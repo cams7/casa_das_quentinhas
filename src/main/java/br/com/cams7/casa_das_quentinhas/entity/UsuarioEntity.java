@@ -31,9 +31,9 @@ public class UsuarioEntity implements Serializable {
 	private Integer id;
 
 	@NotEmpty
-	@Size(min = 3, max = 30)
-	@Column(name = "login", unique = true, nullable = false)
-	private String ssoId;
+	@Size(min = 5, max = 50)
+	@Column(nullable = false)
+	private String email;
 
 	@NotEmpty
 	@Column(name = "senha", length = 100, nullable = false)
@@ -50,11 +50,6 @@ public class UsuarioEntity implements Serializable {
 	private String lastName;
 
 	@NotEmpty
-	@Size(min = 5, max = 50)
-	@Column(nullable = false)
-	private String email;
-
-	@NotEmpty
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "usuario_autorizacao", joinColumns = { @JoinColumn(name = "id_usuario") }, inverseJoinColumns = {
 			@JoinColumn(name = "id_autorizacao") })
@@ -68,12 +63,12 @@ public class UsuarioEntity implements Serializable {
 		this.id = id;
 	}
 
-	public String getSsoId() {
-		return ssoId;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setSsoId(String ssoId) {
-		this.ssoId = ssoId;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getPassword() {
@@ -100,14 +95,6 @@ public class UsuarioEntity implements Serializable {
 		this.lastName = lastName;
 	}
 
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
 	public Set<AutorizacaoEntity> getUserProfiles() {
 		return userProfiles;
 	}
@@ -121,7 +108,7 @@ public class UsuarioEntity implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((ssoId == null) ? 0 : ssoId.hashCode());
+		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		return result;
 	}
 
@@ -139,10 +126,10 @@ public class UsuarioEntity implements Serializable {
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (ssoId == null) {
-			if (other.ssoId != null)
+		if (email == null) {
+			if (other.email != null)
 				return false;
-		} else if (!ssoId.equals(other.ssoId))
+		} else if (!email.equals(other.email))
 			return false;
 		return true;
 	}
@@ -153,8 +140,8 @@ public class UsuarioEntity implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", ssoId=" + ssoId + ", password=" + password + ", firstName=" + firstName
-				+ ", lastName=" + lastName + ", email=" + email + "]";
+		return "User [id=" + id + ", email=" + email + ", password=" + password + ", firstName=" + firstName
+				+ ", lastName=" + lastName + "]";
 	}
 
 }

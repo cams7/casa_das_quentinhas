@@ -94,9 +94,9 @@ public class UsuarioController {
 		 * still using internationalized messages.
 		 * 
 		 */
-		if (!userService.isUserSSOUnique(usuarioEntity.getId(), usuarioEntity.getSsoId())) {
-			FieldError ssoError = new FieldError("usuarioEntity", "ssoId", messageSource.getMessage("non.unique.ssoId",
-					new String[] { usuarioEntity.getSsoId() }, Locale.getDefault()));
+		if (!userService.isEmailUnique(usuarioEntity.getId(), usuarioEntity.getEmail())) {
+			FieldError ssoError = new FieldError("usuarioEntity", "email", messageSource.getMessage("non.unique.email",
+					new String[] { usuarioEntity.getEmail() }, Locale.getDefault()));
 			result.addError(ssoError);
 			return "registration";
 		}
@@ -113,9 +113,9 @@ public class UsuarioController {
 	/**
 	 * This method will provide the medium to update an existing user.
 	 */
-	@RequestMapping(value = { "/edit-user-{ssoId}" }, method = RequestMethod.GET)
-	public String editUser(@PathVariable String ssoId, ModelMap model) {
-		UsuarioEntity user = userService.findBySSO(ssoId);
+	@RequestMapping(value = { "/edit-user-{id}" }, method = RequestMethod.GET)
+	public String editUser(@PathVariable Integer id, ModelMap model) {
+		UsuarioEntity user = userService.findById(id);
 		model.addAttribute("usuarioEntity", user);
 		model.addAttribute("edit", true);
 		model.addAttribute("loggedinuser", getPrincipal());
@@ -126,9 +126,9 @@ public class UsuarioController {
 	 * This method will be called on form submission, handling POST request for
 	 * updating user in database. It also validates the user input
 	 */
-	@RequestMapping(value = { "/edit-user-{ssoId}" }, method = RequestMethod.POST)
+	@RequestMapping(value = { "/edit-user-{id}" }, method = RequestMethod.POST)
 	public String updateUser(@Valid UsuarioEntity usuarioEntity, BindingResult result, ModelMap model,
-			@PathVariable String ssoId) {
+			@PathVariable Integer id) {
 
 		if (result.hasErrors()) {
 			return "registration";
@@ -156,9 +156,9 @@ public class UsuarioController {
 	/**
 	 * This method will delete an user by it's SSOID value.
 	 */
-	@RequestMapping(value = { "/delete-user-{ssoId}" }, method = RequestMethod.GET)
-	public String deleteUser(@PathVariable String ssoId) {
-		userService.deleteUserBySSO(ssoId);
+	@RequestMapping(value = { "/delete-user-{id}" }, method = RequestMethod.GET)
+	public String deleteUser(@PathVariable Integer id) {
+		userService.deleteUserById(id);
 		return "redirect:/list";
 	}
 

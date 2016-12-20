@@ -17,7 +17,7 @@ public class UsuarioRepositoryImpl extends AbstractRepository<Integer, UsuarioEn
 
 	static final Logger logger = LoggerFactory.getLogger(UsuarioRepositoryImpl.class);
 
-	public UsuarioEntity findById(int id) {
+	public UsuarioEntity findById(Integer id) {
 		UsuarioEntity user = getByKey(id);
 		if (user != null) {
 			Hibernate.initialize(user.getUserProfiles());
@@ -25,10 +25,10 @@ public class UsuarioRepositoryImpl extends AbstractRepository<Integer, UsuarioEn
 		return user;
 	}
 
-	public UsuarioEntity findBySSO(String sso) {
-		logger.info("SSO : {}", sso);
+	public UsuarioEntity findByEmail(String email) {
+		logger.info("E-mail : {}", email);
 		Criteria crit = createEntityCriteria();
-		crit.add(Restrictions.eq("ssoId", sso));
+		crit.add(Restrictions.eq("email", email));
 		UsuarioEntity user = (UsuarioEntity) crit.uniqueResult();
 		if (user != null) {
 			Hibernate.initialize(user.getUserProfiles());
@@ -58,10 +58,11 @@ public class UsuarioRepositoryImpl extends AbstractRepository<Integer, UsuarioEn
 		persist(user);
 	}
 
-	public void deleteBySSO(String sso) {
-		Criteria crit = createEntityCriteria();
-		crit.add(Restrictions.eq("ssoId", sso));
-		UsuarioEntity user = (UsuarioEntity) crit.uniqueResult();
+	public void deleteById(Integer id) {
+		// Criteria crit = createEntityCriteria();
+		// crit.add(Restrictions.eq("id", id));
+		// UsuarioEntity user = (UsuarioEntity) crit.uniqueResult();
+		UsuarioEntity user = getByKey(id);
 		delete(user);
 	}
 

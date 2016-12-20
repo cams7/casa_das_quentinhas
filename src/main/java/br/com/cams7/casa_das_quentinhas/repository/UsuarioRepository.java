@@ -6,13 +6,13 @@ import br.com.cams7.casa_das_quentinhas.entity.UsuarioEntity;
 
 public interface UsuarioRepository {
 
-	UsuarioEntity findById(int id);
+	UsuarioEntity findById(Integer id);
 
-	UsuarioEntity findBySSO(String sso);
+	UsuarioEntity findByEmail(String email);
 
 	void save(UsuarioEntity user);
 
-	void deleteBySSO(String sso);
+	void deleteById(Integer id);
 
 	List<UsuarioEntity> findAllUsers();
 

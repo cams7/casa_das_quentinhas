@@ -20,12 +20,12 @@ public class UsuarioServiceImpl implements UsuarioService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-	public UsuarioEntity findById(int id) {
+	public UsuarioEntity findById(Integer id) {
 		return dao.findById(id);
 	}
 
-	public UsuarioEntity findBySSO(String sso) {
-		UsuarioEntity user = dao.findBySSO(sso);
+	public UsuarioEntity findByEmail(String email) {
+		UsuarioEntity user = dao.findByEmail(email);
 		return user;
 	}
 
@@ -43,7 +43,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 	public void updateUser(UsuarioEntity user) {
 		UsuarioEntity entity = dao.findById(user.getId());
 		if (entity != null) {
-			entity.setSsoId(user.getSsoId());
+			// entity.setSsoId(user.getSsoId());
 			if (!user.getPassword().equals(entity.getPassword())) {
 				entity.setPassword(passwordEncoder.encode(user.getPassword()));
 			}
@@ -54,16 +54,16 @@ public class UsuarioServiceImpl implements UsuarioService {
 		}
 	}
 
-	public void deleteUserBySSO(String sso) {
-		dao.deleteBySSO(sso);
+	public void deleteUserById(Integer id) {
+		dao.deleteById(id);
 	}
 
 	public List<UsuarioEntity> findAllUsers() {
 		return dao.findAllUsers();
 	}
 
-	public boolean isUserSSOUnique(Integer id, String sso) {
-		UsuarioEntity user = findBySSO(sso);
+	public boolean isEmailUnique(Integer id, String email) {
+		UsuarioEntity user = findByEmail(email);
 		return (user == null || ((id != null) && (user.getId() == id)));
 	}
 

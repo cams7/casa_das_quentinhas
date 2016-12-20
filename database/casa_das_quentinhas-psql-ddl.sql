@@ -8,13 +8,11 @@ CREATE SEQUENCE id_usuario_seq;
 
 CREATE TABLE usuario (
 	id_usuario INTEGER NOT NULL DEFAULT nextval('id_usuario_seq'),
-	login VARCHAR(30) NOT NULL,
+	email VARCHAR(50) NOT NULL,
 	senha VARCHAR(100) NOT NULL,
 	nome VARCHAR(30) NOT NULL,
-	sobrenome VARCHAR(30) NOT NULL,
-	email VARCHAR(50) NOT NULL,
+	sobrenome VARCHAR(30) NOT NULL,	
     CONSTRAINT usuario_pk PRIMARY KEY (id_usuario),
-	CONSTRAINT usuario_login_uk UNIQUE (login),
 	CONSTRAINT usuario_email_uk UNIQUE (email)
 );
 
@@ -68,9 +66,9 @@ INSERT INTO autorizacao(id_autorizacao, papel) VALUES (nextval('id_autorizacao_s
 INSERT INTO autorizacao(id_autorizacao, papel) VALUES (nextval('id_autorizacao_seq'), 'DBA');
 
 --Username: cesar, password: 12345
-INSERT INTO usuario(id_usuario, login, senha, nome, sobrenome, email) VALUES (nextval('id_usuario_seq'), 'cesar','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 'César','Magalhães','ceanma@gmail.com');
+INSERT INTO usuario(id_usuario, email, senha, nome, sobrenome) VALUES (nextval('id_usuario_seq'),'ceanma@gmail.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 'César','Magalhães');
 
 INSERT INTO usuario_autorizacao (id_usuario, id_autorizacao) VALUES (1, 2);
 
-SELECT u.id_usuario, a.id_autorizacao FROM usuario u INNER JOIN usuario_autorizacao ua ON u.id_usuario=ua.id_usuario INNER JOIN autorizacao a ON ua.id_autorizacao=a.id_autorizacao WHERE u.login='sam' AND a.papel='ADMIN'; 
+SELECT u.id_usuario, a.id_autorizacao FROM usuario u INNER JOIN usuario_autorizacao ua ON u.id_usuario=ua.id_usuario INNER JOIN autorizacao a ON ua.id_autorizacao=a.id_autorizacao WHERE u.email='ceanma@gmail.com' AND a.papel='ADMIN'; 
 
