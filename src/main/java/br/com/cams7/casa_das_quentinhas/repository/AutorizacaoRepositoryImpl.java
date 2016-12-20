@@ -13,7 +13,7 @@ import br.com.cams7.casa_das_quentinhas.entity.AutorizacaoEntity;
 public class AutorizacaoRepositoryImpl extends AbstractRepository<Integer, AutorizacaoEntity>
 		implements AutorizacaoRepository {
 
-	public AutorizacaoEntity findById(int id) {
+	public AutorizacaoEntity findById(Integer id) {
 		return getByKey(id);
 	}
 

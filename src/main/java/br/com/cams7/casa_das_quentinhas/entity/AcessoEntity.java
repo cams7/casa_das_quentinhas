@@ -63,7 +63,7 @@ public class AcessoEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return this.getClass().getSimpleName() + " [series=" + series + ", email=" + username + ", token=" + token
+		return this.getClass().getSimpleName() + " [series=" + series + ", username=" + username + ", token=" + token
 				+ ", ultimoAcesso=" + ultimoAcesso + "]";
 	}
 

@@ -15,23 +15,23 @@ import br.com.cams7.casa_das_quentinhas.repository.UsuarioRepository;
 public class UsuarioServiceImpl implements UsuarioService {
 
 	@Autowired
-	private UsuarioRepository dao;
+	private UsuarioRepository repository;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-	public UsuarioEntity findById(Integer id) {
-		return dao.findById(id);
+	public UsuarioEntity findUsuarioById(Integer id) {
+		return repository.findById(id);
 	}
 
-	public UsuarioEntity findByEmail(String email) {
-		UsuarioEntity user = dao.findByEmail(email);
-		return user;
+	public UsuarioEntity findUsuarioByEmail(String email) {
+		UsuarioEntity usuario = repository.findByEmail(email);
+		return usuario;
 	}
 
-	public void saveUser(UsuarioEntity user) {
-		user.setSenha(passwordEncoder.encode(user.getSenha()));
-		dao.save(user);
+	public void saveUsuario(UsuarioEntity usuario) {
+		usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
+		repository.save(usuario);
 	}
 
 	/*
@@ -40,31 +40,31 @@ public class UsuarioServiceImpl implements UsuarioService {
 	 * proper values within transaction. It will be updated in db once
 	 * transaction ends.
 	 */
-	public void updateUser(UsuarioEntity user) {
-		UsuarioEntity entity = dao.findById(user.getId());
+	public void updateUsuario(UsuarioEntity usuario) {
+		UsuarioEntity entity = repository.findById(usuario.getId());
 		if (entity != null) {
 			// entity.setSsoId(user.getSsoId());
-			if (!user.getSenha().equals(entity.getSenha())) {
-				entity.setSenha(passwordEncoder.encode(user.getSenha()));
+			if (!usuario.getSenha().equals(entity.getSenha())) {
+				entity.setSenha(passwordEncoder.encode(usuario.getSenha()));
 			}
-			entity.setNome(user.getNome());
-			entity.setSobrenome(user.getSobrenome());
-			entity.setEmail(user.getEmail());
-			entity.setAutorizacoes(user.getAutorizacoes());
+			entity.setNome(usuario.getNome());
+			entity.setSobrenome(usuario.getSobrenome());
+			entity.setEmail(usuario.getEmail());
+			entity.setAutorizacoes(usuario.getAutorizacoes());
 		}
 	}
 
-	public void deleteUserById(Integer id) {
-		dao.deleteById(id);
+	public void deleteUsuarioById(Integer id) {
+		repository.deleteById(id);
 	}
 
-	public List<UsuarioEntity> findAllUsers() {
-		return dao.findAllUsers();
+	public List<UsuarioEntity> findAllUsuarios() {
+		return repository.findAll();
 	}
 
 	public boolean isEmailUnique(Integer id, String email) {
-		UsuarioEntity user = findByEmail(email);
-		return (user == null || ((id != null) && (user.getId() == id)));
+		UsuarioEntity usuario = findUsuarioByEmail(email);
+		return (usuario == null || ((id != null) && (usuario.getId() == id)));
 	}
 
 }

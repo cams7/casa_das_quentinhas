@@ -14,17 +14,17 @@ import br.com.cams7.casa_das_quentinhas.repository.AutorizacaoRepository;
 public class AutorizacaoServiceImpl implements AutorizacaoService {
 
 	@Autowired
-	AutorizacaoRepository dao;
+	AutorizacaoRepository repository;
 
-	public AutorizacaoEntity findById(int id) {
-		return dao.findById(id);
+	public AutorizacaoEntity findAutorizacaoById(Integer id) {
+		return repository.findById(id);
 	}
 
-	public AutorizacaoEntity findByPapel(String papel) {
-		return dao.findByPapel(papel);
+	public AutorizacaoEntity findAutorizacaoByPapel(String papel) {
+		return repository.findByPapel(papel);
 	}
 
-	public List<AutorizacaoEntity> findAll() {
-		return dao.findAll();
+	public List<AutorizacaoEntity> findAllAutorizacoes() {
+		return repository.findAll();
 	}
 }

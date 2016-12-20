@@ -10,10 +10,10 @@ public interface UsuarioRepository {
 
 	UsuarioEntity findByEmail(String email);
 
-	void save(UsuarioEntity user);
+	void save(UsuarioEntity usuario);
 
 	void deleteById(Integer id);
 
-	List<UsuarioEntity> findAllUsers();
+	List<UsuarioEntity> findAll();
 
 }

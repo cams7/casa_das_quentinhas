@@ -10,5 +10,5 @@ public interface AutorizacaoRepository {
 
 	AutorizacaoEntity findByPapel(String papel);
 
-	AutorizacaoEntity findById(int id);
+	AutorizacaoEntity findById(Integer id);
 }

@@ -27,9 +27,9 @@ public class AutorizacaoConverter implements Converter<Object, AutorizacaoEntity
 	 */
 	public AutorizacaoEntity convert(Object element) {
 		Integer id = Integer.parseInt((String) element);
-		AutorizacaoEntity profile = userProfileService.findById(id);
-		logger.info("Profile : {}", profile);
-		return profile;
+		AutorizacaoEntity autorizacao = userProfileService.findAutorizacaoById(id);
+		logger.info("Profile : {}", autorizacao);
+		return autorizacao;
 	}
 
 }

@@ -18,30 +18,31 @@ public class UsuarioRepositoryImpl extends AbstractRepository<Integer, UsuarioEn
 	static final Logger logger = LoggerFactory.getLogger(UsuarioRepositoryImpl.class);
 
 	public UsuarioEntity findById(Integer id) {
-		UsuarioEntity user = getByKey(id);
-		if (user != null) {
-			Hibernate.initialize(user.getAutorizacoes());
+		UsuarioEntity usuario = getByKey(id);
+		if (usuario != null) {
+			Hibernate.initialize(usuario.getAutorizacoes());
 		}
-		return user;
+		return usuario;
 	}
 
 	public UsuarioEntity findByEmail(String email) {
 		logger.info("E-mail : {}", email);
 		Criteria crit = createEntityCriteria();
 		crit.add(Restrictions.eq("email", email));
-		UsuarioEntity user = (UsuarioEntity) crit.uniqueResult();
-		if (user != null) {
-			Hibernate.initialize(user.getAutorizacoes());
-		}
-		return user;
+
+		UsuarioEntity usuario = (UsuarioEntity) crit.uniqueResult();
+		if (usuario != null)
+			Hibernate.initialize(usuario.getAutorizacoes());
+
+		return usuario;
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<UsuarioEntity> findAllUsers() {
+	public List<UsuarioEntity> findAll() {
 		Criteria criteria = createEntityCriteria().addOrder(Order.asc("nome"));
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);// To avoid
 																		// duplicates.
-		List<UsuarioEntity> users = (List<UsuarioEntity>) criteria.list();
+		List<UsuarioEntity> usuarios = (List<UsuarioEntity>) criteria.list();
 
 		// No need to fetch userProfiles since we are not showing them on list
 		// page. Let them lazy load.
@@ -51,19 +52,19 @@ public class UsuarioRepositoryImpl extends AbstractRepository<Integer, UsuarioEn
 		 * for(User user : users){ Hibernate.initialize(user.getUserProfiles());
 		 * }
 		 */
-		return users;
+		return usuarios;
 	}
 
-	public void save(UsuarioEntity user) {
-		persist(user);
+	public void save(UsuarioEntity usuario) {
+		persist(usuario);
 	}
 
 	public void deleteById(Integer id) {
 		// Criteria crit = createEntityCriteria();
 		// crit.add(Restrictions.eq("id", id));
 		// UsuarioEntity user = (UsuarioEntity) crit.uniqueResult();
-		UsuarioEntity user = getByKey(id);
-		delete(user);
+		UsuarioEntity usuario = getByKey(id);
+		delete(usuario);
 	}
 
 }

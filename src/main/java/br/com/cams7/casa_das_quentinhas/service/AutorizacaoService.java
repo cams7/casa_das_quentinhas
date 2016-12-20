@@ -7,10 +7,10 @@ import br.com.cams7.casa_das_quentinhas.entity.AutorizacaoEntity;
 
 public interface AutorizacaoService {
 
-	AutorizacaoEntity findById(int id);
+	AutorizacaoEntity findAutorizacaoById(Integer id);
 
-	AutorizacaoEntity findByPapel(String papel);
+	AutorizacaoEntity findAutorizacaoByPapel(String papel);
 	
-	List<AutorizacaoEntity> findAll();
+	List<AutorizacaoEntity> findAllAutorizacoes();
 	
 }

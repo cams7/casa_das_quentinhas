@@ -35,10 +35,10 @@ import br.com.cams7.casa_das_quentinhas.service.UsuarioService;
 public class UsuarioController {
 
 	@Autowired
-	UsuarioService userService;
+	UsuarioService usuarioService;
 
 	@Autowired
-	AutorizacaoService userProfileService;
+	AutorizacaoService autorizacaoService;
 
 	@Autowired
 	MessageSource messageSource;
@@ -53,10 +53,10 @@ public class UsuarioController {
 	 * This method will list all existing users.
 	 */
 	@RequestMapping(value = { "/", "/list" }, method = RequestMethod.GET)
-	public String listUsers(ModelMap model) {
+	public String index(ModelMap model) {
 
-		List<UsuarioEntity> users = userService.findAllUsers();
-		model.addAttribute("users", users);
+		List<UsuarioEntity> usuarios = usuarioService.findAllUsuarios();
+		model.addAttribute("users", usuarios);
 		model.addAttribute("loggedinuser", getPrincipal());
 		return "userslist";
 	}
@@ -65,9 +65,9 @@ public class UsuarioController {
 	 * This method will provide the medium to add a new user.
 	 */
 	@RequestMapping(value = { "/newuser" }, method = RequestMethod.GET)
-	public String newUser(ModelMap model) {
-		UsuarioEntity user = new UsuarioEntity();
-		model.addAttribute("usuarioEntity", user);
+	public String create(ModelMap model) {
+		UsuarioEntity usuario = new UsuarioEntity();
+		model.addAttribute("usuarioEntity", usuario);
 		model.addAttribute("edit", false);
 		model.addAttribute("loggedinuser", getPrincipal());
 		return "registration";
@@ -78,7 +78,7 @@ public class UsuarioController {
 	 * saving user in database. It also validates the user input
 	 */
 	@RequestMapping(value = { "/newuser" }, method = RequestMethod.POST)
-	public String saveUser(@Valid UsuarioEntity usuarioEntity, BindingResult result, ModelMap model) {
+	public String store(@Valid UsuarioEntity usuarioEntity, BindingResult result, ModelMap model) {
 
 		if (result.hasErrors()) {
 			return "registration";
@@ -94,14 +94,14 @@ public class UsuarioController {
 		 * still using internationalized messages.
 		 * 
 		 */
-		if (!userService.isEmailUnique(usuarioEntity.getId(), usuarioEntity.getEmail())) {
+		if (!usuarioService.isEmailUnique(usuarioEntity.getId(), usuarioEntity.getEmail())) {
 			FieldError ssoError = new FieldError("usuarioEntity", "email", messageSource.getMessage("non.unique.email",
 					new String[] { usuarioEntity.getEmail() }, Locale.getDefault()));
 			result.addError(ssoError);
 			return "registration";
 		}
 
-		userService.saveUser(usuarioEntity);
+		usuarioService.saveUsuario(usuarioEntity);
 
 		model.addAttribute("success",
 				"User " + usuarioEntity.getNome() + " " + usuarioEntity.getSobrenome() + " registered successfully");
@@ -114,9 +114,9 @@ public class UsuarioController {
 	 * This method will provide the medium to update an existing user.
 	 */
 	@RequestMapping(value = { "/edit-user-{id}" }, method = RequestMethod.GET)
-	public String editUser(@PathVariable Integer id, ModelMap model) {
-		UsuarioEntity user = userService.findById(id);
-		model.addAttribute("usuarioEntity", user);
+	public String edit(@PathVariable Integer id, ModelMap model) {
+		UsuarioEntity usuario = usuarioService.findUsuarioById(id);
+		model.addAttribute("usuarioEntity", usuario);
 		model.addAttribute("edit", true);
 		model.addAttribute("loggedinuser", getPrincipal());
 		return "registration";
@@ -127,7 +127,7 @@ public class UsuarioController {
 	 * updating user in database. It also validates the user input
 	 */
 	@RequestMapping(value = { "/edit-user-{id}" }, method = RequestMethod.POST)
-	public String updateUser(@Valid UsuarioEntity usuarioEntity, BindingResult result, ModelMap model,
+	public String update(@Valid UsuarioEntity usuarioEntity, BindingResult result, ModelMap model,
 			@PathVariable Integer id) {
 
 		if (result.hasErrors()) {
@@ -145,7 +145,7 @@ public class UsuarioController {
 		 * "registration"; }
 		 */
 
-		userService.updateUser(usuarioEntity);
+		usuarioService.updateUsuario(usuarioEntity);
 
 		model.addAttribute("success",
 				"User " + usuarioEntity.getNome() + " " + usuarioEntity.getSobrenome() + " updated successfully");
@@ -157,8 +157,8 @@ public class UsuarioController {
 	 * This method will delete an user by it's SSOID value.
 	 */
 	@RequestMapping(value = { "/delete-user-{id}" }, method = RequestMethod.GET)
-	public String deleteUser(@PathVariable Integer id) {
-		userService.deleteUserById(id);
+	public String destroy(@PathVariable Integer id) {
+		usuarioService.deleteUsuarioById(id);
 		return "redirect:/list";
 	}
 
@@ -166,8 +166,8 @@ public class UsuarioController {
 	 * This method will provide UserProfile list to views
 	 */
 	@ModelAttribute("autorizacoes")
-	public List<AutorizacaoEntity> initializeProfiles() {
-		return userProfileService.findAll();
+	public List<AutorizacaoEntity> initializeAutorizacoes() {
+		return autorizacaoService.findAllAutorizacoes();
 	}
 
 	/**
