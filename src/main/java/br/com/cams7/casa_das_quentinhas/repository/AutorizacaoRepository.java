@@ -1,10 +1,10 @@
-package br.com.cams7.casa_das_quentinhas.dao;
+package br.com.cams7.casa_das_quentinhas.repository;
 
 import java.util.List;
 
 import br.com.cams7.casa_das_quentinhas.entity.AutorizacaoEntity;
 
-public interface UserProfileDao {
+public interface AutorizacaoRepository {
 
 	List<AutorizacaoEntity> findAll();
 

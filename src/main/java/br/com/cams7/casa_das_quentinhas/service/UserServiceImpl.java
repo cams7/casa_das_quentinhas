@@ -7,8 +7,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.cams7.casa_das_quentinhas.dao.UserDao;
 import br.com.cams7.casa_das_quentinhas.entity.UsuarioEntity;
+import br.com.cams7.casa_das_quentinhas.repository.UsuarioRepository;
 
 
 @Service("userService")
@@ -16,7 +16,7 @@ import br.com.cams7.casa_das_quentinhas.entity.UsuarioEntity;
 public class UserServiceImpl implements UserService{
 
 	@Autowired
-	private UserDao dao;
+	private UsuarioRepository dao;
 
 	@Autowired
     private PasswordEncoder passwordEncoder;

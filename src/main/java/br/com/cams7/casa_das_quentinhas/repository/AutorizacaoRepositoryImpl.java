@@ -1,4 +1,4 @@
-package br.com.cams7.casa_das_quentinhas.dao;
+package br.com.cams7.casa_das_quentinhas.repository;
 
 import java.util.List;
 
@@ -9,8 +9,9 @@ import org.springframework.stereotype.Repository;
 
 import br.com.cams7.casa_das_quentinhas.entity.AutorizacaoEntity;
 
-@Repository("userProfileDao")
-public class UserProfileDaoImpl extends AbstractDao<Integer, AutorizacaoEntity> implements UserProfileDao {
+@Repository
+public class AutorizacaoRepositoryImpl extends AbstractRepository<Integer, AutorizacaoEntity>
+		implements AutorizacaoRepository {
 
 	public AutorizacaoEntity findById(int id) {
 		return getByKey(id);

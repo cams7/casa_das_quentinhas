@@ -1,4 +1,4 @@
-package br.com.cams7.casa_das_quentinhas.dao;
+package br.com.cams7.casa_das_quentinhas.repository;
 
 import java.util.Date;
 
@@ -11,15 +11,15 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.cams7.casa_das_quentinhas.dao.AbstractDao;
 import br.com.cams7.casa_das_quentinhas.entity.AcessoEntity;
+import br.com.cams7.casa_das_quentinhas.repository.AbstractRepository;
 
-@Repository("tokenRepositoryDao")
+@Repository
 @Transactional
-public class HibernateTokenRepositoryImpl extends AbstractDao<String, AcessoEntity>
+public class AcessoRepositoryImpl extends AbstractRepository<String, AcessoEntity>
 		implements PersistentTokenRepository {
 
-	static final Logger logger = LoggerFactory.getLogger(HibernateTokenRepositoryImpl.class);
+	static final Logger logger = LoggerFactory.getLogger(AcessoRepositoryImpl.class);
 
 	@Override
 	public void createNewToken(PersistentRememberMeToken token) {

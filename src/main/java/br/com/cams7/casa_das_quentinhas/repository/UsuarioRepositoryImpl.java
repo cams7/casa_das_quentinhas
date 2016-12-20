@@ -1,4 +1,4 @@
-package br.com.cams7.casa_das_quentinhas.dao;
+package br.com.cams7.casa_das_quentinhas.repository;
 
 import java.util.List;
 
@@ -12,10 +12,10 @@ import org.springframework.stereotype.Repository;
 
 import br.com.cams7.casa_das_quentinhas.entity.UsuarioEntity;
 
-@Repository("userDao")
-public class UserDaoImpl extends AbstractDao<Integer, UsuarioEntity> implements UserDao {
+@Repository
+public class UsuarioRepositoryImpl extends AbstractRepository<Integer, UsuarioEntity> implements UsuarioRepository {
 
-	static final Logger logger = LoggerFactory.getLogger(UserDaoImpl.class);
+	static final Logger logger = LoggerFactory.getLogger(UsuarioRepositoryImpl.class);
 
 	public UsuarioEntity findById(int id) {
 		UsuarioEntity user = getByKey(id);

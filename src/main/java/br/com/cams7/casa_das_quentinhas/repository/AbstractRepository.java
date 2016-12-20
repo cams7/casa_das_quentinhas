@@ -1,4 +1,4 @@
-package br.com.cams7.casa_das_quentinhas.dao;
+package br.com.cams7.casa_das_quentinhas.repository;
 
 import java.io.Serializable;
 
@@ -9,12 +9,12 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public abstract class AbstractDao<PK extends Serializable, T> {
+public abstract class AbstractRepository<PK extends Serializable, T> {
 
 	private final Class<T> persistentClass;
 
 	@SuppressWarnings("unchecked")
-	public AbstractDao() {
+	public AbstractRepository() {
 		this.persistentClass = (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass())
 				.getActualTypeArguments()[1];
 	}
