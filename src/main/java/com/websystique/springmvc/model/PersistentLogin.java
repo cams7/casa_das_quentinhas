@@ -12,19 +12,20 @@ import javax.persistence.TemporalType;
 
 @SuppressWarnings("serial")
 @Entity
-@Table(name = "PERSISTENT_LOGINS")
+@Table(name = "acesso")
 public class PersistentLogin implements Serializable {
 
 	@Id
 	private String series;
 
-	@Column(name = "USERNAME", unique = true, nullable = false)
+	@Column(name = "login", unique = true, nullable = false)
 	private String username;
 
-	@Column(name = "TOKEN", unique = true, nullable = false)
+	@Column(unique = true, nullable = false)
 	private String token;
 
 	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "ultimo_acesso")
 	private Date last_used;
 
 	public String getSeries() {

@@ -13,43 +13,51 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
 @SuppressWarnings("serial")
 @Entity
-@Table(name = "APP_USER")
+@Table(name = "usuario")
 public class User implements Serializable {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@SequenceGenerator(name = "id_usuario_seq", sequenceName = "id_usuario_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id_usuario_seq")
+	@Column(name = "id_usuario")
 	private Integer id;
 
 	@NotEmpty
-	@Column(name = "SSO_ID", unique = true, nullable = false)
+	@Size(min = 3, max = 30)
+	@Column(name = "login", unique = true, nullable = false)
 	private String ssoId;
 
 	@NotEmpty
-	@Column(name = "PASSWORD", nullable = false)
+	@Column(name = "senha", length = 100, nullable = false)
 	private String password;
 
 	@NotEmpty
-	@Column(name = "FIRST_NAME", nullable = false)
+	@Size(min = 3, max = 30)
+	@Column(name = "nome", nullable = false)
 	private String firstName;
 
 	@NotEmpty
-	@Column(name = "LAST_NAME", nullable = false)
+	@Size(min = 3, max = 30)
+	@Column(name = "sobrenome", nullable = false)
 	private String lastName;
 
 	@NotEmpty
-	@Column(name = "EMAIL", nullable = false)
+	@Size(min = 5, max = 50)
+	@Column(nullable = false)
 	private String email;
 
 	@NotEmpty
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "APP_USER_USER_PROFILE", joinColumns = { @JoinColumn(name = "USER_ID") }, inverseJoinColumns = {
-			@JoinColumn(name = "USER_PROFILE_ID") })
+	@JoinTable(name = "usuario_autorizacao", joinColumns = { @JoinColumn(name = "id_usuario") }, inverseJoinColumns = {
+			@JoinColumn(name = "id_autorizacao") })
 	private Set<UserProfile> userProfiles = new HashSet<UserProfile>();
 
 	public Integer getId() {

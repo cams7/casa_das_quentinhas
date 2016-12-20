@@ -7,18 +7,21 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @SuppressWarnings("serial")
 @Entity
-@Table(name = "USER_PROFILE")
+@Table(name = "autorizacao")
 public class UserProfile implements Serializable {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@SequenceGenerator(name = "id_autorizacao_seq", sequenceName = "id_autorizacao_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id_autorizacao_seq")
+	@Column(name = "id_autorizacao")
 	private Integer id;
 
-	@Column(name = "TYPE", length = 15, unique = true, nullable = false)
+	@Column(name = "papel", length = 10, unique = true, nullable = false)
 	private String type = UserProfileType.USER.getUserProfileType();
 
 	public Integer getId() {
