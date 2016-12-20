@@ -1,4 +1,4 @@
-package br.com.cams7.casa_das_quentinhas.model;
+package br.com.cams7.casa_das_quentinhas.entity;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -22,7 +22,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "usuario")
-public class User implements Serializable {
+public class UsuarioEntity implements Serializable {
 
 	@Id
 	@SequenceGenerator(name = "id_usuario_seq", sequenceName = "id_usuario_seq", allocationSize = 1)
@@ -58,7 +58,7 @@ public class User implements Serializable {
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "usuario_autorizacao", joinColumns = { @JoinColumn(name = "id_usuario") }, inverseJoinColumns = {
 			@JoinColumn(name = "id_autorizacao") })
-	private Set<UserProfile> userProfiles = new HashSet<UserProfile>();
+	private Set<AutorizacaoEntity> userProfiles = new HashSet<AutorizacaoEntity>();
 
 	public Integer getId() {
 		return id;
@@ -108,11 +108,11 @@ public class User implements Serializable {
 		this.email = email;
 	}
 
-	public Set<UserProfile> getUserProfiles() {
+	public Set<AutorizacaoEntity> getUserProfiles() {
 		return userProfiles;
 	}
 
-	public void setUserProfiles(Set<UserProfile> userProfiles) {
+	public void setUserProfiles(Set<AutorizacaoEntity> userProfiles) {
 		this.userProfiles = userProfiles;
 	}
 
@@ -131,9 +131,9 @@ public class User implements Serializable {
 			return true;
 		if (obj == null)
 			return false;
-		if (!(obj instanceof User))
+		if (!(obj instanceof UsuarioEntity))
 			return false;
-		User other = (User) obj;
+		UsuarioEntity other = (UsuarioEntity) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;

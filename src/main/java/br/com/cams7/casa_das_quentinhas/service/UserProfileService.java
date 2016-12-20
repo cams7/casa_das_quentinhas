@@ -2,15 +2,15 @@ package br.com.cams7.casa_das_quentinhas.service;
 
 import java.util.List;
 
-import br.com.cams7.casa_das_quentinhas.model.UserProfile;
+import br.com.cams7.casa_das_quentinhas.entity.AutorizacaoEntity;
 
 
 public interface UserProfileService {
 
-	UserProfile findById(int id);
+	AutorizacaoEntity findById(int id);
 
-	UserProfile findByType(String type);
+	AutorizacaoEntity findByType(String type);
 	
-	List<UserProfile> findAll();
+	List<AutorizacaoEntity> findAll();
 	
 }

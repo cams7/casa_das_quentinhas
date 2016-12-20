@@ -10,26 +10,26 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
-import br.com.cams7.casa_das_quentinhas.model.User;
+import br.com.cams7.casa_das_quentinhas.entity.UsuarioEntity;
 
 @Repository("userDao")
-public class UserDaoImpl extends AbstractDao<Integer, User> implements UserDao {
+public class UserDaoImpl extends AbstractDao<Integer, UsuarioEntity> implements UserDao {
 
 	static final Logger logger = LoggerFactory.getLogger(UserDaoImpl.class);
 
-	public User findById(int id) {
-		User user = getByKey(id);
+	public UsuarioEntity findById(int id) {
+		UsuarioEntity user = getByKey(id);
 		if (user != null) {
 			Hibernate.initialize(user.getUserProfiles());
 		}
 		return user;
 	}
 
-	public User findBySSO(String sso) {
+	public UsuarioEntity findBySSO(String sso) {
 		logger.info("SSO : {}", sso);
 		Criteria crit = createEntityCriteria();
 		crit.add(Restrictions.eq("ssoId", sso));
-		User user = (User) crit.uniqueResult();
+		UsuarioEntity user = (UsuarioEntity) crit.uniqueResult();
 		if (user != null) {
 			Hibernate.initialize(user.getUserProfiles());
 		}
@@ -37,11 +37,11 @@ public class UserDaoImpl extends AbstractDao<Integer, User> implements UserDao {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<User> findAllUsers() {
+	public List<UsuarioEntity> findAllUsers() {
 		Criteria criteria = createEntityCriteria().addOrder(Order.asc("firstName"));
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);// To avoid
 																		// duplicates.
-		List<User> users = (List<User>) criteria.list();
+		List<UsuarioEntity> users = (List<UsuarioEntity>) criteria.list();
 
 		// No need to fetch userProfiles since we are not showing them on list
 		// page. Let them lazy load.
@@ -54,14 +54,14 @@ public class UserDaoImpl extends AbstractDao<Integer, User> implements UserDao {
 		return users;
 	}
 
-	public void save(User user) {
+	public void save(UsuarioEntity user) {
 		persist(user);
 	}
 
 	public void deleteBySSO(String sso) {
 		Criteria crit = createEntityCriteria();
 		crit.add(Restrictions.eq("ssoId", sso));
-		User user = (User) crit.uniqueResult();
+		UsuarioEntity user = (UsuarioEntity) crit.uniqueResult();
 		delete(user);
 	}
 

@@ -14,8 +14,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.cams7.casa_das_quentinhas.model.User;
-import br.com.cams7.casa_das_quentinhas.model.UserProfile;
+import br.com.cams7.casa_das_quentinhas.entity.UsuarioEntity;
+import br.com.cams7.casa_das_quentinhas.entity.AutorizacaoEntity;
 import br.com.cams7.casa_das_quentinhas.service.UserService;
 
 @Service("customUserDetailsService")
@@ -28,7 +28,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 	@Transactional(readOnly = true)
 	public UserDetails loadUserByUsername(String ssoId) throws UsernameNotFoundException {
-		User user = userService.findBySSO(ssoId);
+		UsuarioEntity user = userService.findBySSO(ssoId);
 		logger.info("User : {}", user);
 		if (user == null) {
 			logger.info("User not found");
@@ -38,10 +38,10 @@ public class CustomUserDetailsService implements UserDetailsService {
 				true, true, getGrantedAuthorities(user));
 	}
 
-	private List<GrantedAuthority> getGrantedAuthorities(User user) {
+	private List<GrantedAuthority> getGrantedAuthorities(UsuarioEntity user) {
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 
-		for (UserProfile userProfile : user.getUserProfiles()) {
+		for (AutorizacaoEntity userProfile : user.getUserProfiles()) {
 			logger.info("UserProfile : {}", userProfile);
 			authorities.add(new SimpleGrantedAuthority("ROLE_" + userProfile.getType()));
 		}

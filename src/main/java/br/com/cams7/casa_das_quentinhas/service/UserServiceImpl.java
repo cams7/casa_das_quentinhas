@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.cams7.casa_das_quentinhas.dao.UserDao;
-import br.com.cams7.casa_das_quentinhas.model.User;
+import br.com.cams7.casa_das_quentinhas.entity.UsuarioEntity;
 
 
 @Service("userService")
@@ -21,16 +21,16 @@ public class UserServiceImpl implements UserService{
 	@Autowired
     private PasswordEncoder passwordEncoder;
 	
-	public User findById(int id) {
+	public UsuarioEntity findById(int id) {
 		return dao.findById(id);
 	}
 
-	public User findBySSO(String sso) {
-		User user = dao.findBySSO(sso);
+	public UsuarioEntity findBySSO(String sso) {
+		UsuarioEntity user = dao.findBySSO(sso);
 		return user;
 	}
 
-	public void saveUser(User user) {
+	public void saveUser(UsuarioEntity user) {
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		dao.save(user);
 	}
@@ -40,8 +40,8 @@ public class UserServiceImpl implements UserService{
 	 * Just fetch the entity from db and update it with proper values within transaction.
 	 * It will be updated in db once transaction ends. 
 	 */
-	public void updateUser(User user) {
-		User entity = dao.findById(user.getId());
+	public void updateUser(UsuarioEntity user) {
+		UsuarioEntity entity = dao.findById(user.getId());
 		if(entity!=null){
 			entity.setSsoId(user.getSsoId());
 			if(!user.getPassword().equals(entity.getPassword())){
@@ -59,12 +59,12 @@ public class UserServiceImpl implements UserService{
 		dao.deleteBySSO(sso);
 	}
 
-	public List<User> findAllUsers() {
+	public List<UsuarioEntity> findAllUsers() {
 		return dao.findAllUsers();
 	}
 
 	public boolean isUserSSOUnique(Integer id, String sso) {
-		User user = findBySSO(sso);
+		UsuarioEntity user = findBySSO(sso);
 		return ( user == null || ((id != null) && (user.getId() == id)));
 	}
 	

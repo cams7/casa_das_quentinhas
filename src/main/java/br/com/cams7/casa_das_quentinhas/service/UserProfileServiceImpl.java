@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.cams7.casa_das_quentinhas.dao.UserProfileDao;
-import br.com.cams7.casa_das_quentinhas.model.UserProfile;
+import br.com.cams7.casa_das_quentinhas.entity.AutorizacaoEntity;
 
 
 @Service("userProfileService")
@@ -17,15 +17,15 @@ public class UserProfileServiceImpl implements UserProfileService{
 	@Autowired
 	UserProfileDao dao;
 	
-	public UserProfile findById(int id) {
+	public AutorizacaoEntity findById(int id) {
 		return dao.findById(id);
 	}
 
-	public UserProfile findByType(String type){
+	public AutorizacaoEntity findByType(String type){
 		return dao.findByType(type);
 	}
 
-	public List<UserProfile> findAll() {
+	public List<AutorizacaoEntity> findAll() {
 		return dao.findAll();
 	}
 }

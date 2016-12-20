@@ -2,22 +2,22 @@ package br.com.cams7.casa_das_quentinhas.service;
 
 import java.util.List;
 
-import br.com.cams7.casa_das_quentinhas.model.User;
+import br.com.cams7.casa_das_quentinhas.entity.UsuarioEntity;
 
 
 public interface UserService {
 	
-	User findById(int id);
+	UsuarioEntity findById(int id);
 	
-	User findBySSO(String sso);
+	UsuarioEntity findBySSO(String sso);
 	
-	void saveUser(User user);
+	void saveUser(UsuarioEntity user);
 	
-	void updateUser(User user);
+	void updateUser(UsuarioEntity user);
 	
 	void deleteUserBySSO(String sso);
 
-	List<User> findAllUsers(); 
+	List<UsuarioEntity> findAllUsers(); 
 	
 	boolean isUserSSOUnique(Integer id, String sso);
 

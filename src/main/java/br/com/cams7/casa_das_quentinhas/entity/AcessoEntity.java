@@ -1,4 +1,4 @@
-package br.com.cams7.casa_das_quentinhas.model;
+package br.com.cams7.casa_das_quentinhas.entity;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -13,7 +13,7 @@ import javax.persistence.TemporalType;
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "acesso")
-public class PersistentLogin implements Serializable {
+public class AcessoEntity implements Serializable {
 
 	@Id
 	private String series;

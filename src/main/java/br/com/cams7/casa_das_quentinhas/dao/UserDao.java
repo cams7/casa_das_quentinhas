@@ -2,18 +2,18 @@ package br.com.cams7.casa_das_quentinhas.dao;
 
 import java.util.List;
 
-import br.com.cams7.casa_das_quentinhas.model.User;
+import br.com.cams7.casa_das_quentinhas.entity.UsuarioEntity;
 
 public interface UserDao {
 
-	User findById(int id);
+	UsuarioEntity findById(int id);
 
-	User findBySSO(String sso);
+	UsuarioEntity findBySSO(String sso);
 
-	void save(User user);
+	void save(UsuarioEntity user);
 
 	void deleteBySSO(String sso);
 
-	List<User> findAllUsers();
+	List<UsuarioEntity> findAllUsers();
 
 }

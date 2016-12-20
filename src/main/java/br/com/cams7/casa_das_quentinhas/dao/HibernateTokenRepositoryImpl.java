@@ -12,11 +12,11 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.cams7.casa_das_quentinhas.dao.AbstractDao;
-import br.com.cams7.casa_das_quentinhas.model.PersistentLogin;
+import br.com.cams7.casa_das_quentinhas.entity.AcessoEntity;
 
 @Repository("tokenRepositoryDao")
 @Transactional
-public class HibernateTokenRepositoryImpl extends AbstractDao<String, PersistentLogin>
+public class HibernateTokenRepositoryImpl extends AbstractDao<String, AcessoEntity>
 		implements PersistentTokenRepository {
 
 	static final Logger logger = LoggerFactory.getLogger(HibernateTokenRepositoryImpl.class);
@@ -24,7 +24,7 @@ public class HibernateTokenRepositoryImpl extends AbstractDao<String, Persistent
 	@Override
 	public void createNewToken(PersistentRememberMeToken token) {
 		logger.info("Creating Token for user : {}", token.getUsername());
-		PersistentLogin persistentLogin = new PersistentLogin();
+		AcessoEntity persistentLogin = new AcessoEntity();
 		persistentLogin.setUsername(token.getUsername());
 		persistentLogin.setSeries(token.getSeries());
 		persistentLogin.setToken(token.getTokenValue());
@@ -39,7 +39,7 @@ public class HibernateTokenRepositoryImpl extends AbstractDao<String, Persistent
 		try {
 			Criteria crit = createEntityCriteria();
 			crit.add(Restrictions.eq("series", seriesId));
-			PersistentLogin persistentLogin = (PersistentLogin) crit.uniqueResult();
+			AcessoEntity persistentLogin = (AcessoEntity) crit.uniqueResult();
 
 			return new PersistentRememberMeToken(persistentLogin.getUsername(), persistentLogin.getSeries(),
 					persistentLogin.getToken(), persistentLogin.getLast_used());
@@ -54,7 +54,7 @@ public class HibernateTokenRepositoryImpl extends AbstractDao<String, Persistent
 		logger.info("Removing Token if any for user : {}", username);
 		Criteria crit = createEntityCriteria();
 		crit.add(Restrictions.eq("username", username));
-		PersistentLogin persistentLogin = (PersistentLogin) crit.uniqueResult();
+		AcessoEntity persistentLogin = (AcessoEntity) crit.uniqueResult();
 		if (persistentLogin != null) {
 			logger.info("rememberMe was selected");
 			delete(persistentLogin);
@@ -65,7 +65,7 @@ public class HibernateTokenRepositoryImpl extends AbstractDao<String, Persistent
 	@Override
 	public void updateToken(String seriesId, String tokenValue, Date lastUsed) {
 		logger.info("Updating Token for seriesId : {}", seriesId);
-		PersistentLogin persistentLogin = getByKey(seriesId);
+		AcessoEntity persistentLogin = getByKey(seriesId);
 		persistentLogin.setToken(tokenValue);
 		persistentLogin.setLast_used(lastUsed);
 		update(persistentLogin);

@@ -31,7 +31,7 @@ public class HibernateConfiguration {
 	public LocalSessionFactoryBean sessionFactory() throws URISyntaxException {
 		LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
 		sessionFactory.setDataSource(dataSource());
-		sessionFactory.setPackagesToScan(new String[] { "br.com.cams7.casa_das_quentinhas.model" });
+		sessionFactory.setPackagesToScan(new String[] { "br.com.cams7.casa_das_quentinhas.entity" });
 		sessionFactory.setHibernateProperties(hibernateProperties());
 		return sessionFactory;
 	}

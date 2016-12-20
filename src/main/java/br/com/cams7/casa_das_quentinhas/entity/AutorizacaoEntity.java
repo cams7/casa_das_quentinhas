@@ -1,4 +1,4 @@
-package br.com.cams7.casa_das_quentinhas.model;
+package br.com.cams7.casa_das_quentinhas.entity;
 
 import java.io.Serializable;
 
@@ -13,7 +13,7 @@ import javax.persistence.Table;
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "autorizacao")
-public class UserProfile implements Serializable {
+public class AutorizacaoEntity implements Serializable {
 
 	@Id
 	@SequenceGenerator(name = "id_autorizacao_seq", sequenceName = "id_autorizacao_seq", allocationSize = 1)
@@ -22,7 +22,7 @@ public class UserProfile implements Serializable {
 	private Integer id;
 
 	@Column(name = "papel", length = 10, unique = true, nullable = false)
-	private String type = UserProfileType.USER.getUserProfileType();
+	private String type = Perfil.USER.getPapel();
 
 	public Integer getId() {
 		return id;
@@ -55,9 +55,9 @@ public class UserProfile implements Serializable {
 			return true;
 		if (obj == null)
 			return false;
-		if (!(obj instanceof UserProfile))
+		if (!(obj instanceof AutorizacaoEntity))
 			return false;
-		UserProfile other = (UserProfile) obj;
+		AutorizacaoEntity other = (AutorizacaoEntity) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -74,6 +74,21 @@ public class UserProfile implements Serializable {
 	@Override
 	public String toString() {
 		return "UserProfile [id=" + id + ", type=" + type + "]";
+	}
+
+	public enum Perfil implements Serializable {
+		USER("USER"), DBA("DBA"), ADMIN("ADMIN");
+
+		private String papel;
+
+		private Perfil(String papel) {
+			this.papel = papel;
+		}
+
+		public String getPapel() {
+			return papel;
+		}
+
 	}
 
 }
