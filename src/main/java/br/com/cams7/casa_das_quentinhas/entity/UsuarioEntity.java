@@ -36,24 +36,24 @@ public class UsuarioEntity implements Serializable {
 	private String email;
 
 	@NotEmpty
-	@Column(name = "senha", length = 100, nullable = false)
-	private String password;
+	@Column(length = 100, nullable = false)
+	private String senha;
 
 	@NotEmpty
 	@Size(min = 3, max = 30)
-	@Column(name = "nome", nullable = false)
-	private String firstName;
+	@Column(nullable = false)
+	private String nome;
 
 	@NotEmpty
 	@Size(min = 3, max = 30)
-	@Column(name = "sobrenome", nullable = false)
-	private String lastName;
+	@Column(nullable = false)
+	private String sobrenome;
 
 	@NotEmpty
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "usuario_autorizacao", joinColumns = { @JoinColumn(name = "id_usuario") }, inverseJoinColumns = {
 			@JoinColumn(name = "id_autorizacao") })
-	private Set<AutorizacaoEntity> userProfiles = new HashSet<AutorizacaoEntity>();
+	private Set<AutorizacaoEntity> autorizacoes = new HashSet<AutorizacaoEntity>();
 
 	public Integer getId() {
 		return id;
@@ -71,36 +71,36 @@ public class UsuarioEntity implements Serializable {
 		this.email = email;
 	}
 
-	public String getPassword() {
-		return password;
+	public String getSenha() {
+		return senha;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
+	public void setSenha(String senha) {
+		this.senha = senha;
 	}
 
-	public String getFirstName() {
-		return firstName;
+	public String getNome() {
+		return nome;
 	}
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
 
-	public String getLastName() {
-		return lastName;
+	public String getSobrenome() {
+		return sobrenome;
 	}
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
+	public void setSobrenome(String sobrenome) {
+		this.sobrenome = sobrenome;
 	}
 
-	public Set<AutorizacaoEntity> getUserProfiles() {
-		return userProfiles;
+	public Set<AutorizacaoEntity> getAutorizacoes() {
+		return autorizacoes;
 	}
 
-	public void setUserProfiles(Set<AutorizacaoEntity> userProfiles) {
-		this.userProfiles = userProfiles;
+	public void setAutorizacoes(Set<AutorizacaoEntity> autorizacoes) {
+		this.autorizacoes = autorizacoes;
 	}
 
 	@Override
@@ -140,8 +140,8 @@ public class UsuarioEntity implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", email=" + email + ", password=" + password + ", firstName=" + firstName
-				+ ", lastName=" + lastName + "]";
+		return "User [id=" + id + ", email=" + email + ", senha=" + senha + ", nome=" + nome + ", sobrenome="
+				+ sobrenome + "]";
 	}
 
 }

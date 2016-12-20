@@ -34,14 +34,14 @@ public class CustomUserDetailsService implements UserDetailsService {
 			logger.info("User not found");
 			throw new UsernameNotFoundException("Username not found");
 		}
-		return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), true, true,
+		return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getSenha(), true, true,
 				true, true, getGrantedAuthorities(user));
 	}
 
 	private List<GrantedAuthority> getGrantedAuthorities(UsuarioEntity user) {
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 
-		for (AutorizacaoEntity userProfile : user.getUserProfiles()) {
+		for (AutorizacaoEntity userProfile : user.getAutorizacoes()) {
 			logger.info("UserProfile : {}", userProfile);
 			authorities.add(new SimpleGrantedAuthority("ROLE_" + userProfile.getType()));
 		}

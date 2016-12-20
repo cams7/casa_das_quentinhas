@@ -20,7 +20,7 @@ public class UsuarioRepositoryImpl extends AbstractRepository<Integer, UsuarioEn
 	public UsuarioEntity findById(Integer id) {
 		UsuarioEntity user = getByKey(id);
 		if (user != null) {
-			Hibernate.initialize(user.getUserProfiles());
+			Hibernate.initialize(user.getAutorizacoes());
 		}
 		return user;
 	}
@@ -31,14 +31,14 @@ public class UsuarioRepositoryImpl extends AbstractRepository<Integer, UsuarioEn
 		crit.add(Restrictions.eq("email", email));
 		UsuarioEntity user = (UsuarioEntity) crit.uniqueResult();
 		if (user != null) {
-			Hibernate.initialize(user.getUserProfiles());
+			Hibernate.initialize(user.getAutorizacoes());
 		}
 		return user;
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<UsuarioEntity> findAllUsers() {
-		Criteria criteria = createEntityCriteria().addOrder(Order.asc("firstName"));
+		Criteria criteria = createEntityCriteria().addOrder(Order.asc("nome"));
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);// To avoid
 																		// duplicates.
 		List<UsuarioEntity> users = (List<UsuarioEntity>) criteria.list();

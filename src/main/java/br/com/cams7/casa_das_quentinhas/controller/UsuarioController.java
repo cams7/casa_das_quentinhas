@@ -31,7 +31,7 @@ import br.com.cams7.casa_das_quentinhas.service.UsuarioService;
 
 @Controller
 @RequestMapping("/")
-@SessionAttributes("roles")
+@SessionAttributes("autorizacoes")
 public class UsuarioController {
 
 	@Autowired
@@ -103,8 +103,8 @@ public class UsuarioController {
 
 		userService.saveUser(usuarioEntity);
 
-		model.addAttribute("success", "User " + usuarioEntity.getFirstName() + " " + usuarioEntity.getLastName()
-				+ " registered successfully");
+		model.addAttribute("success",
+				"User " + usuarioEntity.getNome() + " " + usuarioEntity.getSobrenome() + " registered successfully");
 		model.addAttribute("loggedinuser", getPrincipal());
 		// return "success";
 		return "registrationsuccess";
@@ -148,7 +148,7 @@ public class UsuarioController {
 		userService.updateUser(usuarioEntity);
 
 		model.addAttribute("success",
-				"User " + usuarioEntity.getFirstName() + " " + usuarioEntity.getLastName() + " updated successfully");
+				"User " + usuarioEntity.getNome() + " " + usuarioEntity.getSobrenome() + " updated successfully");
 		model.addAttribute("loggedinuser", getPrincipal());
 		return "registrationsuccess";
 	}
@@ -165,7 +165,7 @@ public class UsuarioController {
 	/**
 	 * This method will provide UserProfile list to views
 	 */
-	@ModelAttribute("roles")
+	@ModelAttribute("autorizacoes")
 	public List<AutorizacaoEntity> initializeProfiles() {
 		return userProfileService.findAll();
 	}

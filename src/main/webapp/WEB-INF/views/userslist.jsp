@@ -26,8 +26,8 @@
 			<table class="table table-hover">
 				<thead>
 					<tr>
-						<th>Firstname</th>
-						<th>Lastname</th>
+						<th>Nome</th>
+						<th>Sobrenome</th>
 						<th>E-mail</th>
 						<sec:authorize access="hasRole('ADMIN') or hasRole('DBA')">
 							<th width="100"></th>
@@ -41,8 +41,8 @@
 				<tbody>
 					<c:forEach items="${users}" var="user">
 						<tr>
-							<td>${user.firstName}</td>
-							<td>${user.lastName}</td>
+							<td>${user.nome}</td>
+							<td>${user.sobrenome}</td>
 							<td>${user.email}</td>
 							<sec:authorize access="hasRole('ADMIN') or hasRole('DBA')">
 								<td><a href="<c:url value='/edit-user-${user.id}' />"

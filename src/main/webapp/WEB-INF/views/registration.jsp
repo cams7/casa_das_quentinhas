@@ -25,13 +25,12 @@
 
 			<div class="row">
 				<div class="form-group col-md-12">
-					<label class="col-md-3 control-lable" for="firstName">First
-						Name</label>
+					<label class="col-md-3 control-lable" for="nome">Nome</label>
 					<div class="col-md-7">
-						<form:input type="text" path="firstName" id="firstName"
+						<form:input type="text" path="nome" id="nome"
 							class="form-control input-sm" />
 						<div class="has-error">
-							<form:errors path="firstName" class="help-inline" />
+							<form:errors path="nome" class="help-inline" />
 						</div>
 					</div>
 				</div>
@@ -39,13 +38,12 @@
 
 			<div class="row">
 				<div class="form-group col-md-12">
-					<label class="col-md-3 control-lable" for="lastName">Last
-						Name</label>
+					<label class="col-md-3 control-lable" for="sobrenome">Sobrenome</label>
 					<div class="col-md-7">
-						<form:input type="text" path="lastName" id="lastName"
+						<form:input type="text" path="sobrenome" id="sobrenome"
 							class="form-control input-sm" />
 						<div class="has-error">
-							<form:errors path="lastName" class="help-inline" />
+							<form:errors path="sobrenome" class="help-inline" />
 						</div>
 					</div>
 				</div>
@@ -74,12 +72,12 @@
 
 			<div class="row">
 				<div class="form-group col-md-12">
-					<label class="col-md-3 control-lable" for="password">Password</label>
+					<label class="col-md-3 control-lable" for="senha">Senha</label>
 					<div class="col-md-7">
-						<form:input type="password" path="password" id="password"
+						<form:input type="password" path="senha" id="senha"
 							class="form-control input-sm" />
 						<div class="has-error">
-							<form:errors path="password" class="help-inline" />
+							<form:errors path="senha" class="help-inline" />
 						</div>
 					</div>
 				</div>
@@ -87,12 +85,13 @@
 
 			<div class="row">
 				<div class="form-group col-md-12">
-					<label class="col-md-3 control-lable" for="userProfiles">Roles</label>
+					<label class="col-md-3 control-lable" for="autorizacoes">Autorizações</label>
 					<div class="col-md-7">
-						<form:select path="userProfiles" items="${roles}" multiple="true"
-							itemValue="id" itemLabel="type" class="form-control input-sm" />
+						<form:select path="autorizacoes" items="${autorizacoes}"
+							multiple="true" itemValue="id" itemLabel="type"
+							class="form-control input-sm" />
 						<div class="has-error">
-							<form:errors path="userProfiles" class="help-inline" />
+							<form:errors path="autorizacoes" class="help-inline" />
 						</div>
 					</div>
 				</div>

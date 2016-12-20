@@ -30,7 +30,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 	}
 
 	public void saveUser(UsuarioEntity user) {
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		user.setSenha(passwordEncoder.encode(user.getSenha()));
 		dao.save(user);
 	}
 
@@ -44,13 +44,13 @@ public class UsuarioServiceImpl implements UsuarioService {
 		UsuarioEntity entity = dao.findById(user.getId());
 		if (entity != null) {
 			// entity.setSsoId(user.getSsoId());
-			if (!user.getPassword().equals(entity.getPassword())) {
-				entity.setPassword(passwordEncoder.encode(user.getPassword()));
+			if (!user.getSenha().equals(entity.getSenha())) {
+				entity.setSenha(passwordEncoder.encode(user.getSenha()));
 			}
-			entity.setFirstName(user.getFirstName());
-			entity.setLastName(user.getLastName());
+			entity.setNome(user.getNome());
+			entity.setSobrenome(user.getSobrenome());
 			entity.setEmail(user.getEmail());
-			entity.setUserProfiles(user.getUserProfiles());
+			entity.setAutorizacoes(user.getAutorizacoes());
 		}
 	}
 
