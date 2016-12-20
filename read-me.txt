@@ -1,0 +1,69 @@
+sudo add-apt-repository ppa:webupd8team/java
+sudo apt-get update 
+sudo apt-get install oracle-java8-installer
+java -version
+
+echo 'export MVN_HOME=/home/vagrant/apache-maven' >> ~/.bashrc
+echo 'export PATH=$PATH:$MVN_HOME/bin' >> ~/.bashrc
+
+echo 'export GRADLE_HOME=/home/vagrant/gradle' >> ~/.bashrc
+echo 'export PATH=$PATH:$GRADLE_HOME/bin' >> ~/.bashrc
+
+echo 'export CATALINA_HOME=/home/vagrant/apache-tomcat8' >> ~/.bashrc
+
+echo 'export WILDFLY_HOME=/home/vagrant/wildfly' >> ~/.bashrc
+
+echo 'export ROO_HOME=/home/vagrant/spring-roo' >> ~/.bashrc
+echo 'export PATH=$PATH:$ROO_HOME/bin' >> ~/.bashrc
+
+
+sudo -i -u postgres
+psql -d template1 -U postgres
+CREATE USER clinic_owner WITH PASSWORD 'pet';
+CREATE DATABASE petclinic;
+GRANT ALL PRIVILEGES ON DATABASE petclinic to clinic_owner;
+\q
+exit
+
+sudo adduser clinic_owner
+su - clinic_owner
+psql -d petclinic -U clinic_owner
+\q
+
+echo 'export DATABASE_URL=postgres://clinic_owner:pet@localhost:5432/petclinic' >> ~/.bashrc
+
+mvn package -DskipTests
+java -jar target/dependency/jetty-runner.jar --host 0.0.0.0 target/*.war
+
+
+sudo -i -u postgres
+psql -d template1 -U postgres
+CREATE USER dono_da_cozinha WITH PASSWORD 'quentinha';
+CREATE DATABASE casa_das_quentinhas;
+GRANT ALL PRIVILEGES ON DATABASE casa_das_quentinhas to dono_da_cozinha;
+\q
+exit
+
+sudo adduser dono_da_cozinha
+su - dono_da_cozinha
+psql -d casa_das_quentinhas -U dono_da_cozinha
+\q
+exit
+
+sudo -i -u postgres
+psql -d template1 -U postgres
+CREATE USER blog WITH PASSWORD 'blog';
+CREATE DATABASE blog;
+GRANT ALL PRIVILEGES ON DATABASE blog to blog;
+\q
+exit
+
+mysql -u root -p
+CREATE DATABASE websystique;
+CREATE USER 'myuser'@'%' IDENTIFIED BY 'mypassword';
+GRANT ALL PRIVILEGES ON websystique.* TO 'myuser'@'%';
+FLUSH PRIVILEGES;       
+exit        
+mysql --host=127.0.0.1 --user=myuser --password=mypassword websystique
+exit
+

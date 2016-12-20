@@ -1,5 +1,7 @@
 package com.websystique.springmvc.configuration;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Properties;
 
 import javax.sql.DataSource;
@@ -26,7 +28,7 @@ public class HibernateConfiguration {
 	private Environment environment;
 
 	@Bean
-	public LocalSessionFactoryBean sessionFactory() {
+	public LocalSessionFactoryBean sessionFactory() throws URISyntaxException {
 		LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
 		sessionFactory.setDataSource(dataSource());
 		sessionFactory.setPackagesToScan(new String[] { "com.websystique.springmvc.model" });
@@ -35,12 +37,17 @@ public class HibernateConfiguration {
 	}
 
 	@Bean
-	public DataSource dataSource() {
+	public DataSource dataSource() throws URISyntaxException {
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 		dataSource.setDriverClassName(environment.getRequiredProperty("jdbc.driverClassName"));
-		dataSource.setUrl(environment.getRequiredProperty("jdbc.url"));
-		dataSource.setUsername(environment.getRequiredProperty("jdbc.username"));
-		dataSource.setPassword(environment.getRequiredProperty("jdbc.password"));
+
+		URI dbUrl = new URI(System.getenv().get("DATABASE_URL"));
+		String[] info = dbUrl.getUserInfo().split(":");
+
+		dataSource.setUrl("jdbc:postgresql://" + dbUrl.getHost() + ":" + dbUrl.getPort() + dbUrl.getPath());
+		dataSource.setUsername(info[0]);
+		dataSource.setPassword(info[1]);
+
 		return dataSource;
 	}
 
