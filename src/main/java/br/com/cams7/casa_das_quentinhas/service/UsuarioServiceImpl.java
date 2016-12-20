@@ -10,17 +10,16 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.cams7.casa_das_quentinhas.entity.UsuarioEntity;
 import br.com.cams7.casa_das_quentinhas.repository.UsuarioRepository;
 
-
-@Service("userService")
+@Service
 @Transactional
-public class UserServiceImpl implements UserService{
+public class UsuarioServiceImpl implements UsuarioService {
 
 	@Autowired
 	private UsuarioRepository dao;
 
 	@Autowired
-    private PasswordEncoder passwordEncoder;
-	
+	private PasswordEncoder passwordEncoder;
+
 	public UsuarioEntity findById(int id) {
 		return dao.findById(id);
 	}
@@ -36,15 +35,16 @@ public class UserServiceImpl implements UserService{
 	}
 
 	/*
-	 * Since the method is running with Transaction, No need to call hibernate update explicitly.
-	 * Just fetch the entity from db and update it with proper values within transaction.
-	 * It will be updated in db once transaction ends. 
+	 * Since the method is running with Transaction, No need to call hibernate
+	 * update explicitly. Just fetch the entity from db and update it with
+	 * proper values within transaction. It will be updated in db once
+	 * transaction ends.
 	 */
 	public void updateUser(UsuarioEntity user) {
 		UsuarioEntity entity = dao.findById(user.getId());
-		if(entity!=null){
+		if (entity != null) {
 			entity.setSsoId(user.getSsoId());
-			if(!user.getPassword().equals(entity.getPassword())){
+			if (!user.getPassword().equals(entity.getPassword())) {
 				entity.setPassword(passwordEncoder.encode(user.getPassword()));
 			}
 			entity.setFirstName(user.getFirstName());
@@ -54,7 +54,6 @@ public class UserServiceImpl implements UserService{
 		}
 	}
 
-	
 	public void deleteUserBySSO(String sso) {
 		dao.deleteBySSO(sso);
 	}
@@ -65,7 +64,7 @@ public class UserServiceImpl implements UserService{
 
 	public boolean isUserSSOUnique(Integer id, String sso) {
 		UsuarioEntity user = findBySSO(sso);
-		return ( user == null || ((id != null) && (user.getId() == id)));
+		return (user == null || ((id != null) && (user.getId() == id)));
 	}
-	
+
 }

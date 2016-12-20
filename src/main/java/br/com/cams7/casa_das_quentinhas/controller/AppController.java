@@ -26,8 +26,8 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import br.com.cams7.casa_das_quentinhas.entity.UsuarioEntity;
 import br.com.cams7.casa_das_quentinhas.entity.AutorizacaoEntity;
-import br.com.cams7.casa_das_quentinhas.service.UserProfileService;
-import br.com.cams7.casa_das_quentinhas.service.UserService;
+import br.com.cams7.casa_das_quentinhas.service.AutorizacaoService;
+import br.com.cams7.casa_das_quentinhas.service.UsuarioService;
 
 @Controller
 @RequestMapping("/")
@@ -35,10 +35,10 @@ import br.com.cams7.casa_das_quentinhas.service.UserService;
 public class AppController {
 
 	@Autowired
-	UserService userService;
+	UsuarioService userService;
 
 	@Autowired
-	UserProfileService userProfileService;
+	AutorizacaoService userProfileService;
 
 	@Autowired
 	MessageSource messageSource;

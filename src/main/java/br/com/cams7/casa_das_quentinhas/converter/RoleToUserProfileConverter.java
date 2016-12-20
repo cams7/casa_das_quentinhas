@@ -7,7 +7,7 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 import br.com.cams7.casa_das_quentinhas.entity.AutorizacaoEntity;
-import br.com.cams7.casa_das_quentinhas.service.UserProfileService;
+import br.com.cams7.casa_das_quentinhas.service.AutorizacaoService;
 
 /**
  * A converter class used in views to map id's to actual userProfile objects.
@@ -18,7 +18,7 @@ public class RoleToUserProfileConverter implements Converter<Object, Autorizacao
 	static final Logger logger = LoggerFactory.getLogger(RoleToUserProfileConverter.class);
 
 	@Autowired
-	UserProfileService userProfileService;
+	AutorizacaoService userProfileService;
 
 	/**
 	 * Gets UserProfile by Id

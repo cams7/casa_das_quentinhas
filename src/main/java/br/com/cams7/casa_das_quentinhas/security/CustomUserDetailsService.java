@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.cams7.casa_das_quentinhas.entity.UsuarioEntity;
 import br.com.cams7.casa_das_quentinhas.entity.AutorizacaoEntity;
-import br.com.cams7.casa_das_quentinhas.service.UserService;
+import br.com.cams7.casa_das_quentinhas.service.UsuarioService;
 
 @Service("customUserDetailsService")
 public class CustomUserDetailsService implements UserDetailsService {
@@ -24,7 +24,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 	static final Logger logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
 
 	@Autowired
-	private UserService userService;
+	private UsuarioService userService;
 
 	@Transactional(readOnly = true)
 	public UserDetails loadUserByUsername(String ssoId) throws UsernameNotFoundException {

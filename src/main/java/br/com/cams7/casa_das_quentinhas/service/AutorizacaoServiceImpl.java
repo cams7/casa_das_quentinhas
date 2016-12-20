@@ -9,19 +9,18 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.cams7.casa_das_quentinhas.entity.AutorizacaoEntity;
 import br.com.cams7.casa_das_quentinhas.repository.AutorizacaoRepository;
 
-
-@Service("userProfileService")
+@Service
 @Transactional
-public class UserProfileServiceImpl implements UserProfileService{
-	
+public class AutorizacaoServiceImpl implements AutorizacaoService {
+
 	@Autowired
 	AutorizacaoRepository dao;
-	
+
 	public AutorizacaoEntity findById(int id) {
 		return dao.findById(id);
 	}
 
-	public AutorizacaoEntity findByType(String type){
+	public AutorizacaoEntity findByType(String type) {
 		return dao.findByType(type);
 	}
 

@@ -5,7 +5,7 @@ import java.util.List;
 import br.com.cams7.casa_das_quentinhas.entity.UsuarioEntity;
 
 
-public interface UserService {
+public interface UsuarioService {
 	
 	UsuarioEntity findById(int id);
 	
