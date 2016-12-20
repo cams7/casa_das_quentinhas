@@ -32,7 +32,7 @@ import br.com.cams7.casa_das_quentinhas.service.UsuarioService;
 @Controller
 @RequestMapping("/")
 @SessionAttributes("roles")
-public class AppController {
+public class UsuarioController {
 
 	@Autowired
 	UsuarioService userService;
@@ -103,8 +103,8 @@ public class AppController {
 
 		userService.saveUser(usuarioEntity);
 
-		model.addAttribute("success",
-				"User " + usuarioEntity.getFirstName() + " " + usuarioEntity.getLastName() + " registered successfully");
+		model.addAttribute("success", "User " + usuarioEntity.getFirstName() + " " + usuarioEntity.getLastName()
+				+ " registered successfully");
 		model.addAttribute("loggedinuser", getPrincipal());
 		// return "success";
 		return "registrationsuccess";
@@ -127,7 +127,8 @@ public class AppController {
 	 * updating user in database. It also validates the user input
 	 */
 	@RequestMapping(value = { "/edit-user-{ssoId}" }, method = RequestMethod.POST)
-	public String updateUser(@Valid UsuarioEntity usuarioEntity, BindingResult result, ModelMap model, @PathVariable String ssoId) {
+	public String updateUser(@Valid UsuarioEntity usuarioEntity, BindingResult result, ModelMap model,
+			@PathVariable String ssoId) {
 
 		if (result.hasErrors()) {
 			return "registration";

@@ -15,7 +15,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
-import br.com.cams7.casa_das_quentinhas.converter.RoleToUserProfileConverter;
+import br.com.cams7.casa_das_quentinhas.converter.AutorizacaoConverter;
 
 @Configuration
 @EnableWebMvc
@@ -23,7 +23,7 @@ import br.com.cams7.casa_das_quentinhas.converter.RoleToUserProfileConverter;
 public class AppConfig extends WebMvcConfigurerAdapter {
 
 	@Autowired
-	RoleToUserProfileConverter roleToUserProfileConverter;
+	AutorizacaoConverter roleToUserProfileConverter;
 
 	/**
 	 * Configure ViewResolvers to deliver preferred views.

@@ -13,9 +13,9 @@ import br.com.cams7.casa_das_quentinhas.service.AutorizacaoService;
  * A converter class used in views to map id's to actual userProfile objects.
  */
 @Component
-public class RoleToUserProfileConverter implements Converter<Object, AutorizacaoEntity> {
+public class AutorizacaoConverter implements Converter<Object, AutorizacaoEntity> {
 
-	static final Logger logger = LoggerFactory.getLogger(RoleToUserProfileConverter.class);
+	static final Logger logger = LoggerFactory.getLogger(AutorizacaoConverter.class);
 
 	@Autowired
 	AutorizacaoService userProfileService;
