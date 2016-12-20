@@ -11,10 +11,8 @@
 	<name>Casa das Quentinhas</name>
 
 	<properties>
-		<springframework.version>4.2.5.RELEASE</springframework.version>
-		<springsecurity.version>4.0.4.RELEASE</springsecurity.version>
-		<hibernate.version>4.3.11.Final</hibernate.version>
-		<mysql.connector.version>5.1.31</mysql.connector.version>
+		<springframework.version>4.3.4.RELEASE</springframework.version>
+		<springsecurity.version>4.2.0.RELEASE</springsecurity.version>
 	</properties>
 
 	<dependencies>
@@ -66,7 +64,7 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
-			<version>${hibernate.version}</version>
+			<version>5.2.5.Final</version>
 		</dependency>
 
 		<!-- jsr303 validation -->
@@ -78,7 +76,7 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
-			<version>5.1.3.Final</version>
+			<version>5.3.3.Final</version>
 		</dependency>
 
 		<!-- MySQL -->
@@ -154,7 +152,7 @@
 								<artifactItem>
 									<groupId>org.eclipse.jetty</groupId>
 									<artifactId>jetty-runner</artifactId>
-									<version>9.2.7.v20150116</version>
+									<version>9.4.0.v20161208</version>
 									<destFileName>jetty-runner.jar</destFileName>
 								</artifactItem>
 							</artifactItems>
