@@ -16,17 +16,18 @@ import javax.persistence.TemporalType;
 public class AcessoEntity implements Serializable {
 
 	@Id
+	@Column(length = 64)
 	private String series;
 
-	@Column(name = "login", unique = true, nullable = false)
+	@Column(unique = true, length = 50, nullable = false)
 	private String username;
 
-	@Column(unique = true, nullable = false)
+	@Column(unique = true, length = 64, nullable = false)
 	private String token;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "ultimo_acesso")
-	private Date last_used;
+	private Date ultimoAcesso;
 
 	public String getSeries() {
 		return series;
@@ -52,18 +53,18 @@ public class AcessoEntity implements Serializable {
 		this.token = token;
 	}
 
-	public Date getLast_used() {
-		return last_used;
+	public Date getUltimoAcesso() {
+		return ultimoAcesso;
 	}
 
-	public void setLast_used(Date last_used) {
-		this.last_used = last_used;
+	public void setUltimoAcesso(Date ultimoAcesso) {
+		this.ultimoAcesso = ultimoAcesso;
 	}
 
 	@Override
 	public String toString() {
-		return this.getClass().getSimpleName() + " [series=" + series + ", username=" + username + ", token=" + token
-				+ ", last_used=" + last_used + "]";
+		return this.getClass().getSimpleName() + " [series=" + series + ", email=" + username + ", token=" + token
+				+ ", ultimoAcesso=" + ultimoAcesso + "]";
 	}
 
 }

@@ -55,10 +55,12 @@ NOT DEFERRABLE;
 
 CREATE TABLE acesso (
 	series VARCHAR(64) NOT NULL,
-    login VARCHAR(64) NOT NULL,    
+    username VARCHAR(50) NOT NULL,    
     token VARCHAR(64) NOT NULL,
     ultimo_acesso TIMESTAMP NOT NULL,
-    CONSTRAINT acesso_pk PRIMARY KEY (series)
+    CONSTRAINT acesso_pk PRIMARY KEY (series),
+    CONSTRAINT acesso_username_uk UNIQUE (username),
+    CONSTRAINT acesso_token_uk UNIQUE (token)
 );
 
 INSERT INTO autorizacao(id_autorizacao, papel) VALUES (nextval('id_autorizacao_seq'), 'USER');  

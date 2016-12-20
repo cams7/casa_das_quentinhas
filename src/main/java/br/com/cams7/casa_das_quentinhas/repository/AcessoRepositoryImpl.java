@@ -24,13 +24,12 @@ public class AcessoRepositoryImpl extends AbstractRepository<String, AcessoEntit
 	@Override
 	public void createNewToken(PersistentRememberMeToken token) {
 		logger.info("Creating Token for user : {}", token.getUsername());
-		AcessoEntity persistentLogin = new AcessoEntity();
-		persistentLogin.setUsername(token.getUsername());
-		persistentLogin.setSeries(token.getSeries());
-		persistentLogin.setToken(token.getTokenValue());
-		persistentLogin.setLast_used(token.getDate());
-		persist(persistentLogin);
-
+		AcessoEntity acesso = new AcessoEntity();
+		acesso.setUsername(token.getUsername());
+		acesso.setSeries(token.getSeries());
+		acesso.setToken(token.getTokenValue());
+		acesso.setUltimoAcesso(token.getDate());
+		persist(acesso);
 	}
 
 	@Override
@@ -39,10 +38,10 @@ public class AcessoRepositoryImpl extends AbstractRepository<String, AcessoEntit
 		try {
 			Criteria crit = createEntityCriteria();
 			crit.add(Restrictions.eq("series", seriesId));
-			AcessoEntity persistentLogin = (AcessoEntity) crit.uniqueResult();
+			AcessoEntity acesso = (AcessoEntity) crit.uniqueResult();
 
-			return new PersistentRememberMeToken(persistentLogin.getUsername(), persistentLogin.getSeries(),
-					persistentLogin.getToken(), persistentLogin.getLast_used());
+			return new PersistentRememberMeToken(acesso.getUsername(), acesso.getSeries(), acesso.getToken(),
+					acesso.getUltimoAcesso());
 		} catch (Exception e) {
 			logger.info("Token not found...");
 			return null;
@@ -54,10 +53,10 @@ public class AcessoRepositoryImpl extends AbstractRepository<String, AcessoEntit
 		logger.info("Removing Token if any for user : {}", username);
 		Criteria crit = createEntityCriteria();
 		crit.add(Restrictions.eq("username", username));
-		AcessoEntity persistentLogin = (AcessoEntity) crit.uniqueResult();
-		if (persistentLogin != null) {
+		AcessoEntity acesso = (AcessoEntity) crit.uniqueResult();
+		if (acesso != null) {
 			logger.info("rememberMe was selected");
-			delete(persistentLogin);
+			delete(acesso);
 		}
 
 	}
@@ -65,10 +64,10 @@ public class AcessoRepositoryImpl extends AbstractRepository<String, AcessoEntit
 	@Override
 	public void updateToken(String seriesId, String tokenValue, Date lastUsed) {
 		logger.info("Updating Token for seriesId : {}", seriesId);
-		AcessoEntity persistentLogin = getByKey(seriesId);
-		persistentLogin.setToken(tokenValue);
-		persistentLogin.setLast_used(lastUsed);
-		update(persistentLogin);
+		AcessoEntity acesso = getByKey(seriesId);
+		acesso.setToken(tokenValue);
+		acesso.setUltimoAcesso(lastUsed);
+		update(acesso);
 	}
 
 }
