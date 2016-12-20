@@ -8,7 +8,7 @@ public interface AutorizacaoRepository {
 
 	List<AutorizacaoEntity> findAll();
 
-	AutorizacaoEntity findByType(String type);
+	AutorizacaoEntity findByPapel(String papel);
 
 	AutorizacaoEntity findById(int id);
 }

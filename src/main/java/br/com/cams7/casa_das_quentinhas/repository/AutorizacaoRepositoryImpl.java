@@ -17,16 +17,16 @@ public class AutorizacaoRepositoryImpl extends AbstractRepository<Integer, Autor
 		return getByKey(id);
 	}
 
-	public AutorizacaoEntity findByType(String type) {
+	public AutorizacaoEntity findByPapel(String papel) {
 		Criteria crit = createEntityCriteria();
-		crit.add(Restrictions.eq("type", type));
+		crit.add(Restrictions.eq("papel", papel));
 		return (AutorizacaoEntity) crit.uniqueResult();
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<AutorizacaoEntity> findAll() {
 		Criteria crit = createEntityCriteria();
-		crit.addOrder(Order.asc("type"));
+		crit.addOrder(Order.asc("papel"));
 		return (List<AutorizacaoEntity>) crit.list();
 	}
 

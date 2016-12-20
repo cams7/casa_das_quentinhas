@@ -20,8 +20,8 @@ public class AutorizacaoServiceImpl implements AutorizacaoService {
 		return dao.findById(id);
 	}
 
-	public AutorizacaoEntity findByType(String type) {
-		return dao.findByType(type);
+	public AutorizacaoEntity findByPapel(String papel) {
+		return dao.findByPapel(papel);
 	}
 
 	public List<AutorizacaoEntity> findAll() {

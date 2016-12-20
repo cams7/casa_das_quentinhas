@@ -60,4 +60,10 @@ public class AcessoEntity implements Serializable {
 		this.last_used = last_used;
 	}
 
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName() + " [series=" + series + ", username=" + username + ", token=" + token
+				+ ", last_used=" + last_used + "]";
+	}
+
 }

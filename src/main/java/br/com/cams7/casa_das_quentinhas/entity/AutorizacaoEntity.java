@@ -21,8 +21,8 @@ public class AutorizacaoEntity implements Serializable {
 	@Column(name = "id_autorizacao")
 	private Integer id;
 
-	@Column(name = "papel", length = 10, unique = true, nullable = false)
-	private String type = Perfil.USER.getPapel();
+	@Column(length = 10, unique = true, nullable = false)
+	private String papel = Papel.USER.getNome();
 
 	public Integer getId() {
 		return id;
@@ -32,12 +32,12 @@ public class AutorizacaoEntity implements Serializable {
 		this.id = id;
 	}
 
-	public String getType() {
-		return type;
+	public String getPapel() {
+		return papel;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setPapel(String papel) {
+		this.papel = papel;
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class AutorizacaoEntity implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + ((papel == null) ? 0 : papel.hashCode());
 		return result;
 	}
 
@@ -63,30 +63,30 @@ public class AutorizacaoEntity implements Serializable {
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (type == null) {
-			if (other.type != null)
+		if (papel == null) {
+			if (other.papel != null)
 				return false;
-		} else if (!type.equals(other.type))
+		} else if (!papel.equals(other.papel))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "UserProfile [id=" + id + ", type=" + type + "]";
+		return this.getClass().getSimpleName() + " [id=" + id + ", papel=" + papel + "]";
 	}
 
-	public enum Perfil implements Serializable {
+	public enum Papel implements Serializable {
 		USER("USER"), DBA("DBA"), ADMIN("ADMIN");
 
-		private String papel;
+		private String nome;
 
-		private Perfil(String papel) {
-			this.papel = papel;
+		private Papel(String nome) {
+			this.nome = nome;
 		}
 
-		public String getPapel() {
-			return papel;
+		public String getNome() {
+			return nome;
 		}
 
 	}

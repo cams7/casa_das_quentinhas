@@ -140,8 +140,8 @@ public class UsuarioEntity implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", email=" + email + ", senha=" + senha + ", nome=" + nome + ", sobrenome="
-				+ sobrenome + "]";
+		return this.getClass().getSimpleName() + " [id=" + id + ", email=" + email + ", senha=" + senha + ", nome="
+				+ nome + ", sobrenome=" + sobrenome + "]";
 	}
 
 }

@@ -9,7 +9,7 @@ public interface AutorizacaoService {
 
 	AutorizacaoEntity findById(int id);
 
-	AutorizacaoEntity findByType(String type);
+	AutorizacaoEntity findByPapel(String papel);
 	
 	List<AutorizacaoEntity> findAll();
 	

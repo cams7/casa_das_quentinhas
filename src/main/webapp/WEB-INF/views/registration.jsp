@@ -88,7 +88,7 @@
 					<label class="col-md-3 control-lable" for="autorizacoes">Autorizações</label>
 					<div class="col-md-7">
 						<form:select path="autorizacoes" items="${autorizacoes}"
-							multiple="true" itemValue="id" itemLabel="type"
+							multiple="true" itemValue="id" itemLabel="papel"
 							class="form-control input-sm" />
 						<div class="has-error">
 							<form:errors path="autorizacoes" class="help-inline" />
