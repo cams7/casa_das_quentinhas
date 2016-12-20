@@ -1,6 +1,5 @@
 package br.com.cams7.casa_das_quentinhas.entity;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -13,11 +12,11 @@ import javax.persistence.TemporalType;
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "acesso")
-public class AcessoEntity implements Serializable {
+public class AcessoEntity extends AbstractEntity<String> {
 
 	@Id
-	@Column(length = 64)
-	private String series;
+	@Column(name = "series", length = 64)
+	private String id;
 
 	@Column(unique = true, length = 50, nullable = false)
 	private String username;
@@ -29,12 +28,14 @@ public class AcessoEntity implements Serializable {
 	@Column(name = "ultimo_acesso")
 	private Date ultimoAcesso;
 
-	public String getSeries() {
-		return series;
+	@Override
+	public String getId() {
+		return id;
 	}
 
-	public void setSeries(String series) {
-		this.series = series;
+	@Override
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public String getUsername() {
@@ -62,9 +63,27 @@ public class AcessoEntity implements Serializable {
 	}
 
 	@Override
-	public String toString() {
-		return this.getClass().getSimpleName() + " [series=" + series + ", username=" + username + ", token=" + token
-				+ ", ultimoAcesso=" + ultimoAcesso + "]";
+	public int hashCode() {
+		final int PRIME = 31;
+		int hashCode = super.hashCode();
+		hashCode = PRIME * hashCode + ((username == null) ? 0 : username.hashCode());
+		return hashCode;
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		if (!super.equals(object))
+			return false;
+
+		AcessoEntity acesso = (AcessoEntity) object;
+
+		if (username == null) {
+			if (acesso.username != null)
+				return false;
+		} else if (!username.equals(acesso.username))
+			return false;
+
+		return true;
 	}
 
 }

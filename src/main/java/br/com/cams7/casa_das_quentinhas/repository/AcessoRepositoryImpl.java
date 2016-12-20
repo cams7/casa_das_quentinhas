@@ -26,7 +26,7 @@ public class AcessoRepositoryImpl extends AbstractRepository<String, AcessoEntit
 		logger.info("Creating Token for user : {}", token.getUsername());
 		AcessoEntity acesso = new AcessoEntity();
 		acesso.setUsername(token.getUsername());
-		acesso.setSeries(token.getSeries());
+		acesso.setId(token.getSeries());
 		acesso.setToken(token.getTokenValue());
 		acesso.setUltimoAcesso(token.getDate());
 		persist(acesso);
@@ -40,7 +40,7 @@ public class AcessoRepositoryImpl extends AbstractRepository<String, AcessoEntit
 			crit.add(Restrictions.eq("series", seriesId));
 			AcessoEntity acesso = (AcessoEntity) crit.uniqueResult();
 
-			return new PersistentRememberMeToken(acesso.getUsername(), acesso.getSeries(), acesso.getToken(),
+			return new PersistentRememberMeToken(acesso.getUsername(), acesso.getId(), acesso.getToken(),
 					acesso.getUltimoAcesso());
 		} catch (Exception e) {
 			logger.info("Token not found...");

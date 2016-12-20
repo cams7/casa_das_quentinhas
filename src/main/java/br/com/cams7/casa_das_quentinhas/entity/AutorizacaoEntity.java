@@ -13,7 +13,7 @@ import javax.persistence.Table;
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "autorizacao")
-public class AutorizacaoEntity implements Serializable {
+public class AutorizacaoEntity extends AbstractEntity<Integer> {
 
 	@Id
 	@SequenceGenerator(name = "id_autorizacao_seq", sequenceName = "id_autorizacao_seq", allocationSize = 1)
@@ -24,10 +24,12 @@ public class AutorizacaoEntity implements Serializable {
 	@Column(length = 10, unique = true, nullable = false)
 	private String papel = Papel.USER.getNome();
 
+	@Override
 	public Integer getId() {
 		return id;
 	}
 
+	@Override
 	public void setId(Integer id) {
 		this.id = id;
 	}
@@ -42,38 +44,25 @@ public class AutorizacaoEntity implements Serializable {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((papel == null) ? 0 : papel.hashCode());
-		return result;
+		final int PRIME = 31;
+		int hashCode = super.hashCode();
+		hashCode = PRIME * hashCode + ((papel == null) ? 0 : papel.hashCode());
+		return hashCode;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
+	public boolean equals(Object object) {
+		if (!super.equals(object))
 			return false;
-		if (!(obj instanceof AutorizacaoEntity))
-			return false;
-		AutorizacaoEntity other = (AutorizacaoEntity) obj;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
+
+		AutorizacaoEntity autorizacao = (AutorizacaoEntity) object;
 		if (papel == null) {
-			if (other.papel != null)
+			if (autorizacao.papel != null)
 				return false;
-		} else if (!papel.equals(other.papel))
+		} else if (!papel.equals(autorizacao.papel))
 			return false;
-		return true;
-	}
 
-	@Override
-	public String toString() {
-		return this.getClass().getSimpleName() + " [id=" + id + ", papel=" + papel + "]";
+		return true;
 	}
 
 	public enum Papel implements Serializable {

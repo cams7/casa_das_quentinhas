@@ -1,6 +1,5 @@
 package br.com.cams7.casa_das_quentinhas.entity;
 
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,7 +21,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "usuario")
-public class UsuarioEntity implements Serializable {
+public class UsuarioEntity extends AbstractEntity<Integer> {
 
 	@Id
 	@SequenceGenerator(name = "id_usuario_seq", sequenceName = "id_usuario_seq", allocationSize = 1)
@@ -55,10 +54,12 @@ public class UsuarioEntity implements Serializable {
 			@JoinColumn(name = "id_autorizacao") })
 	private Set<AutorizacaoEntity> autorizacoes = new HashSet<AutorizacaoEntity>();
 
+	@Override
 	public Integer getId() {
 		return id;
 	}
 
+	@Override
 	public void setId(Integer id) {
 		this.id = id;
 	}
@@ -105,43 +106,26 @@ public class UsuarioEntity implements Serializable {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((email == null) ? 0 : email.hashCode());
-		return result;
+		final int PRIME = 31;
+		int hashCode = super.hashCode();
+		hashCode = PRIME * hashCode + ((email == null) ? 0 : email.hashCode());
+		return hashCode;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
+	public boolean equals(Object object) {
+		if (!super.equals(object))
 			return false;
-		if (!(obj instanceof UsuarioEntity))
-			return false;
-		UsuarioEntity other = (UsuarioEntity) obj;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
+
+		UsuarioEntity usuario = (UsuarioEntity) object;
+
 		if (email == null) {
-			if (other.email != null)
+			if (usuario.email != null)
 				return false;
-		} else if (!email.equals(other.email))
+		} else if (!email.equals(usuario.email))
 			return false;
-		return true;
-	}
 
-	/*
-	 * DO-NOT-INCLUDE passwords in toString function. It is done here just for
-	 * convenience purpose.
-	 */
-	@Override
-	public String toString() {
-		return this.getClass().getSimpleName() + " [id=" + id + ", email=" + email + ", senha=" + senha + ", nome="
-				+ nome + ", sobrenome=" + sobrenome + "]";
+		return true;
 	}
 
 }
