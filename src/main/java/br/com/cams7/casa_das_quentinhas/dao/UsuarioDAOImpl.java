@@ -1,4 +1,4 @@
-package br.com.cams7.casa_das_quentinhas.repository;
+package br.com.cams7.casa_das_quentinhas.dao;
 
 import java.util.List;
 
@@ -10,27 +10,27 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
-import br.com.cams7.casa_das_quentinhas.entity.UsuarioEntity;
+import br.com.cams7.casa_das_quentinhas.model.Usuario;
 
 @Repository
-public class UsuarioRepositoryImpl extends AbstractRepository<Integer, UsuarioEntity> implements UsuarioRepository {
+public class UsuarioDAOImpl extends AbstractDAO<Integer, Usuario> implements UsuarioDAO {
 
-	static final Logger logger = LoggerFactory.getLogger(UsuarioRepositoryImpl.class);
+	static final Logger logger = LoggerFactory.getLogger(UsuarioDAOImpl.class);
 
-	public UsuarioEntity findById(Integer id) {
-		UsuarioEntity usuario = getByKey(id);
+	public Usuario findById(Integer id) {
+		Usuario usuario = getByKey(id);
 		if (usuario != null) {
 			Hibernate.initialize(usuario.getAutorizacoes());
 		}
 		return usuario;
 	}
 
-	public UsuarioEntity findByEmail(String email) {
+	public Usuario findByEmail(String email) {
 		logger.info("E-mail : {}", email);
 		Criteria crit = createEntityCriteria();
 		crit.add(Restrictions.eq("email", email));
 
-		UsuarioEntity usuario = (UsuarioEntity) crit.uniqueResult();
+		Usuario usuario = (Usuario) crit.uniqueResult();
 		if (usuario != null)
 			Hibernate.initialize(usuario.getAutorizacoes());
 
@@ -38,11 +38,11 @@ public class UsuarioRepositoryImpl extends AbstractRepository<Integer, UsuarioEn
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<UsuarioEntity> findAll() {
+	public List<Usuario> findAll() {
 		Criteria criteria = createEntityCriteria().addOrder(Order.asc("nome"));
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);// To avoid
 																		// duplicates.
-		List<UsuarioEntity> usuarios = (List<UsuarioEntity>) criteria.list();
+		List<Usuario> usuarios = (List<Usuario>) criteria.list();
 
 		// No need to fetch userProfiles since we are not showing them on list
 		// page. Let them lazy load.
@@ -55,7 +55,7 @@ public class UsuarioRepositoryImpl extends AbstractRepository<Integer, UsuarioEn
 		return usuarios;
 	}
 
-	public void save(UsuarioEntity usuario) {
+	public void save(Usuario usuario) {
 		persist(usuario);
 	}
 
@@ -63,7 +63,7 @@ public class UsuarioRepositoryImpl extends AbstractRepository<Integer, UsuarioEn
 		// Criteria crit = createEntityCriteria();
 		// crit.add(Restrictions.eq("id", id));
 		// UsuarioEntity user = (UsuarioEntity) crit.uniqueResult();
-		UsuarioEntity usuario = getByKey(id);
+		Usuario usuario = getByKey(id);
 		delete(usuario);
 	}
 

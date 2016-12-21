@@ -1,4 +1,4 @@
-package br.com.cams7.casa_das_quentinhas.entity;
+package br.com.cams7.casa_das_quentinhas.model;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -21,7 +21,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "usuario")
-public class UsuarioEntity extends AbstractEntity<Integer> {
+public class Usuario extends AbstractEntity<Integer> {
 
 	@Id
 	@SequenceGenerator(name = "id_usuario_seq", sequenceName = "id_usuario_seq", allocationSize = 1)
@@ -52,7 +52,7 @@ public class UsuarioEntity extends AbstractEntity<Integer> {
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "usuario_autorizacao", joinColumns = { @JoinColumn(name = "id_usuario") }, inverseJoinColumns = {
 			@JoinColumn(name = "id_autorizacao") })
-	private Set<AutorizacaoEntity> autorizacoes = new HashSet<AutorizacaoEntity>();
+	private Set<Autorizacao> autorizacoes = new HashSet<Autorizacao>();
 
 	@Override
 	public Integer getId() {
@@ -96,11 +96,11 @@ public class UsuarioEntity extends AbstractEntity<Integer> {
 		this.sobrenome = sobrenome;
 	}
 
-	public Set<AutorizacaoEntity> getAutorizacoes() {
+	public Set<Autorizacao> getAutorizacoes() {
 		return autorizacoes;
 	}
 
-	public void setAutorizacoes(Set<AutorizacaoEntity> autorizacoes) {
+	public void setAutorizacoes(Set<Autorizacao> autorizacoes) {
 		this.autorizacoes = autorizacoes;
 	}
 
@@ -117,8 +117,7 @@ public class UsuarioEntity extends AbstractEntity<Integer> {
 		if (!super.equals(object))
 			return false;
 
-		UsuarioEntity usuario = (UsuarioEntity) object;
-
+		Usuario usuario = (Usuario) object;
 		if (email == null) {
 			if (usuario.email != null)
 				return false;

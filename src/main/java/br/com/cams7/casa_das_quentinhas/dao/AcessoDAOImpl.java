@@ -1,4 +1,4 @@
-package br.com.cams7.casa_das_quentinhas.repository;
+package br.com.cams7.casa_das_quentinhas.dao;
 
 import java.util.Date;
 
@@ -11,20 +11,20 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.cams7.casa_das_quentinhas.entity.AcessoEntity;
-import br.com.cams7.casa_das_quentinhas.repository.AbstractRepository;
+import br.com.cams7.casa_das_quentinhas.dao.AbstractDAO;
+import br.com.cams7.casa_das_quentinhas.model.Acesso;
 
 @Repository
 @Transactional
-public class AcessoRepositoryImpl extends AbstractRepository<String, AcessoEntity>
+public class AcessoDAOImpl extends AbstractDAO<String, Acesso>
 		implements PersistentTokenRepository {
 
-	static final Logger logger = LoggerFactory.getLogger(AcessoRepositoryImpl.class);
+	static final Logger logger = LoggerFactory.getLogger(AcessoDAOImpl.class);
 
 	@Override
 	public void createNewToken(PersistentRememberMeToken token) {
 		logger.info("Creating Token for user : {}", token.getUsername());
-		AcessoEntity acesso = new AcessoEntity();
+		Acesso acesso = new Acesso();
 		acesso.setUsername(token.getUsername());
 		acesso.setId(token.getSeries());
 		acesso.setToken(token.getTokenValue());
@@ -38,7 +38,7 @@ public class AcessoRepositoryImpl extends AbstractRepository<String, AcessoEntit
 		try {
 			Criteria crit = createEntityCriteria();
 			crit.add(Restrictions.eq("series", seriesId));
-			AcessoEntity acesso = (AcessoEntity) crit.uniqueResult();
+			Acesso acesso = (Acesso) crit.uniqueResult();
 
 			return new PersistentRememberMeToken(acesso.getUsername(), acesso.getId(), acesso.getToken(),
 					acesso.getUltimoAcesso());
@@ -53,7 +53,7 @@ public class AcessoRepositoryImpl extends AbstractRepository<String, AcessoEntit
 		logger.info("Removing Token if any for user : {}", username);
 		Criteria crit = createEntityCriteria();
 		crit.add(Restrictions.eq("username", username));
-		AcessoEntity acesso = (AcessoEntity) crit.uniqueResult();
+		Acesso acesso = (Acesso) crit.uniqueResult();
 		if (acesso != null) {
 			logger.info("rememberMe was selected");
 			delete(acesso);
@@ -64,7 +64,7 @@ public class AcessoRepositoryImpl extends AbstractRepository<String, AcessoEntit
 	@Override
 	public void updateToken(String seriesId, String tokenValue, Date lastUsed) {
 		logger.info("Updating Token for seriesId : {}", seriesId);
-		AcessoEntity acesso = getByKey(seriesId);
+		Acesso acesso = getByKey(seriesId);
 		acesso.setToken(tokenValue);
 		acesso.setUltimoAcesso(lastUsed);
 		update(acesso);

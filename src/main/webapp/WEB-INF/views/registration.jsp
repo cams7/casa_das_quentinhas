@@ -19,7 +19,7 @@
 		<%@include file="authheader.jsp"%>
 
 		<div class="well lead">User Registration Form</div>
-		<form:form method="POST" modelAttribute="usuarioEntity"
+		<form:form method="POST" modelAttribute="usuario"
 			class="form-horizontal">
 			<form:input type="hidden" path="id" id="id" />
 

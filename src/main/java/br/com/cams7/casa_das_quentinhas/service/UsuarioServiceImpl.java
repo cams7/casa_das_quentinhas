@@ -7,31 +7,31 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.cams7.casa_das_quentinhas.entity.UsuarioEntity;
-import br.com.cams7.casa_das_quentinhas.repository.UsuarioRepository;
+import br.com.cams7.casa_das_quentinhas.dao.UsuarioDAO;
+import br.com.cams7.casa_das_quentinhas.model.Usuario;
 
 @Service
 @Transactional
 public class UsuarioServiceImpl implements UsuarioService {
 
 	@Autowired
-	private UsuarioRepository repository;
+	private UsuarioDAO dao;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-	public UsuarioEntity findUsuarioById(Integer id) {
-		return repository.findById(id);
+	public Usuario findUsuarioById(Integer id) {
+		return dao.findById(id);
 	}
 
-	public UsuarioEntity findUsuarioByEmail(String email) {
-		UsuarioEntity usuario = repository.findByEmail(email);
+	public Usuario findUsuarioByEmail(String email) {
+		Usuario usuario = dao.findByEmail(email);
 		return usuario;
 	}
 
-	public void saveUsuario(UsuarioEntity usuario) {
+	public void saveUsuario(Usuario usuario) {
 		usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
-		repository.save(usuario);
+		dao.save(usuario);
 	}
 
 	/*
@@ -40,8 +40,8 @@ public class UsuarioServiceImpl implements UsuarioService {
 	 * proper values within transaction. It will be updated in db once
 	 * transaction ends.
 	 */
-	public void updateUsuario(UsuarioEntity usuario) {
-		UsuarioEntity entity = repository.findById(usuario.getId());
+	public void updateUsuario(Usuario usuario) {
+		Usuario entity = dao.findById(usuario.getId());
 		if (entity != null) {
 			// entity.setSsoId(user.getSsoId());
 			if (!usuario.getSenha().equals(entity.getSenha())) {
@@ -55,15 +55,15 @@ public class UsuarioServiceImpl implements UsuarioService {
 	}
 
 	public void deleteUsuarioById(Integer id) {
-		repository.deleteById(id);
+		dao.deleteById(id);
 	}
 
-	public List<UsuarioEntity> findAllUsuarios() {
-		return repository.findAll();
+	public List<Usuario> findAllUsuarios() {
+		return dao.findAll();
 	}
 
 	public boolean isEmailUnique(Integer id, String email) {
-		UsuarioEntity usuario = findUsuarioByEmail(email);
+		Usuario usuario = findUsuarioByEmail(email);
 		return (usuario == null || ((id != null) && (usuario.getId() == id)));
 	}
 

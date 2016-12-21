@@ -8,16 +8,16 @@ import javax.validation.Valid;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 
-import br.com.cams7.casa_das_quentinhas.entity.UsuarioEntity;
+import br.com.cams7.casa_das_quentinhas.model.AbstractEntity;
 
 /**
  * @author César Magalhães
  *
  */
-public interface EntityController {
+public interface BaseController<E extends AbstractEntity<?>> {
 	String index(ModelMap model);
 
 	String create(ModelMap model);
 
-	String store(@Valid UsuarioEntity usuarioEntity, BindingResult result, ModelMap model);
+	String store(@Valid E entity, BindingResult result, ModelMap model);
 }

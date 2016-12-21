@@ -1,4 +1,4 @@
-package br.com.cams7.casa_das_quentinhas.entity;
+package br.com.cams7.casa_das_quentinhas.model;
 
 import java.io.Serializable;
 
@@ -13,7 +13,7 @@ import javax.persistence.Table;
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "autorizacao")
-public class AutorizacaoEntity extends AbstractEntity<Integer> {
+public class Autorizacao extends AbstractEntity<Integer> {
 
 	@Id
 	@SequenceGenerator(name = "id_autorizacao_seq", sequenceName = "id_autorizacao_seq", allocationSize = 1)
@@ -55,7 +55,7 @@ public class AutorizacaoEntity extends AbstractEntity<Integer> {
 		if (!super.equals(object))
 			return false;
 
-		AutorizacaoEntity autorizacao = (AutorizacaoEntity) object;
+		Autorizacao autorizacao = (Autorizacao) object;
 		if (papel == null) {
 			if (autorizacao.papel != null)
 				return false;
@@ -77,7 +77,6 @@ public class AutorizacaoEntity extends AbstractEntity<Integer> {
 		public String getNome() {
 			return nome;
 		}
-
 	}
 
 }

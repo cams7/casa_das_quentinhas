@@ -6,25 +6,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.cams7.casa_das_quentinhas.entity.AutorizacaoEntity;
-import br.com.cams7.casa_das_quentinhas.repository.AutorizacaoRepository;
+import br.com.cams7.casa_das_quentinhas.dao.AutorizacaoDAO;
+import br.com.cams7.casa_das_quentinhas.model.Autorizacao;
 
 @Service
 @Transactional
 public class AutorizacaoServiceImpl implements AutorizacaoService {
 
 	@Autowired
-	AutorizacaoRepository repository;
+	AutorizacaoDAO dao;
 
-	public AutorizacaoEntity findAutorizacaoById(Integer id) {
-		return repository.findById(id);
+	public Autorizacao findAutorizacaoById(Integer id) {
+		return dao.findById(id);
 	}
 
-	public AutorizacaoEntity findAutorizacaoByPapel(String papel) {
-		return repository.findByPapel(papel);
+	public Autorizacao findAutorizacaoByPapel(String papel) {
+		return dao.findByPapel(papel);
 	}
 
-	public List<AutorizacaoEntity> findAllAutorizacoes() {
-		return repository.findAll();
+	public List<Autorizacao> findAllAutorizacoes() {
+		return dao.findAll();
 	}
 }

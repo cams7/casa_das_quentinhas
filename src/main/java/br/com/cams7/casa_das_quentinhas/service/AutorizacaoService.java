@@ -2,15 +2,15 @@ package br.com.cams7.casa_das_quentinhas.service;
 
 import java.util.List;
 
-import br.com.cams7.casa_das_quentinhas.entity.AutorizacaoEntity;
+import br.com.cams7.casa_das_quentinhas.model.Autorizacao;
 
 
 public interface AutorizacaoService {
 
-	AutorizacaoEntity findAutorizacaoById(Integer id);
+	Autorizacao findAutorizacaoById(Integer id);
 
-	AutorizacaoEntity findAutorizacaoByPapel(String papel);
+	Autorizacao findAutorizacaoByPapel(String papel);
 	
-	List<AutorizacaoEntity> findAllAutorizacoes();
+	List<Autorizacao> findAllAutorizacoes();
 	
 }

@@ -1,4 +1,4 @@
-package br.com.cams7.casa_das_quentinhas.entity;
+package br.com.cams7.casa_das_quentinhas.model;
 
 import java.util.Date;
 
@@ -12,7 +12,7 @@ import javax.persistence.TemporalType;
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "acesso")
-public class AcessoEntity extends AbstractEntity<String> {
+public class Acesso extends AbstractEntity<String> {
 
 	@Id
 	@Column(name = "series", length = 64)
@@ -75,8 +75,7 @@ public class AcessoEntity extends AbstractEntity<String> {
 		if (!super.equals(object))
 			return false;
 
-		AcessoEntity acesso = (AcessoEntity) object;
-
+		Acesso acesso = (Acesso) object;
 		if (username == null) {
 			if (acesso.username != null)
 				return false;

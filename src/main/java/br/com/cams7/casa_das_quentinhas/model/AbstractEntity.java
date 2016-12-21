@@ -1,7 +1,7 @@
 /**
  * 
  */
-package br.com.cams7.casa_das_quentinhas.entity;
+package br.com.cams7.casa_das_quentinhas.model;
 
 import java.io.Serializable;
 
@@ -12,7 +12,7 @@ import java.io.Serializable;
  *
  */
 @SuppressWarnings("serial")
-public abstract class AbstractEntity<ID extends Serializable> implements Serializable {
+public abstract class AbstractEntity<PK extends Serializable> implements Serializable {
 
 	public AbstractEntity() {
 		super();
@@ -21,7 +21,7 @@ public abstract class AbstractEntity<ID extends Serializable> implements Seriali
 	/**
 	 * @param id
 	 */
-	public AbstractEntity(ID id) {
+	public AbstractEntity(PK id) {
 		this();
 
 		setId(id);
@@ -43,21 +43,26 @@ public abstract class AbstractEntity<ID extends Serializable> implements Seriali
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
-	public boolean equals(Object entity) {
+	public boolean equals(Object object) {
 
-		if (null == entity)
+		if (null == object)
 			return false;
 
-		if (this == entity)
+		if (this == object)
 			return true;
 
-		if (!getClass().equals(entity.getClass()))
+		if (!getClass().equals(object.getClass()))
 			return false;
 
 		@SuppressWarnings("unchecked")
-		AbstractEntity<ID> e = (AbstractEntity<ID>) entity;
+		AbstractEntity<PK> entity = (AbstractEntity<PK>) object;
+		if (getId() == null) {
+			if (entity.getId() != null)
+				return false;
+		} else if (!getId().equals(entity.getId()))
+			return false;
 
-		return null == this.getId() ? false : this.getId().equals(e.getId());
+		return true;
 	}
 
 	/*
@@ -78,12 +83,12 @@ public abstract class AbstractEntity<ID extends Serializable> implements Seriali
 	 * 
 	 * @return Long
 	 */
-	public abstract ID getId();
+	public abstract PK getId();
 
 	/**
 	 * @param id
 	 *            da entitade
 	 */
-	public abstract void setId(ID id);
+	public abstract void setId(PK id);
 
 }

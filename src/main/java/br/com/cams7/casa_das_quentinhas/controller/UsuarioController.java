@@ -24,8 +24,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
-import br.com.cams7.casa_das_quentinhas.entity.UsuarioEntity;
-import br.com.cams7.casa_das_quentinhas.entity.AutorizacaoEntity;
+import br.com.cams7.casa_das_quentinhas.model.Autorizacao;
+import br.com.cams7.casa_das_quentinhas.model.Usuario;
 import br.com.cams7.casa_das_quentinhas.service.AutorizacaoService;
 import br.com.cams7.casa_das_quentinhas.service.UsuarioService;
 
@@ -55,7 +55,7 @@ public class UsuarioController {
 	@RequestMapping(value = { "/", "/list" }, method = RequestMethod.GET)
 	public String index(ModelMap model) {
 
-		List<UsuarioEntity> usuarios = usuarioService.findAllUsuarios();
+		List<Usuario> usuarios = usuarioService.findAllUsuarios();
 		model.addAttribute("users", usuarios);
 		model.addAttribute("loggedinuser", getPrincipal());
 		return "userslist";
@@ -66,8 +66,8 @@ public class UsuarioController {
 	 */
 	@RequestMapping(value = { "/newuser" }, method = RequestMethod.GET)
 	public String create(ModelMap model) {
-		UsuarioEntity usuario = new UsuarioEntity();
-		model.addAttribute("usuarioEntity", usuario);
+		Usuario usuario = new Usuario();
+		model.addAttribute("usuario", usuario);
 		model.addAttribute("edit", false);
 		model.addAttribute("loggedinuser", getPrincipal());
 		return "registration";
@@ -78,7 +78,7 @@ public class UsuarioController {
 	 * saving user in database. It also validates the user input
 	 */
 	@RequestMapping(value = { "/newuser" }, method = RequestMethod.POST)
-	public String store(@Valid UsuarioEntity usuarioEntity, BindingResult result, ModelMap model) {
+	public String store(@Valid Usuario usuario, BindingResult result, ModelMap model) {
 
 		if (result.hasErrors()) {
 			return "registration";
@@ -94,17 +94,17 @@ public class UsuarioController {
 		 * still using internationalized messages.
 		 * 
 		 */
-		if (!usuarioService.isEmailUnique(usuarioEntity.getId(), usuarioEntity.getEmail())) {
-			FieldError ssoError = new FieldError("usuarioEntity", "email", messageSource.getMessage("non.unique.email",
-					new String[] { usuarioEntity.getEmail() }, Locale.getDefault()));
+		if (!usuarioService.isEmailUnique(usuario.getId(), usuario.getEmail())) {
+			FieldError ssoError = new FieldError("usuario", "email", messageSource.getMessage("non.unique.email",
+					new String[] { usuario.getEmail() }, Locale.getDefault()));
 			result.addError(ssoError);
 			return "registration";
 		}
 
-		usuarioService.saveUsuario(usuarioEntity);
+		usuarioService.saveUsuario(usuario);
 
 		model.addAttribute("success",
-				"User " + usuarioEntity.getNome() + " " + usuarioEntity.getSobrenome() + " registered successfully");
+				"User " + usuario.getNome() + " " + usuario.getSobrenome() + " registered successfully");
 		model.addAttribute("loggedinuser", getPrincipal());
 		// return "success";
 		return "registrationsuccess";
@@ -115,8 +115,8 @@ public class UsuarioController {
 	 */
 	@RequestMapping(value = { "/edit-user-{id}" }, method = RequestMethod.GET)
 	public String edit(@PathVariable Integer id, ModelMap model) {
-		UsuarioEntity usuario = usuarioService.findUsuarioById(id);
-		model.addAttribute("usuarioEntity", usuario);
+		Usuario usuario = usuarioService.findUsuarioById(id);
+		model.addAttribute("usuario", usuario);
 		model.addAttribute("edit", true);
 		model.addAttribute("loggedinuser", getPrincipal());
 		return "registration";
@@ -127,7 +127,7 @@ public class UsuarioController {
 	 * updating user in database. It also validates the user input
 	 */
 	@RequestMapping(value = { "/edit-user-{id}" }, method = RequestMethod.POST)
-	public String update(@Valid UsuarioEntity usuarioEntity, BindingResult result, ModelMap model,
+	public String update(@Valid Usuario usuario, BindingResult result, ModelMap model,
 			@PathVariable Integer id) {
 
 		if (result.hasErrors()) {
@@ -145,10 +145,10 @@ public class UsuarioController {
 		 * "registration"; }
 		 */
 
-		usuarioService.updateUsuario(usuarioEntity);
+		usuarioService.updateUsuario(usuario);
 
 		model.addAttribute("success",
-				"User " + usuarioEntity.getNome() + " " + usuarioEntity.getSobrenome() + " updated successfully");
+				"User " + usuario.getNome() + " " + usuario.getSobrenome() + " updated successfully");
 		model.addAttribute("loggedinuser", getPrincipal());
 		return "registrationsuccess";
 	}
@@ -166,7 +166,7 @@ public class UsuarioController {
 	 * This method will provide UserProfile list to views
 	 */
 	@ModelAttribute("autorizacoes")
-	public List<AutorizacaoEntity> initializeAutorizacoes() {
+	public List<Autorizacao> initializeAutorizacoes() {
 		return autorizacaoService.findAllAutorizacoes();
 	}
 
