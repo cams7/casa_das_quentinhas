@@ -172,9 +172,7 @@ public class UsuarioController implements BaseController<Usuario, Integer> {
 		model.addAttribute("usuarios", usuarios);
 		setPaginationAttribute(model, offset, count);
 
-		model.addAttribute("loggedinuser", getPrincipal());
-
-		return "usuario_index";
+		return "usuario_list";
 	}
 
 	private void setPaginationAttribute(ModelMap model, Integer offset, Long count) {

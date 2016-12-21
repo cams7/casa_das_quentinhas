@@ -39,5 +39,24 @@
 </div>
 
 <script type="text/javascript">
+$(document).on('click', '.pagination a', event => {
+    event.preventDefault();
+    
+    offset = 0;
+    array = event.target.href.split('offset=');
+	
+	if(array.length > 1)
+		offset = array[1];
+	
+	//console.log(offset);
+	getUsuarios(offset);
+});
 
+function getUsuarios(offset) {		
+	$.get('pagination?offset=' + offset, data => {
+        //console.log(data);
+		$('.content').html(data);
+		location.hash = offset;
+   	});
+}
 </script>

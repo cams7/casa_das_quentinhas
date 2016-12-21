@@ -27,8 +27,7 @@
 	</definition>
 
 	<!-- Paginação de Usuários -->
-	<definition name="usuario_list" extends="default">
-		<put-attribute name="title" value="" />
+	<definition name="usuario_list" extends="empty">
 		<put-attribute name="body" value="/WEB-INF/views/usuario/list.jsp" />
 	</definition>
 </tiles-definitions>
