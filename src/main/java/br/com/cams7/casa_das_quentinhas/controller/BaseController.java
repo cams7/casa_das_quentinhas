@@ -5,11 +5,10 @@ package br.com.cams7.casa_das_quentinhas.controller;
 
 import java.io.Serializable;
 
-//import javax.validation.Valid;
-
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-//import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import br.com.cams7.casa_das_quentinhas.model.AbstractEntity;
 
@@ -30,6 +29,7 @@ public interface BaseController<E extends AbstractEntity<PK>, PK extends Seriali
 	 * @param model
 	 * @return
 	 */
+	@GetMapping(value = { "/list" })
 	String index(ModelMap model);
 
 	/**
@@ -38,6 +38,7 @@ public interface BaseController<E extends AbstractEntity<PK>, PK extends Seriali
 	 * @param model
 	 * @return
 	 */
+	@GetMapping(value = { "/create" })
 	String create(ModelMap model);
 
 	/**
@@ -48,7 +49,8 @@ public interface BaseController<E extends AbstractEntity<PK>, PK extends Seriali
 	 * @param model
 	 * @return
 	 */
-	String store(/* @Valid */ E entity, BindingResult result, ModelMap model);
+	@PostMapping(value = { "/create" })
+	String store(E entity, BindingResult result, ModelMap model);
 
 	/**
 	 * Display the specified resource.
@@ -57,7 +59,8 @@ public interface BaseController<E extends AbstractEntity<PK>, PK extends Seriali
 	 * @param model
 	 * @return
 	 */
-	String show(/* @PathVariable */ PK id, ModelMap model);
+	@GetMapping(value = { "/{id}" })
+	String show(PK id, ModelMap model);
 
 	/**
 	 * Show the form for editing the specified resource.
@@ -66,7 +69,8 @@ public interface BaseController<E extends AbstractEntity<PK>, PK extends Seriali
 	 * @param model
 	 * @return
 	 */
-	String edit(/* @PathVariable */ PK id, ModelMap model);
+	@GetMapping(value = { "/{id}/edit" })
+	String edit(PK id, ModelMap model);
 
 	/**
 	 * Update the specified resource in storage.
@@ -77,7 +81,9 @@ public interface BaseController<E extends AbstractEntity<PK>, PK extends Seriali
 	 * @param model
 	 * @return
 	 */
-	String update(/* @Valid */ E entity, BindingResult result, ModelMap model, /* @PathVariable */ PK id);
+	@PostMapping(value = { "/{id}/edit" })
+	// @PutMapping
+	String update(E entity, BindingResult result, ModelMap model, PK id);
 
 	/**
 	 * Remove the specified resource from storage.
@@ -85,5 +91,7 @@ public interface BaseController<E extends AbstractEntity<PK>, PK extends Seriali
 	 * @param id
 	 * @return
 	 */
-	String destroy(/* @PathVariable */ PK id);
+	@GetMapping(value = { "/{id}/delete" })
+	// @DeleteMapping
+	String destroy(PK id);
 }
