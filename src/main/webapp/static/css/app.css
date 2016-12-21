@@ -1,85 +1,105 @@
-html {
-	background-color: #2F2F2F;
+html{
+	background-color:#2F2F2F;
 }
 
-body {
+body{
 	height: 100%;
-	background-color: rgb(245, 245, 245);
+	background-color:rgb(245, 245, 245);
 }
 
-#mainWrapper {
-	height: 100%;
-	background-image: -webkit-gradient(linear, right bottom, right top, color-stop(0, #EDEDED),
-		color-stop(0.08, #EAEAEA), color-stop(1, #2F2F2F),
-		color-stop(1, #AAAAAA));
-	background-image: -o-linear-gradient(top, #EDEDED 0%, #EAEAEA 8%, #2F2F2F 100%, #AAAAAA
-		100%);
-	background-image: -moz-linear-gradient(top, #EDEDED 0%, #EAEAEA 8%, #2F2F2F 100%, #AAAAAA
-		100%);
-	background-image: -webkit-linear-gradient(top, #EDEDED 0%, #EAEAEA 8%, #2F2F2F 100%,
-		#AAAAAA 100%);
-	background-image: -ms-linear-gradient(top, #EDEDED 0%, #EAEAEA 8%, #2F2F2F 100%, #AAAAAA
-		100%);
-	background-image: linear-gradient(to top, #EDEDED 0%, #EAEAEA 8%, #2F2F2F 100%, #AAAAAA
-		100%);
-}
 
-.floatRight {
-	float: right;
-	margin-right: 18px;
-}
-
-.has-error {
-	color: red;
-}
-
-.generic-container {
+#header {
+    margin-left:20%;
+    top: 0px;
+    width: 80%;
+	height: 20%;
 	position: fixed;
-	width: 80%;
-	margin-left: 20px;
-	margin-top: 20px;
-	margin-bottom: 20px;
-	padding: 20px;
-	background-color: #EAE7E7;
-	border: 1px solid #ddd;
-	border-radius: 4px;
-	box-shadow: 0 0 30px black;
+	font-family: 'bgMed',arial,helvetica,sans-serif;
+    font-size: 0.6em;
+    color: #fff;
+    z-index: 15;
+    text-transform: uppercase;
+    background-color: #272727;
+    border-bottom: 2px solid hsl(180,70%,55%);
+    padding-top:20px;
+    text-align:center;
 }
 
-.custom-width {
-	width: 80px !important;
+#footer {
+	margin-left:20%;
+    left: 0px;
+    bottom: 0px;
+    width: 80%;
+	height: 10%;
+	position: fixed;
+	font-family: 'bgMed',arial,helvetica,sans-serif;
+    font-size: 0.6em;
+    color: #fff;
+    z-index: 15;
+    text-transform: uppercase;
+    background-color: #272727;
+	padding-top:20px;   
+    text-align:center;
 }
 
-body, #mainWrapper, .form-control {
-	font-size: 12px !important;
+
+#sidemenu {
+    width: 20%;
+    background-color:#2B2B2B;
+    height: 100%;
+    overflow: auto;
+    float: left;
+    z-index: 20;
+    position: fixed;
+    left: 0px;
+    margin-top:
 }
 
-#mainWrapper {
-	/*height: 720px; Without explicit px values, % in children's does not work*/
-	height: 100vh;
-	/*with Viewport-Percentage, we can handles all devices screens  */
-	padding-left: 10px;
-	padding-right: 10px;
-	padding-bottom: 10px;
+#sidemenu #menu {
+    color: #fff;
+    text-align: right;
+    list-style-type: none;
+    margin-right: 40px;
+    float: right;
 }
 
-.login-container {
-	margin-top: 100px;
-	background-color: floralwhite;
-	width: 40%;
-	left: 30%;
-	position: absolute;
+#sidemenu #menu li {
+    width: 150px;
+    height: 35px;
+    font-size: 1.2em;
+    padding-right:5px;
 }
 
-.login-card {
-	width: 80%;
-	margin: auto;
+#sidemenu #menu li a {
+    text-decoration: none;
+    text-transform: uppercase;
+    color: #fff;
 }
 
-.login-form {
-	padding: 10%;
+#sidemenu #menu li:active{
+	border-left: 5px solid hsl(180,70%,55%);
 }
 
-.authbar {
-	margin-bottom: 15px;
+#sidemenu #menu li:hover {
+    background-color: #635555;
+    border-left: 5px solid hsl(180,70%,55%);
 }
+
+.logo{
+	float:left;
+}
+
+#site-content {
+    width: 80%;
+    height: 100%;
+    overflow: auto;
+    float: left;
+    z-index: 20;
+    position: fixed;
+    min-height: 600px;
+    margin-top:10%;
+    margin-bottom:10%;
+    margin-left:20%;
+    padding-left:10px;
+}
+    
