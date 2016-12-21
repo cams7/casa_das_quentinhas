@@ -32,7 +32,7 @@ import br.com.cams7.casa_das_quentinhas.service.UsuarioService;
 @Controller
 @RequestMapping("/")
 @SessionAttributes("autorizacoes")
-public class UsuarioController {
+public class UsuarioController implements BaseController<Usuario, Integer> {
 
 	@Autowired
 	UsuarioService usuarioService;
@@ -53,6 +53,7 @@ public class UsuarioController {
 	 * This method will list all existing users.
 	 */
 	@RequestMapping(value = { "/", "/list" }, method = RequestMethod.GET)
+	@Override
 	public String index(ModelMap model) {
 
 		List<Usuario> usuarios = usuarioService.findAllUsuarios();
@@ -65,6 +66,7 @@ public class UsuarioController {
 	 * This method will provide the medium to add a new user.
 	 */
 	@RequestMapping(value = { "/newuser" }, method = RequestMethod.GET)
+	@Override
 	public String create(ModelMap model) {
 		Usuario usuario = new Usuario();
 		model.addAttribute("usuario", usuario);
@@ -78,6 +80,7 @@ public class UsuarioController {
 	 * saving user in database. It also validates the user input
 	 */
 	@RequestMapping(value = { "/newuser" }, method = RequestMethod.POST)
+	@Override
 	public String store(@Valid Usuario usuario, BindingResult result, ModelMap model) {
 
 		if (result.hasErrors()) {
@@ -110,10 +113,17 @@ public class UsuarioController {
 		return "registrationsuccess";
 	}
 
+	@Override
+	public String show(@PathVariable Integer id, ModelMap model) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	/**
 	 * This method will provide the medium to update an existing user.
 	 */
 	@RequestMapping(value = { "/edit-user-{id}" }, method = RequestMethod.GET)
+	@Override
 	public String edit(@PathVariable Integer id, ModelMap model) {
 		Usuario usuario = usuarioService.findUsuarioById(id);
 		model.addAttribute("usuario", usuario);
@@ -127,8 +137,8 @@ public class UsuarioController {
 	 * updating user in database. It also validates the user input
 	 */
 	@RequestMapping(value = { "/edit-user-{id}" }, method = RequestMethod.POST)
-	public String update(@Valid Usuario usuario, BindingResult result, ModelMap model,
-			@PathVariable Integer id) {
+	@Override
+	public String update(@Valid Usuario usuario, BindingResult result, ModelMap model, @PathVariable Integer id) {
 
 		if (result.hasErrors()) {
 			return "registration";
@@ -157,6 +167,7 @@ public class UsuarioController {
 	 * This method will delete an user by it's SSOID value.
 	 */
 	@RequestMapping(value = { "/delete-user-{id}" }, method = RequestMethod.GET)
+	@Override
 	public String destroy(@PathVariable Integer id) {
 		usuarioService.deleteUsuarioById(id);
 		return "redirect:/list";
