@@ -67,4 +67,14 @@ public class UsuarioServiceImpl implements UsuarioService {
 		return (usuario == null || ((id != null) && (usuario.getId() == id)));
 	}
 
+	@Override
+	public List<Usuario> listUsuarios(Integer offset, Integer maxResults) {
+		return dao.list(offset, maxResults);
+	}
+
+	@Override
+	public Long countUsuarios() {
+		return dao.count();
+	}
+
 }

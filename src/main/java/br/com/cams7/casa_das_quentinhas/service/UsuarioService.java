@@ -20,4 +20,8 @@ public interface UsuarioService {
 
 	boolean isEmailUnique(Integer id, String email);
 
+	List<Usuario> listUsuarios(Integer offset, Integer maxResults);
+
+	Long countUsuarios();
+
 }

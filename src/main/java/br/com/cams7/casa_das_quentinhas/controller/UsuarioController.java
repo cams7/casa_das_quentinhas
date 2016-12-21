@@ -42,9 +42,19 @@ public class UsuarioController implements BaseController<Usuario, Integer> {
 	 */
 	@Override
 	public String index(ModelMap model) {
-		List<Usuario> usuarios = usuarioService.findAllUsuarios();
+		// List<Usuario> usuarios = usuarioService.findAllUsuarios();
+
+		Integer offset = 0;
+		Integer maxResults = 10;
+
+		List<Usuario> usuarios = usuarioService.listUsuarios(offset, maxResults);
+		Long count = usuarioService.countUsuarios();
+
 		model.addAttribute("usuarios", usuarios);
+		setPaginationAttribute(model, offset, count);
+
 		model.addAttribute("loggedinuser", getPrincipal());
+
 		return "usuario_index";
 	}
 
@@ -152,6 +162,24 @@ public class UsuarioController implements BaseController<Usuario, Integer> {
 	public String destroy(@PathVariable Integer id) {
 		usuarioService.deleteUsuarioById(id);
 		return "redirect:/usuario/list";
+	}
+
+	@RequestMapping(value = "/pagination")
+	public String list(ModelMap model, Integer offset, Integer maxResults) {
+		List<Usuario> usuarios = usuarioService.listUsuarios(offset, maxResults);
+		Long count = usuarioService.countUsuarios();
+
+		model.addAttribute("usuarios", usuarios);
+		setPaginationAttribute(model, offset, count);
+
+		model.addAttribute("loggedinuser", getPrincipal());
+
+		return "usuario_index";
+	}
+
+	private void setPaginationAttribute(ModelMap model, Integer offset, Long count) {
+		model.addAttribute("count", count);
+		model.addAttribute("offset", offset);
 	}
 
 	/**

@@ -37,3 +37,7 @@
 <div class="content">
 	<%@include file="list.jsp"%>
 </div>
+
+<script type="text/javascript">
+
+</script>

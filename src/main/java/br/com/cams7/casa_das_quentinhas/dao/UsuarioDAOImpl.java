@@ -5,6 +5,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,6 +66,20 @@ public class UsuarioDAOImpl extends AbstractDAO<Integer, Usuario> implements Usu
 		// UsuarioEntity user = (UsuarioEntity) crit.uniqueResult();
 		Usuario usuario = getByKey(id);
 		delete(usuario);
+	}
+
+	@Override
+	public List<Usuario> list(Integer offset, Integer maxResults) {
+		@SuppressWarnings("unchecked")
+		List<Usuario> usuarios = createEntityCriteria().setFirstResult(offset != null ? offset : 0)
+				.setMaxResults(maxResults != null ? maxResults : 10).list();
+		return usuarios;
+	}
+
+	@Override
+	public Long count() {
+		Long count = (Long) createEntityCriteria().setProjection(Projections.rowCount()).uniqueResult();
+		return count;
 	}
 
 }
