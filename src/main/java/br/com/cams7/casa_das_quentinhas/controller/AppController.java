@@ -13,7 +13,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 @RequestMapping("/")
@@ -25,38 +24,9 @@ public class AppController {
 	@Autowired
 	AuthenticationTrustResolver authenticationTrustResolver;
 
-	/**
-	 * This method handles Access-Denied redirect.
-	 */
-	@RequestMapping(value = "/Access_Denied", method = RequestMethod.GET)
-	public String accessDeniedPage(ModelMap model) {
-		model.addAttribute("loggedinuser", getPrincipal());
-		return "accessDenied";
-	}
-
-	// @GetMapping
-	// public String home() {
-	// return "redirect:/usuario/list";
-	// }
-
-	@RequestMapping(value = { "/" }, method = RequestMethod.GET)
-	public String homePage(ModelMap model) {
-		return "home";
-	}	
-
-	@RequestMapping(value = { "/products" }, method = RequestMethod.GET)
-	public String productsPage(ModelMap model) {
-		return "products";
-	}
-
-	@RequestMapping(value = { "/contactus" }, method = RequestMethod.GET)
-	public String contactUsPage(ModelMap model) {
-		return "contactus";
-	}
-	
-	@RequestMapping(value = { "/index" }, method = RequestMethod.GET)
-	public String indexPage(ModelMap model) {
-		return "index";
+	@GetMapping
+	public String home() {
+		return "redirect:/usuario/list";
 	}
 
 	/**
@@ -85,6 +55,15 @@ public class AppController {
 			SecurityContextHolder.getContext().setAuthentication(null);
 		}
 		return "redirect:/login?logout";
+	}
+
+	/**
+	 * This method handles Access-Denied redirect.
+	 */
+	@GetMapping(value = "/Access_Denied")
+	public String accessDeniedPage(ModelMap model) {
+		model.addAttribute("loggedinuser", getPrincipal());
+		return "accessDenied";
 	}
 
 	/**

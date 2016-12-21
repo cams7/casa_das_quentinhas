@@ -38,14 +38,14 @@ public class UsuarioController implements BaseController<Usuario, Integer> {
 	MessageSource messageSource;
 
 	/**
-	 * This method will list all existing users.
+	 * This method will list all existing usuarios.
 	 */
 	@Override
 	public String index(ModelMap model) {
 		List<Usuario> usuarios = usuarioService.findAllUsuarios();
-		model.addAttribute("users", usuarios);
+		model.addAttribute("usuarios", usuarios);
 		model.addAttribute("loggedinuser", getPrincipal());
-		return "userslist";
+		return "usuario_index";
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class UsuarioController implements BaseController<Usuario, Integer> {
 		model.addAttribute("usuario", usuario);
 		// model.addAttribute("edit", false);
 		model.addAttribute("loggedinuser", getPrincipal());
-		return "registration";
+		return "usuario_create";
 	}
 
 	/**
@@ -67,7 +67,7 @@ public class UsuarioController implements BaseController<Usuario, Integer> {
 	@Override
 	public String store(@Valid Usuario usuario, BindingResult result, ModelMap model) {
 		if (result.hasErrors())
-			return "registration";
+			return "usuario_create";
 
 		/*
 		 * Preferred way to achieve uniqueness of field [sso] should be
@@ -83,7 +83,7 @@ public class UsuarioController implements BaseController<Usuario, Integer> {
 			FieldError ssoError = new FieldError("usuario", "email", messageSource.getMessage("non.unique.email",
 					new String[] { usuario.getEmail() }, Locale.getDefault()));
 			result.addError(ssoError);
-			return "registration";
+			return "usuario_create";
 		}
 
 		usuarioService.saveUsuario(usuario);
@@ -92,13 +92,15 @@ public class UsuarioController implements BaseController<Usuario, Integer> {
 				"User " + usuario.getNome() + " " + usuario.getSobrenome() + " registered successfully");
 		model.addAttribute("loggedinuser", getPrincipal());
 		// return "success";
-		return "registrationsuccess";
+		return "redirect:/usuario/list";
 	}
 
 	@Override
 	public String show(@PathVariable Integer id, ModelMap model) {
-		// TODO Auto-generated method stub
-		return null;
+		Usuario usuario = usuarioService.findUsuarioById(id);
+		model.addAttribute("usuario", usuario);
+		model.addAttribute("loggedinuser", getPrincipal());
+		return "usuario_show";
 	}
 
 	/**
@@ -110,7 +112,7 @@ public class UsuarioController implements BaseController<Usuario, Integer> {
 		model.addAttribute("usuario", usuario);
 		model.addAttribute("edit", true);
 		model.addAttribute("loggedinuser", getPrincipal());
-		return "registration";
+		return "usuario_edit";
 	}
 
 	/**
@@ -122,7 +124,7 @@ public class UsuarioController implements BaseController<Usuario, Integer> {
 		model.addAttribute("edit", true);
 
 		if (result.hasErrors())
-			return "registration";
+			return "usuario_edit";
 
 		/*
 		 * //Uncomment below 'if block' if you WANT TO ALLOW UPDATING SSO_ID in
@@ -140,7 +142,7 @@ public class UsuarioController implements BaseController<Usuario, Integer> {
 		model.addAttribute("success",
 				"User " + usuario.getNome() + " " + usuario.getSobrenome() + " updated successfully");
 		model.addAttribute("loggedinuser", getPrincipal());
-		return "registrationsuccess";
+		return "redirect:/usuario/list";
 	}
 
 	/**

@@ -11,8 +11,6 @@
 
 	<definition name="public" template="/WEB-INF/layouts/public.jsp">
 		<put-attribute name="title" value="" />
-		<put-attribute name="header" value="/WEB-INF/layouts/header.jsp" />
 		<put-attribute name="body" value="" />
-		<put-attribute name="footer" value="/WEB-INF/layouts/footer.jsp" />
 	</definition>
 </tiles-definitions>

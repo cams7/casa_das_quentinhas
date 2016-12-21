@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC  "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"  "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+	<!-- Lista de Usuários -->
+	<definition name="usuario_index" extends="default">
+		<put-attribute name="title" value="Lista de Usuários" />
+		<put-attribute name="body" value="/WEB-INF/views/usuario/index.jsp" />
+	</definition>
+
+	<!-- Adicionar Usuário -->
+	<definition name="usuario_create" extends="default">
+		<put-attribute name="title" value="Adicionar Usuário" />
+		<put-attribute name="body" value="/WEB-INF/views/usuario/create.jsp" />
+	</definition>
+
+	<!-- Editar Usuário -->
+	<definition name="usuario_edit" extends="default">
+		<put-attribute name="title" value="Editar Usuário" />
+		<put-attribute name="body" value="/WEB-INF/views/usuario/edit.jsp" />
+	</definition>
+
+	<!-- Visualizar Usuário -->
+	<definition name="usuario_show" extends="default">
+		<put-attribute name="title" value="Visualizar Usuário" />
+		<put-attribute name="body" value="/WEB-INF/views/usuario/show.jsp" />
+	</definition>
+
+	<!-- Paginação de Usuários -->
+	<definition name="usuario_list" extends="default">
+		<put-attribute name="title" value="" />
+		<put-attribute name="body" value="/WEB-INF/views/usuario/list.jsp" />
+	</definition>
+</tiles-definitions>

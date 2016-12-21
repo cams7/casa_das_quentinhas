@@ -2,23 +2,13 @@
 <!DOCTYPE tiles-definitions PUBLIC  "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"  "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
 
 <tiles-definitions>
-	<definition name="index" extends="public">
-		<put-attribute name="title" value="Index page" />
-		<put-attribute name="body" value="/WEB-INF/views/index.jsp" />
+	<definition name="login" extends="public">
+		<put-attribute name="title" value="Login page" />
+		<put-attribute name="body" value="/WEB-INF/views/login.jsp" />
 	</definition>
 
-	<definition name="dataAccessFailure" extends="public">
-		<put-attribute name="body"
-			value="/WEB-INF/views/dataAccessFailure.jspx" />
-	</definition>
-
-	<definition name="resourceNotFound" extends="public">
-		<put-attribute name="body"
-			value="/WEB-INF/views/resourceNotFound.jspx" />
-	</definition>
-
-	<definition name="uncaughtException" extends="public">
-		<put-attribute name="body"
-			value="/WEB-INF/views/uncaughtException.jspx" />
+	<definition name="accessDenied" extends="public">
+		<put-attribute name="title" value="AccessDenied page" />
+		<put-attribute name="body" value="/WEB-INF/views/accessDenied.jsp" />
 	</definition>
 </tiles-definitions>
