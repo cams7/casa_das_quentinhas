@@ -24,7 +24,7 @@ import br.com.cams7.casa_das_quentinhas.model.AbstractEntity;
 import br.com.cams7.casa_das_quentinhas.utils.AppHelper;
 import br.com.cams7.casa_das_quentinhas.utils.SearchParams;
 
-public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Serializable> {
+public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Serializable> implements BaseDAO<E, PK> {
 
 	protected final Class<E> ENTITY_TYPE;
 
@@ -41,23 +41,58 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 		return entityManager;
 	}
 
-	public E getByKey(PK id) {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.casa_das_quentinhas.dao.BaseDAO#getByKey(java.io.
+	 * Serializable)
+	 */
+	@Override
+	public E getById(PK id) {
 		E entity = getEntityManager().find(ENTITY_TYPE, id);
 		return entity;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.casa_das_quentinhas.dao.BaseDAO#persist(br.com.cams7.
+	 * casa_das_quentinhas.model.AbstractEntity)
+	 */
+	@Override
 	public void persist(E entity) {
 		getEntityManager().persist(entity);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.casa_das_quentinhas.dao.BaseDAO#update(br.com.cams7.
+	 * casa_das_quentinhas.model.AbstractEntity)
+	 */
+	@Override
 	public void update(E entity) {
 		getEntityManager().merge(entity);
 	}
 
-	public void delete(E entity) {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.casa_das_quentinhas.dao.BaseDAO#delete(br.com.cams7.
+	 * casa_das_quentinhas.model.AbstractEntity)
+	 */
+	@Override
+	public void delete(PK id) {
+		E entity = getById(id);
 		getEntityManager().remove(entity);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.casa_das_quentinhas.dao.BaseDAO#getAll()
+	 */
+	@Override
 	public List<E> getAll() {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<E> cq = cb.createQuery(ENTITY_TYPE);
@@ -230,6 +265,13 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 		return tq;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.casa_das_quentinhas.dao.BaseDAO#search(br.com.cams7.
+	 * casa_das_quentinhas.utils.SearchParams)
+	 */
+	@Override
 	public List<E> search(SearchParams params) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<E> cq = cb.createQuery(ENTITY_TYPE);
@@ -257,7 +299,15 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 		return countValue;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.casa_das_quentinhas.dao.BaseDAO#getTotalElements(java.util.
+	 * Map, java.lang.String[])
+	 */
 	@SuppressWarnings("unchecked")
+	@Override
 	public long getTotalElements(Map<String, Object> filters, String... globalFilters) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Long> cq = cb.createQuery(Long.class);
@@ -269,7 +319,13 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 		return count;
 	}
 
-	public Long count() {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.casa_das_quentinhas.dao.BaseDAO#count()
+	 */
+	@Override
+	public long count() {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Long> cq = cb.createQuery(Long.class);
 

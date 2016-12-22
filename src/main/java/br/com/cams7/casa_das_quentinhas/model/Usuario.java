@@ -1,6 +1,5 @@
 package br.com.cams7.casa_das_quentinhas.model;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -14,6 +13,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -34,9 +34,8 @@ public class Usuario extends AbstractEntity<Integer> {
 	@Column(nullable = false)
 	private String email;
 
-	@NotEmpty
-	@Column(length = 100, nullable = false)
-	private String senha;
+	@Column(name = "senha", length = 100, nullable = false)
+	private String senhaCriptografada;
 
 	@NotEmpty
 	@Size(min = 3, max = 30)
@@ -52,7 +51,10 @@ public class Usuario extends AbstractEntity<Integer> {
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "usuario_autorizacao", joinColumns = { @JoinColumn(name = "id_usuario") }, inverseJoinColumns = {
 			@JoinColumn(name = "id_autorizacao") })
-	private Set<Autorizacao> autorizacoes = new HashSet<Autorizacao>();
+	private Set<Autorizacao> autorizacoes;
+
+	@Transient
+	private String senha;
 
 	@Override
 	public Integer getId() {
@@ -72,12 +74,12 @@ public class Usuario extends AbstractEntity<Integer> {
 		this.email = email;
 	}
 
-	public String getSenha() {
-		return senha;
+	public String getSenhaCriptografada() {
+		return senhaCriptografada;
 	}
 
-	public void setSenha(String senha) {
-		this.senha = senha;
+	public void setSenhaCriptografada(String senhaCriptografada) {
+		this.senhaCriptografada = senhaCriptografada;
 	}
 
 	public String getNome() {
@@ -102,6 +104,14 @@ public class Usuario extends AbstractEntity<Integer> {
 
 	public void setAutorizacoes(Set<Autorizacao> autorizacoes) {
 		this.autorizacoes = autorizacoes;
+	}
+
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
 	}
 
 	@Override

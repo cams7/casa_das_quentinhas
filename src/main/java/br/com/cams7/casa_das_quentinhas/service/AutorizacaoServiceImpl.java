@@ -1,8 +1,7 @@
 package br.com.cams7.casa_das_quentinhas.service;
 
-import java.util.List;
+import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,20 +10,32 @@ import br.com.cams7.casa_das_quentinhas.model.Autorizacao;
 
 @Service
 @Transactional
-public class AutorizacaoServiceImpl implements AutorizacaoService {
+public class AutorizacaoServiceImpl extends AbstractService<AutorizacaoDAO, Autorizacao, Integer>
+		implements AutorizacaoService {
 
-	@Autowired
-	AutorizacaoDAO dao;
-
-	public Autorizacao findAutorizacaoById(Integer id) {
-		return dao.findById(id);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.casa_das_quentinhas.dao.AutorizacaoDAO#getAutorizacaoByPapel
+	 * (java.lang.String)
+	 */
+	@Override
+	public Autorizacao getAutorizacaoByPapel(String papel) {
+		Autorizacao autorizacao = getDao().getAutorizacaoByPapel(papel);
+		return autorizacao;
 	}
 
-	public Autorizacao findAutorizacaoByPapel(String papel) {
-		return dao.findByPapel(papel);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.casa_das_quentinhas.dao.AutorizacaoDAO#
+	 * getAutorizacoesByUsuarioId(java.lang.Integer)
+	 */
+	@Override
+	public Set<Autorizacao> getAutorizacoesByUsuarioId(Integer usuarioId) {
+		Set<Autorizacao> autorizacoes = getDao().getAutorizacoesByUsuarioId(usuarioId);
+		return autorizacoes;
 	}
 
-	public List<Autorizacao> findAllAutorizacoes() {
-		return dao.findAll();
-	}
 }

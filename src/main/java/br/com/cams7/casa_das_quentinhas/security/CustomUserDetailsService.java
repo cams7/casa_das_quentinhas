@@ -21,31 +21,31 @@ import br.com.cams7.casa_das_quentinhas.service.UsuarioService;
 @Service("customUserDetailsService")
 public class CustomUserDetailsService implements UserDetailsService {
 
-	static final Logger logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
+	static final Logger LOGGER = LoggerFactory.getLogger(CustomUserDetailsService.class);
 
 	@Autowired
 	private UsuarioService userService;
 
 	@Transactional(readOnly = true)
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-		Usuario usuario = userService.findUsuarioByEmail(email);
-		logger.info("User : {}", usuario);
+		Usuario usuario = userService.getUsuarioByEmail(email);
+		LOGGER.info("User : {}", usuario);
 		if (usuario == null) {
-			logger.info("User not found");
+			LOGGER.info("User not found");
 			throw new UsernameNotFoundException("Username not found");
 		}
-		return new org.springframework.security.core.userdetails.User(usuario.getEmail(), usuario.getSenha(), true,
-				true, true, true, getGrantedAuthorities(usuario));
+		return new org.springframework.security.core.userdetails.User(usuario.getEmail(),
+				usuario.getSenhaCriptografada(), true, true, true, true, getGrantedAuthorities(usuario));
 	}
 
-	private List<GrantedAuthority> getGrantedAuthorities(Usuario user) {
+	private List<GrantedAuthority> getGrantedAuthorities(Usuario usuario) {
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 
-		for (Autorizacao autorizacao : user.getAutorizacoes()) {
-			logger.info("UserProfile : {}", autorizacao);
+		for (Autorizacao autorizacao : usuario.getAutorizacoes()) {
+			LOGGER.info("UserProfile : {}", autorizacao);
 			authorities.add(new SimpleGrantedAuthority("ROLE_" + autorizacao.getPapel()));
 		}
-		logger.info("authorities : {}", authorities);
+		LOGGER.info("authorities : {}", authorities);
 		return authorities;
 	}
 

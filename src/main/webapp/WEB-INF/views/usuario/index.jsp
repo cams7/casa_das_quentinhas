@@ -13,9 +13,9 @@
 	<div class="col-sm-6">
 		<div class="input-group h2">
 			<input name="data[search]" class="form-control" id="search_query"
-				type="text" placeholder="Pesquisar Usuários"> <input
-				type="hidden" id="query" value=""> <span
-				class="input-group-btn">
+				type="text" placeholder="Pesquisar Usuários"> 
+			<input type="hidden" id="query" value=""> 
+			<span class="input-group-btn">
 				<button id="search_btn" class="btn btn-primary" type="submit">
 					<span class="glyphicon glyphicon-search"></span>
 				</button>
@@ -39,24 +39,35 @@
 </div>
 
 <script type="text/javascript">
-$(document).on('click', '.pagination a', event => {
-    event.preventDefault();
-    
-    offset = 0;
-    array = event.target.href.split('offset=');
+$(document).ready(function() {
+	$(document).on('click', '.pagination a', event => {
+	    event.preventDefault();
+	    
+	    offset = 0;
+	    array = event.target.href.split('offset=');
+		
+		if(array.length > 1)
+			offset = array[1];
+		
+		//console.log(offset);
+		getUsuarios(offset);
+	});
 	
-	if(array.length > 1)
-		offset = array[1];
+	$('#search_btn').click(event => {
+		event.preventDefault();
+		$("#query").val($("#search_query").val());
+		getUsuarios(0);
+	});
 	
-	//console.log(offset);
-	getUsuarios(offset);
+	function getUsuarios(offset) {
+		query = $("#query").val();
+	    query = query != undefined ? query : '';
+		
+		$.get('pagination?offset=' + offset + '&q=' + query, data => {
+	        //console.log(data);
+			$('.content').html(data);
+			location.hash = offset;
+	   	});
+	}
 });
-
-function getUsuarios(offset) {		
-	$.get('pagination?offset=' + offset, data => {
-        //console.log(data);
-		$('.content').html(data);
-		location.hash = offset;
-   	});
-}
 </script>

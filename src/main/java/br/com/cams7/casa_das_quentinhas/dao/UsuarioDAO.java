@@ -1,23 +1,12 @@
 package br.com.cams7.casa_das_quentinhas.dao;
 
-import java.util.List;
-
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
 
-public interface UsuarioDAO {
+public interface UsuarioDAO extends BaseDAO<Usuario, Integer> {
 
-	Usuario findById(Integer id);
+	Usuario getUsuarioById(Integer id);
 
-	Usuario findByEmail(String email);
+	Usuario getUsuarioByEmail(String email);
 
-	void save(Usuario usuario);
-
-	void deleteById(Integer id);
-
-	List<Usuario> findAll();
-
-	List<Usuario> list(Integer offset, Integer maxResults);
-
-	Long count();
-
+	String getUsuarioSenhaById(Integer id);
 }

@@ -16,12 +16,14 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import br.com.cams7.casa_das_quentinhas.model.Autorizacao;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
 import br.com.cams7.casa_das_quentinhas.service.AutorizacaoService;
 import br.com.cams7.casa_das_quentinhas.service.UsuarioService;
+import br.com.cams7.casa_das_quentinhas.utils.SearchParams;
 
 @Controller
 @RequestMapping("/usuario")
@@ -42,13 +44,13 @@ public class UsuarioController implements BaseController<Usuario, Integer> {
 	 */
 	@Override
 	public String index(ModelMap model) {
-		// List<Usuario> usuarios = usuarioService.findAllUsuarios();
-
 		Integer offset = 0;
 		Integer maxResults = 10;
 
-		List<Usuario> usuarios = usuarioService.listUsuarios(offset, maxResults);
-		Long count = usuarioService.countUsuarios();
+		SearchParams params = new SearchParams(offset, maxResults.shortValue(), null, null, null);
+
+		List<Usuario> usuarios = usuarioService.search(params);
+		Long count = usuarioService.count();
 
 		model.addAttribute("usuarios", usuarios);
 		setPaginationAttribute(model, offset, count);
@@ -64,9 +66,10 @@ public class UsuarioController implements BaseController<Usuario, Integer> {
 	@Override
 	public String create(ModelMap model) {
 		Usuario usuario = new Usuario();
+
 		model.addAttribute("usuario", usuario);
-		// model.addAttribute("edit", false);
 		model.addAttribute("loggedinuser", getPrincipal());
+
 		return "usuario_create";
 	}
 
@@ -76,41 +79,36 @@ public class UsuarioController implements BaseController<Usuario, Integer> {
 	 */
 	@Override
 	public String store(@Valid Usuario usuario, BindingResult result, ModelMap model) {
+		if (usuario.getSenha().isEmpty()) {
+			FieldError emailError = new FieldError("usuario", "senha",
+					messageSource.getMessage("NotEmpty.usuario.password", null, Locale.getDefault()));
+			result.addError(emailError);
+		}
+
+		if (!usuarioService.isEmailUnique(usuario.getId(), usuario.getEmail())) {
+			FieldError emailError = new FieldError("usuario", "email", messageSource.getMessage("non.unique.email",
+					new String[] { usuario.getEmail() }, Locale.getDefault()));
+			result.addError(emailError);
+		}
+
 		if (result.hasErrors())
 			return "usuario_create";
 
-		/*
-		 * Preferred way to achieve uniqueness of field [sso] should be
-		 * implementing custom @Unique annotation and applying it on field [sso]
-		 * of Model class [User].
-		 * 
-		 * Below mentioned peace of code [if block] is to demonstrate that you
-		 * can fill custom errors outside the validation framework as well while
-		 * still using internationalized messages.
-		 * 
-		 */
-
-		if (!usuarioService.isEmailUnique(usuario.getId(), usuario.getEmail())) {
-			FieldError ssoError = new FieldError("usuario", "email", messageSource.getMessage("non.unique.email",
-					new String[] { usuario.getEmail() }, Locale.getDefault()));
-			result.addError(ssoError);
-			return "usuario_create";
-		}
-
-		usuarioService.saveUsuario(usuario);
+		usuarioService.persist(usuario);
 
 		model.addAttribute("success",
 				"User " + usuario.getNome() + " " + usuario.getSobrenome() + " registered successfully");
 		model.addAttribute("loggedinuser", getPrincipal());
-		// return "success";
+
 		return "redirect:/usuario/list";
 	}
 
 	@Override
 	public String show(@PathVariable Integer id, ModelMap model) {
-		Usuario usuario = usuarioService.findUsuarioById(id);
+		Usuario usuario = usuarioService.getUsuarioById(id);
 		model.addAttribute("usuario", usuario);
 		model.addAttribute("loggedinuser", getPrincipal());
+
 		return "usuario_show";
 	}
 
@@ -119,10 +117,11 @@ public class UsuarioController implements BaseController<Usuario, Integer> {
 	 */
 	@Override
 	public String edit(@PathVariable Integer id, ModelMap model) {
-		Usuario usuario = usuarioService.findUsuarioById(id);
+		Usuario usuario = usuarioService.getUsuarioById(id);
 		model.addAttribute("usuario", usuario);
 		model.addAttribute("edit", true);
 		model.addAttribute("loggedinuser", getPrincipal());
+
 		return "usuario_edit";
 	}
 
@@ -137,22 +136,12 @@ public class UsuarioController implements BaseController<Usuario, Integer> {
 		if (result.hasErrors())
 			return "usuario_edit";
 
-		/*
-		 * //Uncomment below 'if block' if you WANT TO ALLOW UPDATING SSO_ID in
-		 * UI which is a unique key to a User.
-		 * if(!userService.isUserSSOUnique(user.getId(), user.getSsoId())){
-		 * FieldError ssoError =new
-		 * FieldError("user","email",messageSource.getMessage(
-		 * "non.unique.email", new String[]{user.getSsoId()},
-		 * Locale.getDefault())); result.addError(ssoError); return
-		 * "registration"; }
-		 */
-
-		usuarioService.updateUsuario(usuario);
+		usuarioService.update(usuario);
 
 		model.addAttribute("success",
 				"User " + usuario.getNome() + " " + usuario.getSobrenome() + " updated successfully");
 		model.addAttribute("loggedinuser", getPrincipal());
+
 		return "redirect:/usuario/list";
 	}
 
@@ -161,14 +150,18 @@ public class UsuarioController implements BaseController<Usuario, Integer> {
 	 */
 	@Override
 	public String destroy(@PathVariable Integer id) {
-		usuarioService.deleteUsuarioById(id);
+		usuarioService.delete(id);
 		return "redirect:/usuario/list";
 	}
 
 	@RequestMapping(value = "/pagination")
-	public String list(ModelMap model, Integer offset, Integer maxResults) {
-		List<Usuario> usuarios = usuarioService.listUsuarios(offset, maxResults != null ? maxResults : 10);
-		Long count = usuarioService.countUsuarios();
+	public String list(ModelMap model, @RequestParam("offset") Integer offset, @RequestParam("q") String query) {
+		Integer maxResults = 10;
+
+		SearchParams params = new SearchParams(offset, maxResults.shortValue(), null, null, null);
+
+		List<Usuario> usuarios = usuarioService.search(params);
+		Long count = usuarioService.count();
 
 		model.addAttribute("usuarios", usuarios);
 		setPaginationAttribute(model, offset, count);
@@ -186,7 +179,8 @@ public class UsuarioController implements BaseController<Usuario, Integer> {
 	 */
 	@ModelAttribute("autorizacoes")
 	public List<Autorizacao> initializeAutorizacoes() {
-		return autorizacaoService.findAllAutorizacoes();
+		List<Autorizacao> autorizacoes = autorizacaoService.getAll();
+		return autorizacoes;
 	}
 
 	/**

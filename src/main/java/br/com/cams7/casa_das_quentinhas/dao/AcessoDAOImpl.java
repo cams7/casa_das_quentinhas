@@ -24,6 +24,13 @@ public class AcessoDAOImpl extends AbstractDAO<Acesso, String> implements Persis
 
 	static final Logger LOGGER = LoggerFactory.getLogger(AcessoDAOImpl.class);
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.springframework.security.web.authentication.rememberme.
+	 * PersistentTokenRepository#createNewToken(org.springframework.security.web
+	 * .authentication.rememberme.PersistentRememberMeToken)
+	 */
 	@Override
 	public void createNewToken(PersistentRememberMeToken token) {
 		LOGGER.info("Creating Token for user : {}", token.getUsername());
@@ -37,6 +44,12 @@ public class AcessoDAOImpl extends AbstractDAO<Acesso, String> implements Persis
 		persist(acesso);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.springframework.security.web.authentication.rememberme.
+	 * PersistentTokenRepository#getTokenForSeries(java.lang.String)
+	 */
 	@Override
 	public PersistentRememberMeToken getTokenForSeries(String seriesId) {
 		LOGGER.info("Fetch Token if any for seriesId : {}", seriesId);
@@ -63,6 +76,12 @@ public class AcessoDAOImpl extends AbstractDAO<Acesso, String> implements Persis
 		return null;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.springframework.security.web.authentication.rememberme.
+	 * PersistentTokenRepository#removeUserTokens(java.lang.String)
+	 */
 	@Override
 	public void removeUserTokens(String username) {
 		LOGGER.info("Removing Token if any for user : {}", username);
@@ -79,18 +98,25 @@ public class AcessoDAOImpl extends AbstractDAO<Acesso, String> implements Persis
 
 		try {
 			Acesso acesso = tq.getSingleResult();
-			delete(acesso);
+			delete(acesso.getId());
 
 			LOGGER.info("rememberMe was selected");
 		} catch (NoResultException e) {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.springframework.security.web.authentication.rememberme.
+	 * PersistentTokenRepository#updateToken(java.lang.String, java.lang.String,
+	 * java.util.Date)
+	 */
 	@Override
 	public void updateToken(String seriesId, String tokenValue, Date lastUsed) {
 		LOGGER.info("Updating Token for seriesId : {}", seriesId);
 
-		Acesso acesso = getByKey(seriesId);
+		Acesso acesso = getById(seriesId);
 		acesso.setToken(tokenValue);
 		acesso.setUltimoAcesso(lastUsed);
 

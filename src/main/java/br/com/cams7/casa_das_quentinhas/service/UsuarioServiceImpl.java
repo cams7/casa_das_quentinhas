@@ -1,7 +1,5 @@
 package br.com.cams7.casa_das_quentinhas.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -12,26 +10,49 @@ import br.com.cams7.casa_das_quentinhas.model.Usuario;
 
 @Service
 @Transactional
-public class UsuarioServiceImpl implements UsuarioService {
-
-	@Autowired
-	private UsuarioDAO dao;
+public class UsuarioServiceImpl extends AbstractService<UsuarioDAO, Usuario, Integer> implements UsuarioService {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-	public Usuario findUsuarioById(Integer id) {
-		return dao.findById(id);
-	}
-
-	public Usuario findUsuarioByEmail(String email) {
-		Usuario usuario = dao.findByEmail(email);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.casa_das_quentinhas.service.UsuarioService#getUsuarioById(
+	 * java.lang.Integer)
+	 */
+	@Override
+	public Usuario getUsuarioById(Integer id) {
+		Usuario usuario = getDao().getUsuarioById(id);
 		return usuario;
 	}
 
-	public void saveUsuario(Usuario usuario) {
-		usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
-		dao.save(usuario);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.casa_das_quentinhas.service.UsuarioService#getUsuarioByEmail
+	 * (java.lang.String)
+	 */
+	@Override
+	public Usuario getUsuarioByEmail(String email) {
+		Usuario usuario = getDao().getUsuarioByEmail(email);
+		return usuario;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.casa_das_quentinhas.service.AbstractService#persist(br.com.
+	 * cams7.casa_das_quentinhas.model.AbstractEntity)
+	 */
+	@Override
+	public void persist(Usuario usuario) {
+		String senhaCriptografada = passwordEncoder.encode(usuario.getSenha());
+		usuario.setSenhaCriptografada(senhaCriptografada);
+		super.persist(usuario);
 	}
 
 	/*
@@ -40,45 +61,44 @@ public class UsuarioServiceImpl implements UsuarioService {
 	 * proper values within transaction. It will be updated in db once
 	 * transaction ends.
 	 */
-	public void updateUsuario(Usuario usuario) {
-		Usuario entity = dao.findById(usuario.getId());
-		if (entity != null) {
-			// entity.setSsoId(user.getSsoId());
-			if (!usuario.getSenha().equals(entity.getSenha())) {
-				entity.setSenha(passwordEncoder.encode(usuario.getSenha()));
-			}
-			entity.setNome(usuario.getNome());
-			entity.setSobrenome(usuario.getSobrenome());
-			entity.setEmail(usuario.getEmail());
-			entity.setAutorizacoes(usuario.getAutorizacoes());
-		}
+	@Override
+	public void update(Usuario usuario) {
+		if (!usuario.getSenha().isEmpty())
+			usuario.setSenhaCriptografada(passwordEncoder.encode(usuario.getSenha()));
+		else
+			usuario.setSenhaCriptografada(getUsuarioSenhaById(usuario.getId()));
+
+		super.update(usuario);
 	}
 
-	public void deleteUsuarioById(Integer id) {
-		dao.deleteById(id);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.casa_das_quentinhas.dao.UsuarioDAO#getUsuarioSenhaById(java.
+	 * lang.Integer)
+	 */
+	@Override
+	public String getUsuarioSenhaById(Integer id) {
+		String senhaCriptografada = getDao().getUsuarioSenhaById(id);
+		return senhaCriptografada;
 	}
 
-	public List<Usuario> findAllUsuarios() {
-		return dao.findAll();
-	}
-
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.casa_das_quentinhas.service.UsuarioService#isEmailUnique(
+	 * java.lang.Integer, java.lang.String)
+	 */
+	@Override
 	public boolean isEmailUnique(Integer id, String email) {
-		Usuario usuario = findUsuarioByEmail(email);
+		Usuario usuario = getUsuarioByEmail(email);
 
 		if (usuario == null)
 			return true;
 
 		return id != null && usuario.getId() == id;
-	}
-
-	@Override
-	public List<Usuario> listUsuarios(Integer offset, Integer maxResults) {
-		return dao.list(offset, maxResults);
-	}
-
-	@Override
-	public Long countUsuarios() {
-		return dao.count();
 	}
 
 }

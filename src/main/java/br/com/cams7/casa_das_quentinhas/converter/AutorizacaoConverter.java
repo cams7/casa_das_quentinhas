@@ -18,7 +18,7 @@ public class AutorizacaoConverter implements Converter<Object, Autorizacao> {
 	static final Logger logger = LoggerFactory.getLogger(AutorizacaoConverter.class);
 
 	@Autowired
-	AutorizacaoService userProfileService;
+	private AutorizacaoService autorizacaoService;
 
 	/**
 	 * Gets UserProfile by Id
@@ -27,7 +27,7 @@ public class AutorizacaoConverter implements Converter<Object, Autorizacao> {
 	 */
 	public Autorizacao convert(Object element) {
 		Integer id = Integer.parseInt((String) element);
-		Autorizacao autorizacao = userProfileService.findAutorizacaoById(id);
+		Autorizacao autorizacao = autorizacaoService.getById(id);
 		logger.info("Profile : {}", autorizacao);
 		return autorizacao;
 	}
