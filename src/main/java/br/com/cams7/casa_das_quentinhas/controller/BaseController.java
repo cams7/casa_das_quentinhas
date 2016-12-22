@@ -94,4 +94,7 @@ public interface BaseController<E extends AbstractEntity<PK>, PK extends Seriali
 	@GetMapping(value = { "/{id}/delete" })
 	// @DeleteMapping
 	String destroy(PK id);
+
+	@GetMapping(value = "/pagination")
+	String list(ModelMap model, Integer offset, String query);
 }

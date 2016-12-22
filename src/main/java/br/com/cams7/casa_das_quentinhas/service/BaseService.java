@@ -12,7 +12,6 @@ import br.com.cams7.casa_das_quentinhas.model.AbstractEntity;
  * @author César Magalhães
  *
  */
-public interface BaseService<DAO extends BaseDAO<E, PK>, E extends AbstractEntity<PK>, PK extends Serializable>
-		extends BaseDAO<E, PK> {
+public interface BaseService<E extends AbstractEntity<PK>, PK extends Serializable> extends BaseDAO<E, PK> {
 
 }

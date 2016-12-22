@@ -30,6 +30,8 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 
 	@SuppressWarnings("unchecked")
 	public AbstractDAO() {
+		super();
+
 		ENTITY_TYPE = (Class<E>) ((ParameterizedType) this.getClass().getGenericSuperclass())
 				.getActualTypeArguments()[0];
 	}

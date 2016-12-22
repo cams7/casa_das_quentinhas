@@ -17,6 +17,22 @@ import br.com.cams7.casa_das_quentinhas.model.AbstractEntity;
 public final class AppHelper {
 
 	/**
+	 * Cria uma nova entidade
+	 * 
+	 * @param entityType
+	 *            Tipo de classe Entity
+	 * @return Entity
+	 */
+	public static <E extends AbstractEntity<?>> E getNewEntity(Class<E> entityType) {
+		try {
+			E entity = entityType.newInstance();
+			return entity;
+		} catch (InstantiationException | IllegalAccessException e) {
+			throw new AppException(e.getMessage(), e.getCause());
+		}
+	}
+
+	/**
 	 * Retorna o tipo de classe
 	 * 
 	 * @param entityType

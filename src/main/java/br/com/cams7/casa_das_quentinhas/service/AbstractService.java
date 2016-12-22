@@ -20,7 +20,7 @@ import br.com.cams7.casa_das_quentinhas.utils.SearchParams;
  */
 @Transactional
 public abstract class AbstractService<DAO extends BaseDAO<E, PK>, E extends AbstractEntity<PK>, PK extends Serializable>
-		implements BaseService<DAO, E, PK> {
+		implements BaseService<E, PK> {
 
 	@Autowired
 	private DAO dao;
