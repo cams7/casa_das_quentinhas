@@ -36,6 +36,8 @@ public class SearchParams {
 	 */
 	private String[] globalFilters;
 
+	public static final String GLOBAL_FILTER = "globalFilter";
+
 	public SearchParams() {
 		super();
 	}

@@ -13,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import br.com.cams7.casa_das_quentinhas.model.Autorizacao;
@@ -41,7 +42,8 @@ public class UsuarioController extends AbstractController<UsuarioService, Usuari
 	 * org.springframework.ui.ModelMap)
 	 */
 	@Override
-	public String store(@Valid Usuario usuario, BindingResult result, ModelMap model) {
+	public String store(@Valid Usuario usuario, BindingResult result, ModelMap model,
+			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
 		if (usuario.getSenha().isEmpty()) {
 			FieldError emailError = new FieldError("usuario", "senha",
 					messageSource.getMessage("NotEmpty.usuario.password", null, Locale.getDefault()));
@@ -54,7 +56,7 @@ public class UsuarioController extends AbstractController<UsuarioService, Usuari
 			result.addError(emailError);
 		}
 
-		return super.store(usuario, result, model);
+		return super.store(usuario, result, model, lastLoadedPage);
 	}
 
 	/**
@@ -110,6 +112,11 @@ public class UsuarioController extends AbstractController<UsuarioService, Usuari
 	protected Usuario getEntity(Integer id) {
 		Usuario usuario = getService().getUsuarioById(id);
 		return usuario;
+	}
+
+	@Override
+	protected String[] getGlobalFilters() {
+		return new String[] { "nome", "sobrenome", "email" };
 	}
 
 }

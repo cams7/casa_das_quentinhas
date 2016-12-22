@@ -61,3 +61,16 @@
 		</div>
 	</div>
 </div>
+
+<input type="hidden" id="lastLoadedPage" name="lastLoadedPage"
+	value="${lastLoadedPage}">
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#cancelar').click(event => {
+		event.preventDefault();
+		window.history.go(-$("#lastLoadedPage").val());
+	});
+});
+</script>

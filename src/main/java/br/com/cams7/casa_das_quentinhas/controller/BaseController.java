@@ -50,7 +50,7 @@ public interface BaseController<E extends AbstractEntity<PK>, PK extends Seriali
 	 * @return
 	 */
 	@PostMapping(value = { "/create" })
-	String store(E entity, BindingResult result, ModelMap model);
+	String store(E entity, BindingResult result, ModelMap model, Integer lastLoadedPage);
 
 	/**
 	 * Display the specified resource.
@@ -83,7 +83,7 @@ public interface BaseController<E extends AbstractEntity<PK>, PK extends Seriali
 	 */
 	@PostMapping(value = { "/{id}/edit" })
 	// @PutMapping
-	String update(E entity, BindingResult result, ModelMap model, PK id);
+	String update(E entity, BindingResult result, ModelMap model, PK id, Integer lastLoadedPage);
 
 	/**
 	 * Remove the specified resource from storage.

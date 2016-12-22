@@ -5,7 +5,9 @@ package br.com.cams7.casa_das_quentinhas.controller;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -30,6 +32,8 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 		implements BaseController<E, PK> {
 
 	protected final Class<E> ENTITY_TYPE;
+
+	protected final String LAST_LOADED_PAGE = "lastLoadedPage";
 
 	@Autowired
 	private S service;
@@ -61,12 +65,12 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 		SearchParams params = new SearchParams(offset, maxResults.shortValue(), null, null, null);
 
 		List<E> entities = getService().search(params);
-		Long count = getService().count();
+		long count = getService().count();
 
 		model.addAttribute(getListName(), entities);
 		setPaginationAttribute(model, offset, count);
 
-		model.addAttribute("loggedinuser", getPrincipal());
+		setUsuarioLogado(model);
 
 		return getIndexTilesPage();
 	}
@@ -83,7 +87,9 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 		E entity = getNewEntity();
 
 		model.addAttribute(getEntityName(), entity);
-		model.addAttribute("loggedinuser", getPrincipal());
+
+		setUsuarioLogado(model);
+		setLastLoadedPage(model, 1);
 
 		return getCreateTilesPage();
 	}
@@ -98,16 +104,16 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 	 * org.springframework.ui.ModelMap)
 	 */
 	@Override
-	public String store(@Valid E entity, BindingResult result, ModelMap model) {
+	public String store(@Valid E entity, BindingResult result, ModelMap model,
+			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
+
+		setUsuarioLogado(model);
+		setLastLoadedPage(model, lastLoadedPage + 1);
+
 		if (result.hasErrors())
 			return getCreateTilesPage();
 
 		getService().persist(entity);
-
-		// model.addAttribute("success",
-		// "User " + usuario.getNome() + " " + usuario.getSobrenome() + "
-		// registered successfully");
-		model.addAttribute("loggedinuser", getPrincipal());
 
 		return getMainPage();
 	}
@@ -124,7 +130,8 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 		E entity = getEntity(id);
 
 		model.addAttribute(getEntityName(), entity);
-		model.addAttribute("loggedinuser", getPrincipal());
+
+		setUsuarioLogado(model);
 
 		return getShowTilesPage();
 	}
@@ -141,9 +148,10 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 		E entity = getEntity(id);
 
 		model.addAttribute(getEntityName(), entity);
-		model.addAttribute("loggedinuser", getPrincipal());
 
-		model.addAttribute("edit", true);
+		setEditPage(model);
+		setUsuarioLogado(model);
+		setLastLoadedPage(model, 1);
 
 		return getEditTilesPage();
 	}
@@ -158,18 +166,19 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 	 * org.springframework.ui.ModelMap, java.io.Serializable)
 	 */
 	@Override
-	public String update(@Valid E entity, BindingResult result, ModelMap model, @PathVariable PK id) {
-		model.addAttribute("edit", true);
+	public String update(@Valid E entity, BindingResult result, ModelMap model, @PathVariable PK id,
+			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
+
+		setEditPage(model);
+		setUsuarioLogado(model);
+		setLastLoadedPage(model, lastLoadedPage + 1);
 
 		if (result.hasErrors())
 			return getEditTilesPage();
 
 		getService().update(entity);
 
-		// model.addAttribute("success",
-		// "User " + entity.getNome() + " " + entity.getSobrenome() + " updated
-		// successfully");
-		model.addAttribute("loggedinuser", getPrincipal());
+		setUsuarioLogado(model);
 
 		return getMainPage();
 	}
@@ -194,13 +203,24 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 	 * springframework.ui.ModelMap, java.lang.Integer, java.lang.String)
 	 */
 	@Override
-	public String list(ModelMap model, @RequestParam("offset") Integer offset, @RequestParam("q") String query) {
+	public String list(ModelMap model, @RequestParam(value = "offset", required = true) Integer offset,
+			@RequestParam(value = "q", required = true) String query) {
 		Integer maxResults = 10;
 
-		SearchParams params = new SearchParams(offset, maxResults.shortValue(), null, null, null);
+		Map<String, Object> filters = new HashMap<>();
+		// and
+		// filters.put("nome", query);
+		// filters.put("sobrenome", query);
+		// filters.put("email", query);
+
+		// or
+		filters.put(SearchParams.GLOBAL_FILTER, query);
+		final String[] globalFilters = getGlobalFilters();
+
+		SearchParams params = new SearchParams(offset, maxResults.shortValue(), null, null, filters, globalFilters);
 
 		List<E> entities = getService().search(params);
-		Long count = getService().count();
+		long count = getService().getTotalElements(filters, globalFilters);
 
 		model.addAttribute(getListName(), entities);
 
@@ -212,6 +232,18 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 	private void setPaginationAttribute(ModelMap model, Integer offset, Long count) {
 		model.addAttribute("count", count);
 		model.addAttribute("offset", offset);
+	}
+
+	private void setEditPage(ModelMap model) {
+		model.addAttribute("edit", true);
+	}
+
+	private void setUsuarioLogado(ModelMap model) {
+		model.addAttribute("loggedinuser", getPrincipal());
+	}
+
+	private void setLastLoadedPage(ModelMap model, Integer lastLoadedPage) {
+		model.addAttribute(LAST_LOADED_PAGE, lastLoadedPage);
 	}
 
 	/**
@@ -254,5 +286,7 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 	protected abstract String getEditTilesPage();
 
 	protected abstract String getListTilesPage();
+
+	protected abstract String[] getGlobalFilters();
 
 }

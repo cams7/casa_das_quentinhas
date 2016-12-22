@@ -8,13 +8,13 @@
 
 <form:form method="POST" modelAttribute="usuario">
 
-	<%@include file="form.jsp" %>
+	<%@include file="form.jsp"%>
 
 	<hr />
 	<div id="actions" class="row">
-		<div class="col-md-12">			
+		<div class="col-md-12">
 			<input type="submit" value="Salvar" class="btn btn-primary" />
-			<a href="<c:url value='/usuario/list' />" class="btn btn-default">Cancelar</a>
+			<button id="cancelar" class="btn btn-default">Cancelar</button>
 		</div>
 	</div>
 </form:form>

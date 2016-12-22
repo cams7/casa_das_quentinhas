@@ -180,12 +180,10 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 		if (filters != null && !filters.isEmpty()) {
 			boolean containsKeyGlobalFilter = false;
 
-			final String GLOBALFILTER_KEY = "globalFilter";
-
 			Set<Predicate> predicates = new HashSet<>();
 			Set<Predicate> and = new HashSet<>();
 			for (Entry<String, Object> filter : filters.entrySet()) {
-				if (GLOBALFILTER_KEY.equals(filter.getKey())) {
+				if (SearchParams.GLOBAL_FILTER.equals(filter.getKey())) {
 					containsKeyGlobalFilter = true;
 					continue;
 				}
@@ -201,7 +199,8 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 			if (containsKeyGlobalFilter && globalFilters.length > 0) {
 				Set<Predicate> or = new HashSet<>();
 				for (String globalFilter : globalFilters) {
-					Predicate expression = getExpression(cb, from, globalFilter, filters.get(GLOBALFILTER_KEY));
+					Predicate expression = getExpression(cb, from, globalFilter,
+							filters.get(SearchParams.GLOBAL_FILTER));
 					if (expression != null)
 						or.add(expression);
 				}
