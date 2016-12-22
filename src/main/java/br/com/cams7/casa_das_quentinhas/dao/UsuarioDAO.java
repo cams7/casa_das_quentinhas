@@ -17,7 +17,7 @@ public interface UsuarioDAO {
 	List<Usuario> findAll();
 
 	List<Usuario> list(Integer offset, Integer maxResults);
-	
+
 	Long count();
 
 }

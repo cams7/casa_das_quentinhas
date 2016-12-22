@@ -2,32 +2,44 @@ package br.com.cams7.casa_das_quentinhas.dao;
 
 import java.util.List;
 
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import org.springframework.stereotype.Repository;
 
 import br.com.cams7.casa_das_quentinhas.model.Autorizacao;
+import br.com.cams7.casa_das_quentinhas.model.Autorizacao_;
 
 @Repository
-public class AutorizacaoDAOImpl extends AbstractDAO<Integer, Autorizacao>
-		implements AutorizacaoDAO {
+public class AutorizacaoDAOImpl extends AbstractDAO<Autorizacao, Integer> implements AutorizacaoDAO {
 
 	public Autorizacao findById(Integer id) {
-		return getByKey(id);
+		Autorizacao autorizacao = getByKey(id);
+
+		return autorizacao;
 	}
 
 	public Autorizacao findByPapel(String papel) {
-		Criteria crit = createEntityCriteria();
-		crit.add(Restrictions.eq("papel", papel));
-		return (Autorizacao) crit.uniqueResult();
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Autorizacao> cq = cb.createQuery(ENTITY_TYPE);
+
+		Root<Autorizacao> from = cq.from(ENTITY_TYPE);
+
+		cq.select(from);
+		cq.where(cb.equal(from.get(Autorizacao_.papel), papel));
+
+		TypedQuery<Autorizacao> tq = getEntityManager().createQuery(cq);
+
+		Autorizacao autorizacao = tq.getSingleResult();
+
+		return autorizacao;
 	}
 
-	@SuppressWarnings("unchecked")
 	public List<Autorizacao> findAll() {
-		Criteria crit = createEntityCriteria();
-		crit.addOrder(Order.asc("papel"));
-		return (List<Autorizacao>) crit.list();
+		List<Autorizacao> autorizacoes = super.getAll();
+		return autorizacoes;
 	}
 
 }

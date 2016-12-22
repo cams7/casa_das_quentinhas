@@ -5,6 +5,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -18,12 +19,13 @@ import org.springframework.web.servlet.view.tiles3.TilesViewResolver;
 import br.com.cams7.casa_das_quentinhas.converter.AutorizacaoConverter;
 
 @Configuration
+@Import(JpaConfiguration.class)
 @EnableWebMvc
 @ComponentScan(basePackages = "br.com.cams7.casa_das_quentinhas")
 public class AppConfig extends WebMvcConfigurerAdapter {
 
 	@Autowired
-	AutorizacaoConverter roleToUserProfileConverter;
+	private AutorizacaoConverter autorizacaoConverter;
 
 	/**
 	 * Configure TilesConfigurer.
@@ -61,7 +63,7 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 	 */
 	@Override
 	public void addFormatters(FormatterRegistry registry) {
-		registry.addConverter(roleToUserProfileConverter);
+		registry.addConverter(autorizacaoConverter);
 	}
 
 	/**

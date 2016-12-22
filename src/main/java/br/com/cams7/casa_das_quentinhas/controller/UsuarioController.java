@@ -29,13 +29,13 @@ import br.com.cams7.casa_das_quentinhas.service.UsuarioService;
 public class UsuarioController implements BaseController<Usuario, Integer> {
 
 	@Autowired
-	UsuarioService usuarioService;
+	private UsuarioService usuarioService;
 
 	@Autowired
-	AutorizacaoService autorizacaoService;
+	private AutorizacaoService autorizacaoService;
 
 	@Autowired
-	MessageSource messageSource;
+	private MessageSource messageSource;
 
 	/**
 	 * This method will list all existing usuarios.
@@ -89,6 +89,7 @@ public class UsuarioController implements BaseController<Usuario, Integer> {
 		 * still using internationalized messages.
 		 * 
 		 */
+
 		if (!usuarioService.isEmailUnique(usuario.getId(), usuario.getEmail())) {
 			FieldError ssoError = new FieldError("usuario", "email", messageSource.getMessage("non.unique.email",
 					new String[] { usuario.getEmail() }, Locale.getDefault()));
@@ -166,7 +167,7 @@ public class UsuarioController implements BaseController<Usuario, Integer> {
 
 	@RequestMapping(value = "/pagination")
 	public String list(ModelMap model, Integer offset, Integer maxResults) {
-		List<Usuario> usuarios = usuarioService.listUsuarios(offset, maxResults);
+		List<Usuario> usuarios = usuarioService.listUsuarios(offset, maxResults != null ? maxResults : 10);
 		Long count = usuarioService.countUsuarios();
 
 		model.addAttribute("usuarios", usuarios);

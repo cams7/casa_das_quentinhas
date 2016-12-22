@@ -64,7 +64,11 @@ public class UsuarioServiceImpl implements UsuarioService {
 
 	public boolean isEmailUnique(Integer id, String email) {
 		Usuario usuario = findUsuarioByEmail(email);
-		return (usuario == null || ((id != null) && (usuario.getId() == id)));
+
+		if (usuario == null)
+			return true;
+
+		return id != null && usuario.getId() == id;
 	}
 
 	@Override
