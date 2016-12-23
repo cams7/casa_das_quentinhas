@@ -9,7 +9,7 @@
 <c:if test="${count > 0}">
 	<div id="list" class="row">
 		<div class="table-responsive col-md-12">
-			<table class="table table-striped">
+			<table class="table table-striped">			
 				<thead>
 					<tr>
 						<th>Nome</th>

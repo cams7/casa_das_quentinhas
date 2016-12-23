@@ -34,6 +34,7 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 	protected final Class<E> ENTITY_TYPE;
 
 	protected final String LAST_LOADED_PAGE = "lastLoadedPage";
+	private final short MAX_RESULTS = 10;
 
 	@Autowired
 	private S service;
@@ -60,9 +61,8 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 	@Override
 	public String index(ModelMap model) {
 		Integer offset = 0;
-		Integer maxResults = 10;
 
-		SearchParams params = new SearchParams(offset, maxResults.shortValue(), null, null, null);
+		SearchParams params = new SearchParams(offset, MAX_RESULTS, null, null, null);
 
 		List<E> entities = getService().search(params);
 		long count = getService().count();
@@ -71,6 +71,7 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 		setPaginationAttribute(model, offset, count);
 
 		setUsuarioLogado(model);
+		setActivePage(model, getIndexTilesPage());
 
 		return getIndexTilesPage();
 	}
@@ -205,7 +206,8 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 	@Override
 	public String list(ModelMap model, @RequestParam(value = "offset", required = true) Integer offset,
 			@RequestParam(value = "q", required = true) String query) {
-		Integer maxResults = 10;
+
+		setActivePage(model, getIndexTilesPage());
 
 		Map<String, Object> filters = new HashMap<>();
 		// and
@@ -217,7 +219,7 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 		filters.put(SearchParams.GLOBAL_FILTER, query);
 		final String[] globalFilters = getGlobalFilters();
 
-		SearchParams params = new SearchParams(offset, maxResults.shortValue(), null, null, filters, globalFilters);
+		SearchParams params = new SearchParams(offset, MAX_RESULTS, null, null, filters, globalFilters);
 
 		List<E> entities = getService().search(params);
 		long count = getService().getTotalElements(filters, globalFilters);
@@ -232,6 +234,10 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 	private void setPaginationAttribute(ModelMap model, Integer offset, Long count) {
 		model.addAttribute("count", count);
 		model.addAttribute("offset", offset);
+	}
+
+	private void setActivePage(ModelMap model, String activePage) {
+		model.addAttribute("activePage", activePage);
 	}
 
 	private void setEditPage(ModelMap model) {

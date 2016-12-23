@@ -6,7 +6,7 @@
 	uri="http://www.springframework.org/security/tags"%>
 
 
-<h3 class="page-header">Visualizar Usuário #${usuario.id}</h3>
+<h3 class="page-header">Visualizar Usuário <span class="badge">${usuario.id}</span></h3>
 
 <div class="row">
 	<div class="col-md-6">
