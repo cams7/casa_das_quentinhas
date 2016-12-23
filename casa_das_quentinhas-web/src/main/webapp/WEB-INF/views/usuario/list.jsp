@@ -9,12 +9,13 @@
 <c:if test="${count > 0}">
 	<div id="list" class="row">
 		<div class="table-responsive col-md-12">
-			<table class="table table-striped">			
+			<table id="usuarios"
+				class="table table-striped table-bordered dataTable">
 				<thead>
 					<tr>
-						<th>Nome</th>
-						<th>Sobrenome</th>
-						<th>E-mail</th>
+						<th class="sorting" id="nome">Nome</th>
+						<th class="sorting" id="sobrenome">Sobrenome</th>
+						<th class="sorting" id="email">E-mail</th>
 						<sec:authorize access="hasRole('ADMIN') or hasRole('DBA')">
 							<th class="actions">Ações</th>
 						</sec:authorize>
@@ -45,11 +46,22 @@
 	</div>
 	<!-- /#list -->
 
-	<div id="bottom" class="row">
-		<div class="col-md-12">
-			<p:paginate max="15" offset="${offset}" count="${count}"
-				uri="pagination" next="&raquo;" previous="&laquo;" />
+	<div class="row">
+		<div class="col-sm-5">
+			<div class="dataTables_info" id="usuarios_info" role="status">
+				No total, <span class="badge">${count}</span> usuários foram
+				retornados
+			</div>
+		</div>
+		<div class="col-sm-7">
+			<div class="dataTables_paginate paging_simple_numbers"
+				id="usuarios_paginate">
+				<p:paginate max="15" offset="${offset}" count="${count}"
+					uri="pagination" next="&raquo;" previous="&laquo;" />
+			</div>
 		</div>
 	</div>
 	<!-- /#bottom -->
+	<link rel="stylesheet"
+		href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css">
 </c:if>

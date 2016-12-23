@@ -6,7 +6,9 @@
 	uri="http://www.springframework.org/security/tags"%>
 
 
-<h3 class="page-header">Visualizar Usuário <span class="badge">${usuario.id}</span></h3>
+<h3 class="page-header">
+	Visualizar Usuário <span class="label label-default">${usuario.id}</span>
+</h3>
 
 <div class="row">
 	<div class="col-md-6">
@@ -34,7 +36,12 @@
 		<p>
 			<strong>Autorização</strong>
 		</p>
-		<p></p>
+
+		<ul class="list-group">
+			<c:forEach items="${usuario.autorizacoes}" var="autorizacao">
+				<li class="list-group-item">${autorizacao.papel}</li>
+			</c:forEach>
+		</ul>
 	</div>
 </div>
 
