@@ -23,6 +23,7 @@ import br.com.cams7.app.model.AbstractEntity;
 import br.com.cams7.app.service.BaseService;
 import br.com.cams7.app.utils.AppHelper;
 import br.com.cams7.app.utils.SearchParams;
+import br.com.cams7.app.utils.SearchParams.SortOrder;
 
 /**
  * @author César Magalhães
@@ -61,14 +62,18 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 	@Override
 	public String index(ModelMap model) {
 		Integer offset = 0;
+		String sortField = "id";
+		SortOrder sortOrder = SortOrder.DESCENDING;
+		String query = "";
 
-		SearchParams params = new SearchParams(offset, MAX_RESULTS, null, null, null);
+		SearchParams params = new SearchParams(offset, MAX_RESULTS, sortField, sortOrder, null);
 
 		List<E> entities = getService().search(params);
 		long count = getService().count();
 
 		model.addAttribute(getListName(), entities);
-		setPaginationAttribute(model, offset, count);
+
+		setPaginationAttribute(model, offset, sortField, sortOrder, query, count);
 
 		setUsuarioLogado(model);
 		setActivePage(model, getIndexTilesPage());
@@ -205,9 +210,11 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 	 */
 	@Override
 	public String list(ModelMap model, @RequestParam(value = "offset", required = true) Integer offset,
+			@RequestParam(value = "f", required = true) String sortField,
+			@RequestParam(value = "s", required = true) String sortOrder,
 			@RequestParam(value = "q", required = true) String query) {
 
-		setActivePage(model, getIndexTilesPage());
+		SortOrder sorting = SortOrder.get(sortOrder);
 
 		Map<String, Object> filters = new HashMap<>();
 		// and
@@ -219,21 +226,26 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 		filters.put(SearchParams.GLOBAL_FILTER, query);
 		final String[] globalFilters = getGlobalFilters();
 
-		SearchParams params = new SearchParams(offset, MAX_RESULTS, null, null, filters, globalFilters);
+		SearchParams params = new SearchParams(offset, MAX_RESULTS, sortField, sorting, filters, globalFilters);
 
 		List<E> entities = getService().search(params);
 		long count = getService().getTotalElements(filters, globalFilters);
 
 		model.addAttribute(getListName(), entities);
 
-		setPaginationAttribute(model, offset, count);
+		setPaginationAttribute(model, offset, sortField, sorting, query, count);
 
 		return getListTilesPage();
 	}
 
-	private void setPaginationAttribute(ModelMap model, Integer offset, Long count) {
-		model.addAttribute("count", count);
+	private void setPaginationAttribute(ModelMap model, Integer offset, String sortField, SortOrder sortOrder,
+			String query, Long count) {
 		model.addAttribute("offset", offset);
+		model.addAttribute("sortField", sortField);
+		model.addAttribute("sortOrder", sortOrder.getSorting());
+		model.addAttribute("query", query);
+
+		model.addAttribute("count", count);
 	}
 
 	private void setActivePage(ModelMap model, String activePage) {

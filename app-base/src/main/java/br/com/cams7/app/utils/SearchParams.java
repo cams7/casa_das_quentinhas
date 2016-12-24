@@ -111,7 +111,25 @@ public class SearchParams {
 	}
 
 	public enum SortOrder {
-		ASCENDING, DESCENDING, UNSORTED;
+		ASCENDING("sorting_asc"), DESCENDING("sorting_desc"), UNSORTED("sorting");
+
+		private String sorting;
+
+		private SortOrder(String sorting) {
+			this.sorting = sorting;
+		}
+
+		public String getSorting() {
+			return sorting;
+		}
+
+		public static SortOrder get(String sorting) {
+			for (SortOrder sortOrder : values())
+				if (sortOrder.getSorting().equals(sorting))
+					return sortOrder;
+
+			return null;
+		}
 	}
 
 }

@@ -13,8 +13,7 @@
 	<div class="col-sm-6">
 		<div class="input-group h2">
 			<input name="data[search]" class="form-control" id="search_query"
-				type="text" placeholder="Pesquisar Usuários"> <input
-				type="hidden" id="query" value=""> <span
+				type="text" placeholder="Pesquisar Usuários"> <span
 				class="input-group-btn">
 				<button id="search_btn" class="btn btn-primary" type="submit">
 					<span class="glyphicon glyphicon-search"></span>
@@ -38,80 +37,6 @@
 	<%@include file="list.jsp"%>
 </div>
 
-<script type="text/javascript">
-var lastFieldSorted = null;
-
-$(document).ready(function() {
-	$(document).on('click', '.pagination a', event => {
-	    event.preventDefault();
-	    
-	    offset = 0;
-	    array = event.target.href.split('offset=');
-		
-		if(array.length > 1)
-			offset = array[1];
-		
-		//console.log(offset);
-		getUsuarios(offset);
-	});
-	
-	$('#search_btn').click(event => {
-		event.preventDefault();
-		$('#query').val($('#search_query').val());
-		getUsuarios(0);
-	});
-			
-	$(document).on('click', '#usuarios tr:eq(0)', event => {
-		event.preventDefault();
-		column = $(event.target);
-		
-		if(hasIdAttribute(column)) {			
-			var field = column.attr('id');
-			var sorting = null;
-				
-			if(column.hasClass('sorting')){
-				column.removeClass('sorting');
-				column.addClass('sorting_asc');
-				
-				sorting = 'asc';
-			} else if(column.hasClass('sorting_asc')){
-				column.removeClass('sorting_asc');
-				column.addClass('sorting_desc');
-				
-				sorting = 'desc';
-			} else if(column.hasClass('sorting_desc')){
-				column.removeClass('sorting_desc');
-				column.addClass('sorting_asc');
-				
-				sorting = 'asc';
-			}
-			
-			if(lastFieldSorted != null && lastFieldSorted != field){
-				lastColumn = $('#usuarios tr #' + lastFieldSorted);
-				lastColumn.removeClass('sorting_asc');
-				lastColumn.removeClass('sorting_desc');
-				lastColumn.addClass('sorting');
-			}
-			lastFieldSorted = field;
-			
-			console.log('field: ' + field + ', sorting: ' + sorting);				
-		}			
-	});
-	
-	function hasIdAttribute(column){
-		var attr = column.attr('id');
-		return (typeof attr !== typeof undefined && attr !== false);
-	}
-		
-	function getUsuarios(offset) {
-		query = $('#query').val();
-	    query = query != undefined ? query : '';
-		
-		$.get('pagination?offset=' + offset + '&q=' + query, data => {
-	        //console.log(data);
-			$('.content').html(data);
-			location.hash = offset;
-	   	});
-	}
-});
-</script>
+<link rel="stylesheet"
+	href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css">
+<script src="<c:url value='/static/js/casa_das_marmitas-list.js' />"></script>

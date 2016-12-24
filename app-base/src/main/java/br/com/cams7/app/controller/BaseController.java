@@ -96,5 +96,5 @@ public interface BaseController<E extends AbstractEntity<PK>, PK extends Seriali
 	String destroy(PK id);
 
 	@GetMapping(value = "/pagination")
-	String list(ModelMap model, Integer offset, String query);
+	String list(ModelMap model, Integer offset, String sortField, String sortOrder, String query);
 }

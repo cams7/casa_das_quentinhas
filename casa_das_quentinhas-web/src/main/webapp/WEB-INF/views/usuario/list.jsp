@@ -13,9 +13,12 @@
 				class="table table-striped table-bordered dataTable">
 				<thead>
 					<tr>
-						<th class="sorting" id="nome">Nome</th>
-						<th class="sorting" id="sobrenome">Sobrenome</th>
-						<th class="sorting" id="email">E-mail</th>
+						<th class="${sortField eq 'nome' ? sortOrder : 'sorting' }"
+							id="nome">Nome</th>
+						<th class="${sortField eq 'sobrenome' ? sortOrder : 'sorting' }"
+							id="sobrenome">Sobrenome</th>
+						<th class="${sortField eq 'email' ? sortOrder : 'sorting' }"
+							id="email">E-mail</th>
 						<sec:authorize access="hasRole('ADMIN') or hasRole('DBA')">
 							<th class="actions">Ações</th>
 						</sec:authorize>
@@ -44,7 +47,11 @@
 			</table>
 		</div>
 	</div>
-	<!-- /#list -->
+
+	<input type="hidden" id="offset" value="${offset}">
+	<input type="hidden" id="sortField" value="${sortField}">
+	<input type="hidden" id="sortOrder" value="${sortOrder}">
+	<input type="hidden" id="query" value="${query}">
 
 	<div class="row">
 		<div class="col-sm-5">
@@ -61,7 +68,4 @@
 			</div>
 		</div>
 	</div>
-	<!-- /#bottom -->
-	<link rel="stylesheet"
-		href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css">
 </c:if>
