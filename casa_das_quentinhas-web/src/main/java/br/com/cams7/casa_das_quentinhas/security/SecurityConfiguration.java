@@ -41,12 +41,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.antMatchers("/static/**").permitAll()
 		.antMatchers("/login").permitAll()
 		.antMatchers("/accessDenied").permitAll()
-		
-		//.anyRequest().authenticated()	
-		
+				
 		.antMatchers("/*/create", "/*/*/delete").access("hasRole('ADMIN')")
 		.antMatchers("/*/*/edit").access("hasRole('ADMIN') or hasRole('DBA')")
-		.antMatchers("/*/list", "/*/*").access("hasRole('USER') or hasRole('ADMIN') or hasRole('DBA')").and()
+		.antMatchers("/*", "/*/*").access("hasRole('USER') or hasRole('ADMIN') or hasRole('DBA')")
+		
+		.anyRequest().authenticated()
+		.and()
 		
 		.formLogin().loginPage("/login").loginProcessingUrl("/login")
 		.usernameParameter("username").passwordParameter("password").and()

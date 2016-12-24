@@ -76,7 +76,8 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 		setPaginationAttribute(model, offset, sortField, sortOrder, query, count);
 
 		setUsuarioLogado(model);
-		setActivePage(model, getIndexTilesPage());
+		setActivePage(model);
+		setMainPage(model);
 
 		return getIndexTilesPage();
 	}
@@ -121,7 +122,7 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 
 		getService().persist(entity);
 
-		return getMainPage();
+		return "redirect:/" + getMainPage();
 	}
 
 	/*
@@ -186,7 +187,7 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 
 		setUsuarioLogado(model);
 
-		return getMainPage();
+		return "redirect:/" + getMainPage();
 	}
 
 	/*
@@ -199,7 +200,7 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 	@Override
 	public String destroy(@PathVariable PK id) {
 		getService().delete(id);
-		return getMainPage();
+		return "redirect:/" + getMainPage();
 	}
 
 	/*
@@ -248,8 +249,12 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 		model.addAttribute("count", count);
 	}
 
-	private void setActivePage(ModelMap model, String activePage) {
-		model.addAttribute("activePage", activePage);
+	private void setMainPage(ModelMap model) {
+		model.addAttribute("mainPage", getMainPage());
+	}
+
+	private void setActivePage(ModelMap model) {
+		model.addAttribute("activePage", getIndexTilesPage());
 	}
 
 	private void setEditPage(ModelMap model) {

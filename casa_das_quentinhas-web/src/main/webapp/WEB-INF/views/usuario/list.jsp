@@ -32,8 +32,8 @@
 							<td>${usuario.email}</td>
 
 							<td class="actions"><a class="btn btn-success btn-xs"
-								href="<c:url value='/usuario/${usuario.id}' />">Visualizar</a> <sec:authorize
-									access="hasRole('ADMIN') or hasRole('DBA')">
+								href="<c:url value='/usuario/${usuario.id}' />">Visualizar</a>
+								<sec:authorize access="hasRole('ADMIN') or hasRole('DBA')">
 									<a class="btn btn-warning btn-xs"
 										href="<c:url value='/usuario/${usuario.id}/edit' />">Alterar</a>
 								</sec:authorize> <sec:authorize access="hasRole('ADMIN')">
@@ -53,6 +53,10 @@
 	<input type="hidden" id="sortOrder" value="${sortOrder}">
 	<input type="hidden" id="query" value="${query}">
 
+	<c:set var="paginateUri">
+		<c:url value='/usuario/list' />
+	</c:set>
+
 	<div class="row">
 		<div class="col-sm-5">
 			<div class="dataTables_info" id="usuarios_info" role="status">
@@ -64,7 +68,7 @@
 			<div class="dataTables_paginate paging_simple_numbers"
 				id="usuarios_paginate">
 				<p:paginate max="15" offset="${offset}" count="${count}"
-					uri="pagination" next="&raquo;" previous="&laquo;" />
+					uri="${paginateUri}" next="&raquo;" previous="&laquo;" />
 			</div>
 		</div>
 	</div>

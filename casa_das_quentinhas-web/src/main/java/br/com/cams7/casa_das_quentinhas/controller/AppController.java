@@ -26,7 +26,7 @@ public class AppController {
 
 	@GetMapping
 	public String home() {
-		return "redirect:/usuario/list";
+		return "redirect:/usuario";
 	}
 
 	/**
@@ -38,7 +38,7 @@ public class AppController {
 		if (isCurrentAuthenticationAnonymous())
 			return "login";
 
-		return "redirect:/usuario/list";
+		return "redirect:/usuario";
 	}
 
 	/**

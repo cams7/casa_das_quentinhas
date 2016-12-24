@@ -81,7 +81,7 @@ public class UsuarioController extends AbstractController<UsuarioService, Usuari
 
 	@Override
 	protected String getMainPage() {
-		return "redirect:/usuario/list";
+		return "usuario";
 	}
 
 	@Override

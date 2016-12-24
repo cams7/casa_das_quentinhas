@@ -59,7 +59,7 @@ $(document).ready(function() {
 	    // console.log('get: list?offset=' + offset + '&f=' + sortField +
 		// '&s=' + sortOrder + '&q=' + query);
 		
-		$.get('pagination?offset=' + offset + '&f=' + sortField + '&s=' + sortOrder + '&q=' + query, data => {
+		$.get(MAIN_PAGE + '/list?offset=' + offset + '&f=' + sortField + '&s=' + sortOrder + '&q=' + query, data => {
 	        // console.log(data);
 			$('.content').html(data);
 			location.hash = offset;

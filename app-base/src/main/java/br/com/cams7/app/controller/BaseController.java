@@ -29,7 +29,7 @@ public interface BaseController<E extends AbstractEntity<PK>, PK extends Seriali
 	 * @param model
 	 * @return
 	 */
-	@GetMapping(value = { "/list" })
+	@GetMapping
 	String index(ModelMap model);
 
 	/**
@@ -95,6 +95,6 @@ public interface BaseController<E extends AbstractEntity<PK>, PK extends Seriali
 	// @DeleteMapping
 	String destroy(PK id);
 
-	@GetMapping(value = "/pagination")
+	@GetMapping(value = { "/list" })
 	String list(ModelMap model, Integer offset, String sortField, String sortOrder, String query);
 }

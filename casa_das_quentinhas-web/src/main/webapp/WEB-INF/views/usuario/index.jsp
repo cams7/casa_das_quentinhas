@@ -12,9 +12,8 @@
 
 	<div class="col-sm-6">
 		<div class="input-group h2">
-			<input name="data[search]" class="form-control" id="search_query"
-				type="text" placeholder="Pesquisar Usuários"> <span
-				class="input-group-btn">
+			<input name="data[search]" class="form-control" id="search_query" type="text" placeholder="Pesquisar Usuários"> 
+			<span class="input-group-btn">
 				<button id="search_btn" class="btn btn-primary" type="submit">
 					<span class="glyphicon glyphicon-search"></span>
 				</button>
@@ -39,4 +38,10 @@
 
 <link rel="stylesheet"
 	href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css">
+
+<script type="text/javascript">
+	var MAIN_PAGE = '<c:url value='/${mainPage}' />';
+</script>	
 <script src="<c:url value='/static/js/casa_das_marmitas-list.js' />"></script>
+
+

@@ -87,12 +87,4 @@
 <input type="hidden" id="lastLoadedPage" name="lastLoadedPage"
 	value="${lastLoadedPage}">
 
-
-<script type="text/javascript">
-$(document).ready(function() {
-	$('#cancelar').click(event => {
-		event.preventDefault();
-		window.history.go(-$("#lastLoadedPage").val());
-	});
-});
-</script>
+<script src="<c:url value='/static/js/casa_das_marmitas-form.js' />"></script>

@@ -14,21 +14,21 @@
 			<li class="${activePage eq 'home' ? 'active' : '' }"><a href="/">Início</a></li>
 
 			<li class="${activePage eq 'cliente_index' ? 'active' : '' }"><a
-				href="<c:url value='/cliente/list' />">Clientes</a></li>
+				href="<c:url value='/cliente' />">Clientes</a></li>
 			<li class="${activePage eq 'pedido_index' ? 'active' : '' }"><a
-				href="<c:url value='/pedido/list' />">Pedidos</a></li>
+				href="<c:url value='/pedido' />">Pedidos</a></li>
 			<li class="${activePage eq 'produto_index' ? 'active' : '' }"><a
-				href="<c:url value='/produto/list' />">Produtos</a></li>
+				href="<c:url value='/produto' />">Produtos</a></li>
 			<li class="${activePage eq 'empresa_index' ? 'active' : '' }"><a
-				href="<c:url value='/empresa/list' />">Empresas</a></li>
+				href="<c:url value='/empresa' />">Empresas</a></li>
 			<li class="${activePage eq 'entregador_index' ? 'active' : '' }"><a
-				href="<c:url value='/entregador/list' />">Entregadores</a></li>
+				href="<c:url value='/entregador' />">Entregadores</a></li>
 			<li class="${activePage eq 'taxa_index' ? 'active' : '' }"><a
-				href="<c:url value='/taxa/list' />">Taxas</a></li>
+				href="<c:url value='/taxa' />">Taxas</a></li>
 			<li class="${activePage eq 'funcionario_index' ? 'active' : '' }"><a
-				href="<c:url value='/funcionario/list' />">Funcionários</a></li>
+				href="<c:url value='/funcionario' />">Funcionários</a></li>
 			<li class="${activePage eq 'usuario_index' ? 'active' : '' }"><a
-				href="<c:url value='/usuario/list' />">Usuários</a></li>
+				href="<c:url value='/usuario' />">Usuários</a></li>
 		</ul>
 		<ul class="nav navbar-nav navbar-right">
 			<li><a href="#"><span class="glyphicon glyphicon-user"></span>
