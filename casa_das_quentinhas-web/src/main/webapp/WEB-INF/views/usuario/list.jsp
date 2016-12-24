@@ -9,8 +9,7 @@
 <c:if test="${count > 0}">
 	<div id="list" class="row">
 		<div class="table-responsive col-md-12">
-			<table id="usuarios"
-				class="table table-striped table-bordered dataTable">
+			<table class="table table-striped table-bordered dataTable">
 				<thead>
 					<tr>
 						<th class="${sortField eq 'nome' ? sortOrder : 'sorting' }"
@@ -32,14 +31,15 @@
 							<td>${usuario.email}</td>
 
 							<td class="actions"><a class="btn btn-success btn-xs"
-								href="<c:url value='/usuario/${usuario.id}' />">Visualizar</a>
-								<sec:authorize access="hasRole('ADMIN') or hasRole('DBA')">
+								href="<c:url value='/usuario/${usuario.id}' />">Visualizar</a> <sec:authorize
+									access="hasRole('ADMIN') or hasRole('DBA')">
 									<a class="btn btn-warning btn-xs"
 										href="<c:url value='/usuario/${usuario.id}/edit' />">Alterar</a>
 								</sec:authorize> <sec:authorize access="hasRole('ADMIN')">
-									<!--a class="btn btn-danger btn-xs" href="#" data-toggle="modal" data-target="#delete-modal">Excluir</a-->
-									<a class="btn btn-danger btn-xs"
-										href="<c:url value='/usuario/${usuario.id}/delete' />">Excluir</a>
+									<button class="btn btn-danger btn-xs delete"
+										value="${usuario.id}">Excluir</button>
+									<!--a class="btn btn-danger btn-xs"
+										href="<c:url value='/usuario/${usuario.id}/delete' />">Excluir</a-->
 								</sec:authorize></td>
 						</tr>
 					</c:forEach>
@@ -48,10 +48,13 @@
 		</div>
 	</div>
 
-	<input type="hidden" id="offset" value="${offset}">
-	<input type="hidden" id="sortField" value="${sortField}">
-	<input type="hidden" id="sortOrder" value="${sortOrder}">
-	<input type="hidden" id="query" value="${query}">
+	<input type="hidden" id="dataTable_offset" value="${offset}">
+	<input type="hidden" id="dataTable_sortField" value="${sortField}">
+	<input type="hidden" id="dataTable_sortOrder" value="${sortOrder}">
+	<input type="hidden" id="dataTable_query" value="${query}">
+
+	<input type="hidden" id="dataTable_maxResults" value="${maxResults}">
+	<input type="hidden" id="dataTable_count" value="${count}">
 
 	<c:set var="paginateUri">
 		<c:url value='/usuario/list' />

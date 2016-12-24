@@ -5,6 +5,7 @@ package br.com.cams7.app.controller;
 
 import java.io.Serializable;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -92,8 +93,8 @@ public interface BaseController<E extends AbstractEntity<PK>, PK extends Seriali
 	 * @return
 	 */
 	@GetMapping(value = { "/{id}/delete" })
-	// @DeleteMapping
-	String destroy(PK id);
+	//@DeleteMapping(value = { "/{id}/delete" })
+	ResponseEntity<Void> destroy(PK id);
 
 	@GetMapping(value = { "/list" })
 	String list(ModelMap model, Integer offset, String sortField, String sortOrder, String query);

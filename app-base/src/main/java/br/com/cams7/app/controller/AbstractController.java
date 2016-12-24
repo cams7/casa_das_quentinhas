@@ -12,6 +12,8 @@ import java.util.Map;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.ModelMap;
@@ -198,9 +200,13 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 	 * io.Serializable)
 	 */
 	@Override
-	public String destroy(@PathVariable PK id) {
+	public ResponseEntity<Void> destroy(@PathVariable PK id) {
+		if (((Integer) id).equals(1))
+			return new ResponseEntity<Void>(HttpStatus.FORBIDDEN);
+
 		getService().delete(id);
-		return "redirect:/" + getMainPage();
+
+		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 
 	/*
@@ -246,6 +252,7 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 		model.addAttribute("sortOrder", sortOrder.getSorting());
 		model.addAttribute("query", query);
 
+		model.addAttribute("maxResults", MAX_RESULTS);
 		model.addAttribute("count", count);
 	}
 

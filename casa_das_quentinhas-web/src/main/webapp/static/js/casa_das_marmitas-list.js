@@ -37,22 +37,22 @@ $(document).ready(function() {
 			
 	function loadTable(offset, sortField, sortOrder, query) {		
 		if(offset == null){
-	    	offset = $('#offset').val();
+	    	offset = $('#dataTable_offset').val();
 	    	offset = offset != undefined ? offset : '0';
 	    }
 	    
 	    if(sortField == null){
-	    	sortField = $('#sortField').val();
+	    	sortField = $('#dataTable_sortField').val();
 	    	sortField = sortField != undefined ? sortField : 'id';
 	    }
 	    
 	    if(sortOrder == null){
-	    	sortOrder = $('#sortOrder').val();
+	    	sortOrder = $('#dataTable_sortOrder').val();
 	    	sortOrder = sortOrder != undefined ? sortOrder : 'sorting_desc';
 	    }
 	    
 	    if(query == null){
-			query = $('#query').val();
+			query = $('#dataTable_query').val();
 		    query = query != undefined ? query : '';
 		}
 	    
@@ -65,4 +65,55 @@ $(document).ready(function() {
 			location.hash = offset;
 	   	});
 	}
+	
+    $(document).on('click', 'table.dataTable button.delete', event => {
+        event.preventDefault();
+        
+        var id = event.target.value;
+        
+        $('div#delete_modal #delete_form').attr('action', MAIN_PAGE + '/' + id + '/delete');
+        $('div#delete_modal h4#modalLabel').html(MODAL_LABEL);
+        $('div#delete_modal div.modal-body').html(MODAL_BODY);
+        $('div#delete_modal').modal('show');
+    });
+    
+    $('div#delete_modal #delete_form').on('submit', event => {
+        event.preventDefault();
+
+        var form = event.target;
+        
+        var url = form.action;
+        // console.log('DELETE ' + url);
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            // contentType: "application/json",
+            // dataType: 'JSON',
+            /*
+			 * data: { 'id': 1, '_method': 'DELETE' },
+			 */
+            // timeout: 600000,
+            success: data => {
+                // console.log('Sucess:');
+                // console.log(data);
+            	
+            	offset = $('#dataTable_offset').val();
+            	if(offset > 0) {
+            		maxResults = $('#dataTable_maxResults').val();
+            		count = $('#dataTable_count').val();
+            		
+            		if(count % maxResults == 1)
+            			offset -= maxResults;
+            	}
+            	
+            	loadTable(offset, null, null, null);
+            	$('div#delete_modal').modal('toggle');
+            },
+            error: data => {
+                console.log('Error:');
+                console.log(data);
+            }
+        });
+    }); 
 });

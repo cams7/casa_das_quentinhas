@@ -41,6 +41,8 @@
 
 <script type="text/javascript">
 	var MAIN_PAGE = '<c:url value='/${mainPage}' />';
+	var MODAL_LABEL = 'Excluir Usuário';
+	var MODAL_BODY = 'Deseja realmente excluir este Usuário?';
 </script>	
 <script src="<c:url value='/static/js/casa_das_marmitas-list.js' />"></script>
 
