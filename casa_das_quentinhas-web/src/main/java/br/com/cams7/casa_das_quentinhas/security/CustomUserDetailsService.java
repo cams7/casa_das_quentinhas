@@ -1,5 +1,7 @@
 package br.com.cams7.casa_das_quentinhas.security;
 
+import static br.com.cams7.casa_das_quentinhas.model.Usuario.Tipo.EMPRESA;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +23,7 @@ import br.com.cams7.casa_das_quentinhas.service.UsuarioService;
 @Service("customUserDetailsService")
 public class CustomUserDetailsService implements UserDetailsService {
 
-	static final Logger LOGGER = LoggerFactory.getLogger(CustomUserDetailsService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CustomUserDetailsService.class);
 
 	@Autowired
 	private UsuarioService userService;
@@ -29,10 +31,10 @@ public class CustomUserDetailsService implements UserDetailsService {
 	@Transactional(readOnly = true)
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		Usuario usuario = userService.getUsuarioByEmail(email);
-		LOGGER.info("User : {}", usuario);
+		LOGGER.info("Usuário: {}", usuario);
 		if (usuario == null) {
-			LOGGER.info("User not found");
-			throw new UsernameNotFoundException("Username not found");
+			LOGGER.info("Usuário não encontrado");
+			throw new UsernameNotFoundException("Usuário não encontrado");
 		}
 		return new org.springframework.security.core.userdetails.User(usuario.getEmail(),
 				usuario.getSenhaCriptografada(), true, true, true, true, getGrantedAuthorities(usuario));
@@ -42,11 +44,12 @@ public class CustomUserDetailsService implements UserDetailsService {
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 
 		Funcionario funcionario = usuario.getFuncionario();
-		
-		LOGGER.info("UserProfile : {}", funcionario);
-		String role = "ROLE_" + funcionario.getFuncao().name();
+
+		LOGGER.info("Funcionário: {}", funcionario);
+		String role = "ROLE_" + (usuario.getTipo() == EMPRESA ? EMPRESA.name() : funcionario.getFuncao().name());
 		authorities.add(new SimpleGrantedAuthority(role));
-		LOGGER.info("authorities : {}", authorities);
+		LOGGER.info("authorities: {}", authorities);
+
 		return authorities;
 	}
 

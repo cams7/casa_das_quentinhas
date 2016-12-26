@@ -1,6 +1,5 @@
 package br.com.cams7.casa_das_quentinhas.configuration;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -16,16 +15,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.servlet.view.tiles3.TilesConfigurer;
 import org.springframework.web.servlet.view.tiles3.TilesViewResolver;
 
-import br.com.cams7.casa_das_quentinhas.converter.FuncionarioFuncaoConverter;
-
 @Configuration
 @Import(JpaConfiguration.class)
 @EnableWebMvc
 @ComponentScan(basePackages = "br.com.cams7.casa_das_quentinhas")
 public class AppConfig extends WebMvcConfigurerAdapter {
-
-	@Autowired
-	private FuncionarioFuncaoConverter funcaoConverter;
 
 	/**
 	 * Configure TilesConfigurer.
@@ -63,7 +57,6 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 	 */
 	@Override
 	public void addFormatters(FormatterRegistry registry) {
-		registry.addConverter(funcaoConverter);
 	}
 
 	/**

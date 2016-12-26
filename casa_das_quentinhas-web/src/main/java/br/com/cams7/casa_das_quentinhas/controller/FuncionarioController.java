@@ -22,6 +22,7 @@ import br.com.cams7.app.controller.AbstractController;
 import br.com.cams7.casa_das_quentinhas.model.Funcionario;
 import br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
+import static br.com.cams7.casa_das_quentinhas.model.Usuario.Tipo.FUNCIONARIO;
 import br.com.cams7.casa_das_quentinhas.service.FuncionarioService;
 import br.com.cams7.casa_das_quentinhas.service.UsuarioService;
 
@@ -72,6 +73,7 @@ public class FuncionarioController extends AbstractController<FuncionarioService
 		if (result.hasErrors())
 			return getCreateTilesPage();
 
+		usuario.setTipo(FUNCIONARIO);
 		usuarioService.persist(usuario);
 
 		funcionario.setId(usuario.getId());

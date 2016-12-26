@@ -3,12 +3,12 @@
 
 <tiles-definitions>
 	<definition name="login" extends="public">
-		<put-attribute name="title" value="Login page" />
+		<put-attribute name="title" value="Pagina de login" />
 		<put-attribute name="body" value="/WEB-INF/views/login.jsp" />
 	</definition>
 
-	<definition name="accessDenied" extends="public">
-		<put-attribute name="title" value="AccessDenied page" />
-		<put-attribute name="body" value="/WEB-INF/views/accessDenied.jsp" />
+	<definition name="acesso_negado" extends="public">
+		<put-attribute name="title" value="Acesso negado" />
+		<put-attribute name="body" value="/WEB-INF/views/acesso_negado.jsp" />
 	</definition>
 </tiles-definitions>

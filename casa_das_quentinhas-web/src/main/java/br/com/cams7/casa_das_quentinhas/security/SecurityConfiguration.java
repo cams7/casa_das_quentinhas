@@ -23,10 +23,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	@Qualifier("customUserDetailsService")
-	UserDetailsService userDetailsService;
+	private UserDetailsService userDetailsService;
 
 	@Autowired
-	PersistentTokenRepository tokenRepository;
+	private PersistentTokenRepository tokenRepository;
 
 	@Autowired
 	public void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
@@ -44,7 +44,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				
 		.antMatchers("/*/create", "/*/*/delete").access("hasRole('GERENTE')")
 		.antMatchers("/*/*/edit").access("hasRole('GERENTE') or hasRole('ATENDENTE')")
-		.antMatchers("/*", "/*/*").access("hasRole('GERENTE') or hasRole('ATENDENTE') or hasRole('ENTREGADOR')")
+		.antMatchers("/*", "/*/*").access("hasRole('GERENTE') or hasRole('ATENDENTE') or hasRole('ENTREGADOR') or hasRole('EMPRESA')")
 		
 		.anyRequest().authenticated()
 		.and()
@@ -54,7 +54,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		
 		.rememberMe().rememberMeParameter("lembre_me").tokenRepository(tokenRepository).tokenValiditySeconds(86400).and()
 		
-		.csrf().and().exceptionHandling().accessDeniedPage("/Access_Denied");
+		.csrf().and().exceptionHandling().accessDeniedPage("/acesso_negado");
 	}
 
 	@Bean

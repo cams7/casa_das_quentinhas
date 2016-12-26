@@ -83,7 +83,7 @@ public class Funcionario extends AbstractEntity<Integer> {
 	}
 
 	public enum Funcao {
-		GERENTE("Gerente"), ATENDENTE("Atendente"), ENTREGADOR("Entregador");
+		GERENTE("Gerente"), ATENDENTE("Atendente"), ENTREGADOR("Entregador(a)");
 		private String nome;
 
 		private Funcao(String nome) {

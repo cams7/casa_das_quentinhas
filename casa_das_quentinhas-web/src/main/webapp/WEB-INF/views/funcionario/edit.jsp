@@ -9,6 +9,7 @@
 <form:form method="POST" modelAttribute="funcionario">
 	<form:input type="hidden" path="id" id="id" />
 	<form:input type="hidden" path="usuario.id" id="usuario.id" />
+	<form:input type="hidden" path="usuario.tipo" id="usuario.tipo" />
 
 	<%@include file="form.jsp"%>
 

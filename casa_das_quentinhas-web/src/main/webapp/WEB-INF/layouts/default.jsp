@@ -36,7 +36,7 @@
 <body>
 	<tiles:insertAttribute name="header" />	
 
-	<div id="main" class="container-fluid" style="margin-top: 50px">
+	<div class="container-fluid" style="margin-top: 50px">
 		<tiles:insertAttribute name="body" />
 	</div>
 </body>

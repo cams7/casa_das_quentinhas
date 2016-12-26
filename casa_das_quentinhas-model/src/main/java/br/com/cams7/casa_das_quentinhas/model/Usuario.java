@@ -2,6 +2,8 @@ package br.com.cams7.casa_das_quentinhas.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -34,6 +36,10 @@ public class Usuario extends AbstractEntity<Integer> {
 
 	@Column(name = "senha", length = 100, nullable = false)
 	private String senhaCriptografada;
+
+	@Enumerated(EnumType.ORDINAL)
+	@Column(name = "tipo_usuario", nullable = false)
+	private Tipo tipo;
 
 	@OneToOne(fetch = FetchType.LAZY, mappedBy = "usuario")
 	private Funcionario funcionario;
@@ -68,6 +74,14 @@ public class Usuario extends AbstractEntity<Integer> {
 
 	public void setSenhaCriptografada(String senhaCriptografada) {
 		this.senhaCriptografada = senhaCriptografada;
+	}
+
+	public Tipo getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(Tipo tipo) {
+		this.tipo = tipo;
 	}
 
 	public Funcionario getFuncionario() {
@@ -115,6 +129,23 @@ public class Usuario extends AbstractEntity<Integer> {
 			return false;
 
 		return true;
+	}
+
+	public enum Tipo {
+		FUNCIONARIO("Funcionário(a)"), EMPRESA("Empresa");
+		private String nome;
+
+		private Tipo(String nome) {
+			this.nome = nome;
+		}
+
+		public Tipo getTipo() {
+			return values()[ordinal()];
+		}
+
+		public String getNome() {
+			return nome;
+		}
 	}
 
 }
