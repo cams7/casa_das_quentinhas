@@ -16,7 +16,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.servlet.view.tiles3.TilesConfigurer;
 import org.springframework.web.servlet.view.tiles3.TilesViewResolver;
 
-import br.com.cams7.casa_das_quentinhas.converter.AutorizacaoConverter;
+import br.com.cams7.casa_das_quentinhas.converter.FuncionarioConverter;
 
 @Configuration
 @Import(JpaConfiguration.class)
@@ -25,7 +25,7 @@ import br.com.cams7.casa_das_quentinhas.converter.AutorizacaoConverter;
 public class AppConfig extends WebMvcConfigurerAdapter {
 
 	@Autowired
-	private AutorizacaoConverter autorizacaoConverter;
+	private FuncionarioConverter funcionarioConverter;
 
 	/**
 	 * Configure TilesConfigurer.
@@ -63,7 +63,7 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 	 */
 	@Override
 	public void addFormatters(FormatterRegistry registry) {
-		registry.addConverter(autorizacaoConverter);
+		registry.addConverter(funcionarioConverter);
 	}
 
 	/**

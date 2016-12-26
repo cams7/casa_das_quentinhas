@@ -41,9 +41,9 @@ public class Usuario extends AbstractEntity<Integer> {
 
 	@NotEmpty
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "usuario_autorizacao", joinColumns = { @JoinColumn(name = "id_usuario") }, inverseJoinColumns = {
-			@JoinColumn(name = "id_autorizacao") })
-	private Set<Autorizacao> autorizacoes;
+	@JoinTable(name = "usuario_funcionario", joinColumns = { @JoinColumn(name = "id_usuario") }, inverseJoinColumns = {
+			@JoinColumn(name = "id_funcionario") })
+	private Set<Funcionario> funcionarios;
 
 	@Transient
 	private String senha;
@@ -77,12 +77,12 @@ public class Usuario extends AbstractEntity<Integer> {
 		this.senhaCriptografada = senhaCriptografada;
 	}
 
-	public Set<Autorizacao> getAutorizacoes() {
-		return autorizacoes;
+	public Set<Funcionario> getFuncionarios() {
+		return funcionarios;
 	}
 
-	public void setAutorizacoes(Set<Autorizacao> autorizacoes) {
-		this.autorizacoes = autorizacoes;
+	public void setFuncionarios(Set<Funcionario> funcionarios) {
+		this.funcionarios = funcionarios;
 	}
 
 	public String getSenha() {

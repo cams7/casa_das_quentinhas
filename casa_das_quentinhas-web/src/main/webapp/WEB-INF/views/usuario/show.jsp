@@ -23,8 +23,8 @@
 		</p>
 
 		<ul class="list-group">
-			<c:forEach items="${usuario.autorizacoes}" var="autorizacao">
-				<li class="list-group-item">${autorizacao.papel}</li>
+			<c:forEach items="${usuario.funcionarios}" var="funcionario">
+				<li class="list-group-item">${funcionario.funcao}</li>
 			</c:forEach>
 		</ul>
 	</div>

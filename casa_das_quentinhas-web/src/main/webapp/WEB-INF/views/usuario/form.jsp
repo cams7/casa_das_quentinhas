@@ -48,18 +48,17 @@
 		<div class="help-block with-errors">${confirmacaoError}</div>
 	</div>
 
-	<c:set var="autorizacoesHasBindError">
-		<form:errors path="autorizacoes" />
+	<c:set var="funcionariosError">
+		<form:errors path="funcionarios" />
 	</c:set>
 	<div
-		class="form-group col-md-2 ${not empty autorizacoesHasBindError?'has-error':''}">
-		<label class="control-label" for="autorizacoes">Autorização</label>
+		class="form-group col-md-2 ${not empty funcionariosError?'has-error':''}">
+		<label class="control-label" for="funcionarios">Funcionário</label>
 
-		<form:select path="autorizacoes" items="${autorizacoes}"
-			multiple="true" itemValue="id" itemLabel="papel" class="form-control" />
-		<div class="help-block with-errors">
-			<form:errors path="autorizacoes" />
-		</div>
+		<form:select path="funcionarios" items="${funcionarios}"
+			multiple="true" itemValue="id" itemLabel="funcao"
+			class="form-control" />
+		<div class="help-block with-errors">${funcionariosError}</div>
 	</div>
 </div>
 

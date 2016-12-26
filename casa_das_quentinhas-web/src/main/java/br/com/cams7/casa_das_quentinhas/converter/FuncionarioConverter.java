@@ -6,30 +6,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
-import br.com.cams7.casa_das_quentinhas.model.Autorizacao;
-import br.com.cams7.casa_das_quentinhas.service.AutorizacaoService;
+import br.com.cams7.casa_das_quentinhas.model.Funcionario;
+import br.com.cams7.casa_das_quentinhas.service.FuncionarioService;
 
 /**
  * A converter class used in views to map id's to actual userProfile objects.
  */
 @Component
-public class AutorizacaoConverter implements Converter<Object, Autorizacao> {
+public class FuncionarioConverter implements Converter<Object, Funcionario> {
 
-	static final Logger logger = LoggerFactory.getLogger(AutorizacaoConverter.class);
+	static final Logger logger = LoggerFactory.getLogger(FuncionarioConverter.class);
 
 	@Autowired
-	private AutorizacaoService autorizacaoService;
+	private FuncionarioService funcionarioService;
 
 	/**
 	 * Gets UserProfile by Id
 	 * 
 	 * @see org.springframework.core.convert.converter.Converter#convert(java.lang.Object)
 	 */
-	public Autorizacao convert(Object element) {
+	public Funcionario convert(Object element) {
 		Integer id = Integer.parseInt((String) element);
-		Autorizacao autorizacao = autorizacaoService.getById(id);
-		logger.info("Profile : {}", autorizacao);
-		return autorizacao;
+		Funcionario funcionario = funcionarioService.getById(id);
+		logger.info("Funcionario : {}", funcionario);
+		return funcionario;
 	}
 
 }

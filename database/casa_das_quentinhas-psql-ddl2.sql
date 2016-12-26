@@ -205,7 +205,7 @@ COMMENT ON TABLE public.funcionario IS 'Funcionário da empresa Casa das Quentinh
 COMMENT ON COLUMN public.funcionario.id_funcionario IS 'O funcionário é um usuário, com isso, tem o mesmo id.';
 COMMENT ON COLUMN public.funcionario.id_usuario_cadastro IS 'Usuário que cadastrou o funcionário.';
 COMMENT ON COLUMN public.funcionario.id_empresa IS 'Empresa a qual pertence o funcionário.';
-COMMENT ON COLUMN public.funcionario.funcao IS 'Função do funcionário que pode ser ATENDENTE, GERENTE ou ENTREGADOR.';
+COMMENT ON COLUMN public.funcionario.funcao IS 'Função do funcionário que pode ser 1 - GERENTE, 2 - ATENDENTE ou 3 - ENTREGADOR.';
 COMMENT ON COLUMN public.funcionario.nome IS 'Nome do funcionário.';
 COMMENT ON COLUMN public.funcionario.cpf IS 'CPF do funcionário.';
 COMMENT ON COLUMN public.funcionario.rg IS 'Número da identidade do funcionário.';

@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS acesso;
-DROP TABLE IF EXISTS usuario_autorizacao;
-DROP TABLE IF EXISTS autorizacao;
+DROP TABLE IF EXISTS usuario_funcionario;
+DROP TABLE IF EXISTS funcionario;
 DROP TABLE IF EXISTS usuario;
 
 DROP SEQUENCE IF EXISTS usuario_id_seq;
@@ -16,37 +16,34 @@ CREATE TABLE usuario (
 
 ALTER SEQUENCE usuario_id_seq OWNED BY usuario.id_usuario;
 
-DROP SEQUENCE IF EXISTS id_autorizacao_seq;
-CREATE SEQUENCE id_autorizacao_seq;
+DROP SEQUENCE IF EXISTS funcionario_id_seq;
+CREATE SEQUENCE funcionario_id_seq;
 
-DROP TYPE IF EXISTS autorizacao_papel;
-CREATE TYPE autorizacao_papel AS ENUM ('ADMIN', 'DBA', 'USER');
-
-CREATE TABLE autorizacao (
-	id_autorizacao SMALLINT NOT NULL DEFAULT nextval('id_autorizacao_seq'),
-	papel autorizacao_papel NOT NULL,
-    CONSTRAINT autorizacao_pk PRIMARY KEY (id_autorizacao),
-	CONSTRAINT autorizacao_papel_uk UNIQUE (papel)
+CREATE TABLE funcionario (
+	id_funcionario SMALLINT NOT NULL DEFAULT nextval('funcionario_id_seq'),
+	funcao SMALLINT NOT NULL,
+    CONSTRAINT funcionario_pk PRIMARY KEY (id_funcionario),
+	CONSTRAINT funcionario_funcao_uk UNIQUE (funcao)
 );
 
-ALTER SEQUENCE id_autorizacao_seq OWNED BY autorizacao.id_autorizacao;
+ALTER SEQUENCE funcionario_id_seq OWNED BY funcionario.id_funcionario;
 
-CREATE TABLE usuario_autorizacao (
+CREATE TABLE usuario_funcionario (
 	id_usuario INTEGER NOT NULL,
-	id_autorizacao SMALLINT NOT NULL,
-    CONSTRAINT usuario_autorizacao_pk PRIMARY KEY (id_usuario, id_autorizacao)
+	id_funcionario SMALLINT NOT NULL,
+    CONSTRAINT usuario_funcionario_pk PRIMARY KEY (id_usuario, id_funcionario)
 );
 
-ALTER TABLE usuario_autorizacao ADD CONSTRAINT usuario_autorizacao_usuario_fk
+ALTER TABLE usuario_funcionario ADD CONSTRAINT usuario_funcionario_usuario_fk
 FOREIGN KEY (id_usuario)
 REFERENCES usuario (id_usuario)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION
 NOT DEFERRABLE;
 
-ALTER TABLE usuario_autorizacao ADD CONSTRAINT usuario_autorizacao_autorizacao_fk
-FOREIGN KEY (id_autorizacao)
-REFERENCES autorizacao (id_autorizacao)
+ALTER TABLE usuario_funcionario ADD CONSTRAINT usuario_funcionario_funcionario_fk
+FOREIGN KEY (id_funcionario)
+REFERENCES funcionario (id_funcionario)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION
 NOT DEFERRABLE;
@@ -61,9 +58,10 @@ CREATE TABLE public.acesso (
 	CONSTRAINT acesso_token_uk UNIQUE (token)
 );
 
-INSERT INTO autorizacao(id_autorizacao, papel) VALUES (nextval('id_autorizacao_seq'), 'USER');  
-INSERT INTO autorizacao(id_autorizacao, papel) VALUES (nextval('id_autorizacao_seq'), 'ADMIN');  
-INSERT INTO autorizacao(id_autorizacao, papel) VALUES (nextval('id_autorizacao_seq'), 'DBA');
+  
+INSERT INTO funcionario(id_funcionario, funcao) VALUES (nextval('funcionario_id_seq'), 0);  
+INSERT INTO funcionario(id_funcionario, funcao) VALUES (nextval('funcionario_id_seq'), 1);
+INSERT INTO funcionario(id_funcionario, funcao) VALUES (nextval('funcionario_id_seq'), 2);
 
 --Username: cesar, password: 12345
 INSERT INTO usuario(id_usuario, email, senha) VALUES (nextval('usuario_id_seq'),'ceanma@gmail.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC');
@@ -91,30 +89,30 @@ INSERT INTO usuario(id_usuario, email, senha) VALUES (nextval('usuario_id_seq'),
 INSERT INTO usuario(id_usuario, email, senha) VALUES (nextval('usuario_id_seq'),'julia@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC');
 INSERT INTO usuario(id_usuario, email, senha) VALUES (nextval('usuario_id_seq'),'guilherme@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC');
 
-INSERT INTO usuario_autorizacao (id_usuario, id_autorizacao) VALUES (1, 2);
-INSERT INTO usuario_autorizacao (id_usuario, id_autorizacao) VALUES (2, 1);
-INSERT INTO usuario_autorizacao (id_usuario, id_autorizacao) VALUES (3, 1);
-INSERT INTO usuario_autorizacao (id_usuario, id_autorizacao) VALUES (4, 3);
-INSERT INTO usuario_autorizacao (id_usuario, id_autorizacao) VALUES (5, 3);
-INSERT INTO usuario_autorizacao (id_usuario, id_autorizacao) VALUES (6, 2);
-INSERT INTO usuario_autorizacao (id_usuario, id_autorizacao) VALUES (7, 2);
-INSERT INTO usuario_autorizacao (id_usuario, id_autorizacao) VALUES (8, 1);
-INSERT INTO usuario_autorizacao (id_usuario, id_autorizacao) VALUES (9, 1);
-INSERT INTO usuario_autorizacao (id_usuario, id_autorizacao) VALUES (10, 3);
-INSERT INTO usuario_autorizacao (id_usuario, id_autorizacao) VALUES (11, 3);
-INSERT INTO usuario_autorizacao (id_usuario, id_autorizacao) VALUES (12, 2);
-INSERT INTO usuario_autorizacao (id_usuario, id_autorizacao) VALUES (13, 2);
-INSERT INTO usuario_autorizacao (id_usuario, id_autorizacao) VALUES (14, 1);
-INSERT INTO usuario_autorizacao (id_usuario, id_autorizacao) VALUES (15, 1);
-INSERT INTO usuario_autorizacao (id_usuario, id_autorizacao) VALUES (16, 3);
-INSERT INTO usuario_autorizacao (id_usuario, id_autorizacao) VALUES (17, 3);
-INSERT INTO usuario_autorizacao (id_usuario, id_autorizacao) VALUES (18, 2);
-INSERT INTO usuario_autorizacao (id_usuario, id_autorizacao) VALUES (19, 2);
-INSERT INTO usuario_autorizacao (id_usuario, id_autorizacao) VALUES (20, 1);
-INSERT INTO usuario_autorizacao (id_usuario, id_autorizacao) VALUES (21, 1);
-INSERT INTO usuario_autorizacao (id_usuario, id_autorizacao) VALUES (22, 3);
-INSERT INTO usuario_autorizacao (id_usuario, id_autorizacao) VALUES (23, 3);
-INSERT INTO usuario_autorizacao (id_usuario, id_autorizacao) VALUES (24, 2);
+INSERT INTO usuario_funcionario (id_usuario, id_funcionario) VALUES (1, 1);
+INSERT INTO usuario_funcionario (id_usuario, id_funcionario) VALUES (2, 1);
+INSERT INTO usuario_funcionario (id_usuario, id_funcionario) VALUES (3, 1);
+INSERT INTO usuario_funcionario (id_usuario, id_funcionario) VALUES (4, 3);
+INSERT INTO usuario_funcionario (id_usuario, id_funcionario) VALUES (5, 3);
+INSERT INTO usuario_funcionario (id_usuario, id_funcionario) VALUES (6, 2);
+INSERT INTO usuario_funcionario (id_usuario, id_funcionario) VALUES (7, 2);
+INSERT INTO usuario_funcionario (id_usuario, id_funcionario) VALUES (8, 1);
+INSERT INTO usuario_funcionario (id_usuario, id_funcionario) VALUES (9, 1);
+INSERT INTO usuario_funcionario (id_usuario, id_funcionario) VALUES (10, 3);
+INSERT INTO usuario_funcionario (id_usuario, id_funcionario) VALUES (11, 3);
+INSERT INTO usuario_funcionario (id_usuario, id_funcionario) VALUES (12, 2);
+INSERT INTO usuario_funcionario (id_usuario, id_funcionario) VALUES (13, 2);
+INSERT INTO usuario_funcionario (id_usuario, id_funcionario) VALUES (14, 1);
+INSERT INTO usuario_funcionario (id_usuario, id_funcionario) VALUES (15, 1);
+INSERT INTO usuario_funcionario (id_usuario, id_funcionario) VALUES (16, 3);
+INSERT INTO usuario_funcionario (id_usuario, id_funcionario) VALUES (17, 3);
+INSERT INTO usuario_funcionario (id_usuario, id_funcionario) VALUES (18, 2);
+INSERT INTO usuario_funcionario (id_usuario, id_funcionario) VALUES (19, 2);
+INSERT INTO usuario_funcionario (id_usuario, id_funcionario) VALUES (20, 1);
+INSERT INTO usuario_funcionario (id_usuario, id_funcionario) VALUES (21, 1);
+INSERT INTO usuario_funcionario (id_usuario, id_funcionario) VALUES (22, 3);
+INSERT INTO usuario_funcionario (id_usuario, id_funcionario) VALUES (23, 3);
+INSERT INTO usuario_funcionario (id_usuario, id_funcionario) VALUES (24, 2);
 
-SELECT u.id_usuario, u.email, a.papel FROM usuario u INNER JOIN usuario_autorizacao ua ON u.id_usuario=ua.id_usuario INNER JOIN autorizacao a ON ua.id_autorizacao=a.id_autorizacao; 
+SELECT u.id_usuario, u.email, a.funcao FROM usuario u INNER JOIN usuario_funcionario ua ON u.id_usuario=ua.id_usuario INNER JOIN funcionario a ON ua.id_funcionario=a.id_funcionario; 
 

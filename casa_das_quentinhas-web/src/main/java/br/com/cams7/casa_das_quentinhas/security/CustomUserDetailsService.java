@@ -14,7 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.cams7.casa_das_quentinhas.model.Autorizacao;
+import br.com.cams7.casa_das_quentinhas.model.Funcionario;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
 import br.com.cams7.casa_das_quentinhas.service.UsuarioService;
 
@@ -41,9 +41,10 @@ public class CustomUserDetailsService implements UserDetailsService {
 	private List<GrantedAuthority> getGrantedAuthorities(Usuario usuario) {
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 
-		for (Autorizacao autorizacao : usuario.getAutorizacoes()) {
-			LOGGER.info("UserProfile : {}", autorizacao);
-			authorities.add(new SimpleGrantedAuthority("ROLE_" + autorizacao.getPapel()));
+		for (Funcionario funcionario : usuario.getFuncionarios()) {
+			LOGGER.info("UserProfile : {}", funcionario);
+			String role = "ROLE_" + funcionario.getFuncao().name();
+			authorities.add(new SimpleGrantedAuthority(role));
 		}
 		LOGGER.info("authorities : {}", authorities);
 		return authorities;

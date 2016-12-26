@@ -34,8 +34,8 @@ public class UsuarioDAOImpl extends AbstractDAO<Usuario, Integer> implements Usu
 		Root<Usuario> from = cq.from(ENTITY_TYPE);
 		cq.where(cb.equal(from.get(Usuario_.id), id));
 
-		from.join(Usuario_.autorizacoes);
-		from.fetch(Usuario_.autorizacoes);
+		from.join(Usuario_.funcionarios);
+		from.fetch(Usuario_.funcionarios);
 
 		cq.select(from);
 

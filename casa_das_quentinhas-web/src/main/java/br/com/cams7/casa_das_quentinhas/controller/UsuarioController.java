@@ -18,18 +18,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import br.com.cams7.app.controller.AbstractController;
-import br.com.cams7.casa_das_quentinhas.model.Autorizacao;
+import br.com.cams7.casa_das_quentinhas.model.Funcionario;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
-import br.com.cams7.casa_das_quentinhas.service.AutorizacaoService;
+import br.com.cams7.casa_das_quentinhas.service.FuncionarioService;
 import br.com.cams7.casa_das_quentinhas.service.UsuarioService;
 
 @Controller
 @RequestMapping("/usuario")
-@SessionAttributes("autorizacoes")
+@SessionAttributes("funcionarios")
 public class UsuarioController extends AbstractController<UsuarioService, Usuario, Integer> {
 
 	@Autowired
-	private AutorizacaoService autorizacaoService;
+	private FuncionarioService funcionarioService;
 
 	@Autowired
 	private MessageSource messageSource;
@@ -102,10 +102,10 @@ public class UsuarioController extends AbstractController<UsuarioService, Usuari
 	/**
 	 * This method will provide UserProfile list to views
 	 */
-	@ModelAttribute("autorizacoes")
-	public List<Autorizacao> initializeAutorizacoes() {
-		List<Autorizacao> autorizacoes = autorizacaoService.getAll();
-		return autorizacoes;
+	@ModelAttribute("funcionarios")
+	public List<Funcionario> initializeFuncionarios() {
+		List<Funcionario> funcionarios = funcionarioService.getAll();
+		return funcionarios;
 	}
 
 	@Override
