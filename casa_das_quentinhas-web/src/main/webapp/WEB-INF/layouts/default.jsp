@@ -20,7 +20,7 @@
 	href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
 <link rel="stylesheet" type="text/css"
-	href="<c:url value='/static/css/casa_das_marmitas.css' />">
+	href="<c:url value='/static/css/casa_das_quentinhas.css' />">
 
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -30,34 +30,11 @@
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-<script src="<c:url value='/static/js/casa_das_marmitas.js' />"></script>
+<script src="<c:url value='/static/js/casa_das_quentinhas.js' />"></script>
 </head>
 
 <body>
-	<tiles:insertAttribute name="header" />
-
-	<!-- Modal -->
-	<div class="modal fade" id="delete_modal" tabindex="-1" role="dialog"
-		aria-labelledby="modalLabel">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal"
-						aria-label="Fechar">
-						<span aria-hidden="true">&times;</span>
-					</button>
-					<h4 class="modal-title" id="modalLabel">Title</h4>
-				</div>
-				<div class="modal-body">Message</div>
-				<form:form id="delete_form" method="POST">
-					<div class="modal-footer">
-						<input type="submit" value="Sim" class="btn btn-primary" />
-						<button type="button" class="btn btn-default" data-dismiss="modal">N&atilde;o</button>
-					</div>
-				</form:form>
-			</div>
-		</div>
-	</div>
+	<tiles:insertAttribute name="header" />	
 
 	<div id="main" class="container-fluid" style="margin-top: 50px">
 		<tiles:insertAttribute name="body" />

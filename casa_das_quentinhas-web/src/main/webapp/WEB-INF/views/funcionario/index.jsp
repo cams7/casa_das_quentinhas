@@ -44,6 +44,8 @@
 	var MODAL_LABEL = 'Excluir Funcionário';
 	var MODAL_BODY = 'Deseja realmente excluir este Funcionário?';
 </script>
-<script src="<c:url value='/static/js/casa_das_marmitas-list.js' />"></script>
+<script src="<c:url value='/static/js/casa_das_quentinhas-index.js' />"></script>
+
+<%@include file="../../layouts/delete_modal.jsp"%>
 
 

@@ -140,6 +140,7 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 		model.addAttribute(getEntityName(), entity);
 
 		setUsuarioLogado(model);
+		setMainPage(model);
 
 		return getShowTilesPage();
 	}

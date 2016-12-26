@@ -32,9 +32,17 @@
 				href="<c:url value='/funcionario/${funcionario.id}/edit' />">Alterar</a>
 		</sec:authorize>
 		<sec:authorize access="hasRole('GERENTE')">
-			<a class="btn btn-danger"
-				href="<c:url value='/funcionario/${funcionario.id}/delete' />">Excluir</a>
+			<button id="delete" class="btn btn-danger" value="${funcionario.id}">Excluir</button>
 		</sec:authorize>
 		<a href="javascript:history.back()" class="btn btn-default">Cancelar</a>
 	</div>
 </div>
+
+<script type="text/javascript">
+	var MAIN_PAGE = '<c:url value='/${mainPage}' />';
+	var MODAL_LABEL = 'Excluir Funcionário';
+	var MODAL_BODY = 'Deseja realmente excluir este Funcionário?';
+</script>
+<script src="<c:url value='/static/js/casa_das_quentinhas-show.js' />"></script>
+
+<%@include file="../../layouts/delete_modal.jsp"%>

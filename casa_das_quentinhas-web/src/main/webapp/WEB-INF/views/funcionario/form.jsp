@@ -66,4 +66,4 @@
 <input type="hidden" id="lastLoadedPage" name="lastLoadedPage"
 	value="${lastLoadedPage}">
 
-<script src="<c:url value='/static/js/casa_das_marmitas-form.js' />"></script>
+<script src="<c:url value='/static/js/casa_das_quentinhas-form.js' />"></script>
