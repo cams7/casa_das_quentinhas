@@ -18,7 +18,7 @@
 
 						<th class="${sortField eq 'funcao' ? sortOrder : 'sorting' }"
 							id="funcao">Função</th>
-						<sec:authorize access="hasRole('ADMIN') or hasRole('DBA')">
+						<sec:authorize access="hasRole('GERENTE') or hasRole('ATENDENTE')">
 							<th class="actions">Ações</th>
 						</sec:authorize>
 					</tr>
@@ -31,10 +31,10 @@
 
 							<td class="actions"><a class="btn btn-success btn-xs"
 								href="<c:url value='/funcionario/${funcionario.id}' />">Visualizar</a>
-								<sec:authorize access="hasRole('ADMIN') or hasRole('DBA')">
+								<sec:authorize access="hasRole('GERENTE') or hasRole('ATENDENTE')">
 									<a class="btn btn-warning btn-xs"
 										href="<c:url value='/funcionario/${funcionario.id}/edit' />">Alterar</a>
-								</sec:authorize> <sec:authorize access="hasRole('ADMIN')">
+								</sec:authorize> <sec:authorize access="hasRole('GERENTE')">
 									<button class="btn btn-danger btn-xs delete"
 										value="${funcionario.id}">Excluir</button>
 								</sec:authorize></td>

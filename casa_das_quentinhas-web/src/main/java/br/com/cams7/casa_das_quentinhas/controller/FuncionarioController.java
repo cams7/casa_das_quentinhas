@@ -66,7 +66,6 @@ public class FuncionarioController extends AbstractController<FuncionarioService
 			result.addError(emailError);
 		}
 
-		// return super.store(funcionario, result, model, lastLoadedPage);
 		setUsuarioLogado(model);
 		incrementLastLoadedPage(model, lastLoadedPage);
 
@@ -97,7 +96,6 @@ public class FuncionarioController extends AbstractController<FuncionarioService
 		setNotEmptyConfirmacaoError(usuario, result, !usuario.getSenha().isEmpty());
 		setSenhaNotEqualsConfirmacaoError(usuario, result);
 
-		// return super.update(funcionario, result, model, id, lastLoadedPage);
 		setEditPage(model);
 		setUsuarioLogado(model);
 		incrementLastLoadedPage(model, lastLoadedPage);

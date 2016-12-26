@@ -5,7 +5,6 @@
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
 
-
 <h3 class="page-header">
 	Visualizar Funcionário <span class="label label-default">${funcionario.id}</span>
 </h3>
@@ -28,11 +27,11 @@
 <hr />
 <div id="actions" class="row">
 	<div class="col-md-12">
-		<sec:authorize access="hasRole('ADMIN') or hasRole('DBA')">
+		<sec:authorize access="hasRole('GERENTE') or hasRole('ATENDENTE')">
 			<a class="btn btn-warning"
 				href="<c:url value='/funcionario/${funcionario.id}/edit' />">Alterar</a>
 		</sec:authorize>
-		<sec:authorize access="hasRole('ADMIN')">
+		<sec:authorize access="hasRole('GERENTE')">
 			<a class="btn btn-danger"
 				href="<c:url value='/funcionario/${funcionario.id}/delete' />">Excluir</a>
 		</sec:authorize>

@@ -23,7 +23,7 @@
 	</div>
 
 	<div class="col-sm-3">
-		<sec:authorize access="hasRole('ADMIN')">
+		<sec:authorize access="hasRole('GERENTE')">
 			<a href="<c:url value='/funcionario/create' />"
 				class="btn btn-primary pull-right h2">Novo Funcionário</a>
 		</sec:authorize>
