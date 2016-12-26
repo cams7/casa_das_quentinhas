@@ -28,7 +28,7 @@
 		<form:errors path="senha" />
 	</c:set>
 	<div
-		class="form-group col-md-3 ${not empty senhaError ? 'has-error' : ''}">
+		class="form-group col-md-4 ${not empty senhaError ? 'has-error' : ''}">
 		<label class="control-label" for="senha">Senha</label>
 
 		<form:input type="password" path="senha" id="senha"
@@ -40,26 +40,13 @@
 		<form:errors path="confirmacaoSenha" />
 	</c:set>
 	<div
-		class="form-group col-md-3 ${not empty confirmacaoError ? 'has-error' : ''}">
+		class="form-group col-md-4 ${not empty confirmacaoError ? 'has-error' : ''}">
 		<label class="control-label" for="confirmacaoSenha">Confirmação</label>
 
 		<form:input type="password" path="confirmacaoSenha"
 			id="confirmacaoSenha" class="form-control" />
 		<div class="help-block with-errors">${confirmacaoError}</div>
-	</div>
-
-	<c:set var="funcionariosError">
-		<form:errors path="funcionarios" />
-	</c:set>
-	<div
-		class="form-group col-md-2 ${not empty funcionariosError?'has-error':''}">
-		<label class="control-label" for="funcionarios">Funcionário</label>
-
-		<form:select path="funcionarios" items="${funcionarios}"
-			multiple="true" itemValue="id" itemLabel="funcao"
-			class="form-control" />
-		<div class="help-block with-errors">${funcionariosError}</div>
-	</div>
+	</div>	
 </div>
 
 <input type="hidden" id="lastLoadedPage" name="lastLoadedPage"

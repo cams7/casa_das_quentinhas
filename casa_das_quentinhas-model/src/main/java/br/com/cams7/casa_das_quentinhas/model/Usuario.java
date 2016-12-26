@@ -1,16 +1,12 @@
 package br.com.cams7.casa_das_quentinhas.model;
 
-import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -28,7 +24,7 @@ public class Usuario extends AbstractEntity<Integer> {
 	@Id
 	@SequenceGenerator(name = "usuario_id_seq", sequenceName = "usuario_id_seq", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usuario_id_seq")
-	@Column(name = "id_usuario")
+	@Column(name = "id_usuario", nullable = false)
 	private Integer id;
 
 	@NotEmpty
@@ -39,11 +35,8 @@ public class Usuario extends AbstractEntity<Integer> {
 	@Column(name = "senha", length = 100, nullable = false)
 	private String senhaCriptografada;
 
-	@NotEmpty
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "usuario_funcionario", joinColumns = { @JoinColumn(name = "id_usuario") }, inverseJoinColumns = {
-			@JoinColumn(name = "id_funcionario") })
-	private Set<Funcionario> funcionarios;
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "usuario")
+	private Funcionario funcionario;
 
 	@Transient
 	private String senha;
@@ -77,12 +70,12 @@ public class Usuario extends AbstractEntity<Integer> {
 		this.senhaCriptografada = senhaCriptografada;
 	}
 
-	public Set<Funcionario> getFuncionarios() {
-		return funcionarios;
+	public Funcionario getFuncionario() {
+		return funcionario;
 	}
 
-	public void setFuncionarios(Set<Funcionario> funcionarios) {
-		this.funcionarios = funcionarios;
+	public void setFuncionario(Funcionario funcionario) {
+		this.funcionario = funcionario;
 	}
 
 	public String getSenha() {

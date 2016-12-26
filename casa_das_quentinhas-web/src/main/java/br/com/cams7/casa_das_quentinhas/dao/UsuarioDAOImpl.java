@@ -31,13 +31,14 @@ public class UsuarioDAOImpl extends AbstractDAO<Usuario, Integer> implements Usu
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Usuario> cq = cb.createQuery(ENTITY_TYPE);
 
-		Root<Usuario> from = cq.from(ENTITY_TYPE);
-		cq.where(cb.equal(from.get(Usuario_.id), id));
+		Root<Usuario> from = cq.from(ENTITY_TYPE);		
 
-		from.join(Usuario_.funcionarios);
-		from.fetch(Usuario_.funcionarios);
+		from.join(Usuario_.funcionario);
+		from.fetch(Usuario_.funcionario);
 
 		cq.select(from);
+		
+		cq.where(cb.equal(from.get(Usuario_.id), id));
 
 		TypedQuery<Usuario> tq = getEntityManager().createQuery(cq);
 		Usuario usuario = tq.getSingleResult();
@@ -59,9 +60,14 @@ public class UsuarioDAOImpl extends AbstractDAO<Usuario, Integer> implements Usu
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Usuario> cq = cb.createQuery(ENTITY_TYPE);
 
-		Root<Usuario> from = cq.from(ENTITY_TYPE);
-		cq.where(cb.equal(from.get(Usuario_.email), email));
+		Root<Usuario> from = cq.from(ENTITY_TYPE);		
+		
+		from.join(Usuario_.funcionario);
+		from.fetch(Usuario_.funcionario);
+		
 		cq.select(from);
+		
+		cq.where(cb.equal(from.get(Usuario_.email), email));
 
 		TypedQuery<Usuario> tq = getEntityManager().createQuery(cq);
 

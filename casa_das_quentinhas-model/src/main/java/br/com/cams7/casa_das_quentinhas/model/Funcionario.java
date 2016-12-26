@@ -4,10 +4,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 import br.com.cams7.app.model.AbstractEntity;
@@ -18,10 +17,12 @@ import br.com.cams7.app.model.AbstractEntity;
 public class Funcionario extends AbstractEntity<Integer> {
 
 	@Id
-	@SequenceGenerator(name = "funcionario_id_seq", sequenceName = "funcionario_id_seq", allocationSize = 1)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "funcionario_id_seq")
-	@Column(name = "id_funcionario")
+	@Column(name = "id_funcionario", nullable = false)
 	private Integer id;
+
+	@OneToOne(optional = false)
+	@PrimaryKeyJoinColumn(name = "id_funcionario", referencedColumnName = "id_usuario")
+	private Usuario usuario;
 
 	@Enumerated(EnumType.ORDINAL)
 	@Column(nullable = false)
@@ -35,6 +36,14 @@ public class Funcionario extends AbstractEntity<Integer> {
 	@Override
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
 	}
 
 	public Funcao getFuncao() {

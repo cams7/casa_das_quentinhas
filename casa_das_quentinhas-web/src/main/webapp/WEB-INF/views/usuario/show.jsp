@@ -11,23 +11,12 @@
 </h3>
 
 <div class="row">
-	<div class="col-md-6">
+	<div class="col-md-12">
 		<p>
 			<strong>E-mail</strong>
 		</p>
 		<p>${usuario.email}</p>
-	</div>
-	<div class="col-md-6">
-		<p>
-			<strong>Autorização</strong>
-		</p>
-
-		<ul class="list-group">
-			<c:forEach items="${usuario.funcionarios}" var="funcionario">
-				<li class="list-group-item">${funcionario.funcao}</li>
-			</c:forEach>
-		</ul>
-	</div>
+	</div>	
 </div>
 
 <hr />

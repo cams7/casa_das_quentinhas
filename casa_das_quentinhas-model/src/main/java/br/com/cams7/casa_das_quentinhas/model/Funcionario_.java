@@ -15,5 +15,6 @@ import br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao;
 @StaticMetamodel(Funcionario.class)
 public class Funcionario_ {
 	public static volatile SingularAttribute<Funcionario, Integer> id;
+	public static volatile SingularAttribute<Funcionario, Usuario> usuario;
 	public static volatile SingularAttribute<Funcionario, Funcao> funcao;
 }

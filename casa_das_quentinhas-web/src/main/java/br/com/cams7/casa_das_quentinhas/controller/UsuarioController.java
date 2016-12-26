@@ -1,6 +1,5 @@
 package br.com.cams7.casa_das_quentinhas.controller;
 
-import java.util.List;
 import java.util.Locale;
 
 import javax.validation.Valid;
@@ -11,25 +10,21 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
 
 import br.com.cams7.app.controller.AbstractController;
-import br.com.cams7.casa_das_quentinhas.model.Funcionario;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
-import br.com.cams7.casa_das_quentinhas.service.FuncionarioService;
 import br.com.cams7.casa_das_quentinhas.service.UsuarioService;
 
 @Controller
 @RequestMapping("/usuario")
-@SessionAttributes("funcionarios")
+//@SessionAttributes("funcionarioFuncoes")
 public class UsuarioController extends AbstractController<UsuarioService, Usuario, Integer> {
 
-	@Autowired
-	private FuncionarioService funcionarioService;
+//	@Autowired
+//	private FuncionarioService funcionarioService;
 
 	@Autowired
 	private MessageSource messageSource;
@@ -102,11 +97,11 @@ public class UsuarioController extends AbstractController<UsuarioService, Usuari
 	/**
 	 * This method will provide UserProfile list to views
 	 */
-	@ModelAttribute("funcionarios")
-	public List<Funcionario> initializeFuncionarios() {
-		List<Funcionario> funcionarios = funcionarioService.getAll();
-		return funcionarios;
-	}
+//	@ModelAttribute("funcionarioFuncoes")
+//	public Funcao[] initializeFuncionarioFuncoes() {
+//		Funcao[] funcionarios = Funcao.values();
+//		return funcionarios;
+//	}
 
 	@Override
 	protected String getEntityName() {

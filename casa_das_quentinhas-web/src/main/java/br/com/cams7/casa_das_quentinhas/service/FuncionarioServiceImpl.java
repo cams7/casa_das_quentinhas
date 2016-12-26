@@ -1,7 +1,5 @@
 package br.com.cams7.casa_das_quentinhas.service;
 
-import java.util.Set;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,10 +20,22 @@ public class FuncionarioServiceImpl extends AbstractService<FuncionarioDAO, Func
 	 * getFuncionarioByFuncao(br.com.cams7.casa_das_quentinhas.model.Funcionario
 	 * .Funcao)
 	 */
+	// @Override
+	// public Set<Funcionario> getFuncionariosByFuncao(Funcao funcao) {
+	// Set<Funcionario> funcionario = getDao().getFuncionariosByFuncao(funcao);
+	// return funcionario;
+	// }
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.casa_das_quentinhas.dao.FuncionarioDAO#
+	 * getFuncionarioFuncaoById(java.lang.Integer)
+	 */
 	@Override
-	public Funcionario getFuncionarioByFuncao(Funcao funcao) {
-		Funcionario funcionario = getDao().getFuncionarioByFuncao(funcao);
-		return funcionario;
+	public Funcao getFuncionarioFuncaoById(Integer id) {
+		Funcao funcao = getDao().getFuncionarioFuncaoById(id);
+		return funcao;
 	}
 
 	/*
@@ -34,10 +44,11 @@ public class FuncionarioServiceImpl extends AbstractService<FuncionarioDAO, Func
 	 * @see br.com.cams7.casa_das_quentinhas.dao.FuncionarioDAO#
 	 * getFuncionariosByUsuarioId(java.lang.Integer)
 	 */
-	@Override
-	public Set<Funcionario> getFuncionariosByUsuarioId(Integer usuarioId) {
-		Set<Funcionario> funcionarios = getDao().getFuncionariosByUsuarioId(usuarioId);
-		return funcionarios;
-	}
+	// @Override
+	// public Set<Funcionario> getFuncionariosByUsuarioId(Integer usuarioId) {
+	// Set<Funcionario> funcionarios =
+	// getDao().getFuncionariosByUsuarioId(usuarioId);
+	// return funcionarios;
+	// }
 
 }

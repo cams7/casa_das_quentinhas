@@ -16,7 +16,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.servlet.view.tiles3.TilesConfigurer;
 import org.springframework.web.servlet.view.tiles3.TilesViewResolver;
 
-import br.com.cams7.casa_das_quentinhas.converter.FuncionarioConverter;
+import br.com.cams7.casa_das_quentinhas.converter.FuncaoConverter;
 
 @Configuration
 @Import(JpaConfiguration.class)
@@ -25,7 +25,7 @@ import br.com.cams7.casa_das_quentinhas.converter.FuncionarioConverter;
 public class AppConfig extends WebMvcConfigurerAdapter {
 
 	@Autowired
-	private FuncionarioConverter funcionarioConverter;
+	private FuncaoConverter funcaoConverter;
 
 	/**
 	 * Configure TilesConfigurer.
@@ -63,7 +63,7 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 	 */
 	@Override
 	public void addFormatters(FormatterRegistry registry) {
-		registry.addConverter(funcionarioConverter);
+		registry.addConverter(funcaoConverter);
 	}
 
 	/**

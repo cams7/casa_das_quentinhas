@@ -41,11 +41,11 @@ public class CustomUserDetailsService implements UserDetailsService {
 	private List<GrantedAuthority> getGrantedAuthorities(Usuario usuario) {
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 
-		for (Funcionario funcionario : usuario.getFuncionarios()) {
-			LOGGER.info("UserProfile : {}", funcionario);
-			String role = "ROLE_" + funcionario.getFuncao().name();
-			authorities.add(new SimpleGrantedAuthority(role));
-		}
+		Funcionario funcionario = usuario.getFuncionario();
+		
+		LOGGER.info("UserProfile : {}", funcionario);
+		String role = "ROLE_" + funcionario.getFuncao().name();
+		authorities.add(new SimpleGrantedAuthority(role));
 		LOGGER.info("authorities : {}", authorities);
 		return authorities;
 	}
