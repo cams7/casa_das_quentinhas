@@ -17,17 +17,17 @@ import br.com.cams7.app.model.AbstractEntity;
 public class Acesso extends AbstractEntity<String> {
 
 	@Id
-	@Column(name = "series", length = 64)
+	@Column(name = "series", length = 64, nullable = false)
 	private String id;
 
 	@Column(unique = true, length = 50, nullable = false)
-	private String username;
+	private String email;
 
 	@Column(unique = true, length = 64, nullable = false)
 	private String token;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "ultimo_acesso")
+	@Column(name = "ultimo_acesso", nullable = false)
 	private Date ultimoAcesso;
 
 	@Override
@@ -40,12 +40,12 @@ public class Acesso extends AbstractEntity<String> {
 		this.id = id;
 	}
 
-	public String getUsername() {
-		return username;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getToken() {
@@ -68,7 +68,7 @@ public class Acesso extends AbstractEntity<String> {
 	public int hashCode() {
 		final int PRIME = 31;
 		int hashCode = super.hashCode();
-		hashCode = PRIME * hashCode + ((username == null) ? 0 : username.hashCode());
+		hashCode = PRIME * hashCode + ((email == null) ? 0 : email.hashCode());
 		return hashCode;
 	}
 
@@ -78,10 +78,10 @@ public class Acesso extends AbstractEntity<String> {
 			return false;
 
 		Acesso acesso = (Acesso) object;
-		if (username == null) {
-			if (acesso.username != null)
+		if (email == null) {
+			if (acesso.email != null)
 				return false;
-		} else if (!username.equals(acesso.username))
+		} else if (!email.equals(acesso.email))
 			return false;
 
 		return true;

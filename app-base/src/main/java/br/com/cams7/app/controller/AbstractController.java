@@ -280,15 +280,15 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 	 * This method returns the principal[user-name] of logged-in user.
 	 */
 	private String getPrincipal() {
-		String userName = null;
+		String username = null;
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
 		if (principal instanceof UserDetails) {
-			userName = ((UserDetails) principal).getUsername();
+			username = ((UserDetails) principal).getUsername();
 		} else {
-			userName = principal.toString();
+			username = principal.toString();
 		}
-		return userName;
+		return username;
 	}
 
 	protected E getEntity(PK id) {

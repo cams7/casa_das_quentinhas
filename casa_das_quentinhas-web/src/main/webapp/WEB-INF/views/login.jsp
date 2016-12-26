@@ -10,31 +10,31 @@
 			<form action="${loginUrl}" method="post" class="form-horizontal">
 				<c:if test="${param.error != null}">
 					<div class="alert alert-danger">
-						<p>Invalid username and password.</p>
+						<p>E-mail ou senha inválida.</p>
 					</div>
 				</c:if>
 				<c:if test="${param.logout != null}">
 					<div class="alert alert-success">
-						<p>You have been logged out successfully.</p>
+						<p>Logout realizado com sucesso.</p>
 					</div>
 				</c:if>
 
 				<div class="input-group">
-					<label class="input-group-addon" for="username"><i
+					<label class="input-group-addon" for="email"><i
 						class="glyphicon glyphicon-user"></i></label> <input type="text"
-						class="form-control" id="username" name="username"
-						placeholder="E-mail" required>
+						class="form-control" id="email" name="email" placeholder="E-mail"
+						required>
 				</div>
 				<div class="input-group">
-					<label class="input-group-addon" for="password"><i
+					<label class="input-group-addon" for="senha"><i
 						class="glyphicon glyphicon-lock"></i></label> <input type="password"
-						class="form-control" id="password" name="password"
-						placeholder="Senha" required>
+						class="form-control" id="senha" name="senha" placeholder="Senha"
+						required>
 				</div>
 				<div class="input-group input-sm">
 					<div class="checkbox">
-						<label><input type="checkbox" id="rememberme"
-							name="remember-me"> Remember Me</label>
+						<label><input type="checkbox" id="lembre_me"
+							name="lembre_me"> Lembre-me</label>
 					</div>
 				</div>
 				<input type="hidden" name="${_csrf.parameterName}"

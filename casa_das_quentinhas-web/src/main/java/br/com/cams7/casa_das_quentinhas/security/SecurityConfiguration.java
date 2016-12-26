@@ -50,9 +50,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.and()
 		
 		.formLogin().loginPage("/login").loginProcessingUrl("/login")
-		.usernameParameter("username").passwordParameter("password").and()
+		.usernameParameter("email").passwordParameter("senha").and()
 		
-		.rememberMe().rememberMeParameter("remember-me").tokenRepository(tokenRepository).tokenValiditySeconds(86400).and()
+		.rememberMe().rememberMeParameter("lembre_me").tokenRepository(tokenRepository).tokenValiditySeconds(86400).and()
 		
 		.csrf().and().exceptionHandling().accessDeniedPage("/Access_Denied");
 	}
@@ -73,7 +73,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Bean
 	public PersistentTokenBasedRememberMeServices getPersistentTokenBasedRememberMeServices() {
 		PersistentTokenBasedRememberMeServices tokenBasedservice = new PersistentTokenBasedRememberMeServices(
-				"remember-me", userDetailsService, tokenRepository);
+				"lembre_me", userDetailsService, tokenRepository);
 		return tokenBasedservice;
 	}
 

@@ -53,14 +53,14 @@ ON DELETE NO ACTION
 ON UPDATE NO ACTION
 NOT DEFERRABLE;
 
-CREATE TABLE acesso (
+CREATE TABLE public.acesso (
 	series VARCHAR(64) NOT NULL,
-    username VARCHAR(50) NOT NULL,    
-    token VARCHAR(64) NOT NULL,
-    ultimo_acesso TIMESTAMP NOT NULL,
-    CONSTRAINT acesso_pk PRIMARY KEY (series),
-    CONSTRAINT acesso_username_uk UNIQUE (username),
-    CONSTRAINT acesso_token_uk UNIQUE (token)
+	email VARCHAR(50) NOT NULL,
+	token VARCHAR(64) NOT NULL,
+	ultimo_acesso TIMESTAMP NOT NULL,
+	CONSTRAINT acesso_pk PRIMARY KEY (series),
+	CONSTRAINT acesso_email_uk UNIQUE (email),
+	CONSTRAINT acesso_token_uk UNIQUE (token)
 );
 
 INSERT INTO autorizacao(id_autorizacao, papel) VALUES (nextval('id_autorizacao_seq'), 'USER');  

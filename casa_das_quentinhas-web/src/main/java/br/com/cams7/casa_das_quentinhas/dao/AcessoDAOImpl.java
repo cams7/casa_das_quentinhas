@@ -37,7 +37,7 @@ public class AcessoDAOImpl extends AbstractDAO<Acesso, String> implements Persis
 		LOGGER.info("Creating Token for user : {}", token.getUsername());
 
 		Acesso acesso = new Acesso();
-		acesso.setUsername(token.getUsername());
+		acesso.setEmail(token.getUsername());
 		acesso.setId(token.getSeries());
 		acesso.setToken(token.getTokenValue());
 		acesso.setUltimoAcesso(token.getDate());
@@ -68,7 +68,7 @@ public class AcessoDAOImpl extends AbstractDAO<Acesso, String> implements Persis
 		try {
 			Acesso acesso = tq.getSingleResult();
 
-			return new PersistentRememberMeToken(acesso.getUsername(), acesso.getId(), acesso.getToken(),
+			return new PersistentRememberMeToken(acesso.getEmail(), acesso.getId(), acesso.getToken(),
 					acesso.getUltimoAcesso());
 		} catch (NoResultException e) {
 			LOGGER.info("Token not found...");
@@ -93,7 +93,7 @@ public class AcessoDAOImpl extends AbstractDAO<Acesso, String> implements Persis
 		Root<Acesso> from = cq.from(ENTITY_TYPE);
 
 		cq.select(from);
-		cq.where(cb.equal(from.get(Acesso_.username), username));
+		cq.where(cb.equal(from.get(Acesso_.email), username));
 
 		TypedQuery<Acesso> tq = getEntityManager().createQuery(cq);
 

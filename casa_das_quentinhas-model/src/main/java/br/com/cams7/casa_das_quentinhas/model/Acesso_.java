@@ -15,7 +15,7 @@ import javax.persistence.metamodel.StaticMetamodel;
 @StaticMetamodel(Acesso.class)
 public class Acesso_ {
 	public static volatile SingularAttribute<Acesso, String> id;
-	public static volatile SingularAttribute<Acesso, String> username;
+	public static volatile SingularAttribute<Acesso, String> email;
 	public static volatile SingularAttribute<Acesso, String> token;
 	public static volatile SingularAttribute<Acesso, Date> ultimoAcesso;
 }
