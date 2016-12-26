@@ -26,8 +26,8 @@ import br.com.cams7.app.model.AbstractEntity;
 public class Usuario extends AbstractEntity<Integer> {
 
 	@Id
-	@SequenceGenerator(name = "id_usuario_seq", sequenceName = "id_usuario_seq", allocationSize = 1)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id_usuario_seq")
+	@SequenceGenerator(name = "usuario_id_seq", sequenceName = "usuario_id_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usuario_id_seq")
 	@Column(name = "id_usuario")
 	private Integer id;
 
@@ -38,16 +38,6 @@ public class Usuario extends AbstractEntity<Integer> {
 
 	@Column(name = "senha", length = 100, nullable = false)
 	private String senhaCriptografada;
-
-	@NotEmpty
-	@Size(min = 3, max = 30)
-	@Column(nullable = false)
-	private String nome;
-
-	@NotEmpty
-	@Size(min = 3, max = 30)
-	@Column(nullable = false)
-	private String sobrenome;
 
 	@NotEmpty
 	@ManyToMany(fetch = FetchType.LAZY)
@@ -82,22 +72,6 @@ public class Usuario extends AbstractEntity<Integer> {
 
 	public void setSenhaCriptografada(String senhaCriptografada) {
 		this.senhaCriptografada = senhaCriptografada;
-	}
-
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
-	public String getSobrenome() {
-		return sobrenome;
-	}
-
-	public void setSobrenome(String sobrenome) {
-		this.sobrenome = sobrenome;
 	}
 
 	public Set<Autorizacao> getAutorizacoes() {

@@ -12,10 +12,6 @@
 			<table class="table table-striped table-bordered dataTable">
 				<thead>
 					<tr>
-						<th class="${sortField eq 'nome' ? sortOrder : 'sorting' }"
-							id="nome">Nome</th>
-						<th class="${sortField eq 'sobrenome' ? sortOrder : 'sorting' }"
-							id="sobrenome">Sobrenome</th>
 						<th class="${sortField eq 'email' ? sortOrder : 'sorting' }"
 							id="email">E-mail</th>
 						<sec:authorize access="hasRole('ADMIN') or hasRole('DBA')">
@@ -26,8 +22,6 @@
 				<tbody>
 					<c:forEach items="${usuarios}" var="usuario">
 						<tr>
-							<td>${usuario.nome}</td>
-							<td>${usuario.sobrenome}</td>
 							<td>${usuario.email}</td>
 
 							<td class="actions"><a class="btn btn-success btn-xs"
@@ -38,8 +32,6 @@
 								</sec:authorize> <sec:authorize access="hasRole('ADMIN')">
 									<button class="btn btn-danger btn-xs delete"
 										value="${usuario.id}">Excluir</button>
-									<!--a class="btn btn-danger btn-xs"
-										href="<c:url value='/usuario/${usuario.id}/delete' />">Excluir</a-->
 								</sec:authorize></td>
 						</tr>
 					</c:forEach>

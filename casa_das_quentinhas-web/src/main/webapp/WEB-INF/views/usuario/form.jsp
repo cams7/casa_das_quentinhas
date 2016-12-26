@@ -5,40 +5,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <div class="row">
-	<c:set var="nomeHasBindError">
-		<form:errors path="nome" />
-	</c:set>
-	<div
-		class="form-group col-md-6 ${not empty nomeHasBindError?'has-error':''}">
-		<label class="control-label" for="nome">Nome</label>
-
-		<form:input type="text" path="nome" id="nome" class="form-control" />
-		<div class="help-block with-errors">
-			<form:errors path="nome" />
-		</div>
-	</div>
-
-	<c:set var="sobrenomeHasBindError">
-		<form:errors path="sobrenome" />
-	</c:set>
-	<div
-		class="form-group col-md-6 ${not empty sobrenomeHasBindError?'has-error':''}">
-		<label class="control-label" for="sobrenome">Sobrenome</label>
-
-		<form:input type="text" path="sobrenome" id="sobrenome"
-			class="form-control" />
-		<div class="help-block with-errors">
-			<form:errors path="sobrenome" />
-		</div>
-	</div>
-</div>
-
-<div class="row">
-	<c:set var="emailHasBindError">
+	<c:set var="emailError">
 		<form:errors path="email" />
 	</c:set>
 	<div
-		class="form-group col-md-5 ${not empty emailHasBindError?'has-error':''}">
+		class="form-group col-md-5 ${not empty emailError ? 'has-error' : ''}">
 		<label class="control-label" for="email">E-mail</label>
 
 		<c:choose>
@@ -48,25 +19,21 @@
 			</c:when>
 			<c:otherwise>
 				<form:input type="text" path="email" id="email" class="form-control" />
-				<div class="help-block with-errors">
-					<form:errors path="email" />
-				</div>
+				<div class="help-block with-errors">${emailError}</div>
 			</c:otherwise>
 		</c:choose>
 	</div>
 
-	<c:set var="senhaHasBindError">
+	<c:set var="senhaError">
 		<form:errors path="senha" />
 	</c:set>
 	<div
-		class="form-group col-md-5 ${not empty senhaHasBindError?'has-error':''}">
+		class="form-group col-md-5 ${not empty senhaError ? 'has-error' : ''}">
 		<label class="control-label" for="senha">Senha</label>
 
 		<form:input type="password" path="senha" id="senha"
 			class="form-control" />
-		<div class="help-block with-errors">
-			<form:errors path="senha" />
-		</div>
+		<div class="help-block with-errors">${senhaError}</div>
 	</div>
 
 	<c:set var="autorizacoesHasBindError">

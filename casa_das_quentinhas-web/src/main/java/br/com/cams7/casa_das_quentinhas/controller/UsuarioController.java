@@ -47,7 +47,7 @@ public class UsuarioController extends AbstractController<UsuarioService, Usuari
 			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
 		if (usuario.getSenha().isEmpty()) {
 			FieldError emailError = new FieldError("usuario", "senha",
-					messageSource.getMessage("NotEmpty.usuario.password", null, Locale.getDefault()));
+					messageSource.getMessage("NotEmpty.usuario.senha", null, Locale.getDefault()));
 			result.addError(emailError);
 		}
 
@@ -117,7 +117,7 @@ public class UsuarioController extends AbstractController<UsuarioService, Usuari
 
 	@Override
 	protected String[] getGlobalFilters() {
-		return new String[] { "nome", "sobrenome", "email" };
+		return new String[] { "email" };
 	}
 
 }

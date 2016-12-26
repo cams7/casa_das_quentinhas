@@ -3,20 +3,18 @@ DROP TABLE IF EXISTS usuario_autorizacao;
 DROP TABLE IF EXISTS autorizacao;
 DROP TABLE IF EXISTS usuario;
 
-DROP SEQUENCE IF EXISTS id_usuario_seq;
-CREATE SEQUENCE id_usuario_seq;
+DROP SEQUENCE IF EXISTS usuario_id_seq;
+CREATE SEQUENCE usuario_id_seq;
 
 CREATE TABLE usuario (
-	id_usuario INTEGER NOT NULL DEFAULT nextval('id_usuario_seq'),
+	id_usuario INTEGER NOT NULL DEFAULT nextval('usuario_id_seq'),
 	email VARCHAR(50) NOT NULL,
-	senha VARCHAR(100) NOT NULL,
-	nome VARCHAR(30) NOT NULL,
-	sobrenome VARCHAR(30) NOT NULL,	
-    CONSTRAINT usuario_pk PRIMARY KEY (id_usuario),
+	senha VARCHAR(100) NOT NULL,		
+    	CONSTRAINT usuario_pk PRIMARY KEY (id_usuario),
 	CONSTRAINT usuario_email_uk UNIQUE (email)
 );
 
-ALTER SEQUENCE id_usuario_seq OWNED BY usuario.id_usuario;
+ALTER SEQUENCE usuario_id_seq OWNED BY usuario.id_usuario;
 
 DROP SEQUENCE IF EXISTS id_autorizacao_seq;
 CREATE SEQUENCE id_autorizacao_seq;
@@ -68,30 +66,30 @@ INSERT INTO autorizacao(id_autorizacao, papel) VALUES (nextval('id_autorizacao_s
 INSERT INTO autorizacao(id_autorizacao, papel) VALUES (nextval('id_autorizacao_seq'), 'DBA');
 
 --Username: cesar, password: 12345
-INSERT INTO usuario(id_usuario, email, senha, nome, sobrenome) VALUES (nextval('id_usuario_seq'),'ceanma@gmail.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 'César','Magalhães');
-INSERT INTO usuario(id_usuario, email, senha, nome, sobrenome) VALUES (nextval('id_usuario_seq'),'leone@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 'Leone','Magalhães');
-INSERT INTO usuario(id_usuario, email, senha, nome, sobrenome) VALUES (nextval('id_usuario_seq'),'leandro@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 'Leandro','Magalhães');
-INSERT INTO usuario(id_usuario, email, senha, nome, sobrenome) VALUES (nextval('id_usuario_seq'),'daniel@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 'Daniel','Magalhães');
-INSERT INTO usuario(id_usuario, email, senha, nome, sobrenome) VALUES (nextval('id_usuario_seq'),'cintia@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 'Cintia','Magalhães');
-INSERT INTO usuario(id_usuario, email, senha, nome, sobrenome) VALUES (nextval('id_usuario_seq'),'violeta@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 'Violeta','Neto');
-INSERT INTO usuario(id_usuario, email, senha, nome, sobrenome) VALUES (nextval('id_usuario_seq'),'ariana@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 'Ariana','Rosa');
-INSERT INTO usuario(id_usuario, email, senha, nome, sobrenome) VALUES (nextval('id_usuario_seq'),'bianca@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 'Bianca','Filho');
-INSERT INTO usuario(id_usuario, email, senha, nome, sobrenome) VALUES (nextval('id_usuario_seq'),'micaela@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 'Micaela','Filho');
-INSERT INTO usuario(id_usuario, email, senha, nome, sobrenome) VALUES (nextval('id_usuario_seq'),'henrique@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 'Henrique','Medina');
-INSERT INTO usuario(id_usuario, email, senha, nome, sobrenome) VALUES (nextval('id_usuario_seq'),'jeronimo@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 'Jerônimo','Ferminiano');
-INSERT INTO usuario(id_usuario, email, senha, nome, sobrenome) VALUES (nextval('id_usuario_seq'),'natal@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 'Natal','Sobrinho');
-INSERT INTO usuario(id_usuario, email, senha, nome, sobrenome) VALUES (nextval('id_usuario_seq'),'antoniela@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 'Antonieta','Rocha');
-INSERT INTO usuario(id_usuario, email, senha, nome, sobrenome) VALUES (nextval('id_usuario_seq'),'sabrina@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 'Sabrina','Neto');
-INSERT INTO usuario(id_usuario, email, senha, nome, sobrenome) VALUES (nextval('id_usuario_seq'),'carolina@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 'Carolina','Galindo');
-INSERT INTO usuario(id_usuario, email, senha, nome, sobrenome) VALUES (nextval('id_usuario_seq'),'nadia@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 'Nádia','Vale');
-INSERT INTO usuario(id_usuario, email, senha, nome, sobrenome) VALUES (nextval('id_usuario_seq'),'evandro@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 'Evandro','Mesquita');
-INSERT INTO usuario(id_usuario, email, senha, nome, sobrenome) VALUES (nextval('id_usuario_seq'),'elias@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 'Elias','Sepúlveda');
-INSERT INTO usuario(id_usuario, email, senha, nome, sobrenome) VALUES (nextval('id_usuario_seq'),'maximo@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 'Máximo','Quintana');
-INSERT INTO usuario(id_usuario, email, senha, nome, sobrenome) VALUES (nextval('id_usuario_seq'),'carlos@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 'Carlos','Silva');
-INSERT INTO usuario(id_usuario, email, senha, nome, sobrenome) VALUES (nextval('id_usuario_seq'),'rafael@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 'Rafael','Dominato');
-INSERT INTO usuario(id_usuario, email, senha, nome, sobrenome) VALUES (nextval('id_usuario_seq'),'maximiano@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 'Maximiano','Vega');
-INSERT INTO usuario(id_usuario, email, senha, nome, sobrenome) VALUES (nextval('id_usuario_seq'),'julia@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 'Júlia','Sobrinho');
-INSERT INTO usuario(id_usuario, email, senha, nome, sobrenome) VALUES (nextval('id_usuario_seq'),'guilherme@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 'Guilherme','Sobrinho');
+INSERT INTO usuario(id_usuario, email, senha) VALUES (nextval('usuario_id_seq'),'ceanma@gmail.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC');
+INSERT INTO usuario(id_usuario, email, senha) VALUES (nextval('usuario_id_seq'),'leone@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC');
+INSERT INTO usuario(id_usuario, email, senha) VALUES (nextval('usuario_id_seq'),'leandro@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC');
+INSERT INTO usuario(id_usuario, email, senha) VALUES (nextval('usuario_id_seq'),'daniel@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC');
+INSERT INTO usuario(id_usuario, email, senha) VALUES (nextval('usuario_id_seq'),'cintia@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC');
+INSERT INTO usuario(id_usuario, email, senha) VALUES (nextval('usuario_id_seq'),'violeta@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC');
+INSERT INTO usuario(id_usuario, email, senha) VALUES (nextval('usuario_id_seq'),'ariana@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC');
+INSERT INTO usuario(id_usuario, email, senha) VALUES (nextval('usuario_id_seq'),'bianca@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC');
+INSERT INTO usuario(id_usuario, email, senha) VALUES (nextval('usuario_id_seq'),'micaela@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC');
+INSERT INTO usuario(id_usuario, email, senha) VALUES (nextval('usuario_id_seq'),'henrique@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC');
+INSERT INTO usuario(id_usuario, email, senha) VALUES (nextval('usuario_id_seq'),'jeronimo@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC');
+INSERT INTO usuario(id_usuario, email, senha) VALUES (nextval('usuario_id_seq'),'natal@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC');
+INSERT INTO usuario(id_usuario, email, senha) VALUES (nextval('usuario_id_seq'),'antoniela@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC');
+INSERT INTO usuario(id_usuario, email, senha) VALUES (nextval('usuario_id_seq'),'sabrina@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC');
+INSERT INTO usuario(id_usuario, email, senha) VALUES (nextval('usuario_id_seq'),'carolina@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC');
+INSERT INTO usuario(id_usuario, email, senha) VALUES (nextval('usuario_id_seq'),'nadia@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC');
+INSERT INTO usuario(id_usuario, email, senha) VALUES (nextval('usuario_id_seq'),'evandro@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC');
+INSERT INTO usuario(id_usuario, email, senha) VALUES (nextval('usuario_id_seq'),'elias@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC');
+INSERT INTO usuario(id_usuario, email, senha) VALUES (nextval('usuario_id_seq'),'maximo@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC');
+INSERT INTO usuario(id_usuario, email, senha) VALUES (nextval('usuario_id_seq'),'carlos@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC');
+INSERT INTO usuario(id_usuario, email, senha) VALUES (nextval('usuario_id_seq'),'rafael@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC');
+INSERT INTO usuario(id_usuario, email, senha) VALUES (nextval('usuario_id_seq'),'maximiano@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC');
+INSERT INTO usuario(id_usuario, email, senha) VALUES (nextval('usuario_id_seq'),'julia@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC');
+INSERT INTO usuario(id_usuario, email, senha) VALUES (nextval('usuario_id_seq'),'guilherme@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC');
 
 INSERT INTO usuario_autorizacao (id_usuario, id_autorizacao) VALUES (1, 2);
 INSERT INTO usuario_autorizacao (id_usuario, id_autorizacao) VALUES (2, 1);

@@ -13,21 +13,6 @@
 <div class="row">
 	<div class="col-md-6">
 		<p>
-			<strong>Nome</strong>
-		</p>
-		<p>${usuario.nome}</p>
-	</div>
-	<div class="col-md-6">
-		<p>
-			<strong>Sobrenome</strong>
-		</p>
-		<p>${usuario.sobrenome}</p>
-	</div>
-</div>
-
-<div class="row">
-	<div class="col-md-6">
-		<p>
 			<strong>E-mail</strong>
 		</p>
 		<p>${usuario.email}</p>
