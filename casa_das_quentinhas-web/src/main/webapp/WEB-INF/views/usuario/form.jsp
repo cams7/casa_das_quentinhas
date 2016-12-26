@@ -9,7 +9,7 @@
 		<form:errors path="email" />
 	</c:set>
 	<div
-		class="form-group col-md-5 ${not empty emailError ? 'has-error' : ''}">
+		class="form-group col-md-4 ${not empty emailError ? 'has-error' : ''}">
 		<label class="control-label" for="email">E-mail</label>
 
 		<c:choose>
@@ -28,12 +28,24 @@
 		<form:errors path="senha" />
 	</c:set>
 	<div
-		class="form-group col-md-5 ${not empty senhaError ? 'has-error' : ''}">
+		class="form-group col-md-3 ${not empty senhaError ? 'has-error' : ''}">
 		<label class="control-label" for="senha">Senha</label>
 
 		<form:input type="password" path="senha" id="senha"
 			class="form-control" />
 		<div class="help-block with-errors">${senhaError}</div>
+	</div>
+
+	<c:set var="confirmacaoError">
+		<form:errors path="confirmacaoSenha" />
+	</c:set>
+	<div
+		class="form-group col-md-3 ${not empty confirmacaoError ? 'has-error' : ''}">
+		<label class="control-label" for="confirmacaoSenha">Confirmação</label>
+
+		<form:input type="password" path="confirmacaoSenha"
+			id="confirmacaoSenha" class="form-control" />
+		<div class="help-block with-errors">${confirmacaoError}</div>
 	</div>
 
 	<c:set var="autorizacoesHasBindError">

@@ -48,6 +48,9 @@ public class Usuario extends AbstractEntity<Integer> {
 	@Transient
 	private String senha;
 
+	@Transient
+	private String confirmacaoSenha;
+
 	@Override
 	public Integer getId() {
 		return id;
@@ -88,6 +91,14 @@ public class Usuario extends AbstractEntity<Integer> {
 
 	public void setSenha(String senha) {
 		this.senha = senha;
+	}
+
+	public String getConfirmacaoSenha() {
+		return confirmacaoSenha;
+	}
+
+	public void setConfirmacaoSenha(String confirmacaoSenha) {
+		this.confirmacaoSenha = confirmacaoSenha;
 	}
 
 	@Override

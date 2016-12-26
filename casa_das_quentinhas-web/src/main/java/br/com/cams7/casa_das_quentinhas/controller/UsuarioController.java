@@ -12,6 +12,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
@@ -46,10 +47,13 @@ public class UsuarioController extends AbstractController<UsuarioService, Usuari
 	public String store(@Valid Usuario usuario, BindingResult result, ModelMap model,
 			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
 		if (usuario.getSenha().isEmpty()) {
-			FieldError emailError = new FieldError("usuario", "senha",
+			FieldError senhaError = new FieldError("usuario", "senha",
 					messageSource.getMessage("NotEmpty.usuario.senha", null, Locale.getDefault()));
-			result.addError(emailError);
+			result.addError(senhaError);
 		}
+
+		setNotEmptyConfirmacaoError(usuario, result, true);
+		setSenhaNotEqualsConfirmacaoError(usuario, result);
 
 		if (!getService().isEmailUnique(usuario.getId(), usuario.getEmail())) {
 			FieldError emailError = new FieldError("usuario", "email", messageSource.getMessage("non.unique.email",
@@ -58,6 +62,41 @@ public class UsuarioController extends AbstractController<UsuarioService, Usuari
 		}
 
 		return super.store(usuario, result, model, lastLoadedPage);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.controller.AbstractController#update(br.com.cams7.app.
+	 * model.AbstractEntity, org.springframework.validation.BindingResult,
+	 * org.springframework.ui.ModelMap, java.io.Serializable, java.lang.Integer)
+	 */
+	@Override
+	public String update(@Valid Usuario usuario, BindingResult result, ModelMap model, @PathVariable Integer id,
+			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
+
+		setNotEmptyConfirmacaoError(usuario, result, !usuario.getSenha().isEmpty());
+		setSenhaNotEqualsConfirmacaoError(usuario, result);
+
+		return super.update(usuario, result, model, id, lastLoadedPage);
+	}
+
+	private void setNotEmptyConfirmacaoError(Usuario usuario, BindingResult result, boolean senhaInformada) {
+		if (senhaInformada && usuario.getConfirmacaoSenha().isEmpty()) {
+			FieldError confirmacaoError = new FieldError("usuario", "confirmacaoSenha",
+					messageSource.getMessage("NotEmpty.usuario.confirmacaoSenha", null, Locale.getDefault()));
+			result.addError(confirmacaoError);
+		}
+	}
+
+	private void setSenhaNotEqualsConfirmacaoError(Usuario usuario, BindingResult result) {
+		if (!usuario.getSenha().isEmpty() && !usuario.getConfirmacaoSenha().isEmpty()
+				&& !usuario.getSenha().equals(usuario.getConfirmacaoSenha())) {
+			FieldError confirmacaoError = new FieldError("usuario", "confirmacaoSenha",
+					messageSource.getMessage("senha.notEquals.confirmacao", null, Locale.getDefault()));
+			result.addError(confirmacaoError);
+		}
 	}
 
 	/**
