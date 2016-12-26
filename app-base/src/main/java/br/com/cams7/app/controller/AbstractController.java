@@ -58,8 +58,8 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * br.com.cams7.casa_das_quentinhas.controller.BaseController#index(org.
-	 * springframework.ui.ModelMap)
+	 * br.com.cams7.app.controller.BaseController#index(org.springframework.ui.
+	 * ModelMap)
 	 */
 	@Override
 	public String index(ModelMap model) {
@@ -88,8 +88,8 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * br.com.cams7.casa_das_quentinhas.controller.BaseController#create(org.
-	 * springframework.ui.ModelMap)
+	 * br.com.cams7.app.controller.BaseController#create(org.springframework.ui.
+	 * ModelMap)
 	 */
 	@Override
 	public String create(ModelMap model) {
@@ -107,32 +107,31 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * br.com.cams7.casa_das_quentinhas.controller.BaseController#store(br.com.
-	 * cams7.casa_das_quentinhas.model.AbstractEntity,
-	 * org.springframework.validation.BindingResult,
-	 * org.springframework.ui.ModelMap)
+	 * br.com.cams7.app.controller.BaseController#store(br.com.cams7.app.model.
+	 * AbstractEntity, org.springframework.validation.BindingResult,
+	 * org.springframework.ui.ModelMap, java.lang.Integer)
 	 */
 	@Override
 	public String store(@Valid E entity, BindingResult result, ModelMap model,
 			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
 
 		setUsuarioLogado(model);
-		setLastLoadedPage(model, lastLoadedPage + 1);
+		incrementLastLoadedPage(model, lastLoadedPage);
 
 		if (result.hasErrors())
 			return getCreateTilesPage();
 
 		getService().persist(entity);
 
-		return "redirect:/" + getMainPage();
+		return redirectMainPage();
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * br.com.cams7.casa_das_quentinhas.controller.BaseController#show(java.io.
-	 * Serializable, org.springframework.ui.ModelMap)
+	 * br.com.cams7.app.controller.BaseController#show(java.io.Serializable,
+	 * org.springframework.ui.ModelMap)
 	 */
 	@Override
 	public String show(@PathVariable PK id, ModelMap model) {
@@ -149,8 +148,8 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * br.com.cams7.casa_das_quentinhas.controller.BaseController#edit(java.io.
-	 * Serializable, org.springframework.ui.ModelMap)
+	 * br.com.cams7.app.controller.BaseController#edit(java.io.Serializable,
+	 * org.springframework.ui.ModelMap)
 	 */
 	@Override
 	public String edit(@PathVariable PK id, ModelMap model) {
@@ -169,10 +168,9 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * br.com.cams7.casa_das_quentinhas.controller.BaseController#update(br.com.
-	 * cams7.casa_das_quentinhas.model.AbstractEntity,
-	 * org.springframework.validation.BindingResult,
-	 * org.springframework.ui.ModelMap, java.io.Serializable)
+	 * br.com.cams7.app.controller.BaseController#update(br.com.cams7.app.model.
+	 * AbstractEntity, org.springframework.validation.BindingResult,
+	 * org.springframework.ui.ModelMap, java.io.Serializable, java.lang.Integer)
 	 */
 	@Override
 	public String update(@Valid E entity, BindingResult result, ModelMap model, @PathVariable PK id,
@@ -180,29 +178,26 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 
 		setEditPage(model);
 		setUsuarioLogado(model);
-		setLastLoadedPage(model, lastLoadedPage + 1);
+		incrementLastLoadedPage(model, lastLoadedPage);
 
 		if (result.hasErrors())
 			return getEditTilesPage();
 
 		getService().update(entity);
 
-		setUsuarioLogado(model);
-
-		return "redirect:/" + getMainPage();
+		return redirectMainPage();
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * br.com.cams7.casa_das_quentinhas.controller.BaseController#destroy(java.
-	 * io.Serializable)
+	 * br.com.cams7.app.controller.BaseController#destroy(java.io.Serializable)
 	 */
 	@Override
 	public ResponseEntity<Void> destroy(@PathVariable PK id) {
-		if (((Integer) id).equals(1))
-			return new ResponseEntity<Void>(HttpStatus.FORBIDDEN);
+		// if (((Integer) id).equals(1))
+		// return new ResponseEntity<Void>(HttpStatus.FORBIDDEN);
 
 		getService().delete(id);
 
@@ -212,8 +207,10 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see br.com.cams7.casa_das_quentinhas.controller.BaseController#list(org.
-	 * springframework.ui.ModelMap, java.lang.Integer, java.lang.String)
+	 * @see
+	 * br.com.cams7.app.controller.BaseController#list(org.springframework.ui.
+	 * ModelMap, java.lang.Integer, java.lang.String, java.lang.String,
+	 * java.lang.String)
 	 */
 	@Override
 	public String list(ModelMap model, @RequestParam(value = "offset", required = true) Integer offset,
@@ -245,6 +242,10 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 		return getListTilesPage();
 	}
 
+	protected String redirectMainPage() {
+		return "redirect:/" + getMainPage();
+	}
+
 	private void setPaginationAttribute(ModelMap model, Integer offset, String sortField, SortOrder sortOrder,
 			String query, Long count) {
 		model.addAttribute("offset", offset);
@@ -264,16 +265,20 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 		model.addAttribute("activePage", getIndexTilesPage());
 	}
 
-	private void setEditPage(ModelMap model) {
+	protected void setEditPage(ModelMap model) {
 		model.addAttribute("edit", true);
 	}
 
-	private void setUsuarioLogado(ModelMap model) {
+	protected void setUsuarioLogado(ModelMap model) {
 		model.addAttribute("loggedinuser", getPrincipal());
 	}
 
 	private void setLastLoadedPage(ModelMap model, Integer lastLoadedPage) {
 		model.addAttribute(LAST_LOADED_PAGE, lastLoadedPage);
+	}
+
+	protected void incrementLastLoadedPage(ModelMap model, Integer lastLoadedPage) {
+		setLastLoadedPage(model, lastLoadedPage + 1);
 	}
 
 	/**

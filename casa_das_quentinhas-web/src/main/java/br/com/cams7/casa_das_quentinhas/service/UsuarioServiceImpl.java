@@ -23,11 +23,11 @@ public class UsuarioServiceImpl extends AbstractService<UsuarioDAO, Usuario, Int
 	 * br.com.cams7.casa_das_quentinhas.service.UsuarioService#getUsuarioById(
 	 * java.lang.Integer)
 	 */
-	@Override
-	public Usuario getUsuarioById(Integer id) {
-		Usuario usuario = getDao().getUsuarioById(id);
-		return usuario;
-	}
+	// @Override
+	// public Usuario getUsuarioById(Integer id) {
+	// Usuario usuario = getDao().getUsuarioById(id);
+	// return usuario;
+	// }
 
 	/*
 	 * (non-Javadoc)

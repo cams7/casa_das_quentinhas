@@ -26,6 +26,12 @@ public class FuncionarioServiceImpl extends AbstractService<FuncionarioDAO, Func
 	// return funcionario;
 	// }
 
+	@Override
+	public Funcionario getFuncionarioById(Integer id) {
+		Funcionario funcionario = getDao().getFuncionarioById(id);
+		return funcionario;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 

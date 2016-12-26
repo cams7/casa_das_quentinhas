@@ -26,25 +26,25 @@ public class UsuarioDAOImpl extends AbstractDAO<Usuario, Integer> implements Usu
 	 * br.com.cams7.casa_das_quentinhas.dao.UsuarioDAO#getUsuarioById(java.lang.
 	 * Integer)
 	 */
-	@Override
-	public Usuario getUsuarioById(Integer id) {
-		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-		CriteriaQuery<Usuario> cq = cb.createQuery(ENTITY_TYPE);
-
-		Root<Usuario> from = cq.from(ENTITY_TYPE);		
-
-		from.join(Usuario_.funcionario);
-		from.fetch(Usuario_.funcionario);
-
-		cq.select(from);
-		
-		cq.where(cb.equal(from.get(Usuario_.id), id));
-
-		TypedQuery<Usuario> tq = getEntityManager().createQuery(cq);
-		Usuario usuario = tq.getSingleResult();
-
-		return usuario;
-	}
+	// @Override
+	// public Usuario getUsuarioById(Integer id) {
+	// CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+	// CriteriaQuery<Usuario> cq = cb.createQuery(ENTITY_TYPE);
+	//
+	// Root<Usuario> from = cq.from(ENTITY_TYPE);
+	//
+	// from.join(Usuario_.funcionario);
+	// from.fetch(Usuario_.funcionario);
+	//
+	// cq.select(from);
+	//
+	// cq.where(cb.equal(from.get(Usuario_.id), id));
+	//
+	// TypedQuery<Usuario> tq = getEntityManager().createQuery(cq);
+	// Usuario usuario = tq.getSingleResult();
+	//
+	// return usuario;
+	// }
 
 	/*
 	 * (non-Javadoc)
@@ -60,13 +60,13 @@ public class UsuarioDAOImpl extends AbstractDAO<Usuario, Integer> implements Usu
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Usuario> cq = cb.createQuery(ENTITY_TYPE);
 
-		Root<Usuario> from = cq.from(ENTITY_TYPE);		
-		
+		Root<Usuario> from = cq.from(ENTITY_TYPE);
+
 		from.join(Usuario_.funcionario);
 		from.fetch(Usuario_.funcionario);
-		
+
 		cq.select(from);
-		
+
 		cq.where(cb.equal(from.get(Usuario_.email), email));
 
 		TypedQuery<Usuario> tq = getEntityManager().createQuery(cq);

@@ -16,7 +16,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.servlet.view.tiles3.TilesConfigurer;
 import org.springframework.web.servlet.view.tiles3.TilesViewResolver;
 
-import br.com.cams7.casa_das_quentinhas.converter.FuncaoConverter;
+import br.com.cams7.casa_das_quentinhas.converter.FuncionarioFuncaoConverter;
 
 @Configuration
 @Import(JpaConfiguration.class)
@@ -25,7 +25,7 @@ import br.com.cams7.casa_das_quentinhas.converter.FuncaoConverter;
 public class AppConfig extends WebMvcConfigurerAdapter {
 
 	@Autowired
-	private FuncaoConverter funcaoConverter;
+	private FuncionarioFuncaoConverter funcaoConverter;
 
 	/**
 	 * Configure TilesConfigurer.
@@ -34,7 +34,7 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 	public TilesConfigurer tilesConfigurer() {
 		TilesConfigurer tilesConfigurer = new TilesConfigurer();
 		tilesConfigurer.setDefinitions(new String[] { "/WEB-INF/layouts/tiles.xml", "/WEB-INF/views/tiles.xml",
-				"/WEB-INF/views/usuario/tiles.xml" });
+				"/WEB-INF/views/funcionario/tiles.xml" });
 		tilesConfigurer.setCheckRefresh(true);
 		return tilesConfigurer;
 	}

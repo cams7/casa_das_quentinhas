@@ -175,7 +175,7 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 	 * @param globalFilters
 	 * @return
 	 */
-	private CriteriaQuery<?> getFilter(CriteriaBuilder cb, CriteriaQuery<?> cq, From<?, ?> from,
+	protected CriteriaQuery<?> getFilter(CriteriaBuilder cb, CriteriaQuery<?> cq, From<?, ?> from,
 			Map<String, Object> filters, String... globalFilters) {
 		if (filters != null && !filters.isEmpty()) {
 			boolean containsKeyGlobalFilter = false;
@@ -227,7 +227,7 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	private TypedQuery<E> getFilterAndPaginationAndSorting(CriteriaBuilder cb, CriteriaQuery<E> cq, From<?, ?> from,
+	protected TypedQuery<E> getFilterAndPaginationAndSorting(CriteriaBuilder cb, CriteriaQuery<E> cq, From<?, ?> from,
 			SearchParams params) {
 		cq = (CriteriaQuery<E>) getFilter(cb, cq, from, params.getFilters(), params.getGlobalFilters());
 
@@ -291,7 +291,7 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 	 * @param select
 	 * @return
 	 */
-	private long getCount(CriteriaBuilder cb, CriteriaQuery<Long> cq, From<?, ?> from) {
+	protected long getCount(CriteriaBuilder cb, CriteriaQuery<Long> cq, From<?, ?> from) {
 		Root<E> root = getRoot(from);
 		Expression<Long> count = cb.count(root);
 		cq.select(count);

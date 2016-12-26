@@ -4,10 +4,13 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import br.com.cams7.app.model.AbstractEntity;
 
@@ -20,12 +23,14 @@ public class Funcionario extends AbstractEntity<Integer> {
 	@Column(name = "id_funcionario", nullable = false)
 	private Integer id;
 
-	@OneToOne(optional = false)
+	@Valid
+	@OneToOne(fetch = FetchType.LAZY, optional = false)
 	@PrimaryKeyJoinColumn(name = "id_funcionario", referencedColumnName = "id_usuario")
 	private Usuario usuario;
 
+	@NotNull
 	@Enumerated(EnumType.ORDINAL)
-	@Column(nullable = false)
+	@Column
 	private Funcao funcao;
 
 	@Override
@@ -78,7 +83,20 @@ public class Funcionario extends AbstractEntity<Integer> {
 	}
 
 	public enum Funcao {
-		/* GERENTE */ADMIN, /* ATENDENTE */DBA, /* ENTREGADOR */USER
+		/* GERENTE */ADMIN("Gerente"), /* ATENDENTE */DBA("Atendente"), /* ENTREGADOR */USER("Entregador");
+		private String nome;
+
+		private Funcao(String nome) {
+			this.nome = nome;
+		}
+
+		public Funcao getFuncao() {
+			return values()[ordinal()];
+		}
+
+		public String getNome() {
+			return nome;
+		}
 	}
 
 }

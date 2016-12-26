@@ -7,13 +7,14 @@
 
 <div id="top" class="row">
 	<div class="col-sm-3">
-		<h2>Usuários</h2>
+		<h2>Funcionários</h2>
 	</div>
 
 	<div class="col-sm-6">
 		<div class="input-group h2">
-			<input name="data[search]" class="form-control" id="search_query" type="text" placeholder="Pesquisar Usuários"> 
-			<span class="input-group-btn">
+			<input name="data[search]" class="form-control" id="search_query"
+				type="text" placeholder="Pesquisar Funcionários"> <span
+				class="input-group-btn">
 				<button id="search_btn" class="btn btn-primary" type="submit">
 					<span class="glyphicon glyphicon-search"></span>
 				</button>
@@ -23,12 +24,11 @@
 
 	<div class="col-sm-3">
 		<sec:authorize access="hasRole('ADMIN')">
-			<a href="<c:url value='/usuario/create' />"
-				class="btn btn-primary pull-right h2">Novo Usuário</a>
+			<a href="<c:url value='/funcionario/create' />"
+				class="btn btn-primary pull-right h2">Novo Funcionário</a>
 		</sec:authorize>
 	</div>
 </div>
-<!-- /#top -->
 
 <hr />
 
@@ -41,9 +41,9 @@
 
 <script type="text/javascript">
 	var MAIN_PAGE = '<c:url value='/${mainPage}' />';
-	var MODAL_LABEL = 'Excluir Usuário';
-	var MODAL_BODY = 'Deseja realmente excluir este Usuário?';
-</script>	
+	var MODAL_LABEL = 'Excluir Funcionário';
+	var MODAL_BODY = 'Deseja realmente excluir este Funcionário?';
+</script>
 <script src="<c:url value='/static/js/casa_das_marmitas-list.js' />"></script>
 
 

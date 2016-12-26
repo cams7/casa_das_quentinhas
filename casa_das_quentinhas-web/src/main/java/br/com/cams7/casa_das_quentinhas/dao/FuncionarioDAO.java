@@ -7,6 +7,7 @@ import br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao;
 public interface FuncionarioDAO extends BaseDAO<Funcionario, Integer> {
 
 	// Set<Funcionario> getFuncionariosByFuncao(Funcao funcao);
+	Funcionario getFuncionarioById(Integer id);
 
 	Funcao getFuncionarioFuncaoById(Integer id);
 

@@ -26,9 +26,7 @@
 			<li class="${activePage eq 'taxa_index' ? 'active' : '' }"><a
 				href="<c:url value='/taxa' />">Taxas</a></li>
 			<li class="${activePage eq 'funcionario_index' ? 'active' : '' }"><a
-				href="<c:url value='/funcionario' />">Funcionários</a></li>
-			<li class="${activePage eq 'usuario_index' ? 'active' : '' }"><a
-				href="<c:url value='/usuario' />">Usuários</a></li>
+				href="<c:url value='/funcionario' />">Funcionários</a></li>			
 		</ul>
 		<ul class="nav navbar-nav navbar-right">
 			<li><a href="#"><span class="glyphicon glyphicon-user"></span>
