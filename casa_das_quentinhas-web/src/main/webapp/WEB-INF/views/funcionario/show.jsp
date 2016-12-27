@@ -10,11 +10,11 @@
 </h3>
 
 <div class="row">
-	<div class="col-md-10">
+	<div class="col-md-4">
 		<p>
-			<strong>E-mail</strong>
+			<strong>Nome</strong>
 		</p>
-		<p>${funcionario.usuario.email}</p>
+		<p>${funcionario.nome}</p>
 	</div>
 	<div class="col-md-2">
 		<p>
@@ -22,6 +22,38 @@
 		</p>
 		<p>${funcionario.funcao.nome}</p>
 	</div>
+	<div class="col-md-2">
+		<p>
+			<strong>Celular</strong>
+		</p>
+		<p>${funcionario.formattedCelular}</p>
+	</div>
+	<div class="col-md-4">
+		<p>
+			<strong>Empresa</strong>
+		</p>
+		<p>${funcionario.empresa.nomeWithCnpj}</p>
+	</div>
+</div>
+<div class="row">	
+	<div class="col-md-4">
+		<p>
+			<strong>E-mail</strong>
+		</p>
+		<p>${funcionario.usuario.email}</p>
+	</div>
+	<div class="col-md-4">
+		<p>
+			<strong>CPF</strong>
+		</p>
+		<p>${funcionario.formattedCpf}</p>
+	</div>
+	<div class="col-md-4">
+		<p>
+			<strong>RG</strong>
+		</p>
+		<p>${funcionario.rg}</p>
+	</div>	
 </div>
 
 <hr />

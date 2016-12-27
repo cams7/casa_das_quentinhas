@@ -6,4 +6,6 @@ import br.com.cams7.casa_das_quentinhas.model.Funcionario;
 
 public interface FuncionarioService extends BaseService<Funcionario, Integer>, FuncionarioDAO {
 
+	boolean isCPFUnique(Integer id, String cpf);
+
 }

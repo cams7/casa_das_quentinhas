@@ -20,6 +20,9 @@ import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import br.com.cams7.app.model.AbstractEntity;
 import br.com.cams7.app.utils.AppHelper;
 import br.com.cams7.app.utils.SearchParams;
@@ -27,6 +30,7 @@ import br.com.cams7.app.utils.SearchParams;
 public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Serializable> implements BaseDAO<E, PK> {
 
 	protected final Class<E> ENTITY_TYPE;
+	protected final Logger LOGGER;
 
 	@SuppressWarnings("unchecked")
 	public AbstractDAO() {
@@ -34,6 +38,8 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 
 		ENTITY_TYPE = (Class<E>) ((ParameterizedType) this.getClass().getGenericSuperclass())
 				.getActualTypeArguments()[0];
+		
+		LOGGER = LoggerFactory.getLogger(this.getClass());
 	}
 
 	@PersistenceContext
@@ -101,40 +107,49 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 
 		Root<E> from = cq.from(ENTITY_TYPE);
 		cq.select(from);
-		cq.orderBy(cb.desc(from.get("id")));
+		cq.orderBy(cb.desc(from.<PK>get("id")));
 
 		TypedQuery<E> tq = getEntityManager().createQuery(cq);
 		List<E> entities = tq.getResultList();
 		return entities;
 	}
 
-	@SuppressWarnings("unchecked")
-	private Root<E> getRoot(From<?, ?> from) {
-		if (from instanceof Root<?>)
-			return (Root<E>) from;
+	/**
+	 * @param fromWithJoins
+	 * @param attributeName
+	 * @return
+	 */
+	private FromOrJoin getFromOrJoin(From<?, ?>[] fromWithJoins, String attributeName) {
+		From<?, ?> fromOrJoin = fromWithJoins[0];
 
-		from = ((Join<?, ?>) from).getParent();
-		return getRoot(from);
+		String[] atributes = attributeName.split("\\.");
+
+		if (atributes.length > 1) {
+			attributeName = atributes[atributes.length - 1];
+			String entityName = atributes[atributes.length - 2];
+
+			for (short i = 1; i < fromWithJoins.length; i++) {
+				Join<?, ?> join = (Join<?, ?>) fromWithJoins[i];
+
+				if (entityName.equals(join.getAttribute().getName())) {
+					fromOrJoin = join;
+					break;
+				}
+			}
+		}
+
+		return new FromOrJoin(attributeName, fromOrJoin);
 	}
 
-	private From<?, ?> getFrom(From<?, ?> from, Class<E> entityType) {
-		if (from.getJavaType().equals(entityType) || from instanceof Root<?>)
-			return from;
-
-		from = ((Join<?, ?>) from).getParent();
-		return getFrom(from, entityType);
-	}
-
-	private AttributeFrom getFrom(From<?, ?> from, String attributeName) {
-		Class<E> entityType = AppHelper.getFieldTypes(ENTITY_TYPE, attributeName).getEntityType();
-
-		attributeName = attributeName.substring(attributeName.lastIndexOf(".") + 1);
-		from = getFrom(from, entityType);
-
-		return new AttributeFrom(attributeName, from);
-	}
-
-	private Predicate getExpression(CriteriaBuilder cb, From<?, ?> from, String fieldName, Object fieldValue) {
+	/**
+	 * @param cb
+	 * @param fromWithJoins
+	 * @param fieldName
+	 * @param fieldValue
+	 * @return
+	 */
+	private Predicate getExpression(CriteriaBuilder cb, From<?, ?>[] fromWithJoins, String fieldName,
+			Object fieldValue) {
 		Object value = AppHelper.getFieldValue(ENTITY_TYPE, fieldName, fieldValue);
 
 		if (value == null)
@@ -142,9 +157,9 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 
 		Class<?> fieldType = value.getClass();
 
-		AttributeFrom attributeFrom = getFrom(from, fieldName);
-		fieldName = attributeFrom.attributeName;
-		from = attributeFrom.from;
+		FromOrJoin fromOrJoin = getFromOrJoin(fromWithJoins, fieldName);
+		fieldName = fromOrJoin.attributeName;
+		From<?, ?> from = fromOrJoin.from;
 
 		Predicate predicate;
 
@@ -170,12 +185,12 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 	 * 
 	 * @param cb
 	 * @param cq
-	 * @param from
+	 * @param fromWithJoins
 	 * @param filters
 	 * @param globalFilters
 	 * @return
 	 */
-	protected CriteriaQuery<?> getFilter(CriteriaBuilder cb, CriteriaQuery<?> cq, From<?, ?> from,
+	protected CriteriaQuery<?> getFilter(CriteriaBuilder cb, CriteriaQuery<?> cq, From<?, ?>[] fromWithJoins,
 			Map<String, Object> filters, String... globalFilters) {
 		if (filters != null && !filters.isEmpty()) {
 			boolean containsKeyGlobalFilter = false;
@@ -188,7 +203,7 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 					continue;
 				}
 
-				Predicate expression = getExpression(cb, from, filter.getKey(), filter.getValue());
+				Predicate expression = getExpression(cb, fromWithJoins, filter.getKey(), filter.getValue());
 				if (expression != null)
 					and.add(expression);
 			}
@@ -199,7 +214,7 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 			if (containsKeyGlobalFilter && globalFilters.length > 0) {
 				Set<Predicate> or = new HashSet<>();
 				for (String globalFilter : globalFilters) {
-					Predicate expression = getExpression(cb, from, globalFilter,
+					Predicate expression = getExpression(cb, fromWithJoins, globalFilter,
 							filters.get(SearchParams.GLOBAL_FILTER));
 					if (expression != null)
 						or.add(expression);
@@ -220,21 +235,21 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 	 *            CriteriaBuilder
 	 * @param cq
 	 *            CriteriaQuery<E>
-	 * @param from
+	 * @param fromWithJoins
 	 *            From<?, ?>
 	 * @param params
 	 *            parâmetros
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	protected TypedQuery<E> getFilterAndPaginationAndSorting(CriteriaBuilder cb, CriteriaQuery<E> cq, From<?, ?> from,
-			SearchParams params) {
-		cq = (CriteriaQuery<E>) getFilter(cb, cq, from, params.getFilters(), params.getGlobalFilters());
+	protected TypedQuery<E> getFilterAndPaginationAndSorting(CriteriaBuilder cb, CriteriaQuery<E> cq,
+			From<?, ?>[] fromWithJoins, SearchParams params) {
+		cq = (CriteriaQuery<E>) getFilter(cb, cq, fromWithJoins, params.getFilters(), params.getGlobalFilters());
 
 		if (params.getSortField() != null && params.getSortOrder() != null) {
-			AttributeFrom attributeFrom = getFrom(from, params.getSortField());
-			params.setSortField(attributeFrom.attributeName);
-			From<?, ?> sortFrom = attributeFrom.from;
+			FromOrJoin fromOrJoin = getFromOrJoin(fromWithJoins, params.getSortField());
+			params.setSortField(fromOrJoin.attributeName);
+			From<?, ?> sortFrom = fromOrJoin.from;
 
 			Order order;
 
@@ -253,7 +268,7 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 			cq = cq.orderBy(order);
 		}
 
-		Root<E> root = getRoot(from);
+		Root<E> root = (Root<E>) fromWithJoins[0];
 		cq.select(root);
 
 		TypedQuery<E> tq = getEntityManager().createQuery(cq);
@@ -264,6 +279,11 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 			tq.setMaxResults(params.getSizePage());
 
 		return tq;
+	}
+
+	protected From<?, ?>[] getFromWithFetchJoins(Root<E> from) {
+		From<?, ?>[] fromWithJoins = new From<?, ?>[] { from };
+		return fromWithJoins;
 	}
 
 	/*
@@ -278,26 +298,35 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 		CriteriaQuery<E> cq = cb.createQuery(ENTITY_TYPE);
 
 		Root<E> from = cq.from(ENTITY_TYPE);
+		From<?, ?>[] fromWithJoins = getFromWithFetchJoins(from);
 
-		TypedQuery<E> tq = getFilterAndPaginationAndSorting(cb, cq, from, params);
+		TypedQuery<E> tq = getFilterAndPaginationAndSorting(cb, cq, fromWithJoins, params);
 		List<E> entities = tq.getResultList();
 		return entities;
 	}
 
 	/**
-	 * Retorna o numero total de instâncias de "AbstractEntity". Essa pesquisa é
-	 * feita com auxilio de filtros
+	 * Retorna o número total de instâncias. Essa pesquisa é feita com auxilio
+	 * de filtros
 	 * 
-	 * @param select
+	 * @param cb
+	 * @param cq
+	 * @param fromWithJoins
 	 * @return
 	 */
-	protected long getCount(CriteriaBuilder cb, CriteriaQuery<Long> cq, From<?, ?> from) {
-		Root<E> root = getRoot(from);
+	protected long getCount(CriteriaBuilder cb, CriteriaQuery<Long> cq, From<?, ?>[] fromWithJoins) {
+		@SuppressWarnings("unchecked")
+		Root<E> root = (Root<E>) fromWithJoins[0];
 		Expression<Long> count = cb.count(root);
 		cq.select(count);
 
 		Long countValue = getEntityManager().createQuery(cq).getSingleResult();
 		return countValue;
+	}
+
+	protected From<?, ?>[] getFromWithJoins(Root<E> from) {
+		From<?, ?>[] fromWithJoins = new From<?, ?>[] { from };
+		return fromWithJoins;
 	}
 
 	/*
@@ -314,8 +343,10 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 		CriteriaQuery<Long> cq = cb.createQuery(Long.class);
 
 		Root<E> from = cq.from(ENTITY_TYPE);
-		cq = (CriteriaQuery<Long>) getFilter(cb, cq, from, filters, globalFilters);
-		long count = getCount(cb, cq, from);
+		From<?, ?>[] fromWithJoins = getFromWithJoins(from);
+
+		cq = (CriteriaQuery<Long>) getFilter(cb, cq, fromWithJoins, filters, globalFilters);
+		long count = getCount(cb, cq, fromWithJoins);
 
 		return count;
 	}
@@ -331,16 +362,18 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 		CriteriaQuery<Long> cq = cb.createQuery(Long.class);
 
 		Root<E> from = cq.from(ENTITY_TYPE);
-		long count = getCount(cb, cq, from);
+		From<?, ?>[] fromWithJoins = getFromWithJoins(from);
+
+		long count = getCount(cb, cq, fromWithJoins);
 
 		return count;
 	}
 
-	private class AttributeFrom {
+	private class FromOrJoin {
 		private String attributeName;
 		private From<?, ?> from;
 
-		private AttributeFrom(String attributeName, From<?, ?> from) {
+		private FromOrJoin(String attributeName, From<?, ?> from) {
 			super();
 			this.attributeName = attributeName;
 			this.from = from;

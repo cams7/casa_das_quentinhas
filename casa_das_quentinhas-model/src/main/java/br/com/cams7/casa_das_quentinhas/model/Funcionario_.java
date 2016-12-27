@@ -3,6 +3,8 @@
  */
 package br.com.cams7.casa_das_quentinhas.model;
 
+import java.util.Date;
+
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
@@ -17,4 +19,12 @@ public class Funcionario_ {
 	public static volatile SingularAttribute<Funcionario, Integer> id;
 	public static volatile SingularAttribute<Funcionario, Usuario> usuario;
 	public static volatile SingularAttribute<Funcionario, Funcao> funcao;
+	public static volatile SingularAttribute<Funcionario, Usuario> usuarioCadastro;
+	public static volatile SingularAttribute<Funcionario, Empresa> empresa;
+	public static volatile SingularAttribute<Funcionario, String> nome;
+	public static volatile SingularAttribute<Funcionario, String> cpf;
+	public static volatile SingularAttribute<Funcionario, String> rg;
+	public static volatile SingularAttribute<Funcionario, String> celular;
+	public static volatile SingularAttribute<Funcionario, Date> cadastro;
+	public static volatile SingularAttribute<Funcionario, Date> alteracao;
 }

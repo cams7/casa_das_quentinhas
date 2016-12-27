@@ -94,6 +94,9 @@ public class UsuarioServiceImpl extends AbstractService<UsuarioDAO, Usuario, Int
 	 */
 	@Override
 	public boolean isEmailUnique(Integer id, String email) {
+		if (email == null || email.isEmpty())
+			return true;
+
 		Usuario usuario = getUsuarioByEmail(email);
 
 		if (usuario == null)

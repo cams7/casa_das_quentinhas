@@ -7,9 +7,11 @@
 <h3 class="page-header">Editar Funcionário</h3>
 
 <form:form method="POST" modelAttribute="funcionario">
-	<form:input type="hidden" path="id" id="id" />
-	<form:input type="hidden" path="usuario.id" id="usuario.id" />
-	<form:input type="hidden" path="usuario.tipo" id="usuario.tipo" />
+	<form:input type="hidden" path="id" />
+	<form:input type="hidden" path="cadastro.time" />
+	<form:input type="hidden" path="usuario.id" />
+	<form:input type="hidden" path="usuario.tipo" />
+	<form:input type="hidden" path="usuarioCadastro.id" />
 
 	<%@include file="form.jsp"%>
 

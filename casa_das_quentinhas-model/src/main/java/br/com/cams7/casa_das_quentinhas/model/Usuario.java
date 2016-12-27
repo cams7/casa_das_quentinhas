@@ -1,5 +1,7 @@
 package br.com.cams7.casa_das_quentinhas.model;
 
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -8,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -31,7 +34,7 @@ public class Usuario extends AbstractEntity<Integer> {
 
 	@NotEmpty
 	@Size(min = 5, max = 50)
-	@Column(nullable = false)
+	@Column(unique = true, nullable = false)
 	private String email;
 
 	@Column(name = "senha", length = 100, nullable = false)
@@ -43,6 +46,9 @@ public class Usuario extends AbstractEntity<Integer> {
 
 	@OneToOne(fetch = FetchType.LAZY, mappedBy = "usuario")
 	private Funcionario funcionario;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "usuarioCadastro")
+	private Set<Funcionario> funcionarios;
 
 	@Transient
 	private String senha;
@@ -90,6 +96,14 @@ public class Usuario extends AbstractEntity<Integer> {
 
 	public void setFuncionario(Funcionario funcionario) {
 		this.funcionario = funcionario;
+	}
+
+	public Set<Funcionario> getFuncionarios() {
+		return funcionarios;
+	}
+
+	public void setFuncionarios(Set<Funcionario> funcionarios) {
+		this.funcionarios = funcionarios;
 	}
 
 	public String getSenha() {

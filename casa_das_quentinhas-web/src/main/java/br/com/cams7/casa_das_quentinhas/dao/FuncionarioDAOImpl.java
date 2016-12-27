@@ -1,11 +1,10 @@
 package br.com.cams7.casa_das_quentinhas.dao;
 
-import java.util.List;
-import java.util.Map;
-
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
@@ -14,9 +13,8 @@ import javax.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
 
 import br.com.cams7.app.dao.AbstractDAO;
-import br.com.cams7.app.utils.SearchParams;
+import br.com.cams7.casa_das_quentinhas.model.Empresa;
 import br.com.cams7.casa_das_quentinhas.model.Funcionario;
-import br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao;
 import br.com.cams7.casa_das_quentinhas.model.Funcionario_;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
 
@@ -48,37 +46,52 @@ public class FuncionarioDAOImpl extends AbstractDAO<Funcionario, Integer> implem
 	// return funcionario;
 	// }
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.dao.AbstractDAO#getFromWithFetchJoins(javax.persistence.
+	 * criteria.Root)
+	 */
 	@Override
-	public List<Funcionario> search(SearchParams params) {
-		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-		CriteriaQuery<Funcionario> cq = cb.createQuery(ENTITY_TYPE);
-
-		Root<Funcionario> from = cq.from(ENTITY_TYPE);
-
+	protected From<?, ?>[] getFromWithFetchJoins(Root<Funcionario> from) {
 		@SuppressWarnings("unchecked")
-		Join<Funcionario, Usuario> join = (Join<Funcionario, Usuario>) from.fetch(Funcionario_.usuario, JoinType.LEFT);
+		Join<Funcionario, Usuario> joinUsuario = (Join<Funcionario, Usuario>) from.fetch(Funcionario_.usuario,
+				JoinType.LEFT);
+		@SuppressWarnings("unchecked")
+		Join<Funcionario, Empresa> joinEmpresa = (Join<Funcionario, Empresa>) from.fetch(Funcionario_.empresa,
+				JoinType.LEFT);
 
-		TypedQuery<Funcionario> tq = getFilterAndPaginationAndSorting(cb, cq, join, params);
-		List<Funcionario> funcionarios = tq.getResultList();
+		From<?, ?>[] fromWithJoins = new From<?, ?>[] { from, joinUsuario, joinEmpresa };
 
-		return funcionarios;
+		return fromWithJoins;
 	}
 
-	@SuppressWarnings("unchecked")
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.app.dao.AbstractDAO#getFromWithJoins(javax.persistence.
+	 * criteria.Root)
+	 */
 	@Override
-	public long getTotalElements(Map<String, Object> filters, String... globalFilters) {
-		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-		CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+	protected From<?, ?>[] getFromWithJoins(Root<Funcionario> from) {
+		Join<Funcionario, Usuario> joinUsuario = (Join<Funcionario, Usuario>) from.join(Funcionario_.usuario,
+				JoinType.LEFT);
+		Join<Funcionario, Empresa> joinEmpresa = (Join<Funcionario, Empresa>) from.join(Funcionario_.empresa,
+				JoinType.LEFT);
 
-		Root<Funcionario> from = cq.from(ENTITY_TYPE);
-		Join<Funcionario, Usuario> join = from.join(Funcionario_.usuario, JoinType.LEFT);
+		From<?, ?>[] fromWithJoins = new From<?, ?>[] { from, joinUsuario, joinEmpresa };
 
-		cq = (CriteriaQuery<Long>) getFilter(cb, cq, join, filters, globalFilters);
-		long count = getCount(cb, cq, join);
-
-		return count;
+		return fromWithJoins;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.casa_das_quentinhas.dao.FuncionarioDAO#getFuncionarioById(
+	 * java.lang.Integer)
+	 */
 	@Override
 	public Funcionario getFuncionarioById(Integer id) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
@@ -86,8 +99,9 @@ public class FuncionarioDAOImpl extends AbstractDAO<Funcionario, Integer> implem
 
 		Root<Funcionario> from = cq.from(ENTITY_TYPE);
 
-		from.join(Funcionario_.usuario);
-		from.fetch(Funcionario_.usuario);
+		from.fetch(Funcionario_.usuario, JoinType.LEFT);
+		from.fetch(Funcionario_.usuarioCadastro, JoinType.LEFT);
+		from.fetch(Funcionario_.empresa, JoinType.LEFT);
 
 		cq.select(from);
 
@@ -99,26 +113,51 @@ public class FuncionarioDAOImpl extends AbstractDAO<Funcionario, Integer> implem
 		return funcionario;
 	}
 
+	@Override
+	public Funcionario getFuncionarioByCpf(String cpf) {
+		LOGGER.info("CPF : {}", cpf);
+
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Funcionario> cq = cb.createQuery(ENTITY_TYPE);
+
+		Root<Funcionario> from = cq.from(ENTITY_TYPE);
+
+		cq.select(from);
+
+		cq.where(cb.equal(from.get(Funcionario_.cpf), cpf));
+
+		TypedQuery<Funcionario> tq = getEntityManager().createQuery(cq);
+
+		try {
+			Funcionario usuario = tq.getSingleResult();
+			return usuario;
+		} catch (NoResultException e) {
+			LOGGER.warn("CPF not found...");
+		}
+
+		return null;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see br.com.cams7.casa_das_quentinhas.dao.FuncionarioDAO#
 	 * getFuncionarioFuncaoById(java.lang.Integer)
 	 */
-	@Override
-	public Funcao getFuncionarioFuncaoById(Integer id) {
-		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-		CriteriaQuery<Funcao> cq = cb.createQuery(Funcao.class);
-
-		Root<Funcionario> from = cq.from(ENTITY_TYPE);
-		cq.where(cb.equal(from.get(Funcionario_.id), id));
-		cq.select(from.get(Funcionario_.funcao));
-
-		TypedQuery<Funcao> tq = getEntityManager().createQuery(cq);
-		Funcao funcao = tq.getSingleResult();
-
-		return funcao;
-	}
+	// @Override
+	// public Funcao getFuncionarioFuncaoById(Integer id) {
+	// CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+	// CriteriaQuery<Funcao> cq = cb.createQuery(Funcao.class);
+	//
+	// Root<Funcionario> from = cq.from(ENTITY_TYPE);
+	// cq.where(cb.equal(from.get(Funcionario_.id), id));
+	// cq.select(from.get(Funcionario_.funcao));
+	//
+	// TypedQuery<Funcao> tq = getEntityManager().createQuery(cq);
+	// Funcao funcao = tq.getSingleResult();
+	//
+	// return funcao;
+	// }
 
 	/*
 	 * (non-Javadoc)

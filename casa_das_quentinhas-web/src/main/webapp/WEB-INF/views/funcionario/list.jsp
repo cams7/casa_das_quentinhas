@@ -12,12 +12,20 @@
 			<table class="table table-striped table-bordered dataTable">
 				<thead>
 					<tr>
+						<th class="${sortField eq 'id' ? sortOrder : 'sorting' }"
+							id="id">#</th>
+						<th class="${sortField eq 'nome' ? sortOrder : 'sorting' }"
+							id="nome">Nome</th>
+						<th class="${sortField eq 'cpf' ? sortOrder : 'sorting' }"
+							id="cpf">CPF</th>
 						<th
 							class="${sortField eq 'usuario.email' ? sortOrder : 'sorting' }"
 							id="usuario.email">E-mail</th>
-
 						<th class="${sortField eq 'funcao' ? sortOrder : 'sorting' }"
 							id="funcao">Função</th>
+						<th
+							class="${sortField eq 'empresa.nome' ? sortOrder : 'sorting' }"
+							id="empresa.nome">Empresa</th>
 						<sec:authorize access="hasRole('GERENTE') or hasRole('ATENDENTE')">
 							<th class="actions">Ações</th>
 						</sec:authorize>
@@ -26,12 +34,17 @@
 				<tbody>
 					<c:forEach items="${funcionarios}" var="funcionario">
 						<tr>
+							<td>${funcionario.id}</td>
+							<td>${funcionario.nome}</td>
+							<td>${funcionario.formattedCpf}</td>
 							<td>${funcionario.usuario.email}</td>
 							<td>${funcionario.funcao.nome}</td>
+							<td><a href="<c:url value='/empresa/${funcionario.empresa.id}' />">${funcionario.empresa.nome}</a></td>
 
 							<td class="actions"><a class="btn btn-success btn-xs"
 								href="<c:url value='/funcionario/${funcionario.id}' />">Visualizar</a>
-								<sec:authorize access="hasRole('GERENTE') or hasRole('ATENDENTE')">
+								<sec:authorize
+									access="hasRole('GERENTE') or hasRole('ATENDENTE')">
 									<a class="btn btn-warning btn-xs"
 										href="<c:url value='/funcionario/${funcionario.id}/edit' />">Alterar</a>
 								</sec:authorize> <sec:authorize access="hasRole('GERENTE')">

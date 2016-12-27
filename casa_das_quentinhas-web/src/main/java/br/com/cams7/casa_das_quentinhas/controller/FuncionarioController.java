@@ -1,17 +1,21 @@
 package br.com.cams7.casa_das_quentinhas.controller;
 
 import java.util.Locale;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,10 +23,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import br.com.cams7.app.controller.AbstractController;
+import br.com.cams7.casa_das_quentinhas.model.Empresa;
 import br.com.cams7.casa_das_quentinhas.model.Funcionario;
 import br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
-import static br.com.cams7.casa_das_quentinhas.model.Usuario.Tipo.FUNCIONARIO;
+import br.com.cams7.casa_das_quentinhas.service.EmpresaService;
 import br.com.cams7.casa_das_quentinhas.service.FuncionarioService;
 import br.com.cams7.casa_das_quentinhas.service.UsuarioService;
 
@@ -33,6 +38,9 @@ public class FuncionarioController extends AbstractController<FuncionarioService
 
 	@Autowired
 	private UsuarioService usuarioService;
+
+	@Autowired
+	private EmpresaService empresaService;
 
 	@Autowired
 	private MessageSource messageSource;
@@ -51,6 +59,13 @@ public class FuncionarioController extends AbstractController<FuncionarioService
 			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
 
 		Usuario usuario = funcionario.getUsuario();
+		Empresa empresa = funcionario.getEmpresa();
+
+		if (empresa.getId() == null) {
+			FieldError senhaError = new FieldError("funcionario", "empresa.id",
+					messageSource.getMessage("NotNull.empresa.id", null, Locale.getDefault()));
+			result.addError(senhaError);
+		}
 
 		if (usuario.getSenha().isEmpty()) {
 			FieldError senhaError = new FieldError("funcionario", "usuario.senha",
@@ -58,25 +73,29 @@ public class FuncionarioController extends AbstractController<FuncionarioService
 			result.addError(senhaError);
 		}
 
-		setNotEmptyConfirmacaoError(usuario, result, true);
-		setSenhaNotEqualsConfirmacaoError(usuario, result);
-
 		if (!usuarioService.isEmailUnique(usuario.getId(), usuario.getEmail())) {
 			FieldError emailError = new FieldError("funcionario", "usuario.email", messageSource
 					.getMessage("non.unique.email", new String[] { usuario.getEmail() }, Locale.getDefault()));
 			result.addError(emailError);
 		}
 
+		setNotEmptyConfirmacaoError(usuario, result, true);
+		setSenhaNotEqualsConfirmacaoError(usuario, result);
+		setCPFNotUniqueError(funcionario, result);
+
 		setUsuarioLogado(model);
 		incrementLastLoadedPage(model, lastLoadedPage);
+		setMainPage(model);
 
 		if (result.hasErrors())
 			return getCreateTilesPage();
 
-		usuario.setTipo(FUNCIONARIO);
-		usuarioService.persist(usuario);
+		usuario = usuarioService.getUsuarioByEmail(getUsername());
+		funcionario.setUsuarioCadastro(usuario);
 
-		funcionario.setId(usuario.getId());
+		funcionario.setCpf(funcionario.getUnformattedCpf());
+		funcionario.setCelular(funcionario.getUnformattedCelular());
+
 		getService().persist(funcionario);
 
 		return redirectMainPage();
@@ -97,28 +116,31 @@ public class FuncionarioController extends AbstractController<FuncionarioService
 
 		setNotEmptyConfirmacaoError(usuario, result, !usuario.getSenha().isEmpty());
 		setSenhaNotEqualsConfirmacaoError(usuario, result);
+		setCPFNotUniqueError(funcionario, result);
 
 		setEditPage(model);
 		setUsuarioLogado(model);
 		incrementLastLoadedPage(model, lastLoadedPage);
+		setMainPage(model);
 
 		if (result.hasErrors())
 			return getEditTilesPage();
 
-		usuarioService.update(usuario);
+		funcionario.setCpf(funcionario.getUnformattedCpf());
+		funcionario.setCelular(funcionario.getUnformattedCelular());
 
 		getService().update(funcionario);
 
 		return redirectMainPage();
 	}
 
-	@Override
-	public ResponseEntity<Void> destroy(@PathVariable Integer id) {
+	@GetMapping(value = { "/empresas/{nome}" }, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Set<Empresa>> getEmpresas(@PathVariable String nome) {
+		Set<Empresa> empresas = empresaService.getEmpresasByNome(nome);
+		empresas = empresas.stream().map(empresa -> new Empresa(empresa.getId(), empresa.getNome(), empresa.getCnpj()))
+				.collect(Collectors.toSet());
 
-		getService().delete(id);
-		usuarioService.delete(id);
-
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		return new ResponseEntity<Set<Empresa>>(empresas, HttpStatus.OK);
 	}
 
 	private void setNotEmptyConfirmacaoError(Usuario usuario, BindingResult result, boolean senhaInformada) {
@@ -135,6 +157,15 @@ public class FuncionarioController extends AbstractController<FuncionarioService
 			FieldError confirmacaoError = new FieldError("funcionario", "usuario.confirmacaoSenha",
 					messageSource.getMessage("senha.notEquals.confirmacao", null, Locale.getDefault()));
 			result.addError(confirmacaoError);
+		}
+	}
+
+	private void setCPFNotUniqueError(Funcionario funcionario, BindingResult result) {
+		String cpf = funcionario.getUnformattedCpf();
+		if (!getService().isCPFUnique(funcionario.getId(), cpf)) {
+			FieldError emailError = new FieldError("funcionario", "cpf", messageSource.getMessage("non.unique.cpf",
+					new String[] { funcionario.getCpf() }, Locale.getDefault()));
+			result.addError(emailError);
 		}
 	}
 
@@ -191,6 +222,7 @@ public class FuncionarioController extends AbstractController<FuncionarioService
 	protected Funcionario getNewEntity() {
 		Funcionario funcionario = new Funcionario();
 		funcionario.setUsuario(new Usuario());
+		funcionario.setEmpresa(new Empresa());
 		return funcionario;
 	}
 
@@ -202,7 +234,7 @@ public class FuncionarioController extends AbstractController<FuncionarioService
 
 	@Override
 	protected String[] getGlobalFilters() {
-		return new String[] { "usuario.email" };
+		return new String[] { "nome", "cpf", "usuario.email", "empresa.nome" };
 	}
 
 }

@@ -20,7 +20,7 @@ public class Acesso extends AbstractEntity<String> {
 	@Column(name = "series", length = 64, nullable = false)
 	private String id;
 
-	@Column(length = 50, nullable = false)
+	@Column(unique = true, length = 50, nullable = false)
 	private String email;
 
 	@Column(unique = true, length = 64, nullable = false)

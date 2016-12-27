@@ -6,7 +6,9 @@ CREATE TABLE public.uf (
                 nome VARCHAR(64) NOT NULL,
                 sigla CHAR(2) NOT NULL,
                 codigo_ibge CHAR(2) NOT NULL,
-                CONSTRAINT uf_pk PRIMARY KEY (id_uf)
+                CONSTRAINT uf_pk PRIMARY KEY (id_uf),
+				CONSTRAINT uf_sigla_uk UNIQUE (sigla),
+				CONSTRAINT uf_ibge_uk UNIQUE (codigo_ibge)
 );
 COMMENT ON TABLE public.uf IS 'Estado ou unidade federativa.';
 COMMENT ON COLUMN public.uf.id_uf IS 'Id do estado.';
@@ -25,7 +27,8 @@ CREATE TABLE public.cidade (
                 nome VARCHAR(64) NOT NULL,
                 codigo_ibge CHAR(7) NOT NULL,
                 ddd CHAR(2) NOT NULL,
-                CONSTRAINT cidade_pk PRIMARY KEY (id_cidade)
+                CONSTRAINT cidade_pk PRIMARY KEY (id_cidade),
+				CONSTRAINT cidade_ibge_uk UNIQUE (codigo_ibge)
 );
 COMMENT ON TABLE public.cidade IS 'Cidade.';
 COMMENT ON COLUMN public.cidade.id_cidade IS 'Id da cidade.';
@@ -42,7 +45,7 @@ CREATE TABLE public.acesso (
                 token VARCHAR(64) NOT NULL,
                 ultimo_acesso TIMESTAMP NOT NULL,
                 CONSTRAINT acesso_pk PRIMARY KEY (series),
-				CONSTRAINT acesso_email_uk UNIQUE (email),
+				CONSTRAINT acesso_email_uk UNIQUE (email)
 				CONSTRAINT acesso_token_uk UNIQUE (token)
 );
 
@@ -53,7 +56,8 @@ CREATE TABLE public.usuario (
                 email VARCHAR(50) NOT NULL,
                 senha VARCHAR(60) NOT NULL,
                 tipo_usuario SMALLINT NOT NULL,
-                CONSTRAINT usuario_pk PRIMARY KEY (id_usuario)
+                CONSTRAINT usuario_pk PRIMARY KEY (id_usuario),
+				CONSTRAINT usuario_email_uk UNIQUE (email)
 );
 COMMENT ON COLUMN public.usuario.tipo_usuario IS 'Tipo de usuário que pode ser FUNCIONÁRIO ou EMPRESA.';
 
@@ -168,7 +172,9 @@ CREATE TABLE public.empresa (
                 ponto_referencia VARCHAR(30),
                 data_cadastro TIMESTAMP NOT NULL,
                 data_alteracao TIMESTAMP NOT NULL,
-                CONSTRAINT empresa_pk PRIMARY KEY (id_empresa)
+                CONSTRAINT empresa_pk PRIMARY KEY (id_empresa),
+				CONSTRAINT empresa_cnpj_uk UNIQUE (cnpj),
+				CONSTRAINT empresa_email_uk UNIQUE (email)
 );
 COMMENT ON TABLE public.empresa IS 'Empresa pode ser um cliente ou prestadora de serviços da Casa das Quentinhas.';
 COMMENT ON COLUMN public.empresa.id_usuario_acesso IS 'A empresa pode ser um usuário do sistema.';
@@ -190,7 +196,7 @@ ALTER SEQUENCE public.empresa_id_seq OWNED BY public.empresa.id_empresa;
 
 CREATE TABLE public.funcionario (
                 id_funcionario INTEGER NOT NULL,
-                id_usuario_cadastro INTEGER NOT NULL,
+                id_usuario_cadastro INTEGER,
                 id_empresa INTEGER NOT NULL,
                 funcao SMALLINT NOT NULL,
                 nome VARCHAR(60) NOT NULL,
@@ -199,7 +205,8 @@ CREATE TABLE public.funcionario (
                 celular CHAR(11) NOT NULL,
                 data_cadastro TIMESTAMP NOT NULL,
                 data_alteracao TIMESTAMP NOT NULL,
-                CONSTRAINT funcionario_pk PRIMARY KEY (id_funcionario)
+                CONSTRAINT funcionario_pk PRIMARY KEY (id_funcionario),
+				CONSTRAINT funcionario_cpf_uk UNIQUE (cpf)
 );
 COMMENT ON TABLE public.funcionario IS 'Funcionário da empresa Casa das Quentinhas.';
 COMMENT ON COLUMN public.funcionario.id_funcionario IS 'O funcionário é um usuário, com isso, tem o mesmo id.';
@@ -242,7 +249,9 @@ CREATE TABLE public.cliente (
                 ponto_referencia VARCHAR(30),
                 data_cadastro TIMESTAMP NOT NULL,
                 data_alteracao TIMESTAMP NOT NULL,
-                CONSTRAINT cliente_pk PRIMARY KEY (id_cliente)
+                CONSTRAINT cliente_pk PRIMARY KEY (id_cliente),
+				CONSTRAINT cliente_cpf_uk UNIQUE (cpf),
+				CONSTRAINT cliente_email_uk UNIQUE (email)
 );
 COMMENT ON TABLE public.cliente IS 'Cliente da Casa da Marmitas.';
 COMMENT ON COLUMN public.cliente.id_usuario_cadastro IS 'Usuário que cadastrou o cliente.';

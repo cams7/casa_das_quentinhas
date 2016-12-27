@@ -8,8 +8,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.web.authentication.rememberme.PersistentRememberMeToken;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.stereotype.Repository;
@@ -22,8 +20,6 @@ import br.com.cams7.casa_das_quentinhas.model.Acesso_;
 @Repository
 @Transactional
 public class AcessoDAOImpl extends AbstractDAO<Acesso, String> implements PersistentTokenRepository {
-
-	static final Logger LOGGER = LoggerFactory.getLogger(AcessoDAOImpl.class);
 
 	/*
 	 * (non-Javadoc)

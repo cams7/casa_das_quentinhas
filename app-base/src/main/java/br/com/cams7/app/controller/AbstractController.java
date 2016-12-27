@@ -99,6 +99,7 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 
 		setUsuarioLogado(model);
 		setLastLoadedPage(model, 1);
+		setMainPage(model);
 
 		return getCreateTilesPage();
 	}
@@ -117,6 +118,7 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 
 		setUsuarioLogado(model);
 		incrementLastLoadedPage(model, lastLoadedPage);
+		setMainPage(model);
 
 		if (result.hasErrors())
 			return getCreateTilesPage();
@@ -161,6 +163,7 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 		setEditPage(model);
 		setUsuarioLogado(model);
 		setLastLoadedPage(model, 1);
+		setMainPage(model);
 
 		return getEditTilesPage();
 	}
@@ -180,6 +183,7 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 		setEditPage(model);
 		setUsuarioLogado(model);
 		incrementLastLoadedPage(model, lastLoadedPage);
+		setMainPage(model);
 
 		if (result.hasErrors())
 			return getEditTilesPage();
@@ -258,7 +262,7 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 		model.addAttribute("count", count);
 	}
 
-	private void setMainPage(ModelMap model) {
+	protected void setMainPage(ModelMap model) {
 		model.addAttribute("mainPage", getMainPage());
 	}
 
@@ -271,7 +275,7 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 	}
 
 	protected void setUsuarioLogado(ModelMap model) {
-		model.addAttribute("loggedinuser", getPrincipal());
+		model.addAttribute("loggedinuser", getUsername());
 	}
 
 	private void setLastLoadedPage(ModelMap model, Integer lastLoadedPage) {
@@ -285,15 +289,15 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 	/**
 	 * This method returns the principal[user-name] of logged-in user.
 	 */
-	private String getPrincipal() {
+	protected String getUsername() {
 		String username = null;
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-		if (principal instanceof UserDetails) {
+		if (principal instanceof UserDetails)
 			username = ((UserDetails) principal).getUsername();
-		} else {
+		else
 			username = principal.toString();
-		}
+
 		return username;
 	}
 

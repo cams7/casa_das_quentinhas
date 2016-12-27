@@ -6,8 +6,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import br.com.cams7.app.dao.AbstractDAO;
@@ -16,8 +14,7 @@ import br.com.cams7.casa_das_quentinhas.model.Usuario_;
 
 @Repository
 public class UsuarioDAOImpl extends AbstractDAO<Usuario, Integer> implements UsuarioDAO {
-
-	static final Logger LOGGER = LoggerFactory.getLogger(UsuarioDAOImpl.class);
+	
 
 	/*
 	 * (non-Javadoc)
