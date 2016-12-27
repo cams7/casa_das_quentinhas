@@ -17,6 +17,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import br.com.cams7.app.model.AbstractEntity;
@@ -34,6 +35,7 @@ public class Usuario extends AbstractEntity<Integer> {
 
 	@NotEmpty
 	@Size(min = 5, max = 50)
+	@Email
 	@Column(unique = true, nullable = false)
 	private String email;
 

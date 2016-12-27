@@ -73,7 +73,7 @@
 		class="form-group col-md-3 ${not empty rgError ? 'has-error' : ''}">
 		<label class="control-label" for="rg">RG</label>
 		<form:input type="text" path="rg" id="rg" class="form-control"
-			placeholder="99999999" maxlength="10" />
+			placeholder="99999999" maxlength="9" />
 		<div class="help-block with-errors">${rgError}</div>
 	</div>
 </div>

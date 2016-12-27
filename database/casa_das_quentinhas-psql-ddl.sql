@@ -141,5 +141,5 @@ INSERT INTO funcionario (id_funcionario, funcao, id_empresa, data_cadastro, data
 INSERT INTO funcionario (id_funcionario, funcao, id_empresa, data_cadastro, data_alteracao, id_usuario_cadastro, nome, cpf, rg, celular) VALUES (23, 1, 1,'2016-12-26 18:45:00.0','2016-12-26 18:45:00.0', 1, 'Dr. Júlia Cruz Sobrinho', '38008720565', '12345699', '31991012369');
 INSERT INTO funcionario (id_funcionario, funcao, id_empresa, data_cadastro, data_alteracao, id_usuario_cadastro, nome, cpf, rg, celular) VALUES (24, 0, 1,'2016-12-26 18:45:00.0','2016-12-26 18:45:00.0', 1, 'Guilherme Galindo Sobrinho', '02441890212', '12345700', '31991012370');
 
-SELECT u.id_usuario, u.email, f.funcao, f.id_empresa FROM usuario u INNER JOIN funcionario f ON u.id_usuario=f.id_funcionario; 
+SELECT u.email, f.nome FROM usuario u INNER JOIN funcionario f ON u.id_usuario=f.id_funcionario; 
 

@@ -1,5 +1,10 @@
 package br.com.cams7.casa_das_quentinhas.model;
 
+import static br.com.cams7.app.validator.CelularValidator.formatCelular;
+import static br.com.cams7.app.validator.CelularValidator.unformatCelular;
+import static br.com.cams7.app.validator.CpfValidator.formatCpf;
+import static br.com.cams7.app.validator.CpfValidator.unformatCpf;
+
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -22,6 +27,9 @@ import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import br.com.cams7.app.model.AbstractEntity;
+import br.com.cams7.app.validator.CPF;
+import br.com.cams7.app.validator.Celular;
+import br.com.cams7.app.validator.RG;
 
 @SuppressWarnings("serial")
 @Entity
@@ -56,20 +64,18 @@ public class Funcionario extends AbstractEntity<Integer> {
 	@Column(nullable = false)
 	private String nome;
 
-	// @Pattern(regexp = "^(\\d{3})\\.(\\d{3})\\.(\\d{3})\\-(\\d{2})$")
 	@NotEmpty
-	// @CPF
+	@CPF
 	@Column(nullable = false, length = 11)
 	private String cpf;
 
 	@NotEmpty
-	// @RG
+	@RG
 	@Column(nullable = false, length = 10)
 	private String rg;
 
-	// @Pattern(regexp = "^\\((\\d{2})\\) (\\d{5})\\-(\\d{4})$")
 	@NotEmpty
-	// @RG
+	@Celular
 	@Column(nullable = false, length = 11)
 	private String celular;
 
@@ -175,32 +181,28 @@ public class Funcionario extends AbstractEntity<Integer> {
 		if (getCpf() == null || getCpf().isEmpty())
 			return null;
 
-		String cpf = getCpf().replaceAll("^(\\d{3})\\.(\\d{3})\\.(\\d{3})\\-(\\d{2})$", "$1$2$3$4");
-		return cpf;
+		return unformatCpf(getCpf());
 	}
 
 	public String getFormattedCpf() {
 		if (getCpf() == null || getCpf().isEmpty())
 			return null;
 
-		String cpf = getCpf().replaceAll("^(\\d{3})(\\d{3})(\\d{3})(\\d{2})$", "$1.$2.$3-$4");
-		return cpf;
+		return formatCpf(getCpf());
 	}
 
 	public String getUnformattedCelular() {
 		if (getCelular() == null || getCelular().isEmpty())
 			return null;
 
-		String cpf = getCelular().replaceAll("^\\((\\d{2})\\) (\\d{5})\\-(\\d{4})$", "$1$2$3");
-		return cpf;
+		return unformatCelular(getCelular());
 	}
 
 	public String getFormattedCelular() {
 		if (getCelular() == null || getCelular().isEmpty())
 			return null;
 
-		String cpf = getCelular().replaceAll("^(\\d{2})(\\d{5})(\\d{4})$", "($1) $2-$3");
-		return cpf;
+		return formatCelular(getCelular());
 	}
 
 	@Override
