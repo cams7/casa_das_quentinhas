@@ -43,7 +43,7 @@ mvn --version
 
 * No **Windows**, faça o download e descompacte o **apache-tomcat-8.5.9**.
 * No **Windows**, faça o download e descompacte o **eclipse-jee-neon-1a-win32-x86_64**. 
-* Crie o diretório **java-dev** 
+* No **Windows**, crie o diretório **java-dev** 
 * No **Windows**, execute no *Prompt de Comando*, as linhas abaixo:
 ```	
 cd java-dev
@@ -195,7 +195,7 @@ su - dono_da_cozinha
 psql -d casa_das_quentinhas -U dono_da_cozinha
 ```
 
-* No banco de dados *casa_das_quentinhas*, Execute os comandos SQL do arquivo **casa_das_quentinhas-psql-ddl.sql** que está localizado no diretório *database*.
+* No banco de dados *casa_das_quentinhas*, execute os comandos SQL do arquivo **casa_das_quentinhas-psql-ddl.sql** que está localizado no diretório *database*.
 * Em seguida, execute as linhas abaixo:
 ```sh
 \q
@@ -221,7 +221,7 @@ heroku addons:add heroku-postgresql:hobby-dev
 heroku pg:psql DATABASE_URL --app <Nome da aplicação>
 ```
 
-* No seu *banco de dados* do *Heroku*, Execute os comandos SQL do arquivo **casa_das_quentinhas-psql-ddl.sql** que está localizado no diretório *database*.
+* No seu *banco de dados* do *Heroku*, execute os comandos SQL do arquivo **casa_das_quentinhas-psql-ddl.sql** que está localizado no diretório *database*.
 * Em seguida, feche o *banco de dados* e execute a linha abaixo:	 
 ```sh
 git push heroku -u master

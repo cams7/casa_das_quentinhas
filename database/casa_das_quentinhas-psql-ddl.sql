@@ -77,9 +77,9 @@ CREATE TABLE acesso (
 );
 
 --password: 12345
-INSERT INTO usuario(id_usuario, email, senha, tipo_usuario) VALUES (nextval('usuario_id_seq'),'ceanma@gmail.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 0);
-INSERT INTO usuario(id_usuario, email, senha, tipo_usuario) VALUES (nextval('usuario_id_seq'),'leone@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 0);
-INSERT INTO usuario(id_usuario, email, senha, tipo_usuario) VALUES (nextval('usuario_id_seq'),'leandro@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 0);
+INSERT INTO usuario(id_usuario, email, senha, tipo_usuario) VALUES (nextval('usuario_id_seq'),'gerente@casa-das-quentinhas.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 0);
+INSERT INTO usuario(id_usuario, email, senha, tipo_usuario) VALUES (nextval('usuario_id_seq'),'atendente@casa-das-quentinhas.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 0);
+INSERT INTO usuario(id_usuario, email, senha, tipo_usuario) VALUES (nextval('usuario_id_seq'),'entregador@casa-das-quentinhas.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 0);
 INSERT INTO usuario(id_usuario, email, senha, tipo_usuario) VALUES (nextval('usuario_id_seq'),'daniel@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 0);
 INSERT INTO usuario(id_usuario, email, senha, tipo_usuario) VALUES (nextval('usuario_id_seq'),'cintia@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 0);
 INSERT INTO usuario(id_usuario, email, senha, tipo_usuario) VALUES (nextval('usuario_id_seq'),'violeta@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 0);
@@ -117,7 +117,7 @@ INSERT INTO empresa(id_empresa, razao_social, cnpj) VALUES (nextval('empresa_id_
 INSERT INTO empresa(id_empresa, razao_social, cnpj) VALUES (nextval('empresa_id_seq'),'Serna e Lovato', '25869596000191');
 
 INSERT INTO funcionario (id_funcionario, funcao, id_empresa, data_cadastro, data_alteracao, id_usuario_cadastro, nome, cpf, rg, celular) VALUES (1, 0, 1,'2016-12-26 18:45:00.0','2016-12-26 18:45:00.0', null, 'César Antônio de Magalhães', '05948755678', '12345678', '31991012345');
-INSERT INTO funcionario (id_funcionario, funcao, id_empresa, data_cadastro, data_alteracao, id_usuario_cadastro, nome, cpf, rg, celular) VALUES (2, 2, 2,'2016-12-26 18:45:00.0','2016-12-26 18:45:00.0', 1, 'Leone José de Magalhães', '90596851561', '12345679', '31991012346');
+INSERT INTO funcionario (id_funcionario, funcao, id_empresa, data_cadastro, data_alteracao, id_usuario_cadastro, nome, cpf, rg, celular) VALUES (2, 1, 1,'2016-12-26 18:45:00.0','2016-12-26 18:45:00.0', 1, 'Leone José de Magalhães', '90596851561', '12345679', '31991012346');
 INSERT INTO funcionario (id_funcionario, funcao, id_empresa, data_cadastro, data_alteracao, id_usuario_cadastro, nome, cpf, rg, celular) VALUES (3, 2, 3,'2016-12-26 18:45:00.0','2016-12-26 18:45:00.0', 1, 'Leandro Luzia de Magalhães', '68903888103', '12345670', '31991012347');
 INSERT INTO funcionario (id_funcionario, funcao, id_empresa, data_cadastro, data_alteracao, id_usuario_cadastro, nome, cpf, rg, celular) VALUES (4, 2, 4,'2016-12-26 18:45:00.0','2016-12-26 18:45:00.0', 1, 'Daniel Júlio de Magalhães', '82157725288', '12345680', '31991012350');
 INSERT INTO funcionario (id_funcionario, funcao, id_empresa, data_cadastro, data_alteracao, id_usuario_cadastro, nome, cpf, rg, celular) VALUES (5, 2, 5,'2016-12-26 18:45:00.0','2016-12-26 18:45:00.0', 1, 'Cintia Aparecida de Magalhães', '09203331921', '12345681', '31991012351');
