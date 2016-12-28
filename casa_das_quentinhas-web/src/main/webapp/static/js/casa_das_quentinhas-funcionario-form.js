@@ -11,8 +11,8 @@ $(document).ready(function($) {
                         cnpj = ' < ' + empresa.cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5') + ' >';
                         return {
                             id: empresa.id,
-                            label: empresa.nome + cnpj,
-                            value: empresa.nome + cnpj
+                            label: empresa.razaoSocial + cnpj,
+                            value: empresa.razaoSocial + cnpj
                         };
                     })
                 );

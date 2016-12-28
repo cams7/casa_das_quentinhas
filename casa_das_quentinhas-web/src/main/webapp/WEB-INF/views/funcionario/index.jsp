@@ -13,7 +13,7 @@
 	<div class="col-sm-6">
 		<div class="input-group h2">
 			<input name="data[search]" class="form-control" id="search_query"
-				type="text" placeholder="Nome / CPF / E-mail / Empresa"> <span
+				type="text" placeholder="Nome / CPF / E-mail / Nome da Empresa / CNPJ da Empresa"> <span
 				class="input-group-btn">
 				<button id="search_btn" class="btn btn-primary" type="submit">
 					<span class="glyphicon glyphicon-search"></span>

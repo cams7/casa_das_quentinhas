@@ -30,36 +30,67 @@ public class Acesso extends AbstractEntity<String> {
 	@Column(name = "ultimo_acesso", nullable = false)
 	private Date ultimoAcesso;
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.app.model.AbstractEntity#getId()
+	 */
 	@Override
 	public String getId() {
 		return id;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.app.model.AbstractEntity#setId(java.io.Serializable)
+	 */
 	@Override
 	public void setId(String id) {
 		this.id = id;
 	}
 
+	/**
+	 * @return E-mail do usuário que logou no sistema
+	 */
 	public String getEmail() {
 		return email;
 	}
 
+	/**
+	 * @param email
+	 *            E-mail do usuário que logou no sistema
+	 */
 	public void setEmail(String email) {
 		this.email = email;
 	}
 
+	/**
+	 * @return Token
+	 */
 	public String getToken() {
 		return token;
 	}
 
+	/**
+	 * @param token
+	 *            Token
+	 */
 	public void setToken(String token) {
 		this.token = token;
 	}
 
+	/**
+	 * @return Data do último acesso
+	 */
 	public Date getUltimoAcesso() {
 		return ultimoAcesso;
 	}
 
+	/**
+	 * @param ultimoAcesso
+	 *            Data do último acesso
+	 */
 	public void setUltimoAcesso(Date ultimoAcesso) {
 		this.ultimoAcesso = ultimoAcesso;
 	}

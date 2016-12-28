@@ -64,34 +64,62 @@ public class Estado extends AbstractEntity<Short> {
 		this.id = id;
 	}
 
+	/**
+	 * @return Nome do estado
+	 */
 	public String getNome() {
 		return nome;
 	}
 
+	/**
+	 * @param nome
+	 *            Nome do estado
+	 */
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
 
+	/**
+	 * @return Sigla do estado
+	 */
 	public String getSigla() {
 		return sigla;
 	}
 
+	/**
+	 * @param sigla
+	 *            Sigla do estado
+	 */
 	public void setSigla(String sigla) {
 		this.sigla = sigla;
 	}
 
+	/**
+	 * @return Código do estado de acordo com o IBGE
+	 */
 	public Byte getCodigoIbge() {
 		return codigoIbge;
 	}
 
+	/**
+	 * @param codigoIbge
+	 *            Código do estado de acordo com o IBGE
+	 */
 	public void setCodigoIbge(Byte codigoIbge) {
 		this.codigoIbge = codigoIbge;
 	}
 
+	/**
+	 * @return Cidades pertencente ao estado
+	 */
 	public Set<Cidade> getCidades() {
 		return cidades;
 	}
 
+	/**
+	 * @param cidades
+	 *            Cidades
+	 */
 	public void setCidades(Set<Cidade> cidades) {
 		this.cidades = cidades;
 	}

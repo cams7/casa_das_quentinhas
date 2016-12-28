@@ -34,8 +34,8 @@
 	</c:set>
 	<div
 		class="form-group col-md-4 ${not empty empresaError ? 'has-error' : ''}">
-		<label class="control-label" for="empresa.nome">Empresa</label>
-		<form:input type="text" path="empresa.nome" id="empresa_nome"
+		<label class="control-label" for="empresa.razaoSocial">Empresa</label>
+		<form:input type="text" path="empresa.razaoSocial" id="empresa_nome"
 			class="form-control" maxlength="60" placeholder="Nome / CNPJ"
 			value="${funcionario.empresa.nomeWithCnpj}" />
 		<form:input type="hidden" path="empresa.id" id="empresa_id" />
@@ -89,13 +89,13 @@
 		<label class="control-label" for="funcao">Função</label>
 		<c:choose>
 			<c:when test="${edit and not isGerente}">
-				<input type="text" value="${funcionario.funcao.nome}"
+				<input type="text" value="${funcionario.funcao.descricao}"
 					class="form-control" readonly="readonly" id="funcao" />
 				<form:input type="hidden" path="funcao" />
 			</c:when>
 			<c:otherwise>
 				<form:select path="funcao" id="funcao" items="${funcionarioFuncoes}"
-					multiple="true" itemValue="funcao" itemLabel="nome"
+					multiple="true" itemValue="funcao" itemLabel="descricao"
 					class="form-control" />
 				<div class="help-block with-errors">${funcaoError}</div>
 			</c:otherwise>

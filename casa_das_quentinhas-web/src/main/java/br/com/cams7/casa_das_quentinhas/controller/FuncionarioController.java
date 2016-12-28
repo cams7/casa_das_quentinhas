@@ -137,7 +137,7 @@ public class FuncionarioController extends AbstractController<FuncionarioService
 	@GetMapping(value = { "/empresas/{nome}" }, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Set<Empresa>> getEmpresas(@PathVariable String nome) {
 		Set<Empresa> empresas = empresaService.getEmpresasByNomeOrCnpj(nome);
-		empresas = empresas.stream().map(empresa -> new Empresa(empresa.getId(), empresa.getNome(), empresa.getCnpj()))
+		empresas = empresas.stream().map(empresa -> new Empresa(empresa.getId(), empresa.getRazaoSocial(), empresa.getCnpj()))
 				.collect(Collectors.toSet());
 
 		return new ResponseEntity<Set<Empresa>>(empresas, HttpStatus.OK);
@@ -234,7 +234,7 @@ public class FuncionarioController extends AbstractController<FuncionarioService
 
 	@Override
 	protected String[] getGlobalFilters() {
-		return new String[] { "nome", "cpf", "usuario.email", "empresa.nome" };
+		return new String[] { "nome", "cpf", "usuario.email", "empresa.razaoSocial", "empresa.cnpj" };
 	}
 
 }

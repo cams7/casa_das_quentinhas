@@ -86,122 +86,214 @@ public class Funcionario extends AbstractEntity<Integer> {
 	@Column(name = "data_alteracao", nullable = false)
 	private Date alteracao;
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.app.model.AbstractEntity#getId()
+	 */
 	@Override
 	public Integer getId() {
 		return id;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.app.model.AbstractEntity#setId(java.io.Serializable)
+	 */
 	@Override
 	public void setId(Integer id) {
 		this.id = id;
 	}
 
+	/**
+	 * @return Usuário de acesso ao sistema
+	 */
 	public Usuario getUsuario() {
 		return usuario;
 	}
 
+	/**
+	 * @param usuario
+	 *            Usuário de acesso ao sistema
+	 */
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
 	}
 
+	/**
+	 * @return Função do funcionário
+	 */
 	public Funcao getFuncao() {
 		return funcao;
 	}
 
+	/**
+	 * @param funcao
+	 *            Função do funcionário
+	 */
 	public void setFuncao(Funcao funcao) {
 		this.funcao = funcao;
 	}
 
+	/**
+	 * @return Usuário que cadastrou o funcionário
+	 */
 	public Usuario getUsuarioCadastro() {
 		return usuarioCadastro;
 	}
 
+	/**
+	 * @param usuarioCadastro
+	 *            Usuário que cadastrou o funcionário
+	 */
 	public void setUsuarioCadastro(Usuario usuarioCadastro) {
 		this.usuarioCadastro = usuarioCadastro;
 	}
 
+	/**
+	 * @return Empresa a qual pertence o funcionário
+	 */
 	public Empresa getEmpresa() {
 		return empresa;
 	}
 
+	/**
+	 * @param empresa
+	 *            Empresa a qual pertence o funcionário
+	 */
 	public void setEmpresa(Empresa empresa) {
 		this.empresa = empresa;
 	}
 
+	/**
+	 * @return Nome do funcionário
+	 */
 	public String getNome() {
 		return nome;
 	}
 
+	/**
+	 * @param nome
+	 *            Nome do funcionário
+	 */
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
 
+	/**
+	 * @return CPF do funcionário sem formatação
+	 */
 	public String getCpf() {
 		return cpf;
 	}
 
+	/**
+	 * @param cpf
+	 *            CPF do funcionário sem formatação
+	 */
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
 	}
 
+	/**
+	 * @return Número de identidade do funcionário sem formatação
+	 */
 	public String getRg() {
 		return rg;
 	}
 
+	/**
+	 * @param rg
+	 *            Número de identidade do funcionário sem formatação
+	 */
 	public void setRg(String rg) {
 		this.rg = rg;
 	}
 
+	/**
+	 * @return Número de celular do funcionário sem formatação
+	 */
 	public String getCelular() {
 		return celular;
 	}
 
+	/**
+	 * @param celular
+	 *            Número de celular do funcionário sem formatação
+	 */
 	public void setCelular(String celular) {
 		this.celular = celular;
 	}
 
+	/**
+	 * @return Data do cadastro do funcionário
+	 */
 	public Date getCadastro() {
 		return cadastro;
 	}
 
+	/**
+	 * @param cadastro
+	 *            Data do cadastro do funcionário
+	 */
 	public void setCadastro(Date cadastro) {
 		this.cadastro = cadastro;
 	}
 
+	/**
+	 * @return Data da alteração dos dados do funcionário
+	 */
 	public Date getAlteracao() {
 		return alteracao;
 	}
 
+	/**
+	 * @param alteracao
+	 *            Data da alteração dos dados do funcionário
+	 */
 	public void setAlteracao(Date alteracao) {
 		this.alteracao = alteracao;
 	}
 
+	/**
+	 * @return CPF formatado
+	 */
 	public String getUnformattedCpf() {
-		if (getCpf() == null || getCpf().isEmpty())
+		if (cpf == null || cpf.isEmpty())
 			return null;
 
-		return unformatCpf(getCpf());
+		return unformatCpf(cpf);
 	}
 
+	/**
+	 * @return CPF sem formatação
+	 */
 	public String getFormattedCpf() {
-		if (getCpf() == null || getCpf().isEmpty())
+		if (cpf == null || cpf.isEmpty())
 			return null;
 
-		return formatCpf(getCpf());
+		return formatCpf(cpf);
 	}
 
+	/**
+	 * @return Celular formatado
+	 */
 	public String getUnformattedCelular() {
-		if (getCelular() == null || getCelular().isEmpty())
+		if (celular == null || celular.isEmpty())
 			return null;
 
-		return unformatCelular(getCelular());
+		return unformatCelular(celular);
 	}
 
+	/**
+	 * @return Celular sem formatação
+	 */
 	public String getFormattedCelular() {
-		if (getCelular() == null || getCelular().isEmpty())
+		if (celular == null || celular.isEmpty())
 			return null;
 
-		return formatCelular(getCelular());
+		return formatCelular(celular);
 	}
 
 	@Override
@@ -227,20 +319,25 @@ public class Funcionario extends AbstractEntity<Integer> {
 		return true;
 	}
 
+	/**
+	 * @author César Magalhães
+	 * 
+	 *         Função do Funcionário
+	 */
 	public enum Funcao {
 		GERENTE("Gerente"), ATENDENTE("Atendente"), ENTREGADOR("Entregador(a)");
-		private String nome;
+		private String descricao;
 
-		private Funcao(String nome) {
-			this.nome = nome;
+		private Funcao(String descricao) {
+			this.descricao = descricao;
 		}
 
 		public Funcao getFuncao() {
 			return values()[ordinal()];
 		}
 
-		public String getNome() {
-			return nome;
+		public String getDescricao() {
+			return descricao;
 		}
 	}
 

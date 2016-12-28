@@ -20,7 +20,7 @@
 		<p>
 			<strong>Função</strong>
 		</p>
-		<p>${funcionario.funcao.nome}</p>
+		<p>${funcionario.funcao.descricao}</p>
 	</div>
 	<div class="col-md-2">
 		<p>

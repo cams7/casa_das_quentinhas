@@ -24,8 +24,8 @@
 						<th class="${sortField eq 'funcao' ? sortOrder : 'sorting' }"
 							id="funcao">Função</th>
 						<th
-							class="${sortField eq 'empresa.nome' ? sortOrder : 'sorting' }"
-							id="empresa.nome">Empresa</th>
+							class="${sortField eq 'empresa.razaoSocial' ? sortOrder : 'sorting' }"
+							id="empresa.razaoSocial">Empresa</th>
 						<sec:authorize access="hasRole('GERENTE') or hasRole('ATENDENTE')">
 							<th class="actions">Ações</th>
 						</sec:authorize>
@@ -38,8 +38,8 @@
 							<td>${funcionario.nome}</td>
 							<td>${funcionario.formattedCpf}</td>
 							<td>${funcionario.usuario.email}</td>
-							<td>${funcionario.funcao.nome}</td>
-							<td><a href="<c:url value='/empresa/${funcionario.empresa.id}' />">${funcionario.empresa.nome}</a></td>
+							<td>${funcionario.funcao.descricao}</td>
+							<td><a href="<c:url value='/empresa/${funcionario.empresa.id}' />">${funcionario.empresa.nomeWithCnpj}</a></td>
 
 							<td class="actions"><a class="btn btn-success btn-xs"
 								href="<c:url value='/funcionario/${funcionario.id}' />">Visualizar</a>

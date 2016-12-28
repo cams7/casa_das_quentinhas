@@ -10,9 +10,9 @@ import javax.validation.ConstraintValidatorContext;
  * @author cesar
  *
  */
-public class RGValidator implements ConstraintValidator<RG, String> {
+public class RgValidator implements ConstraintValidator<RG, String> {
 
-	public RGValidator() {
+	public RgValidator() {
 		super();
 	}
 

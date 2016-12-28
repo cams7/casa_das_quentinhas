@@ -64,34 +64,62 @@ public class Cidade extends AbstractEntity<Integer> {
 		this.id = id;
 	}
 
+	/**
+	 * @return Estado o qual pertence a cidade
+	 */
 	public Estado getEstado() {
 		return estado;
 	}
 
+	/**
+	 * @param estado
+	 *            Estado o qual pertence a cidade
+	 */
 	public void setEstado(Estado estado) {
 		this.estado = estado;
 	}
 
+	/**
+	 * @return Nome da cidade
+	 */
 	public String getNome() {
 		return nome;
 	}
 
+	/**
+	 * @param nome
+	 *            Nome da cidade
+	 */
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
 
+	/**
+	 * @return Código da cidade de acordo com o IBGE
+	 */
 	public Long getCodigoIbge() {
 		return codigoIbge;
 	}
 
+	/**
+	 * @param codigoIbge
+	 *            Código da cidade de acordo com o IBGE
+	 */
 	public void setCodigoIbge(Long codigoIbge) {
 		this.codigoIbge = codigoIbge;
 	}
 
+	/**
+	 * @return DDD da cidade - Discagem direta a distância
+	 */
 	public Byte getDdd() {
 		return ddd;
 	}
 
+	/**
+	 * @param ddd
+	 *            DDD da cidade
+	 */
 	public void setDdd(Byte ddd) {
 		this.ddd = ddd;
 	}

@@ -23,10 +23,10 @@ import javax.validation.Payload;
  */
 @Target({ METHOD, FIELD, ANNOTATION_TYPE })
 @Retention(RUNTIME)
-@Constraint(validatedBy = RgValidator.class)
+@Constraint(validatedBy = CepValidator.class)
 @Documented
-public @interface RG {
-	String message() default "{br.com.cams7.app.validator.rg}";
+public @interface CEP {
+	String message() default "{br.com.cams7.app.validator.cep}";
 
 	Class<?>[] groups() default {};
 

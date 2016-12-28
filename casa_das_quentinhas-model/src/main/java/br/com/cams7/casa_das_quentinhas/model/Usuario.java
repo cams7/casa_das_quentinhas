@@ -58,68 +58,127 @@ public class Usuario extends AbstractEntity<Integer> {
 	@Transient
 	private String confirmacaoSenha;
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.app.model.AbstractEntity#getId()
+	 */
 	@Override
 	public Integer getId() {
 		return id;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.app.model.AbstractEntity#setId(java.io.Serializable)
+	 */
 	@Override
 	public void setId(Integer id) {
 		this.id = id;
 	}
 
+	/**
+	 * @return E-mail de acesso
+	 */
 	public String getEmail() {
 		return email;
 	}
 
+	/**
+	 * @param email
+	 *            E-mail de acesso
+	 */
 	public void setEmail(String email) {
 		this.email = email;
 	}
 
+	/**
+	 * @return Senha criptografada
+	 */
 	public String getSenhaCriptografada() {
 		return senhaCriptografada;
 	}
 
+	/**
+	 * @param senhaCriptografada
+	 *            Senha criptografada
+	 */
 	public void setSenhaCriptografada(String senhaCriptografada) {
 		this.senhaCriptografada = senhaCriptografada;
 	}
 
+	/**
+	 * @return Tipo de usuário
+	 */
 	public Tipo getTipo() {
 		return tipo;
 	}
 
+	/**
+	 * @param tipo
+	 *            Tipo de usuário
+	 */
 	public void setTipo(Tipo tipo) {
 		this.tipo = tipo;
 	}
 
+	/**
+	 * @return Funcionário que tem o mesmo id do usuário
+	 */
 	public Funcionario getFuncionario() {
 		return funcionario;
 	}
 
+	/**
+	 * @param funcionario
+	 *            Funcionário
+	 */
 	public void setFuncionario(Funcionario funcionario) {
 		this.funcionario = funcionario;
 	}
 
+	/**
+	 * @return Funcionários cadastrados pelo usuário
+	 */
 	public Set<Funcionario> getFuncionarios() {
 		return funcionarios;
 	}
 
+	/**
+	 * @param funcionarios
+	 *            Funcionários
+	 */
 	public void setFuncionarios(Set<Funcionario> funcionarios) {
 		this.funcionarios = funcionarios;
 	}
 
+	/**
+	 * @return Senha sem criptografia
+	 */
 	public String getSenha() {
 		return senha;
 	}
 
+	/**
+	 * @param senha
+	 *            Senha sem criptografia
+	 */
 	public void setSenha(String senha) {
 		this.senha = senha;
 	}
 
+	/**
+	 * @return Senha de confirmação
+	 */
 	public String getConfirmacaoSenha() {
 		return confirmacaoSenha;
 	}
 
+	/**
+	 * @param confirmacaoSenha
+	 *            Senha de confirmação
+	 */
 	public void setConfirmacaoSenha(String confirmacaoSenha) {
 		this.confirmacaoSenha = confirmacaoSenha;
 	}
@@ -147,20 +206,25 @@ public class Usuario extends AbstractEntity<Integer> {
 		return true;
 	}
 
+	/**
+	 * @author César Magalhães
+	 * 
+	 *         Tipo de Usuário
+	 */
 	public enum Tipo {
 		FUNCIONARIO("Funcionário(a)"), EMPRESA("Empresa");
-		private String nome;
+		private String descricao;
 
-		private Tipo(String nome) {
-			this.nome = nome;
+		private Tipo(String descricao) {
+			this.descricao = descricao;
 		}
 
 		public Tipo getTipo() {
 			return values()[ordinal()];
 		}
 
-		public String getNome() {
-			return nome;
+		public String getDescricao() {
+			return descricao;
 		}
 	}
 

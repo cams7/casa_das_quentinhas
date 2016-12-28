@@ -35,10 +35,10 @@ public class EmpresaDAOImpl extends AbstractDAO<Empresa, Integer> implements Emp
 
 		nomeOrCnpj = "%" + nomeOrCnpj.toLowerCase() + "%";
 
-		cq.where(cb.or(cb.like(cb.lower(from.get(Empresa_.nome)), nomeOrCnpj),
+		cq.where(cb.or(cb.like(cb.lower(from.get(Empresa_.razaoSocial)), nomeOrCnpj),
 				cb.like(from.get(Empresa_.cnpj), nomeOrCnpj)));
 
-		cq.orderBy(cb.asc(from.get(Empresa_.nome)));
+		cq.orderBy(cb.asc(from.get(Empresa_.razaoSocial)));
 
 		TypedQuery<Empresa> tq = getEntityManager().createQuery(cq);
 		tq.setMaxResults(5);
