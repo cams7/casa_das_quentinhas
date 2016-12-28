@@ -44,7 +44,7 @@ mvn --version
 * No **Windows**, faça o download e descompacte o **apache-tomcat-8.5.9**.
 * No **Windows**, faça o download e descompacte o **eclipse-jee-neon-1a-win32-x86_64**. 
 * Crie o diretório **java-dev** 
-* No **Windows**, execute no *Prompt de Comando*, a linha abaixo:
+* No **Windows**, execute no *Prompt de Comando*, as linhas abaixo:
 ```	
 cd java-dev
 vagrant init ubuntu/trusty64
@@ -175,13 +175,9 @@ GRANT ALL PRIVILEGES ON DATABASE casa_das_quentinhas to dono_da_cozinha;
 exit
 
 sudo adduser dono_da_cozinha
-su - dono_da_cozinha
-psql -d casa_das_quentinhas -U dono_da_cozinha
-\q
-exit
 ```		
 
-* Para baixar o projeto *casa_das_quentinhas*, execute a linha abaixo:
+* No **Ubuntu**, para baixar o projeto *casa_das_quentinhas*, execute as linhas abaixo:
 ```sh
 cd /home/vagrant/github/
 git clone https://github.com/cams7/casa_das_quentinhas.git
@@ -189,21 +185,50 @@ cd casa_das_quentinhas
 
 git remote add origin <URL do repositório>
 git remote -v
+git pull origin master
 git push origin master
-```		
+```
+
+* No **Ubuntu**, para criar as tabelas do banco, execute as linhas abaixo:
+```sh
+su - dono_da_cozinha
+psql -d casa_das_quentinhas -U dono_da_cozinha
+```
+
+* No banco de dados *casa_das_quentinhas*, Execute os comandos SQL do arquivo **casa_das_quentinhas-psql-ddl.sql** que está localizado no diretório *database*.
+* Em seguida, execute as linhas abaixo:
+```sh
+\q
+exit
+```	
+
+* No **Ubuntu**, para testar a aplicação, execute as linhas abaixo:	
+```sh
+cd /home/vagrant/github/casa_das_quentinhas
+mvn clean package -DskipTests
+java $JAVA_OPTS -jar casa_das_quentinhas-web/target/dependency/jetty-runner.jar --host 0.0.0.0 casa_das_quentinhas-web/target/*.war
+```
+
+* No **Windows**, abra um navegador e informe o endereço **http://localhost:8090**
+* Para logar na aplicação, a senha é **12345** e os e-mails de acesso são: **gerente@casa-das-quentinhas.com**, **atendente@casa-das-quentinhas.com**, **entregador@casa-das-quentinhas.com**.
 	
 * Caso deseje rodar o *casa_das_quentinhas* num [PAAS](https://pt.wikipedia.org/wiki/Plataforma_como_serviço), primeiro e necessário ter uma conta no **Heroku**. Após criar uma conta nesse site, execute as linhas abaixo:				
 ```sh		
 heroku login
 heroku create <Nome da aplicação>
-		
 heroku addons:add heroku-postgresql:hobby-dev
 
-git add .
-git commit -m "Initial commit"
+heroku pg:psql DATABASE_URL --app <Nome da aplicação>
+```
 
+* No seu *banco de dados* do *Heroku*, Execute os comandos SQL do arquivo **casa_das_quentinhas-psql-ddl.sql** que está localizado no diretório *database*.
+* Em seguida, feche o *banco de dados* e execute a linha abaixo:	 
+```sh
 git push heroku -u master
 ```
+
+* No **Windows**, abra um navegador e informe o endereço da sua aplicação no *Heroku*.
+* Para logar na aplicação, a senha é **12345** e os e-mails de acesso são: **gerente@casa-das-quentinhas.com**, **atendente@casa-das-quentinhas.com**, **entregador@casa-das-quentinhas.com**.
 
 * Caso deseje remover a aplicação do seu *PAAS*, execute a linha abaixo:
 ```sh		
