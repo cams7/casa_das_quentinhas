@@ -19,6 +19,7 @@ import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import br.com.cams7.app.model.AbstractEntity;
+import br.com.cams7.app.validator.CNPJ;
 
 /**
  * @author César Magalhães
@@ -41,8 +42,8 @@ public class Empresa extends AbstractEntity<Integer> {
 	private String nome;
 
 	@NotEmpty
-	// @CNPJ
-	@Column(nullable = false, length = 14)
+	@CNPJ
+	@Column(unique = true, nullable = false, length = 14)
 	private String cnpj;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "empresa")
@@ -113,6 +114,29 @@ public class Empresa extends AbstractEntity<Integer> {
 
 		return getNome() + " < " + getCnpj().replaceAll("(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})", "$1.$2.$3/$4-$5")
 				+ " >";
+	}
+
+	@Override
+	public int hashCode() {
+		final int PRIME = 31;
+		int hashCode = super.hashCode();
+		hashCode = PRIME * hashCode + ((cnpj == null) ? 0 : cnpj.hashCode());
+		return hashCode;
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		if (!super.equals(object))
+			return false;
+
+		Empresa empresa = (Empresa) object;
+		if (cnpj == null) {
+			if (empresa.cnpj != null)
+				return false;
+		} else if (!cnpj.equals(empresa.cnpj))
+			return false;
+
+		return true;
 	}
 
 }
