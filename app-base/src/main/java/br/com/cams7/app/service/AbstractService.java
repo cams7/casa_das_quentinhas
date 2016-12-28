@@ -4,8 +4,8 @@
 package br.com.cams7.app.service;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,14 +51,14 @@ public abstract class AbstractService<DAO extends BaseDAO<E, PK>, E extends Abst
 	}
 
 	@Override
-	public List<E> getAll() {
-		List<E> entities = getDao().getAll();
+	public Set<E> getAll() {
+		Set<E> entities = getDao().getAll();
 		return entities;
 	}
 
 	@Override
-	public List<E> search(SearchParams params) {
-		List<E> entities = getDao().search(params);
+	public Set<E> search(SearchParams params) {
+		Set<E> entities = getDao().search(params);
 		return entities;
 	}
 

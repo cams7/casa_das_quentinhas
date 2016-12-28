@@ -3,8 +3,8 @@
  */
 package br.com.cams7.casa_das_quentinhas.dao;
 
-import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -43,7 +43,7 @@ public class EmpresaDAOImpl extends AbstractDAO<Empresa, Integer> implements Emp
 		TypedQuery<Empresa> tq = getEntityManager().createQuery(cq);
 		tq.setMaxResults(5);
 
-		Set<Empresa> empresas = new HashSet<Empresa>(tq.getResultList());
+		Set<Empresa> empresas = tq.getResultList().stream().collect(Collectors.toSet());
 
 		return empresas;
 	}

@@ -3,10 +3,10 @@ package br.com.cams7.app.dao;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -38,7 +38,7 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 
 		ENTITY_TYPE = (Class<E>) ((ParameterizedType) this.getClass().getGenericSuperclass())
 				.getActualTypeArguments()[0];
-		
+
 		LOGGER = LoggerFactory.getLogger(this.getClass());
 	}
 
@@ -101,7 +101,7 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 	 * @see br.com.cams7.casa_das_quentinhas.dao.BaseDAO#getAll()
 	 */
 	@Override
-	public List<E> getAll() {
+	public Set<E> getAll() {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<E> cq = cb.createQuery(ENTITY_TYPE);
 
@@ -110,7 +110,7 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 		cq.orderBy(cb.desc(from.<PK>get("id")));
 
 		TypedQuery<E> tq = getEntityManager().createQuery(cq);
-		List<E> entities = tq.getResultList();
+		Set<E> entities = tq.getResultList().stream().collect(Collectors.toSet());
 		return entities;
 	}
 
@@ -293,7 +293,7 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 	 * casa_das_quentinhas.utils.SearchParams)
 	 */
 	@Override
-	public List<E> search(SearchParams params) {
+	public Set<E> search(SearchParams params) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<E> cq = cb.createQuery(ENTITY_TYPE);
 
@@ -301,7 +301,7 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 		From<?, ?>[] fromWithJoins = getFromWithFetchJoins(from);
 
 		TypedQuery<E> tq = getFilterAndPaginationAndSorting(cb, cq, fromWithJoins, params);
-		List<E> entities = tq.getResultList();
+		Set<E> entities = tq.getResultList().stream().collect(Collectors.toSet());
 		return entities;
 	}
 
