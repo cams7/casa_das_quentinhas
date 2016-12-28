@@ -36,7 +36,7 @@
 		class="form-group col-md-4 ${not empty empresaError ? 'has-error' : ''}">
 		<label class="control-label" for="empresa.nome">Empresa</label>
 		<form:input type="text" path="empresa.nome" id="empresa_nome"
-			class="form-control" maxlength="60" placeholder="Nome da empresa"
+			class="form-control" maxlength="60" placeholder="Nome / CNPJ"
 			value="${funcionario.empresa.nomeWithCnpj}" />
 		<form:input type="hidden" path="empresa.id" id="empresa_id" />
 		<div class="help-block with-errors">${empresaError}</div>

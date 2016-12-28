@@ -14,5 +14,5 @@ import br.com.cams7.casa_das_quentinhas.model.Empresa;
  */
 public interface EmpresaDAO extends BaseDAO<Empresa, Integer> {
 	
-	Set<Empresa> getEmpresasByNome(String nome);
+	Set<Empresa> getEmpresasByNomeOrCnpj(String nomeOrCnpj);
 }

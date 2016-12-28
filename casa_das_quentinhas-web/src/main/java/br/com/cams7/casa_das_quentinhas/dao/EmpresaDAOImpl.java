@@ -25,14 +25,19 @@ import br.com.cams7.casa_das_quentinhas.model.Empresa_;
 public class EmpresaDAOImpl extends AbstractDAO<Empresa, Integer> implements EmpresaDAO {
 
 	@Override
-	public Set<Empresa> getEmpresasByNome(String nome) {
+	public Set<Empresa> getEmpresasByNomeOrCnpj(String nomeOrCnpj) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Empresa> cq = cb.createQuery(ENTITY_TYPE);
 
 		Root<Empresa> from = cq.from(ENTITY_TYPE);
 
 		cq.select(from);
-		cq.where(cb.like(cb.lower(from.get(Empresa_.nome)), "%" + nome.toLowerCase() + "%"));
+
+		nomeOrCnpj = "%" + nomeOrCnpj.toLowerCase() + "%";
+
+		cq.where(cb.or(cb.like(cb.lower(from.get(Empresa_.nome)), nomeOrCnpj),
+				cb.like(from.get(Empresa_.cnpj), nomeOrCnpj)));
+
 		cq.orderBy(cb.asc(from.get(Empresa_.nome)));
 
 		TypedQuery<Empresa> tq = getEntityManager().createQuery(cq);

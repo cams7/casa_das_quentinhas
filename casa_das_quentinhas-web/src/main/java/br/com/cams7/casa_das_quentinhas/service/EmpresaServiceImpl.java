@@ -28,8 +28,8 @@ public class EmpresaServiceImpl extends AbstractService<EmpresaDAO, Empresa, Int
 	 * lang.String)
 	 */
 	@Override
-	public Set<Empresa> getEmpresasByNome(String nome) {
-		Set<Empresa> empresas = getDao().getEmpresasByNome(nome);
+	public Set<Empresa> getEmpresasByNomeOrCnpj(String nomeOrCnpj) {
+		Set<Empresa> empresas = getDao().getEmpresasByNomeOrCnpj(nomeOrCnpj);
 		return empresas;
 	}
 
