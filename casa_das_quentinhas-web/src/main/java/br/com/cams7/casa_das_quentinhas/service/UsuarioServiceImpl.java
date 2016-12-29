@@ -33,6 +33,37 @@ public class UsuarioServiceImpl extends AbstractService<UsuarioDAO, Usuario, Int
 	 * (non-Javadoc)
 	 * 
 	 * @see
+	 * br.com.cams7.app.service.AbstractService#persist(br.com.cams7.app.model.
+	 * AbstractEntity)
+	 */
+	@Override
+	public void persist(Usuario usuario) {
+		String senhaCriptografada = passwordEncoder.encode(usuario.getSenha());
+		usuario.setSenhaCriptografada(senhaCriptografada);
+		super.persist(usuario);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.service.AbstractService#update(br.com.cams7.app.model.
+	 * AbstractEntity)
+	 */
+	@Override
+	public void update(Usuario usuario) {
+		if (!usuario.getSenha().isEmpty())
+			usuario.setSenhaCriptografada(passwordEncoder.encode(usuario.getSenha()));
+		else
+			usuario.setSenhaCriptografada(getUsuarioSenhaById(usuario.getId()));
+
+		super.update(usuario);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
 	 * br.com.cams7.casa_das_quentinhas.service.UsuarioService#getUsuarioByEmail
 	 * (java.lang.String)
 	 */
@@ -46,30 +77,13 @@ public class UsuarioServiceImpl extends AbstractService<UsuarioDAO, Usuario, Int
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * br.com.cams7.casa_das_quentinhas.service.AbstractService#persist(br.com.
-	 * cams7.casa_das_quentinhas.model.AbstractEntity)
+	 * br.com.cams7.casa_das_quentinhas.dao.UsuarioDAO#getUsuarioIdByEmail(java.
+	 * lang.String)
 	 */
 	@Override
-	public void persist(Usuario usuario) {
-		String senhaCriptografada = passwordEncoder.encode(usuario.getSenha());
-		usuario.setSenhaCriptografada(senhaCriptografada);
-		super.persist(usuario);
-	}
-
-	/*
-	 * Since the method is running with Transaction, No need to call hibernate
-	 * update explicitly. Just fetch the entity from db and update it with
-	 * proper values within transaction. It will be updated in db once
-	 * transaction ends.
-	 */
-	@Override
-	public void update(Usuario usuario) {
-		if (!usuario.getSenha().isEmpty())
-			usuario.setSenhaCriptografada(passwordEncoder.encode(usuario.getSenha()));
-		else
-			usuario.setSenhaCriptografada(getUsuarioSenhaById(usuario.getId()));
-
-		super.update(usuario);
+	public Integer getUsuarioIdByEmail(String email) {
+		Integer usuarioId = getDao().getUsuarioIdByEmail(email);
+		return usuarioId;
 	}
 
 	/*
@@ -97,12 +111,12 @@ public class UsuarioServiceImpl extends AbstractService<UsuarioDAO, Usuario, Int
 		if (email == null || email.isEmpty())
 			return true;
 
-		Usuario usuario = getUsuarioByEmail(email);
+		Integer usuarioId = getUsuarioIdByEmail(email);
 
-		if (usuario == null)
+		if (usuarioId == null)
 			return true;
 
-		return id != null && usuario.getId() == id;
+		return id != null && usuarioId == id;
 	}
 
 }

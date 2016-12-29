@@ -58,6 +58,20 @@ public class Usuario extends AbstractEntity<Integer> {
 	@Transient
 	private String confirmacaoSenha;
 
+	/**
+	 * 
+	 */
+	public Usuario() {
+		super();
+	}
+
+	/**
+	 * @param id
+	 */
+	public Usuario(Integer id) {
+		super(id);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 

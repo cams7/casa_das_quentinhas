@@ -14,34 +14,6 @@ import br.com.cams7.casa_das_quentinhas.model.Usuario_;
 
 @Repository
 public class UsuarioDAOImpl extends AbstractDAO<Usuario, Integer> implements UsuarioDAO {
-	
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * br.com.cams7.casa_das_quentinhas.dao.UsuarioDAO#getUsuarioById(java.lang.
-	 * Integer)
-	 */
-	// @Override
-	// public Usuario getUsuarioById(Integer id) {
-	// CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-	// CriteriaQuery<Usuario> cq = cb.createQuery(ENTITY_TYPE);
-	//
-	// Root<Usuario> from = cq.from(ENTITY_TYPE);
-	//
-	// from.join(Usuario_.funcionario);
-	// from.fetch(Usuario_.funcionario);
-	//
-	// cq.select(from);
-	//
-	// cq.where(cb.equal(from.get(Usuario_.id), id));
-	//
-	// TypedQuery<Usuario> tq = getEntityManager().createQuery(cq);
-	// Usuario usuario = tq.getSingleResult();
-	//
-	// return usuario;
-	// }
 
 	/*
 	 * (non-Javadoc)
@@ -58,9 +30,6 @@ public class UsuarioDAOImpl extends AbstractDAO<Usuario, Integer> implements Usu
 		CriteriaQuery<Usuario> cq = cb.createQuery(ENTITY_TYPE);
 
 		Root<Usuario> from = cq.from(ENTITY_TYPE);
-
-		from.join(Usuario_.funcionario);
-		from.fetch(Usuario_.funcionario);
 
 		cq.select(from);
 
@@ -82,6 +51,38 @@ public class UsuarioDAOImpl extends AbstractDAO<Usuario, Integer> implements Usu
 	 * (non-Javadoc)
 	 * 
 	 * @see
+	 * br.com.cams7.casa_das_quentinhas.dao.UsuarioDAO#getUsuarioIdByEmail(java.
+	 * lang.String)
+	 */
+	@Override
+	public Integer getUsuarioIdByEmail(String email) {
+		LOGGER.info("E-mail : {}", email);
+
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Integer> cq = cb.createQuery(Integer.class);
+
+		Root<Usuario> from = cq.from(ENTITY_TYPE);
+
+		cq.select(from.get(Usuario_.id));
+
+		cq.where(cb.equal(from.get(Usuario_.email), email));
+
+		TypedQuery<Integer> tq = getEntityManager().createQuery(cq);
+
+		try {
+			Integer usuarioId = tq.getSingleResult();
+			return usuarioId;
+		} catch (NoResultException e) {
+			LOGGER.warn("E-mail not found...");
+		}
+
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
 	 * br.com.cams7.casa_das_quentinhas.dao.UsuarioDAO#getUsuarioSenhaById(java.
 	 * lang.Integer)
 	 */
@@ -91,8 +92,10 @@ public class UsuarioDAOImpl extends AbstractDAO<Usuario, Integer> implements Usu
 		CriteriaQuery<String> cq = cb.createQuery(String.class);
 
 		Root<Usuario> from = cq.from(ENTITY_TYPE);
-		cq.where(cb.equal(from.get(Usuario_.id), id));
+
 		cq.select(from.get(Usuario_.senhaCriptografada));
+
+		cq.where(cb.equal(from.get(Usuario_.id), id));
 
 		TypedQuery<String> tq = getEntityManager().createQuery(cq);
 		String senhaCriptografada = tq.getSingleResult();

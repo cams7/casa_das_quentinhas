@@ -24,8 +24,46 @@ public class EmpresaServiceImpl extends AbstractService<EmpresaDAO, Empresa, Int
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * br.com.cams7.casa_das_quentinhas.dao.EmpresaDAO#getEmpresasByNome(java.
+	 * br.com.cams7.casa_das_quentinhas.dao.EmpresaDAO#getEmpresaById(java.lang.
+	 * Integer)
+	 */
+	@Override
+	public Empresa getEmpresaById(Integer id) {
+		Empresa empresa = getDao().getEmpresaById(id);
+		return empresa;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.casa_das_quentinhas.dao.EmpresaDAO#getEmpresaByCnpj(java.
 	 * lang.String)
+	 */
+	@Override
+	public Integer getEmpresaIdByCnpj(String cnpj) {
+		Integer empresaId = getDao().getEmpresaIdByCnpj(cnpj);
+		return empresaId;
+	}
+
+	@Override
+	public boolean isCNPJUnique(Integer id, String cnpj) {
+		if (cnpj == null || cnpj.isEmpty())
+			return true;
+
+		Integer empresaId = getEmpresaIdByCnpj(cnpj);
+
+		if (empresaId == null)
+			return true;
+
+		return id != null && empresaId == id;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.casa_das_quentinhas.dao.EmpresaDAO#
+	 * getEmpresasByRazaoSocialOrCnpj(java.lang.String)
 	 */
 	@Override
 	public Map<Integer, String> getEmpresasByRazaoSocialOrCnpj(String razaoSocialOrCnpj) {

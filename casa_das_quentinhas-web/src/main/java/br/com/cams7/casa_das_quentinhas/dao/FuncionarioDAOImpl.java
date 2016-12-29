@@ -113,24 +113,31 @@ public class FuncionarioDAOImpl extends AbstractDAO<Funcionario, Integer> implem
 		return funcionario;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.casa_das_quentinhas.dao.FuncionarioDAO#getFuncionarioByCpf(
+	 * java.lang.String)
+	 */
 	@Override
-	public Funcionario getFuncionarioByCpf(String cpf) {
+	public Integer getFuncionarioIdByCpf(String cpf) {
 		LOGGER.info("CPF : {}", cpf);
 
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-		CriteriaQuery<Funcionario> cq = cb.createQuery(ENTITY_TYPE);
+		CriteriaQuery<Integer> cq = cb.createQuery(Integer.class);
 
 		Root<Funcionario> from = cq.from(ENTITY_TYPE);
 
-		cq.select(from);
+		cq.select(from.get(Funcionario_.id));
 
 		cq.where(cb.equal(from.get(Funcionario_.cpf), cpf));
 
-		TypedQuery<Funcionario> tq = getEntityManager().createQuery(cq);
+		TypedQuery<Integer> tq = getEntityManager().createQuery(cq);
 
 		try {
-			Funcionario usuario = tq.getSingleResult();
-			return usuario;
+			Integer funcionarioId = tq.getSingleResult();
+			return funcionarioId;
 		} catch (NoResultException e) {
 			LOGGER.warn("CPF not found...");
 		}

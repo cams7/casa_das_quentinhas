@@ -6,8 +6,8 @@ package br.com.cams7.app.controller;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.validation.Valid;
 
@@ -70,7 +70,7 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 
 		SearchParams params = new SearchParams(offset, MAX_RESULTS, sortField, sortOrder, null);
 
-		Set<E> entities = getService().search(params);
+		List<E> entities = getService().search(params);
 		long count = getService().count();
 
 		model.addAttribute(getListName(), entities);
@@ -237,7 +237,7 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 
 		SearchParams params = new SearchParams(offset, MAX_RESULTS, sortField, sorting, filters, globalFilters);
 
-		Set<E> entities = getService().search(params);
+		List<E> entities = getService().search(params);
 		long count = getService().getTotalElements(filters, globalFilters);
 
 		model.addAttribute(getListName(), entities);

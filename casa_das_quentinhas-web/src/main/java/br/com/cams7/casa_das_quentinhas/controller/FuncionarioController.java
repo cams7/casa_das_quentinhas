@@ -72,7 +72,8 @@ public class FuncionarioController extends AbstractController<FuncionarioService
 			result.addError(senhaError);
 		}
 
-		if (!usuarioService.isEmailUnique(usuario.getId(), usuario.getEmail())) {
+		if (result.getFieldErrorCount("usuario.email") == 0
+				&& !usuarioService.isEmailUnique(usuario.getId(), usuario.getEmail())) {
 			FieldError emailError = new FieldError("funcionario", "usuario.email", messageSource
 					.getMessage("non.unique.email", new String[] { usuario.getEmail() }, Locale.getDefault()));
 			result.addError(emailError);
@@ -89,7 +90,7 @@ public class FuncionarioController extends AbstractController<FuncionarioService
 		if (result.hasErrors())
 			return getCreateTilesPage();
 
-		usuario = usuarioService.getUsuarioByEmail(getUsername());
+		usuario = new Usuario(usuarioService.getUsuarioIdByEmail(getUsername()));
 		funcionario.setUsuarioCadastro(usuario);
 
 		funcionario.setCpf(funcionario.getUnformattedCpf());
@@ -149,6 +150,9 @@ public class FuncionarioController extends AbstractController<FuncionarioService
 	}
 
 	private void setSenhaNotEqualsConfirmacaoError(Usuario usuario, BindingResult result) {
+		if (result.getFieldErrorCount("usuario.confirmacaoSenha") > 0)
+			return;
+
 		if (!usuario.getSenha().isEmpty() && !usuario.getConfirmacaoSenha().isEmpty()
 				&& !usuario.getSenha().equals(usuario.getConfirmacaoSenha())) {
 			FieldError confirmacaoError = new FieldError("funcionario", "usuario.confirmacaoSenha",
@@ -158,7 +162,11 @@ public class FuncionarioController extends AbstractController<FuncionarioService
 	}
 
 	private void setCPFNotUniqueError(Funcionario funcionario, BindingResult result) {
+		if (result.getFieldErrorCount("cpf") > 0)
+			return;
+
 		String cpf = funcionario.getUnformattedCpf();
+
 		if (!getService().isCPFUnique(funcionario.getId(), cpf)) {
 			FieldError emailError = new FieldError("funcionario", "cpf", messageSource.getMessage("non.unique.cpf",
 					new String[] { funcionario.getCpf() }, Locale.getDefault()));
@@ -167,7 +175,7 @@ public class FuncionarioController extends AbstractController<FuncionarioService
 	}
 
 	/**
-	 * This method will provide UserProfile list to views
+	 * Possiveis funções do funcionário
 	 */
 	@ModelAttribute("funcionarioFuncoes")
 	public Funcao[] initializeFuncoes() {
@@ -216,6 +224,11 @@ public class FuncionarioController extends AbstractController<FuncionarioService
 	}
 
 	@Override
+	protected String[] getGlobalFilters() {
+		return new String[] { "nome", "cpf", "usuario.email", "empresa.razaoSocial", "empresa.cnpj" };
+	}
+
+	@Override
 	protected Funcionario getNewEntity() {
 		Funcionario funcionario = new Funcionario();
 		funcionario.setUsuario(new Usuario());
@@ -227,11 +240,6 @@ public class FuncionarioController extends AbstractController<FuncionarioService
 	protected Funcionario getEntity(Integer id) {
 		Funcionario funcionario = getService().getFuncionarioById(id);
 		return funcionario;
-	}
-
-	@Override
-	protected String[] getGlobalFilters() {
-		return new String[] { "nome", "cpf", "usuario.email", "empresa.razaoSocial", "empresa.cnpj" };
 	}
 
 }

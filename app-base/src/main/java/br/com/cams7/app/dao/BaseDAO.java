@@ -1,8 +1,8 @@
 package br.com.cams7.app.dao;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import br.com.cams7.app.model.AbstractEntity;
 import br.com.cams7.app.utils.SearchParams;
@@ -48,7 +48,7 @@ public interface BaseDAO<E extends AbstractEntity<PK>, PK extends Serializable> 
 	 * 
 	 * @return Entidades
 	 */
-	Set<E> getAll();
+	List<E> getAll();
 
 	/**
 	 * Filtra, pagina e ordena os objetos que são instâncias de "AbstractEntity"
@@ -57,7 +57,7 @@ public interface BaseDAO<E extends AbstractEntity<PK>, PK extends Serializable> 
 	 * 
 	 * @return Entidades
 	 */
-	Set<E> search(SearchParams params);
+	List<E> search(SearchParams params);
 
 	/**
 	 * Retorna o número total de instâncias de "AbstractEntity". Essa pesquisa é

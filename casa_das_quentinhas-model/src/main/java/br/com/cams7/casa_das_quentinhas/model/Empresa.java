@@ -110,6 +110,8 @@ public class Empresa extends AbstractEntity<Integer> {
 
 	@Valid
 	@Embedded
+	// @AttributeOverrides({ @AttributeOverride(name = "numeroImovel", column =
+	// @Column(name = "numero_imovel")) })
 	private Endereco endereco;
 
 	@Temporal(TemporalType.TIMESTAMP)

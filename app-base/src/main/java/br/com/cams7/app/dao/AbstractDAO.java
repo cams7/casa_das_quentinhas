@@ -3,10 +3,10 @@ package br.com.cams7.app.dao;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -101,7 +101,7 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 	 * @see br.com.cams7.casa_das_quentinhas.dao.BaseDAO#getAll()
 	 */
 	@Override
-	public Set<E> getAll() {
+	public List<E> getAll() {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<E> cq = cb.createQuery(ENTITY_TYPE);
 
@@ -110,7 +110,7 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 		cq.orderBy(cb.desc(from.<PK>get("id")));
 
 		TypedQuery<E> tq = getEntityManager().createQuery(cq);
-		Set<E> entities = tq.getResultList().stream().collect(Collectors.toSet());
+		List<E> entities = tq.getResultList();
 		return entities;
 	}
 
@@ -293,7 +293,7 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 	 * casa_das_quentinhas.utils.SearchParams)
 	 */
 	@Override
-	public Set<E> search(SearchParams params) {
+	public List<E> search(SearchParams params) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<E> cq = cb.createQuery(ENTITY_TYPE);
 
@@ -301,7 +301,7 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 		From<?, ?>[] fromWithJoins = getFromWithFetchJoins(from);
 
 		TypedQuery<E> tq = getFilterAndPaginationAndSorting(cb, cq, fromWithJoins, params);
-		Set<E> entities = tq.getResultList().stream().collect(Collectors.toSet());
+		List<E> entities = tq.getResultList();
 		return entities;
 	}
 

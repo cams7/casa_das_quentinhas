@@ -46,7 +46,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 		Funcionario funcionario = usuario.getFuncionario();
 
 		LOGGER.info("Funcionário: {}", funcionario);
-		String role = "ROLE_" + (usuario.getTipo() == EMPRESA ? EMPRESA.name() : funcionario.getFuncao().name());
+		String role = "ROLE_" + (funcionario == null ? EMPRESA.name() : funcionario.getFuncao().name());
 		authorities.add(new SimpleGrantedAuthority(role));
 		LOGGER.info("authorities: {}", authorities);
 

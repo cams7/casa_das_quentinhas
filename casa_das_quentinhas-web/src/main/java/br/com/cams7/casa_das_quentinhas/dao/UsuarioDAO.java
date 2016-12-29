@@ -5,9 +5,24 @@ import br.com.cams7.casa_das_quentinhas.model.Usuario;
 
 public interface UsuarioDAO extends BaseDAO<Usuario, Integer> {
 
-//	Usuario getUsuarioById(Integer id);
-
+	/**
+	 * @param email
+	 *            E-mail do usuário
+	 * @return Usuário
+	 */
 	Usuario getUsuarioByEmail(String email);
 
+	/**
+	 * @param email
+	 *            E-mail do usuário
+	 * @return ID do usuário
+	 */
+	Integer getUsuarioIdByEmail(String email);
+
+	/**
+	 * @param id
+	 *            ID do usuário
+	 * @return Senha criptografada
+	 */
 	String getUsuarioSenhaById(Integer id);
 }

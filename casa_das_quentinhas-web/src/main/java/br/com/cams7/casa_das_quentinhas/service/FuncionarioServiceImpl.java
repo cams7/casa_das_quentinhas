@@ -99,9 +99,9 @@ public class FuncionarioServiceImpl extends AbstractService<FuncionarioDAO, Func
 	 * java.lang.String)
 	 */
 	@Override
-	public Funcionario getFuncionarioByCpf(String cpf) {
-		Funcionario funcionario = getDao().getFuncionarioByCpf(cpf);
-		return funcionario;
+	public Integer getFuncionarioIdByCpf(String cpf) {
+		Integer funcionarioId = getDao().getFuncionarioIdByCpf(cpf);
+		return funcionarioId;
 	}
 
 	/*
@@ -113,16 +113,15 @@ public class FuncionarioServiceImpl extends AbstractService<FuncionarioDAO, Func
 	 */
 	@Override
 	public boolean isCPFUnique(Integer id, String cpf) {
-
 		if (cpf == null || cpf.isEmpty())
 			return true;
 
-		Funcionario funcionario = getFuncionarioByCpf(cpf);
+		Integer funcionarioId = getFuncionarioIdByCpf(cpf);
 
-		if (funcionario == null)
+		if (funcionarioId == null)
 			return true;
 
-		return id != null && funcionario.getId() == id;
+		return id != null && funcionarioId == id;
 	}
 
 	/*
