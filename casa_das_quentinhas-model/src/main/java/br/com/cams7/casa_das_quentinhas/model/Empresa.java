@@ -457,7 +457,18 @@ public class Empresa extends AbstractEntity<Integer> {
 	/**
 	 * @return Razão social com o CNPJ formatado
 	 */
-	public String getNomeWithCnpj() {
+	public String getRazaoSocialWithCnpj() {
+		return getRazaoSocialWithCnpj(razaoSocial, cnpj);
+	}
+
+	/**
+	 * @param razaoSocial
+	 *            Razão social da empresa
+	 * @param cnpj
+	 *            CNPJ da empresa
+	 * @return Razão social com o CNPJ formatado
+	 */
+	public static String getRazaoSocialWithCnpj(String razaoSocial, String cnpj) {
 		if (razaoSocial == null || cnpj == null)
 			return null;
 

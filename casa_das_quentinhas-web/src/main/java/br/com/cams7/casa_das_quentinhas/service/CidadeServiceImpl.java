@@ -3,7 +3,7 @@
  */
 package br.com.cams7.casa_das_quentinhas.service;
 
-import java.util.Set;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,8 +28,8 @@ public class CidadeServiceImpl extends AbstractService<CidadeDAO, Cidade, Intege
 	 * java.lang.String)
 	 */
 	@Override
-	public Set<Cidade> getCidadesByNomeOrIbge(String nomeOrIbge) {
-		Set<Cidade> cidades = getDao().getCidadesByNomeOrIbge(nomeOrIbge);
+	public Map<Integer, String> getCidadesByNomeOrIbge(String nomeOrIbge) {
+		Map<Integer, String> cidades = getDao().getCidadesByNomeOrIbge(nomeOrIbge);
 		return cidades;
 	}
 

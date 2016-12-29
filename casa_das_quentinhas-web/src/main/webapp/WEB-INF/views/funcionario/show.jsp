@@ -32,7 +32,7 @@
 		<p>
 			<strong>Empresa</strong>
 		</p>
-		<p>${funcionario.empresa.nomeWithCnpj}</p>
+		<p>${funcionario.empresa.razaoSocialWithCnpj}</p>
 	</div>
 </div>
 <div class="row">	

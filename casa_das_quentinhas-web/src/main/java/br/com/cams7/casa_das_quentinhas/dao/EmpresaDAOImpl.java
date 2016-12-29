@@ -3,7 +3,7 @@
  */
 package br.com.cams7.casa_das_quentinhas.dao;
 
-import java.util.Set;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.persistence.TypedQuery;
@@ -25,25 +25,26 @@ import br.com.cams7.casa_das_quentinhas.model.Empresa_;
 public class EmpresaDAOImpl extends AbstractDAO<Empresa, Integer> implements EmpresaDAO {
 
 	@Override
-	public Set<Empresa> getEmpresasByNomeOrCnpj(String nomeOrCnpj) {
+	public Map<Integer, String> getEmpresasByRazaoSocialOrCnpj(String razaoSocialOrCnpj) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-		CriteriaQuery<Empresa> cq = cb.createQuery(ENTITY_TYPE);
+		CriteriaQuery<Object[]> cq = cb.createQuery(Object[].class);
 
 		Root<Empresa> from = cq.from(ENTITY_TYPE);
 
-		cq.select(from);
+		cq.select(cb.array(from.get(Empresa_.id), from.get(Empresa_.razaoSocial), from.get(Empresa_.cnpj)));
 
-		nomeOrCnpj = "%" + nomeOrCnpj.toLowerCase() + "%";
+		razaoSocialOrCnpj = "%" + razaoSocialOrCnpj.toLowerCase() + "%";
 
-		cq.where(cb.or(cb.like(cb.lower(from.get(Empresa_.razaoSocial)), nomeOrCnpj),
-				cb.like(from.get(Empresa_.cnpj), nomeOrCnpj)));
+		cq.where(cb.or(cb.like(cb.lower(from.get(Empresa_.razaoSocial)), razaoSocialOrCnpj),
+				cb.like(from.get(Empresa_.cnpj), razaoSocialOrCnpj)));
 
 		cq.orderBy(cb.asc(from.get(Empresa_.razaoSocial)));
 
-		TypedQuery<Empresa> tq = getEntityManager().createQuery(cq);
+		TypedQuery<Object[]> tq = getEntityManager().createQuery(cq);
 		tq.setMaxResults(5);
 
-		Set<Empresa> empresas = tq.getResultList().stream().collect(Collectors.toSet());
+		Map<Integer, String> empresas = tq.getResultList().stream().collect(Collectors.toMap(empresa -> (Integer) empresa[0],
+				empresa -> Empresa.getRazaoSocialWithCnpj((String) empresa[1], (String) empresa[2])));
 
 		return empresas;
 	}

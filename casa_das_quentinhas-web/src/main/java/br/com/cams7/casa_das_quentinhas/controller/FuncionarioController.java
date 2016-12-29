@@ -1,8 +1,7 @@
 package br.com.cams7.casa_das_quentinhas.controller;
 
 import java.util.Locale;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -134,13 +133,11 @@ public class FuncionarioController extends AbstractController<FuncionarioService
 		return redirectMainPage();
 	}
 
-	@GetMapping(value = { "/empresas/{nome}" }, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Set<Empresa>> getEmpresas(@PathVariable String nome) {
-		Set<Empresa> empresas = empresaService.getEmpresasByNomeOrCnpj(nome);
-		empresas = empresas.stream().map(empresa -> new Empresa(empresa.getId(), empresa.getRazaoSocial(), empresa.getCnpj()))
-				.collect(Collectors.toSet());
+	@GetMapping(value = { "/empresas/{razaoSocialOrCnpj}" }, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Map<Integer, String>> getEmpresas(@PathVariable String razaoSocialOrCnpj) {
+		Map<Integer, String> empresas = empresaService.getEmpresasByRazaoSocialOrCnpj(razaoSocialOrCnpj);
 
-		return new ResponseEntity<Set<Empresa>>(empresas, HttpStatus.OK);
+		return new ResponseEntity<Map<Integer, String>>(empresas, HttpStatus.OK);
 	}
 
 	private void setNotEmptyConfirmacaoError(Usuario usuario, BindingResult result, boolean senhaInformada) {

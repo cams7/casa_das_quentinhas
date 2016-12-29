@@ -124,6 +124,30 @@ public class Cidade extends AbstractEntity<Integer> {
 		this.ddd = ddd;
 	}
 
+	/**
+	 * @return Nome da cidade com a sigla do estado
+	 */
+	public String getNomeWithEstadoSigla() {
+		if (estado == null)
+			return null;
+
+		return getNomeWithEstadoSigla(nome, estado.getSigla());
+	}
+
+	/**
+	 * @param nome
+	 *            Nome da cidade
+	 * @param sigla
+	 *            Sigla do estado
+	 * @return Nome da cidade com a sigla do estado
+	 */
+	public static String getNomeWithEstadoSigla(String nome, String sigla) {
+		if (nome == null || sigla == null)
+			return null;
+
+		return nome + " < " + sigla + " >";
+	}
+
 	@Override
 	public int hashCode() {
 		final int PRIME = 31;

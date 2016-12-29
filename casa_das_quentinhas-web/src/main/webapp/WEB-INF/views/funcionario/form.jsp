@@ -37,7 +37,7 @@
 		<label class="control-label" for="empresa.razaoSocial">Empresa</label>
 		<form:input type="text" path="empresa.razaoSocial" id="empresa_nome"
 			class="form-control" maxlength="60" placeholder="Nome / CNPJ"
-			value="${funcionario.empresa.nomeWithCnpj}" />
+			value="${funcionario.empresa.razaoSocialWithCnpj}" />
 		<form:input type="hidden" path="empresa.id" id="empresa_id" />
 		<div class="help-block with-errors">${empresaError}</div>
 	</div>

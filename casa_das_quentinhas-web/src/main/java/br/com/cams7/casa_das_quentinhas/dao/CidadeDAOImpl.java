@@ -3,12 +3,14 @@
  */
 package br.com.cams7.casa_das_quentinhas.dao;
 
-import java.util.Set;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
 
 import org.springframework.stereotype.Repository;
@@ -16,6 +18,8 @@ import org.springframework.stereotype.Repository;
 import br.com.cams7.app.dao.AbstractDAO;
 import br.com.cams7.casa_das_quentinhas.model.Cidade;
 import br.com.cams7.casa_das_quentinhas.model.Cidade_;
+import br.com.cams7.casa_das_quentinhas.model.Estado;
+import br.com.cams7.casa_das_quentinhas.model.Estado_;
 
 /**
  * @author César Magalhães
@@ -32,13 +36,14 @@ public class CidadeDAOImpl extends AbstractDAO<Cidade, Integer> implements Cidad
 	 * java.lang.String)
 	 */
 	@Override
-	public Set<Cidade> getCidadesByNomeOrIbge(String nomeOrIbge) {
+	public Map<Integer, String> getCidadesByNomeOrIbge(String nomeOrIbge) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-		CriteriaQuery<Cidade> cq = cb.createQuery(ENTITY_TYPE);
+		CriteriaQuery<Object[]> cq = cb.createQuery(Object[].class);
 
 		Root<Cidade> from = cq.from(ENTITY_TYPE);
+		Join<Cidade, Estado> join = (Join<Cidade, Estado>) from.join(Cidade_.estado, JoinType.LEFT);
 
-		cq.select(from);
+		cq.select(cb.array(from.get(Cidade_.id), from.get(Cidade_.nome), join.get(Estado_.sigla)));
 
 		nomeOrIbge = "%" + nomeOrIbge.toLowerCase() + "%";
 
@@ -47,12 +52,14 @@ public class CidadeDAOImpl extends AbstractDAO<Cidade, Integer> implements Cidad
 
 		cq.orderBy(cb.asc(from.get(Cidade_.nome)));
 
-		TypedQuery<Cidade> tq = getEntityManager().createQuery(cq);
+		TypedQuery<Object[]> tq = getEntityManager().createQuery(cq);
 		tq.setMaxResults(5);
 
-		Set<Cidade> empresas = tq.getResultList().stream().collect(Collectors.toSet());
+		Map<Integer, String> cidades = tq.getResultList().stream()
+				.collect(Collectors.toMap(cidade -> (Integer) cidade[0],
+						cidade -> Cidade.getNomeWithEstadoSigla((String) cidade[1], (String) cidade[2])));
 
-		return empresas;
+		return cidades;
 	}
 
 }

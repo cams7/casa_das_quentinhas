@@ -5,14 +5,13 @@ $(document).ready(function($) {
     $('#empresa_nome').autocomplete({
         source : function(request, response) {
             $.getJSON( MAIN_PAGE + '/empresas/' + request.term, function( data ) {
-            	console.log(data);
+            	//console.log(data);
                 response(
-                    $.map(data, function (empresa, i) {
-                        cnpj = ' < ' + empresa.cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5') + ' >';
+                    $.map(data, function (razaoSocialWithCnpj, i) {
                         return {
-                            id: empresa.id,
-                            label: empresa.razaoSocial + cnpj,
-                            value: empresa.razaoSocial + cnpj
+                            id: i,
+                            label: razaoSocialWithCnpj,
+                            value: razaoSocialWithCnpj
                         };
                     })
                 );

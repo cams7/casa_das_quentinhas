@@ -39,7 +39,7 @@
 							<td>${funcionario.formattedCpf}</td>
 							<td>${funcionario.usuario.email}</td>
 							<td>${funcionario.funcao.descricao}</td>
-							<td><a href="<c:url value='/empresa/${funcionario.empresa.id}' />">${funcionario.empresa.nomeWithCnpj}</a></td>
+							<td><a href="<c:url value='/empresa/${funcionario.empresa.id}' />">${funcionario.empresa.razaoSocialWithCnpj}</a></td>
 
 							<td class="actions"><a class="btn btn-success btn-xs"
 								href="<c:url value='/funcionario/${funcionario.id}' />">Visualizar</a>

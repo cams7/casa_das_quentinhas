@@ -3,7 +3,7 @@
  */
 package br.com.cams7.casa_das_quentinhas.service;
 
-import java.util.Set;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,8 +28,8 @@ public class EmpresaServiceImpl extends AbstractService<EmpresaDAO, Empresa, Int
 	 * lang.String)
 	 */
 	@Override
-	public Set<Empresa> getEmpresasByNomeOrCnpj(String nomeOrCnpj) {
-		Set<Empresa> empresas = getDao().getEmpresasByNomeOrCnpj(nomeOrCnpj);
+	public Map<Integer, String> getEmpresasByRazaoSocialOrCnpj(String razaoSocialOrCnpj) {
+		Map<Integer, String> empresas = getDao().getEmpresasByRazaoSocialOrCnpj(razaoSocialOrCnpj);
 		return empresas;
 	}
 
