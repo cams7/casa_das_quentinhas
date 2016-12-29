@@ -4,11 +4,15 @@ import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
 
 import org.springframework.stereotype.Repository;
 
 import br.com.cams7.app.dao.AbstractDAO;
+import br.com.cams7.casa_das_quentinhas.model.Empresa;
+import br.com.cams7.casa_das_quentinhas.model.Empresa_;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
 import br.com.cams7.casa_das_quentinhas.model.Usuario_;
 
@@ -101,6 +105,36 @@ public class UsuarioDAOImpl extends AbstractDAO<Usuario, Integer> implements Usu
 		String senhaCriptografada = tq.getSingleResult();
 
 		return senhaCriptografada;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.casa_das_quentinhas.dao.UsuarioDAO#
+	 * getUsuarioAcessoIdByEmpresaId(java.lang.Integer)
+	 */
+	@Override
+	public Integer getUsuarioAcessoIdByEmpresaId(Integer empresaId) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Integer> cq = cb.createQuery(Integer.class);
+
+		Root<Empresa> from = cq.from(Empresa.class);
+		Join<Empresa, Usuario> join = (Join<Empresa, Usuario>) from.join(Empresa_.usuarioAcesso, JoinType.LEFT);
+
+		cq.select(join.get(Usuario_.id));
+
+		cq.where(cb.equal(from.get(Empresa_.id), empresaId));
+
+		TypedQuery<Integer> tq = getEntityManager().createQuery(cq);
+
+		try {
+			Integer usuarioId = tq.getSingleResult();
+			return usuarioId;
+		} catch (NoResultException e) {
+			LOGGER.warn("E-mail not found...");
+		}
+
+		return null;
 	}
 
 }

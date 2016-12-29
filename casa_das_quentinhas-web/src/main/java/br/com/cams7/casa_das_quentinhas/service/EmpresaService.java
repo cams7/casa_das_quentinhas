@@ -20,4 +20,15 @@ public interface EmpresaService extends BaseService<Empresa, Integer>, EmpresaDA
 	 * @return Verifica se o CNPJ não foi cadastrado anteriormente
 	 */
 	boolean isCNPJUnique(Integer id, String cnpj);
+
+	/**
+	 * @param empresaId
+	 *            ID da empresa
+	 * @param usuarioId
+	 *            ID do usuário
+	 * @param email
+	 *            E-mail do usuário ou da empresa
+	 * @return Verifica se o e-mail não foi cadastrado anteriormente
+	 */
+	boolean isEmailUnique(Integer empresaId, Integer usuarioId, String email);
 }

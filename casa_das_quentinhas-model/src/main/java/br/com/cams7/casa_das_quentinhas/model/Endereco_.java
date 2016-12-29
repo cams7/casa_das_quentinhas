@@ -11,8 +11,7 @@ import javax.persistence.metamodel.StaticMetamodel;
  *
  */
 @StaticMetamodel(Endereco.class)
-public class Endereco_ {
-	public static volatile SingularAttribute<Endereco, Cidade> cidade;
+public class Endereco_ {	
 	public static volatile SingularAttribute<Endereco, String> cep;
 	public static volatile SingularAttribute<Endereco, String> bairro;
 	public static volatile SingularAttribute<Endereco, String> logradouro;

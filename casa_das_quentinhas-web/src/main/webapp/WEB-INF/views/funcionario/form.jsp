@@ -6,6 +6,8 @@
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
 
+<sec:authorize access="hasRole('GERENTE')" var="isGerente"></sec:authorize>
+
 <div class="row">
 	<c:set var="nomeError">
 		<form:errors path="nome" />
@@ -51,8 +53,8 @@
 		<label class="control-label" for="usuario.email">E-mail</label>
 
 		<form:input type="text" path="usuario.email" id="usuario.email"
-			class="form-control" readonly="${edit}" maxlength="50" />
-		<div class="help-block with-errors">${emailError}</div>
+			class="form-control" readonly="${edit and not isGerente}" maxlength="50" />
+		<div class="help-block with-errors">${emailError}</div>		
 	</div>
 
 	<c:set var="cpfError">
@@ -82,9 +84,7 @@
 		<form:errors path="funcao" />
 	</c:set>
 	<div
-		class="form-group col-md-2 ${not empty funcaoError?'has-error':''}">
-
-		<sec:authorize access="hasRole('GERENTE')" var="isGerente"></sec:authorize>
+		class="form-group col-md-2 ${not empty funcaoError?'has-error':''}">		
 
 		<label class="control-label" for="funcao">Função</label>
 		<c:choose>

@@ -69,9 +69,16 @@ public class FuncionarioServiceImpl extends AbstractService<FuncionarioDAO, Func
 		usuarioService.update(usuario);
 
 		funcionario.setAlteracao(new Date());
+
 		super.update(funcionario);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.service.AbstractService#delete(java.io.Serializable)
+	 */
 	@Override
 	public void delete(Integer id) {
 		super.delete(id);

@@ -29,6 +29,13 @@ public interface EmpresaDAO extends BaseDAO<Empresa, Integer> {
 	Integer getEmpresaIdByCnpj(String cnpj);
 
 	/**
+	 * @param email
+	 *            E-mail da empresa
+	 * @return ID da empresa
+	 */
+	Integer getEmpresaIdByEmail(String email);
+
+	/**
 	 * @param nomeOrCnpj
 	 *            Nome ou CNPJ
 	 * @return Empresas

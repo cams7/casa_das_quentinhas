@@ -53,6 +53,10 @@ public class Empresa extends AbstractEntity<Integer> {
 	@Column(name = "id_empresa", nullable = false)
 	private Integer id;
 
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "id_cidade", referencedColumnName = "id_cidade")
+	private Cidade cidade;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_usuario_acesso", referencedColumnName = "id_usuario")
 	private Usuario usuarioAcesso;
@@ -158,6 +162,21 @@ public class Empresa extends AbstractEntity<Integer> {
 	@Override
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	/**
+	 * @return Cidade
+	 */
+	public Cidade getCidade() {
+		return cidade;
+	}
+
+	/**
+	 * @param Cidade
+	 * 
+	 */
+	public void setCidade(Cidade cidade) {
+		this.cidade = cidade;
 	}
 
 	/**

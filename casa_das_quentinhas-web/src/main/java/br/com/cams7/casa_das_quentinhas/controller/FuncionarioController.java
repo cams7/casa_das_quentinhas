@@ -61,9 +61,9 @@ public class FuncionarioController extends AbstractController<FuncionarioService
 		Empresa empresa = funcionario.getEmpresa();
 
 		if (empresa.getId() == null) {
-			FieldError senhaError = new FieldError("funcionario", "empresa.id",
-					messageSource.getMessage("NotNull.empresa.id", null, Locale.getDefault()));
-			result.addError(senhaError);
+			FieldError empresaError = new FieldError("funcionario", "empresa.id",
+					messageSource.getMessage("NotNull.funcionario.empresa.id", null, Locale.getDefault()));
+			result.addError(empresaError);
 		}
 
 		if (usuario.getSenha().isEmpty()) {
@@ -72,15 +72,10 @@ public class FuncionarioController extends AbstractController<FuncionarioService
 			result.addError(senhaError);
 		}
 
-		if (result.getFieldErrorCount("usuario.email") == 0
-				&& !usuarioService.isEmailUnique(usuario.getId(), usuario.getEmail())) {
-			FieldError emailError = new FieldError("funcionario", "usuario.email", messageSource
-					.getMessage("non.unique.email", new String[] { usuario.getEmail() }, Locale.getDefault()));
-			result.addError(emailError);
-		}
-
 		setNotEmptyConfirmacaoError(usuario, result, true);
 		setSenhaNotEqualsConfirmacaoError(usuario, result);
+
+		setEmailNotUniqueError(usuario, result);
 		setCPFNotUniqueError(funcionario, result);
 
 		setUsuarioLogado(model);
@@ -116,6 +111,8 @@ public class FuncionarioController extends AbstractController<FuncionarioService
 
 		setNotEmptyConfirmacaoError(usuario, result, !usuario.getSenha().isEmpty());
 		setSenhaNotEqualsConfirmacaoError(usuario, result);
+		
+		setEmailNotUniqueError(usuario, result);
 		setCPFNotUniqueError(funcionario, result);
 
 		setEditPage(model);
@@ -141,6 +138,16 @@ public class FuncionarioController extends AbstractController<FuncionarioService
 		return new ResponseEntity<Map<Integer, String>>(empresas, HttpStatus.OK);
 	}
 
+	/**
+	 * Verifica se o campo de confirmação de senha não esta vazio, caso o campo
+	 * senha tenha sido preenchido anteriormente
+	 * 
+	 * @param usuario
+	 *            Usuário
+	 * @param result
+	 * @param senhaInformada
+	 *            A senha foi informada
+	 */
 	private void setNotEmptyConfirmacaoError(Usuario usuario, BindingResult result, boolean senhaInformada) {
 		if (senhaInformada && usuario.getConfirmacaoSenha().isEmpty()) {
 			FieldError confirmacaoError = new FieldError("funcionario", "usuario.confirmacaoSenha",
@@ -149,6 +156,13 @@ public class FuncionarioController extends AbstractController<FuncionarioService
 		}
 	}
 
+	/**
+	 * Verifica se senha informada é mesma do campo confirmação
+	 * 
+	 * @param usuario
+	 *            Usuário
+	 * @param result
+	 */
 	private void setSenhaNotEqualsConfirmacaoError(Usuario usuario, BindingResult result) {
 		if (result.getFieldErrorCount("usuario.confirmacaoSenha") > 0)
 			return;
@@ -156,11 +170,34 @@ public class FuncionarioController extends AbstractController<FuncionarioService
 		if (!usuario.getSenha().isEmpty() && !usuario.getConfirmacaoSenha().isEmpty()
 				&& !usuario.getSenha().equals(usuario.getConfirmacaoSenha())) {
 			FieldError confirmacaoError = new FieldError("funcionario", "usuario.confirmacaoSenha",
-					messageSource.getMessage("senha.notEquals.confirmacao", null, Locale.getDefault()));
+					messageSource.getMessage("NotEquals.usuario.confirmacaoSenha", null, Locale.getDefault()));
 			result.addError(confirmacaoError);
 		}
 	}
 
+	/**
+	 * Verifica se o e-mail informado não foi cadastrado anteriormente
+	 * 
+	 * @param usuario
+	 * @param result
+	 */
+	private void setEmailNotUniqueError(Usuario usuario, BindingResult result) {
+		if (result.getFieldErrorCount("usuario.email") > 0)
+			return;
+
+		if (!usuarioService.isEmailUnique(usuario.getId(), usuario.getEmail())) {
+			FieldError emailError = new FieldError("funcionario", "usuario.email", messageSource
+					.getMessage("NonUnique.usuario.email", new String[] { usuario.getEmail() }, Locale.getDefault()));
+			result.addError(emailError);
+		}
+	}
+
+	/**
+	 * Verifica se o CPF informado não foi cadastrado anteriormente
+	 * 
+	 * @param funcionario
+	 * @param result
+	 */
 	private void setCPFNotUniqueError(Funcionario funcionario, BindingResult result) {
 		if (result.getFieldErrorCount("cpf") > 0)
 			return;
@@ -168,9 +205,9 @@ public class FuncionarioController extends AbstractController<FuncionarioService
 		String cpf = funcionario.getUnformattedCpf();
 
 		if (!getService().isCPFUnique(funcionario.getId(), cpf)) {
-			FieldError emailError = new FieldError("funcionario", "cpf", messageSource.getMessage("non.unique.cpf",
-					new String[] { funcionario.getCpf() }, Locale.getDefault()));
-			result.addError(emailError);
+			FieldError cpfError = new FieldError("funcionario", "cpf", messageSource.getMessage(
+					"NonUnique.funcionario.cpf", new String[] { funcionario.getCpf() }, Locale.getDefault()));
+			result.addError(cpfError);
 		}
 	}
 

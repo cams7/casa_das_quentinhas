@@ -119,4 +119,16 @@ public class UsuarioServiceImpl extends AbstractService<UsuarioDAO, Usuario, Int
 		return id != null && usuarioId == id;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.casa_das_quentinhas.dao.UsuarioDAO#
+	 * getUsuarioAcessoIdByEmpresaId(java.lang.Integer)
+	 */
+	@Override
+	public Integer getUsuarioAcessoIdByEmpresaId(Integer empresaId) {
+		Integer usuarioId = getDao().getUsuarioAcessoIdByEmpresaId(empresaId);
+		return usuarioId;
+	}
+
 }

@@ -8,9 +8,6 @@ import static br.com.cams7.app.validator.CepValidator.unformatCep;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -23,10 +20,6 @@ import br.com.cams7.app.validator.CEP;
  */
 @Embeddable
 public class Endereco {
-
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "id_cidade", referencedColumnName = "id_cidade")
-	private Cidade cidade;
 
 	@NotEmpty
 	@CEP
@@ -53,21 +46,6 @@ public class Endereco {
 
 	@Column(name = "ponto_referencia", length = 30)
 	private String pontoReferencia;
-
-	/**
-	 * @return Cidade
-	 */
-	public Cidade getCidade() {
-		return cidade;
-	}
-
-	/**
-	 * @param Cidade
-	 * 
-	 */
-	public void setCidade(Cidade cidade) {
-		this.cidade = cidade;
-	}
 
 	/**
 	 * @return CEP sem formatação

@@ -19,9 +19,10 @@ import org.springframework.stereotype.Repository;
 
 import br.com.cams7.app.dao.AbstractDAO;
 import br.com.cams7.casa_das_quentinhas.model.Cidade;
+import br.com.cams7.casa_das_quentinhas.model.Cidade_;
 import br.com.cams7.casa_das_quentinhas.model.Empresa;
 import br.com.cams7.casa_das_quentinhas.model.Empresa_;
-import br.com.cams7.casa_das_quentinhas.model.Endereco_;
+import br.com.cams7.casa_das_quentinhas.model.Estado;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
 
 /**
@@ -47,10 +48,12 @@ public class EmpresaDAOImpl extends AbstractDAO<Empresa, Integer> implements Emp
 		Join<Empresa, Usuario> joinUsuarioCadastro = (Join<Empresa, Usuario>) from.fetch(Empresa_.usuarioCadastro,
 				JoinType.LEFT);
 		@SuppressWarnings("unchecked")
-		Join<Empresa, Cidade> joinCidade = (Join<Empresa, Cidade>) from.join(Empresa_.endereco, JoinType.LEFT)
-				.get(Endereco_.cidade);
+		Join<Empresa, Cidade> joinCidade = (Join<Empresa, Cidade>) from.fetch(Empresa_.cidade, JoinType.LEFT);
+		@SuppressWarnings("unchecked")
+		Join<Cidade, Estado> joinEstado = (Join<Cidade, Estado>) joinCidade.fetch(Cidade_.estado, JoinType.LEFT);
 
-		From<?, ?>[] fromWithJoins = new From<?, ?>[] { from, joinUsuarioAcesso, joinUsuarioCadastro, joinCidade };
+		From<?, ?>[] fromWithJoins = new From<?, ?>[] { from, joinUsuarioAcesso, joinUsuarioCadastro, joinCidade,
+				joinEstado };
 
 		return fromWithJoins;
 	}
@@ -67,11 +70,11 @@ public class EmpresaDAOImpl extends AbstractDAO<Empresa, Integer> implements Emp
 				JoinType.LEFT);
 		Join<Empresa, Usuario> joinUsuarioCadastro = (Join<Empresa, Usuario>) from.join(Empresa_.usuarioCadastro,
 				JoinType.LEFT);
-		@SuppressWarnings("unchecked")
-		Join<Empresa, Cidade> joinCidade = (Join<Empresa, Cidade>) from.join(Empresa_.endereco, JoinType.LEFT)
-				.get(Endereco_.cidade);
+		Join<Empresa, Cidade> joinCidade = (Join<Empresa, Cidade>) from.join(Empresa_.cidade, JoinType.LEFT);
+		Join<Cidade, Estado> joinEstado = (Join<Cidade, Estado>) joinCidade.join(Cidade_.estado, JoinType.LEFT);
 
-		From<?, ?>[] fromWithJoins = new From<?, ?>[] { from, joinUsuarioAcesso, joinUsuarioCadastro, joinCidade };
+		From<?, ?>[] fromWithJoins = new From<?, ?>[] { from, joinUsuarioAcesso, joinUsuarioCadastro, joinCidade,
+				joinEstado };
 
 		return fromWithJoins;
 	}
@@ -92,8 +95,7 @@ public class EmpresaDAOImpl extends AbstractDAO<Empresa, Integer> implements Emp
 
 		from.fetch(Empresa_.usuarioAcesso, JoinType.LEFT);
 		from.fetch(Empresa_.usuarioCadastro, JoinType.LEFT);
-		// from.join(Empresa_.endereco).fetch(Endereco_.cidade, JoinType.LEFT);
-		from.join(Empresa_.endereco, JoinType.LEFT).get(Endereco_.cidade);
+		from.fetch(Empresa_.cidade, JoinType.LEFT).fetch(Cidade_.estado, JoinType.LEFT);
 
 		cq.select(from);
 
@@ -132,6 +134,38 @@ public class EmpresaDAOImpl extends AbstractDAO<Empresa, Integer> implements Emp
 			return empresaId;
 		} catch (NoResultException e) {
 			LOGGER.warn("CNPJ not found...");
+		}
+
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.casa_das_quentinhas.dao.EmpresaDAO#getEmpresaIdByEmail(java.
+	 * lang.String)
+	 */
+	@Override
+	public Integer getEmpresaIdByEmail(String email) {
+		LOGGER.info("E-mail : {}", email);
+
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Integer> cq = cb.createQuery(Integer.class);
+
+		Root<Empresa> from = cq.from(ENTITY_TYPE);
+
+		cq.select(from.get(Empresa_.id));
+
+		cq.where(cb.equal(from.get(Empresa_.email), email));
+
+		TypedQuery<Integer> tq = getEntityManager().createQuery(cq);
+
+		try {
+			Integer empresaId = tq.getSingleResult();
+			return empresaId;
+		} catch (NoResultException e) {
+			LOGGER.warn("E-mail not found...");
 		}
 
 		return null;

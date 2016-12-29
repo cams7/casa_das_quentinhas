@@ -19,6 +19,7 @@ import br.com.cams7.casa_das_quentinhas.model.Empresa.Tipo;
 @StaticMetamodel(Empresa.class)
 public class Empresa_ {
 	public static volatile SingularAttribute<Empresa, Integer> id;
+	public static volatile SingularAttribute<Empresa, Cidade> cidade;
 	public static volatile SingularAttribute<Empresa, Usuario> usuarioAcesso;
 	public static volatile SingularAttribute<Empresa, Usuario> usuarioCadastro;
 	public static volatile SingularAttribute<Empresa, Tipo> tipo;

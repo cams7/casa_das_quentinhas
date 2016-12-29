@@ -25,4 +25,11 @@ public interface UsuarioDAO extends BaseDAO<Usuario, Integer> {
 	 * @return Senha criptografada
 	 */
 	String getUsuarioSenhaById(Integer id);
+
+	/**
+	 * @param empresaId
+	 *            ID da empresa
+	 * @return ID do usuário
+	 */
+	Integer getUsuarioAcessoIdByEmpresaId(Integer empresaId);
 }
