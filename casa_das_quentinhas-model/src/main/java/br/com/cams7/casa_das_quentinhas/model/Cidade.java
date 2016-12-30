@@ -3,6 +3,8 @@
  */
 package br.com.cams7.casa_das_quentinhas.model;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -43,6 +46,9 @@ public class Cidade extends AbstractEntity<Integer> {
 
 	@Column(length = 2, nullable = false)
 	private Byte ddd;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "cidade")
+	private List<Empresa> empresas;
 
 	/*
 	 * (non-Javadoc)
@@ -122,6 +128,21 @@ public class Cidade extends AbstractEntity<Integer> {
 	 */
 	public void setDdd(Byte ddd) {
 		this.ddd = ddd;
+	}
+
+	/**
+	 * @return Empresas da cidade
+	 */
+	public List<Empresa> getEmpresas() {
+		return empresas;
+	}
+
+	/**
+	 * @param empresas
+	 *            Empresas
+	 */
+	public void setEmpresas(List<Empresa> empresas) {
+		this.empresas = empresas;
 	}
 
 	/**

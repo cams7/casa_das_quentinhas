@@ -243,6 +243,7 @@ CREATE SEQUENCE public.cliente_id_seq;
 
 CREATE TABLE public.cliente (
                 id_cliente INTEGER NOT NULL DEFAULT nextval('public.cliente_id_seq'),
+				id_usuario_acesso INTEGER,
                 id_usuario_cadastro INTEGER NOT NULL,
                 id_cidade INTEGER NOT NULL,
                 nome VARCHAR(60) NOT NULL,
@@ -264,6 +265,7 @@ CREATE TABLE public.cliente (
 				CONSTRAINT cliente_email_uk UNIQUE (email)
 );
 COMMENT ON TABLE public.cliente IS 'Cliente da Casa da Marmitas';
+COMMENT ON COLUMN public.cliente.id_usuario_acesso IS 'O usuário pode ser um usuário do sistema';
 COMMENT ON COLUMN public.cliente.id_usuario_cadastro IS 'Usuário que cadastrou o cliente';
 COMMENT ON COLUMN public.cliente.id_cidade IS 'Id da cidade';
 COMMENT ON COLUMN public.cliente.cpf IS 'CPF do cliente';
@@ -295,13 +297,6 @@ ON DELETE NO ACTION
 ON UPDATE NO ACTION
 NOT DEFERRABLE;
 
-ALTER TABLE public.cliente ADD CONSTRAINT cidade_cliente_fk
-FOREIGN KEY (id_cidade)
-REFERENCES public.cidade (id_cidade)
-ON DELETE NO ACTION
-ON UPDATE NO ACTION
-NOT DEFERRABLE;
-
 ALTER TABLE public.empresa ADD CONSTRAINT usuario_cadastro_empresa_fk
 FOREIGN KEY (id_usuario_cadastro)
 REFERENCES public.usuario (id_usuario)
@@ -309,22 +304,8 @@ ON DELETE NO ACTION
 ON UPDATE NO ACTION
 NOT DEFERRABLE;
 
-ALTER TABLE public.cliente ADD CONSTRAINT usuario_cliente_fk
-FOREIGN KEY (id_usuario_cadastro)
-REFERENCES public.usuario (id_usuario)
-ON DELETE NO ACTION
-ON UPDATE NO ACTION
-NOT DEFERRABLE;
-
-ALTER TABLE public.pedido ADD CONSTRAINT usuario_pedido_fk
-FOREIGN KEY (id_usuario_cadastro)
-REFERENCES public.usuario (id_usuario)
-ON DELETE NO ACTION
-ON UPDATE NO ACTION
-NOT DEFERRABLE;
-
-ALTER TABLE public.produto ADD CONSTRAINT usuario_produto_fk
-FOREIGN KEY (id_usuario_cadastro)
+ALTER TABLE public.empresa ADD CONSTRAINT usuario_acesso_empresa_fk
+FOREIGN KEY (id_usuario_acesso)
 REFERENCES public.usuario (id_usuario)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION
@@ -344,30 +325,44 @@ ON DELETE NO ACTION
 ON UPDATE NO ACTION
 NOT DEFERRABLE;
 
-ALTER TABLE public.empresa ADD CONSTRAINT usuario_empresa_fk
+ALTER TABLE public.funcionario ADD CONSTRAINT empresa_funcionario_fk
+FOREIGN KEY (id_empresa)
+REFERENCES public.empresa (id_empresa)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE public.produto ADD CONSTRAINT usuario_produto_fk
+FOREIGN KEY (id_usuario_cadastro)
+REFERENCES public.usuario (id_usuario)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE public.cliente ADD CONSTRAINT cidade_cliente_fk
+FOREIGN KEY (id_cidade)
+REFERENCES public.cidade (id_cidade)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE public.cliente ADD CONSTRAINT usuario_cadastro_cliente_fk
+FOREIGN KEY (id_usuario_cadastro)
+REFERENCES public.usuario (id_usuario)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE public.cliente ADD CONSTRAINT usuario_acesso_cliente_fk
 FOREIGN KEY (id_usuario_acesso)
 REFERENCES public.usuario (id_usuario)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION
 NOT DEFERRABLE;
 
-ALTER TABLE public.pedido_item ADD CONSTRAINT produto_pedido_item_fk
-FOREIGN KEY (id_produto)
-REFERENCES public.produto (id_produto)
-ON DELETE NO ACTION
-ON UPDATE NO ACTION
-NOT DEFERRABLE;
-
-ALTER TABLE public.pedido_item ADD CONSTRAINT pedido_pedido_item_fk
-FOREIGN KEY (id_pedido)
-REFERENCES public.pedido (id_pedido)
-ON DELETE NO ACTION
-ON UPDATE NO ACTION
-NOT DEFERRABLE;
-
-ALTER TABLE public.cliente_pedido ADD CONSTRAINT pedido_cliente_pedido_fk
-FOREIGN KEY (id_pedido)
-REFERENCES public.pedido (id_pedido)
+ALTER TABLE public.pedido ADD CONSTRAINT usuario_pedido_fk
+FOREIGN KEY (id_usuario_cadastro)
+REFERENCES public.usuario (id_usuario)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION
 NOT DEFERRABLE;
@@ -386,9 +381,9 @@ ON DELETE NO ACTION
 ON UPDATE NO ACTION
 NOT DEFERRABLE;
 
-ALTER TABLE public.funcionario ADD CONSTRAINT empresa_funcionario_fk
-FOREIGN KEY (id_empresa)
-REFERENCES public.empresa (id_empresa)
+ALTER TABLE public.cliente_pedido ADD CONSTRAINT pedido_cliente_pedido_fk
+FOREIGN KEY (id_pedido)
+REFERENCES public.pedido (id_pedido)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION
 NOT DEFERRABLE;
@@ -396,6 +391,20 @@ NOT DEFERRABLE;
 ALTER TABLE public.cliente_pedido ADD CONSTRAINT cliente_cliente_pedido_fk
 FOREIGN KEY (id_cliente)
 REFERENCES public.cliente (id_cliente)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE public.pedido_item ADD CONSTRAINT produto_pedido_item_fk
+FOREIGN KEY (id_produto)
+REFERENCES public.produto (id_produto)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE public.pedido_item ADD CONSTRAINT pedido_pedido_item_fk
+FOREIGN KEY (id_pedido)
+REFERENCES public.pedido (id_pedido)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION
 NOT DEFERRABLE;

@@ -5,7 +5,7 @@ package br.com.cams7.casa_das_quentinhas.model;
 
 import java.util.Date;
 
-import javax.persistence.metamodel.SetAttribute;
+import javax.persistence.metamodel.ListAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
@@ -36,5 +36,5 @@ public class Empresa_ {
 	public static volatile SingularAttribute<Empresa, Endereco> endereco;
 	public static volatile SingularAttribute<Empresa, Date> cadastro;
 	public static volatile SingularAttribute<Empresa, Date> alteracao;
-	public static volatile SetAttribute<Empresa, Funcionario> funcionarios;
+	public static volatile ListAttribute<Empresa, Funcionario> funcionarios;
 }

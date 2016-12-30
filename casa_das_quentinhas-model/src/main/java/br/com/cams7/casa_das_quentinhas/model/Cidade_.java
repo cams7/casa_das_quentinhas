@@ -3,6 +3,7 @@
  */
 package br.com.cams7.casa_das_quentinhas.model;
 
+import javax.persistence.metamodel.ListAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
@@ -17,4 +18,5 @@ public class Cidade_ {
 	public static volatile SingularAttribute<Cidade, String> nome;
 	public static volatile SingularAttribute<Cidade, Long> codigoIbge;
 	public static volatile SingularAttribute<Cidade, Byte> ddd;
+	public static volatile ListAttribute<Cidade, Empresa> empresas;
 }

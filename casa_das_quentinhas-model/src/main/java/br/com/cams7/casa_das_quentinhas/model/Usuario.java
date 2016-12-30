@@ -1,6 +1,6 @@
 package br.com.cams7.casa_das_quentinhas.model;
 
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -50,7 +50,13 @@ public class Usuario extends AbstractEntity<Integer> {
 	private Funcionario funcionario;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "usuarioCadastro")
-	private Set<Funcionario> funcionarios;
+	private List<Funcionario> funcionarios;
+
+	// @OneToOne(fetch = FetchType.LAZY, mappedBy = "usuarioAcesso")
+	// private Empresa empresa;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "usuarioCadastro")
+	private List<Empresa> empresas;
 
 	@Transient
 	private String senha;
@@ -155,16 +161,46 @@ public class Usuario extends AbstractEntity<Integer> {
 	/**
 	 * @return Funcionários cadastrados pelo usuário
 	 */
-	public Set<Funcionario> getFuncionarios() {
+	public List<Funcionario> getFuncionarios() {
 		return funcionarios;
 	}
 
 	/**
 	 * @param funcionarios
-	 *            Funcionários
+	 *            Funcionários cadastrados pelo usuário
 	 */
-	public void setFuncionarios(Set<Funcionario> funcionarios) {
+	public void setFuncionarios(List<Funcionario> funcionarios) {
 		this.funcionarios = funcionarios;
+	}
+
+	/**
+	 * @return Empresa com acesso através do usuário
+	 */
+	// public Empresa getEmpresa() {
+	// return empresa;
+	// }
+
+	/**
+	 * @param empresa
+	 *            Empresa com acesso através do usuário
+	 */
+	// public void setEmpresa(Empresa empresa) {
+	// this.empresa = empresa;
+	// }
+
+	/**
+	 * @return Empresas cadastradas pelo usuário
+	 */
+	public List<Empresa> getEmpresas() {
+		return empresas;
+	}
+
+	/**
+	 * @param empresas
+	 *            Empresas cadastradas pelo usuário
+	 */
+	public void setEmpresas(List<Empresa> empresas) {
+		this.empresas = empresas;
 	}
 
 	/**
@@ -226,7 +262,7 @@ public class Usuario extends AbstractEntity<Integer> {
 	 *         Tipo de Usuário
 	 */
 	public enum Tipo {
-		FUNCIONARIO("Funcionário(a)"), EMPRESA("Empresa");
+		FUNCIONARIO("Funcionário(a)"), EMPRESA("Empresa"), CLIENTE("Cliente");
 		private String descricao;
 
 		private Tipo(String descricao) {

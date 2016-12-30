@@ -9,7 +9,7 @@ import static br.com.cams7.app.validator.TelefoneValidator.formatTelefone;
 import static br.com.cams7.app.validator.TelefoneValidator.unformatTelefone;
 
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -23,6 +23,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -57,7 +58,7 @@ public class Empresa extends AbstractEntity<Integer> {
 	@JoinColumn(name = "id_cidade", referencedColumnName = "id_cidade")
 	private Cidade cidade;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_usuario_acesso", referencedColumnName = "id_usuario")
 	private Usuario usuarioAcesso;
 
@@ -127,7 +128,7 @@ public class Empresa extends AbstractEntity<Integer> {
 	private Date alteracao;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "empresa")
-	private Set<Funcionario> funcionarios;
+	private List<Funcionario> funcionarios;
 
 	public Empresa() {
 		super();
@@ -423,7 +424,7 @@ public class Empresa extends AbstractEntity<Integer> {
 	/**
 	 * @return Funcionários da empresa
 	 */
-	public Set<Funcionario> getFuncionarios() {
+	public List<Funcionario> getFuncionarios() {
 		return funcionarios;
 	}
 
@@ -431,7 +432,7 @@ public class Empresa extends AbstractEntity<Integer> {
 	 * @param funcionarios
 	 *            Funcionários da empresa
 	 */
-	public void setFuncionarios(Set<Funcionario> funcionarios) {
+	public void setFuncionarios(List<Funcionario> funcionarios) {
 		this.funcionarios = funcionarios;
 	}
 

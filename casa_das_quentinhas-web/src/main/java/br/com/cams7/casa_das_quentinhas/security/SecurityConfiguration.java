@@ -44,7 +44,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				
 		.antMatchers("/*/create", "/*/*/delete").access("hasRole('GERENTE')")
 		.antMatchers("/*/*/edit").access("hasRole('GERENTE') or hasRole('ATENDENTE')")
-		.antMatchers("/*", "/*/*").access("hasRole('GERENTE') or hasRole('ATENDENTE') or hasRole('ENTREGADOR') or hasRole('EMPRESA')")
+		.antMatchers("/*", "/*/*").access("hasRole('GERENTE') or hasRole('ATENDENTE') or hasRole('ENTREGADOR') or hasRole('EMPRESA') or hasRole('CLIENTE')")
 		
 		.anyRequest().authenticated()
 		.and()

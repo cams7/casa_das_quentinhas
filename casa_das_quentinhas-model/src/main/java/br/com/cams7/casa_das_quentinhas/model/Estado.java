@@ -3,7 +3,7 @@
  */
 package br.com.cams7.casa_das_quentinhas.model;
 
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -42,7 +42,7 @@ public class Estado extends AbstractEntity<Short> {
 	private Byte codigoIbge;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "estado")
-	private Set<Cidade> cidades;
+	private List<Cidade> cidades;
 
 	/*
 	 * (non-Javadoc)
@@ -112,7 +112,7 @@ public class Estado extends AbstractEntity<Short> {
 	/**
 	 * @return Cidades pertencente ao estado
 	 */
-	public Set<Cidade> getCidades() {
+	public List<Cidade> getCidades() {
 		return cidades;
 	}
 
@@ -120,7 +120,7 @@ public class Estado extends AbstractEntity<Short> {
 	 * @param cidades
 	 *            Cidades
 	 */
-	public void setCidades(Set<Cidade> cidades) {
+	public void setCidades(List<Cidade> cidades) {
 		this.cidades = cidades;
 	}
 

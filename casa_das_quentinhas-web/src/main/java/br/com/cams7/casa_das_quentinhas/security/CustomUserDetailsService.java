@@ -1,7 +1,5 @@
 package br.com.cams7.casa_das_quentinhas.security;
 
-import static br.com.cams7.casa_das_quentinhas.model.Usuario.Tipo.EMPRESA;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,9 +43,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 		Funcionario funcionario = usuario.getFuncionario();
 
-		LOGGER.info("Funcionário: {}", funcionario);
-		String role = "ROLE_" + (funcionario == null ? EMPRESA.name() : funcionario.getFuncao().name());
+		String role = "ROLE_" + (funcionario == null ? usuario.getTipo().name() : funcionario.getFuncao().name());
 		authorities.add(new SimpleGrantedAuthority(role));
+
 		LOGGER.info("authorities: {}", authorities);
 
 		return authorities;

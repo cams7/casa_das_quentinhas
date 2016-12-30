@@ -3,7 +3,7 @@
  */
 package br.com.cams7.casa_das_quentinhas.model;
 
-import javax.persistence.metamodel.SetAttribute;
+import javax.persistence.metamodel.ListAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
@@ -20,5 +20,7 @@ public class Usuario_ {
 	public static volatile SingularAttribute<Usuario, String> senhaCriptografada;
 	public static volatile SingularAttribute<Usuario, Tipo> tipo;
 	public static volatile SingularAttribute<Usuario, Funcionario> funcionario;
-	public static volatile SetAttribute<Usuario, Funcionario> funcionarios;
+	public static volatile ListAttribute<Usuario, Funcionario> funcionarios;
+	// public static volatile SingularAttribute<Usuario, Empresa> empresa;
+	public static volatile ListAttribute<Usuario, Empresa> empresas;
 }
