@@ -44,6 +44,20 @@ public class Estado extends AbstractEntity<Short> {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "estado")
 	private List<Cidade> cidades;
 
+	/**
+	 * 
+	 */
+	public Estado() {
+		super();
+	}
+
+	/**
+	 * @param id
+	 */
+	public Estado(Short id) {
+		super(id);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 

@@ -30,6 +30,20 @@ public class Acesso extends AbstractEntity<String> {
 	@Column(name = "ultimo_acesso", nullable = false)
 	private Date ultimoAcesso;
 
+	/**
+	 * 
+	 */
+	public Acesso() {
+		super();
+	}
+
+	/**
+	 * @param id
+	 */
+	public Acesso(String id) {
+		super(id);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 

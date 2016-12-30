@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.cams7.app.service.AbstractService;
 import br.com.cams7.casa_das_quentinhas.dao.FuncionarioDAO;
 import br.com.cams7.casa_das_quentinhas.model.Funcionario;
+import br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
 
 @Service
@@ -137,11 +138,11 @@ public class FuncionarioServiceImpl extends AbstractService<FuncionarioDAO, Func
 	 * @see br.com.cams7.casa_das_quentinhas.dao.FuncionarioDAO#
 	 * getFuncionarioFuncaoById(java.lang.Integer)
 	 */
-	// @Override
-	// public Funcao getFuncionarioFuncaoById(Integer id) {
-	// Funcao funcao = getDao().getFuncionarioFuncaoById(id);
-	// return funcao;
-	// }
+	@Override
+	public Funcao getFuncionarioFuncaoById(Integer id) {
+		Funcao funcao = getDao().getFuncionarioFuncaoById(id);
+		return funcao;
+	}
 
 	/*
 	 * (non-Javadoc)

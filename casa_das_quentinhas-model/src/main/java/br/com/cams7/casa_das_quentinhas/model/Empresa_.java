@@ -31,8 +31,7 @@ public class Empresa_ {
 	public static volatile SingularAttribute<Empresa, String> inscricaoMuncipal;
 	public static volatile SingularAttribute<Empresa, String> codigoCnae;
 	public static volatile SingularAttribute<Empresa, RegimeTributario> regimeTributario;
-	public static volatile SingularAttribute<Empresa, String> email;
-	public static volatile SingularAttribute<Empresa, String> telefone;
+	public static volatile SingularAttribute<Empresa, Contato> contato;
 	public static volatile SingularAttribute<Empresa, Endereco> endereco;
 	public static volatile SingularAttribute<Empresa, Date> cadastro;
 	public static volatile SingularAttribute<Empresa, Date> alteracao;

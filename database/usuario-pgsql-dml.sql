@@ -23,3 +23,15 @@ INSERT INTO usuario(id_usuario, email, senha, tipo_usuario) VALUES (nextval('usu
 INSERT INTO usuario(id_usuario, email, senha, tipo_usuario) VALUES (nextval('usuario_id_seq'),'maximiano@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 0);
 INSERT INTO usuario(id_usuario, email, senha, tipo_usuario) VALUES (nextval('usuario_id_seq'),'julia@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 0);
 INSERT INTO usuario(id_usuario, email, senha, tipo_usuario) VALUES (nextval('usuario_id_seq'),'guilherme@teste.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 0);
+INSERT INTO usuario(id_usuario, email, senha, tipo_usuario) VALUES (nextval('usuario_id_seq'),'empresa@casa-das-quentinhas.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 1);
+INSERT INTO usuario(id_usuario, email, senha, tipo_usuario) VALUES (nextval('usuario_id_seq'),'soto-domingues@gmail.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 1);
+INSERT INTO usuario(id_usuario, email, senha, tipo_usuario) VALUES (nextval('usuario_id_seq'),'rodrigues.dante@matias.net','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 1);
+INSERT INTO usuario(id_usuario, email, senha, tipo_usuario) VALUES (nextval('usuario_id_seq'),'vendas@gabrielayuri.com.br','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 1);
+INSERT INTO usuario(id_usuario, email, senha, tipo_usuario) VALUES (nextval('usuario_id_seq'),'fonseca@gmail.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 1);
+INSERT INTO usuario(id_usuario, email, senha, tipo_usuario) VALUES (nextval('usuario_id_seq'),'contato@teles.com.br','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 1);
+INSERT INTO usuario(id_usuario, email, senha, tipo_usuario) VALUES (nextval('usuario_id_seq'),'cliente@casa-das-quentinhas.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 2);
+INSERT INTO usuario(id_usuario, email, senha, tipo_usuario) VALUES (nextval('usuario_id_seq'),'francisco.yuri.souza@soespodonto.com.br','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 2);
+INSERT INTO usuario(id_usuario, email, senha, tipo_usuario) VALUES (nextval('usuario_id_seq'),'gabrielly-eduarda72@bravo.com.br','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 2);
+INSERT INTO usuario(id_usuario, email, senha, tipo_usuario) VALUES (nextval('usuario_id_seq'),'camila_ana@effem.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 2);
+INSERT INTO usuario(id_usuario, email, senha, tipo_usuario) VALUES (nextval('usuario_id_seq'),'eloa.joana.rodrigues@yogoothies.com.br','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 2);
+INSERT INTO usuario(id_usuario, email, senha, tipo_usuario) VALUES (nextval('usuario_id_seq'),'ester-sara97@negocios-de-valor.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 2);

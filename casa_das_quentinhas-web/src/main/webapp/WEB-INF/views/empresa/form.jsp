@@ -66,24 +66,24 @@
 
 <div class="row">
 	<c:set var="emailError">
-		<form:errors path="email" />
+		<form:errors path="contato.email" />
 	</c:set>
 	<div
 		class="form-group col-md-6 ${not empty emailError ? 'has-error' : ''}">
-		<label class="control-label" for="email">E-mail</label>
+		<label class="control-label" for="contato.email">E-mail</label>
 
-		<form:input type="text" path="email" id="email" class="form-control"
-			maxlength="50" />
+		<form:input type="text" path="contato.email" id="email"
+			class="form-control" maxlength="50" />
 		<div class="help-block with-errors">${emailError}</div>
 	</div>
 
 	<c:set var="telefoneError">
-		<form:errors path="telefone" />
+		<form:errors path="contato.telefone" />
 	</c:set>
 	<div
 		class="form-group col-md-2 ${not empty telefoneError ? 'has-error' : ''}">
-		<label class="control-label" for="telefone">Telefone</label>
-		<form:input type="text" path="telefone" id="telefone"
+		<label class="control-label" for="contato.telefone">Telefone</label>
+		<form:input type="text" path="contato.telefone" id="telefone"
 			class="form-control" placeholder="(99) 9999-9999" maxlength="14" />
 		<div class="help-block with-errors">${telefoneError}</div>
 	</div>
@@ -248,8 +248,8 @@
 		class="form-group col-md-6 ${not empty senhaError ? 'has-error' : ''}">
 		<label class="control-label" for="usuarioAcesso.senha">Senha</label>
 
-		<form:input type="password" path="usuarioAcesso.senha"
-			id="usuarioAcesso.senha" class="form-control" />
+		<form:input type="password" path="usuarioAcesso.senha" id="senha"
+			class="form-control" />
 		<div class="help-block with-errors">${senhaError}</div>
 	</div>
 
@@ -261,7 +261,7 @@
 		<label class="control-label" for="usuarioAcesso.confirmacaoSenha">Confirmação</label>
 
 		<form:input type="password" path="usuarioAcesso.confirmacaoSenha"
-			id="usuarioAcesso.confirmacaoSenha" class="form-control" />
+			id="confirmacaoSenha" class="form-control" />
 		<div class="help-block with-errors">${confirmacaoError}</div>
 	</div>
 </div>

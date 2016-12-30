@@ -14,8 +14,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.cams7.casa_das_quentinhas.model.Funcionario;
+import br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
+import br.com.cams7.casa_das_quentinhas.service.FuncionarioService;
 import br.com.cams7.casa_das_quentinhas.service.UsuarioService;
 
 @Service("customUserDetailsService")
@@ -24,11 +25,14 @@ public class CustomUserDetailsService implements UserDetailsService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CustomUserDetailsService.class);
 
 	@Autowired
-	private UsuarioService userService;
+	private UsuarioService usuarioService;
+
+	@Autowired
+	private FuncionarioService funcionarioService;
 
 	@Transactional(readOnly = true)
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-		Usuario usuario = userService.getUsuarioByEmail(email);
+		Usuario usuario = usuarioService.getUsuarioByEmail(email);
 		LOGGER.info("Usuário: {}", usuario);
 		if (usuario == null) {
 			LOGGER.info("Usuário não encontrado");
@@ -39,11 +43,11 @@ public class CustomUserDetailsService implements UserDetailsService {
 	}
 
 	private List<GrantedAuthority> getGrantedAuthorities(Usuario usuario) {
+		Funcao funcao = funcionarioService.getFuncionarioFuncaoById(usuario.getId());
+
+		String role = "ROLE_" + (funcao == null ? usuario.getTipo().name() : funcao.name());
+
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-
-		Funcionario funcionario = usuario.getFuncionario();
-
-		String role = "ROLE_" + (funcionario == null ? usuario.getTipo().name() : funcionario.getFuncao().name());
 		authorities.add(new SimpleGrantedAuthority(role));
 
 		LOGGER.info("authorities: {}", authorities);

@@ -11,7 +11,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -46,8 +45,8 @@ public class Usuario extends AbstractEntity<Integer> {
 	@Column(name = "tipo_usuario", nullable = false)
 	private Tipo tipo;
 
-	@OneToOne(fetch = FetchType.LAZY, mappedBy = "usuario")
-	private Funcionario funcionario;
+	// @OneToOne(fetch = FetchType.LAZY, mappedBy = "usuario")
+	// private Funcionario funcionario;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "usuarioCadastro")
 	private List<Funcionario> funcionarios;
@@ -57,6 +56,12 @@ public class Usuario extends AbstractEntity<Integer> {
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "usuarioCadastro")
 	private List<Empresa> empresas;
+
+	// @OneToOne(fetch = FetchType.LAZY, mappedBy = "usuarioAcesso")
+	// private Cliente cliente;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "usuarioCadastro")
+	private List<Cliente> clientes;
 
 	@Transient
 	private String senha;
@@ -144,19 +149,19 @@ public class Usuario extends AbstractEntity<Integer> {
 	}
 
 	/**
-	 * @return Funcionário que tem o mesmo id do usuário
+	 * @return Funcionário com acesso através do usuário
 	 */
-	public Funcionario getFuncionario() {
-		return funcionario;
-	}
+	// public Funcionario getFuncionario() {
+	// return funcionario;
+	// }
 
 	/**
 	 * @param funcionario
-	 *            Funcionário
+	 *            Funcionário com acesso através do usuário
 	 */
-	public void setFuncionario(Funcionario funcionario) {
-		this.funcionario = funcionario;
-	}
+	// public void setFuncionario(Funcionario funcionario) {
+	// this.funcionario = funcionario;
+	// }
 
 	/**
 	 * @return Funcionários cadastrados pelo usuário
@@ -201,6 +206,36 @@ public class Usuario extends AbstractEntity<Integer> {
 	 */
 	public void setEmpresas(List<Empresa> empresas) {
 		this.empresas = empresas;
+	}
+
+	/**
+	 * @return Cliente com acesso através do usuário
+	 */
+	// public Cliente getCliente() {
+	// return cliente;
+	// }
+
+	/**
+	 * @param cliente
+	 *            Cliente com acesso através do usuário
+	 */
+	// public void setCliente(Cliente cliente) {
+	// this.cliente = cliente;
+	// }
+
+	/**
+	 * @return Clientes cadastrados pelo usuário
+	 */
+	public List<Cliente> getClientes() {
+		return clientes;
+	}
+
+	/**
+	 * @param clientes
+	 *            Clientes cadastrados pelo usuário
+	 */
+	public void setClientes(List<Cliente> clientes) {
+		this.clientes = clientes;
 	}
 
 	/**

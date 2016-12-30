@@ -17,6 +17,7 @@ import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -26,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import br.com.cams7.app.model.AbstractEntity;
 import br.com.cams7.app.utils.AppHelper;
 import br.com.cams7.app.utils.SearchParams;
+import javax.persistence.Entity;
 
 public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Serializable> implements BaseDAO<E, PK> {
 
@@ -125,20 +127,37 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 		String[] atributes = attributeName.split("\\.");
 
 		if (atributes.length > 1) {
-			attributeName = atributes[atributes.length - 1];
-			String entityName = atributes[atributes.length - 2];
+			Class<E> entityType = AppHelper.getFieldTypes(ENTITY_TYPE, attributeName).getEntityType();
 
-			for (short i = 1; i < fromWithJoins.length; i++) {
-				Join<?, ?> join = (Join<?, ?>) fromWithJoins[i];
+			boolean isEntity = entityType.isAnnotationPresent(Entity.class);
 
-				if (entityName.equals(join.getAttribute().getName())) {
-					fromOrJoin = join;
-					break;
+			if (isEntity) {
+				attributeName = atributes[atributes.length - 1];
+				String entityName = atributes[atributes.length - 2];
+
+				for (short i = 1; i < fromWithJoins.length; i++) {
+					Join<?, ?> join = (Join<?, ?>) fromWithJoins[i];
+
+					if (entityType.equals(join.getJavaType()) && entityName.equals(join.getAttribute().getName())) {
+						fromOrJoin = join;
+						break;
+					}
 				}
 			}
 		}
 
 		return new FromOrJoin(attributeName, fromOrJoin);
+	}
+
+	private Expression<?> getExpression(FromOrJoin fromOrJoin) {
+		String[] atributes = fromOrJoin.attributeName.split("\\.");
+
+		Path<?> expression = fromOrJoin.from.get(atributes[0]);
+
+		for (short i = 1; i < atributes.length; i++)
+			expression = expression.get(atributes[i]);
+
+		return expression;
 	}
 
 	/**
@@ -148,6 +167,7 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 	 * @param fieldValue
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	private Predicate getExpression(CriteriaBuilder cb, From<?, ?>[] fromWithJoins, String fieldName,
 			Object fieldValue) {
 		Object value = AppHelper.getFieldValue(ENTITY_TYPE, fieldName, fieldValue);
@@ -158,24 +178,24 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 		Class<?> fieldType = value.getClass();
 
 		FromOrJoin fromOrJoin = getFromOrJoin(fromWithJoins, fieldName);
-		fieldName = fromOrJoin.attributeName;
-		From<?, ?> from = fromOrJoin.from;
 
 		Predicate predicate;
 
 		if (AppHelper.isBoolean(fieldType))
 			if (((Boolean) value).booleanValue())
-				predicate = cb.isTrue(from.<Boolean>get(fieldName));
+				predicate = cb.isTrue((Expression<Boolean>) getExpression(fromOrJoin));
 			else
-				predicate = cb.isFalse(from.<Boolean>get(fieldName));
+				predicate = cb.isFalse((Expression<Boolean>) getExpression(fromOrJoin));
 		else if (AppHelper.isNumber(fieldType))
-			predicate = cb.like(cb.lower(from.<String>get(fieldName)), "%" + String.valueOf(value).toLowerCase() + "%");
+			predicate = cb.like(cb.lower((Expression<String>) getExpression(fromOrJoin)),
+					"%" + String.valueOf(value).toLowerCase() + "%");
 		else if (AppHelper.isDate(fieldType))
-			predicate = cb.equal(from.get(fieldName), value);
+			predicate = cb.equal(getExpression(fromOrJoin), value);
 		else if (AppHelper.isEnum(fieldType))
-			predicate = cb.equal(from.get(fieldName), value);
+			predicate = cb.equal(getExpression(fromOrJoin), value);
 		else
-			predicate = cb.like(cb.lower(from.<String>get(fieldName)), "%" + String.valueOf(value).toLowerCase() + "%");
+			predicate = cb.like(cb.lower((Expression<String>) getExpression(fromOrJoin)),
+					"%" + String.valueOf(value).toLowerCase() + "%");
 
 		return predicate;
 	}
@@ -248,21 +268,19 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 
 		if (params.getSortField() != null && params.getSortOrder() != null) {
 			FromOrJoin fromOrJoin = getFromOrJoin(fromWithJoins, params.getSortField());
-			params.setSortField(fromOrJoin.attributeName);
-			From<?, ?> sortFrom = fromOrJoin.from;
 
 			Order order;
 
 			switch (params.getSortOrder()) {
 			case ASCENDING:
-				order = cb.asc(sortFrom.get(params.getSortField()));
+				order = cb.asc(getExpression(fromOrJoin));
 				break;
 			case DESCENDING:
-				order = cb.desc(sortFrom.get(params.getSortField()));
+				order = cb.desc(getExpression(fromOrJoin));
 				break;
 
 			default:
-				order = cb.asc(sortFrom.get("id"));
+				order = cb.desc(fromOrJoin.from.get("id"));
 				break;
 			}
 			cq = cq.orderBy(order);
@@ -375,6 +393,7 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 
 		private FromOrJoin(String attributeName, From<?, ?> from) {
 			super();
+
 			this.attributeName = attributeName;
 			this.from = from;
 		}

@@ -41,13 +41,13 @@
 		<p>
 			<strong>E-mail</strong>
 		</p>
-		<p>${empresa.email}</p>
+		<p>${empresa.contato.email}</p>
 	</div>
 	<div class="col-md-2">
 		<p>
 			<strong>Telefone</strong>
 		</p>
-		<p>${empresa.formattedTelefone}</p>
+		<p>${empresa.contato.formattedTelefone}</p>
 	</div>
 	<div class="col-md-4">
 		<p>

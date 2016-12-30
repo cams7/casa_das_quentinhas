@@ -5,8 +5,6 @@ package br.com.cams7.casa_das_quentinhas.model;
 
 import static br.com.cams7.app.validator.CnpjValidator.formatCnpj;
 import static br.com.cams7.app.validator.CnpjValidator.unformatCnpj;
-import static br.com.cams7.app.validator.TelefoneValidator.formatTelefone;
-import static br.com.cams7.app.validator.TelefoneValidator.unformatTelefone;
 
 import java.util.Date;
 import java.util.List;
@@ -32,12 +30,10 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import br.com.cams7.app.model.AbstractEntity;
 import br.com.cams7.app.validator.CNPJ;
-import br.com.cams7.app.validator.Telefone;
 
 /**
  * @author César Magalhães
@@ -102,21 +98,12 @@ public class Empresa extends AbstractEntity<Integer> {
 	@Column(name = "regime_tributario")
 	private RegimeTributario regimeTributario;
 
-	@NotEmpty
-	@Size(min = 5, max = 50)
-	@Email
-	@Column(unique = true, nullable = false)
-	private String email;
-
-	@NotEmpty
-	@Telefone
-	@Column(nullable = false, length = 11)
-	private String telefone;
+	@Valid
+	@Embedded
+	private Contato contato;
 
 	@Valid
 	@Embedded
-	// @AttributeOverrides({ @AttributeOverride(name = "numeroImovel", column =
-	// @Column(name = "numero_imovel")) })
 	private Endereco endereco;
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -130,19 +117,18 @@ public class Empresa extends AbstractEntity<Integer> {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "empresa")
 	private List<Funcionario> funcionarios;
 
+	/**
+	 * 
+	 */
 	public Empresa() {
 		super();
 	}
 
+	/**
+	 * @param id
+	 */
 	public Empresa(Integer id) {
 		super(id);
-	}
-
-	public Empresa(Integer id, String nome, String cnpj) {
-		this(id);
-
-		this.razaoSocial = nome;
-		this.cnpj = cnpj;
 	}
 
 	/*
@@ -166,14 +152,15 @@ public class Empresa extends AbstractEntity<Integer> {
 	}
 
 	/**
-	 * @return Cidade
+	 * @return Cidade onde está localizada a empresa
 	 */
 	public Cidade getCidade() {
 		return cidade;
 	}
 
 	/**
-	 * @param Cidade
+	 * @param cidade
+	 *            Cidade onde está localizada a empresa
 	 * 
 	 */
 	public void setCidade(Cidade cidade) {
@@ -347,33 +334,18 @@ public class Empresa extends AbstractEntity<Integer> {
 	}
 
 	/**
-	 * @return E-mail da empresa
+	 * @return Contato da empresa
 	 */
-	public String getEmail() {
-		return email;
+	public Contato getContato() {
+		return contato;
 	}
 
 	/**
-	 * @param email
-	 *            E-mail da empresa
+	 * @param contato
+	 *            Contato da empresa
 	 */
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	/**
-	 * @return Número de telefone da empresa sem formatação
-	 */
-	public String getTelefone() {
-		return telefone;
-	}
-
-	/**
-	 * @param telefone
-	 *            Número de telefone da empresa sem formatação
-	 */
-	public void setTelefone(String telefone) {
-		this.telefone = telefone;
+	public void setContato(Contato contato) {
+		this.contato = contato;
 	}
 
 	/**
@@ -454,26 +426,6 @@ public class Empresa extends AbstractEntity<Integer> {
 			return null;
 
 		return formatCnpj(cnpj);
-	}
-
-	/**
-	 * @return Telefone formatado
-	 */
-	public String getUnformattedTelefone() {
-		if (telefone == null || telefone.isEmpty())
-			return null;
-
-		return unformatTelefone(telefone);
-	}
-
-	/**
-	 * @return Telefone sem formatação
-	 */
-	public String getFormattedTelefone() {
-		if (telefone == null || telefone.isEmpty())
-			return null;
-
-		return formatTelefone(telefone);
 	}
 
 	/**

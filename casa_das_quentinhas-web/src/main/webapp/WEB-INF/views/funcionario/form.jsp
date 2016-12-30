@@ -37,7 +37,7 @@
 	<div
 		class="form-group col-md-4 ${not empty empresaError ? 'has-error' : ''}">
 		<label class="control-label" for="empresa.razaoSocial">Empresa</label>
-		<form:input type="text" path="empresa.razaoSocial" id="empresa_nome"
+		<form:input type="text" path="empresa.razaoSocial" id="empresa"
 			class="form-control" maxlength="60" placeholder="Nome / CNPJ"
 			value="${funcionario.empresa.razaoSocialWithCnpj}" />
 		<form:input type="hidden" path="empresa.id" id="empresa_id" />
@@ -52,7 +52,7 @@
 		class="form-group col-md-6 ${not empty emailError ? 'has-error' : ''}">
 		<label class="control-label" for="usuario.email">E-mail</label>
 
-		<form:input type="text" path="usuario.email" id="usuario.email"
+		<form:input type="text" path="usuario.email" id="email"
 			class="form-control" readonly="${edit and not isGerente}" maxlength="50" />
 		<div class="help-block with-errors">${emailError}</div>		
 	</div>
@@ -109,7 +109,7 @@
 		class="form-group col-md-5 ${not empty senhaError ? 'has-error' : ''}">
 		<label class="control-label" for="usuario.senha">Senha</label>
 
-		<form:input type="password" path="usuario.senha" id="usuario.senha"
+		<form:input type="password" path="usuario.senha" id="senha"
 			class="form-control" />
 		<div class="help-block with-errors">${senhaError}</div>
 	</div>
@@ -122,7 +122,7 @@
 		<label class="control-label" for="usuario.confirmacaoSenha">Confirmação</label>
 
 		<form:input type="password" path="usuario.confirmacaoSenha"
-			id="usuario.confirmacaoSenha" class="form-control" />
+			id="confirmacaoSenha" class="form-control" />
 		<div class="help-block with-errors">${confirmacaoError}</div>
 	</div>
 </div>

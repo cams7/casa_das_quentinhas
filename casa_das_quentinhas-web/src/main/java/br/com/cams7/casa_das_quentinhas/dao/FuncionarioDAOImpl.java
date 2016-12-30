@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 import br.com.cams7.app.dao.AbstractDAO;
 import br.com.cams7.casa_das_quentinhas.model.Empresa;
 import br.com.cams7.casa_das_quentinhas.model.Funcionario;
+import br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao;
 import br.com.cams7.casa_das_quentinhas.model.Funcionario_;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
 
@@ -151,20 +152,26 @@ public class FuncionarioDAOImpl extends AbstractDAO<Funcionario, Integer> implem
 	 * @see br.com.cams7.casa_das_quentinhas.dao.FuncionarioDAO#
 	 * getFuncionarioFuncaoById(java.lang.Integer)
 	 */
-	// @Override
-	// public Funcao getFuncionarioFuncaoById(Integer id) {
-	// CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-	// CriteriaQuery<Funcao> cq = cb.createQuery(Funcao.class);
-	//
-	// Root<Funcionario> from = cq.from(ENTITY_TYPE);
-	// cq.where(cb.equal(from.get(Funcionario_.id), id));
-	// cq.select(from.get(Funcionario_.funcao));
-	//
-	// TypedQuery<Funcao> tq = getEntityManager().createQuery(cq);
-	// Funcao funcao = tq.getSingleResult();
-	//
-	// return funcao;
-	// }
+	@Override
+	public Funcao getFuncionarioFuncaoById(Integer id) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Funcao> cq = cb.createQuery(Funcao.class);
+
+		Root<Funcionario> from = cq.from(ENTITY_TYPE);
+		cq.where(cb.equal(from.get(Funcionario_.id), id));
+		cq.select(from.get(Funcionario_.funcao));
+
+		TypedQuery<Funcao> tq = getEntityManager().createQuery(cq);
+
+		try {
+			Funcao funcao = tq.getSingleResult();
+			return funcao;
+		} catch (NoResultException e) {
+			LOGGER.warn("Função not found...");
+		}
+
+		return null;
+	}
 
 	/*
 	 * (non-Javadoc)

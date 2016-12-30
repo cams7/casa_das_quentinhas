@@ -99,6 +99,7 @@ public class AcessoDAOImpl extends AbstractDAO<Acesso, String> implements Persis
 
 			LOGGER.info("rememberMe was selected");
 		} catch (NoResultException e) {
+			LOGGER.warn("E-mail not found...");
 		}
 	}
 

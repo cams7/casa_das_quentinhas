@@ -39,7 +39,7 @@ public class EmpresaServiceImpl extends AbstractService<EmpresaDAO, Empresa, Int
 	public void persist(Empresa empresa) {
 		Usuario usuario = empresa.getUsuarioAcesso();
 
-		usuario.setEmail(empresa.getEmail());
+		usuario.setEmail(empresa.getContato().getEmail());
 		usuario.setTipo(EMPRESA);
 		usuarioService.persist(usuario);
 
@@ -63,7 +63,7 @@ public class EmpresaServiceImpl extends AbstractService<EmpresaDAO, Empresa, Int
 		Usuario usuario = empresa.getUsuarioAcesso();
 
 		if (usuario != null && usuario.getId() != null) {
-			usuario.setEmail(empresa.getEmail());
+			usuario.setEmail(empresa.getContato().getEmail());
 			usuarioService.update(usuario);
 		} else
 			empresa.setUsuarioAcesso(null);

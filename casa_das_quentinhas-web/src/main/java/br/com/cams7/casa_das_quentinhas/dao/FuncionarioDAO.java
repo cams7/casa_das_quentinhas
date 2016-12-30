@@ -2,6 +2,7 @@ package br.com.cams7.casa_das_quentinhas.dao;
 
 import br.com.cams7.app.dao.BaseDAO;
 import br.com.cams7.casa_das_quentinhas.model.Funcionario;
+import br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao;
 
 public interface FuncionarioDAO extends BaseDAO<Funcionario, Integer> {
 
@@ -20,7 +21,12 @@ public interface FuncionarioDAO extends BaseDAO<Funcionario, Integer> {
 	 */
 	Integer getFuncionarioIdByCpf(String cpf);
 
-	// Funcao getFuncionarioFuncaoById(Integer id);
+	/**
+	 * @param id
+	 *            ID do funcionário
+	 * @return Função do funcionário
+	 */
+	Funcao getFuncionarioFuncaoById(Integer id);
 
 	// Set<Funcionario> getFuncionariosByUsuarioId(Integer usuarioId);
 }

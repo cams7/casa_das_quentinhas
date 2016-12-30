@@ -50,6 +50,20 @@ public class Cidade extends AbstractEntity<Integer> {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "cidade")
 	private List<Empresa> empresas;
 
+	/**
+	 * 
+	 */
+	public Cidade() {
+		super();
+	}
+
+	/**
+	 * @param id
+	 */
+	public Cidade(Integer id) {
+		super(id);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 

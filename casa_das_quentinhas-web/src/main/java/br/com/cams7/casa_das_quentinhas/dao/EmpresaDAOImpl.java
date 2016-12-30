@@ -20,6 +20,7 @@ import org.springframework.stereotype.Repository;
 import br.com.cams7.app.dao.AbstractDAO;
 import br.com.cams7.casa_das_quentinhas.model.Cidade;
 import br.com.cams7.casa_das_quentinhas.model.Cidade_;
+import br.com.cams7.casa_das_quentinhas.model.Contato_;
 import br.com.cams7.casa_das_quentinhas.model.Empresa;
 import br.com.cams7.casa_das_quentinhas.model.Empresa_;
 import br.com.cams7.casa_das_quentinhas.model.Estado;
@@ -157,7 +158,7 @@ public class EmpresaDAOImpl extends AbstractDAO<Empresa, Integer> implements Emp
 
 		cq.select(from.get(Empresa_.id));
 
-		cq.where(cb.equal(from.get(Empresa_.email), email));
+		cq.where(cb.equal(from.get(Empresa_.contato).get(Contato_.email), email));
 
 		TypedQuery<Integer> tq = getEntityManager().createQuery(cq);
 

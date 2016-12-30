@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import br.com.cams7.app.controller.AbstractController;
 import br.com.cams7.casa_das_quentinhas.model.Cidade;
+import br.com.cams7.casa_das_quentinhas.model.Contato;
 import br.com.cams7.casa_das_quentinhas.model.Empresa;
 import br.com.cams7.casa_das_quentinhas.model.Empresa.RegimeTributario;
 import br.com.cams7.casa_das_quentinhas.model.Endereco;
@@ -96,7 +97,7 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 		empresa.setUsuarioCadastro(usuario);
 
 		empresa.setCnpj(empresa.getUnformattedCnpj());
-		empresa.setTelefone(empresa.getUnformattedTelefone());
+		empresa.getContato().setTelefone(empresa.getContato().getUnformattedTelefone());
 		empresa.getEndereco().setCep(empresa.getEndereco().getUnformattedCep());
 
 		getService().persist(empresa);
@@ -119,7 +120,7 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 
 		setNotEmptyConfirmacaoError(usuario, result, !usuario.getSenha().isEmpty());
 		setSenhaNotEqualsConfirmacaoError(usuario, result);
-		
+
 		setEmailNotUniqueError(empresa, result);
 		setCNPJNotUniqueError(empresa, result);
 
@@ -132,7 +133,7 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 			return getEditTilesPage();
 
 		empresa.setCnpj(empresa.getUnformattedCnpj());
-		empresa.setTelefone(empresa.getUnformattedTelefone());
+		empresa.getContato().setTelefone(empresa.getContato().getUnformattedTelefone());
 		empresa.getEndereco().setCep(empresa.getEndereco().getUnformattedCep());
 
 		getService().update(empresa);
@@ -191,14 +192,15 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 	 * @param result
 	 */
 	private void setEmailNotUniqueError(Empresa empresa, BindingResult result) {
-		if (result.getFieldErrorCount("email") > 0)
+		if (result.getFieldErrorCount("contato.email") > 0)
 			return;
 
 		Usuario usuario = empresa.getUsuarioAcesso();
+		Contato contato = empresa.getContato();
 
-		if (!getService().isEmailUnique(empresa.getId(), usuario.getId(), empresa.getEmail())) {
-			FieldError emailError = new FieldError("empresa", "email", messageSource
-					.getMessage("NonUnique.empresa.email", new String[] { empresa.getEmail() }, Locale.getDefault()));
+		if (!getService().isEmailUnique(empresa.getId(), usuario.getId(), contato.getEmail())) {
+			FieldError emailError = new FieldError("empresa", "contato.email", messageSource
+					.getMessage("NonUnique.empresa.contato.email", new String[] { contato.getEmail() }, Locale.getDefault()));
 			result.addError(emailError);
 		}
 	}
@@ -282,15 +284,16 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 
 	@Override
 	protected String[] getGlobalFilters() {
-		return new String[] { "razaoSocial", "cnpj", "email", "telefone", "cidade.nome" };
+		return new String[] { "razaoSocial", "cnpj", "contato.email", "contato.telefone", "cidade.nome" };
 	}
 
 	@Override
 	protected Empresa getNewEntity() {
 		Empresa empresa = new Empresa();
+		empresa.setCidade(new Cidade());
 		empresa.setUsuarioAcesso(new Usuario());
 		empresa.setEndereco(new Endereco());
-		empresa.setCidade(new Cidade());
+		empresa.setContato(new Contato());
 
 		return empresa;
 	}

@@ -165,7 +165,7 @@ CREATE TABLE public.empresa (
                 id_usuario_acesso INTEGER,
                 id_usuario_cadastro INTEGER NOT NULL,
                 id_cidade INTEGER NOT NULL,
-                tipo_empresa SMALLINT NOT NULL,
+                tipo_empresa SMALLINT,
                 razao_social VARCHAR(60) NOT NULL,
                 nome_fantasia VARCHAR(60),
                 cnpj VARCHAR(14) NOT NULL,

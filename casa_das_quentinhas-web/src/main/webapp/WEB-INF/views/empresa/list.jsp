@@ -19,11 +19,11 @@
 						<th class="${sortField eq 'cnpj' ? sortOrder : 'sorting' }"
 							id="cnpj">CNPJ</th>
 						<th
-							class="${sortField eq 'email' ? sortOrder : 'sorting' }"
-							id="email">E-mail</th>
+							class="${sortField eq 'contato.email' ? sortOrder : 'sorting' }"
+							id="contato.email">E-mail</th>
 						<th
-							class="${sortField eq 'telefone' ? sortOrder : 'sorting' }"
-							id="telefone">Telefone</th>
+							class="${sortField eq 'contato.telefone' ? sortOrder : 'sorting' }"
+							id="contato.telefone">Telefone</th>
 						<th class="${sortField eq 'tipo' ? sortOrder : 'sorting' }"
 							id="tipo">Tipo de empresa</th>
 						<th
@@ -41,8 +41,8 @@
 							<td>${empresa.id}</td>
 							<td>${empresa.razaoSocial}</td>
 							<td>${empresa.formattedCnpj}</td>
-							<td>${empresa.email}</td>
-							<td>${empresa.formattedTelefone}</td>
+							<td>${empresa.contato.email}</td>
+							<td>${empresa.contato.formattedTelefone}</td>
 							<td>${empresa.tipo.descricao}</td>	
 							<td>${empresa.cidade.nomeWithEstadoSigla}</td>						
 

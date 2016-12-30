@@ -86,6 +86,20 @@ public class Funcionario extends AbstractEntity<Integer> {
 	@Column(name = "data_alteracao", nullable = false)
 	private Date alteracao;
 
+	/**
+	 * 
+	 */
+	public Funcionario() {
+		super();
+	}
+
+	/**
+	 * @param id
+	 */
+	public Funcionario(Integer id) {
+		super(id);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
