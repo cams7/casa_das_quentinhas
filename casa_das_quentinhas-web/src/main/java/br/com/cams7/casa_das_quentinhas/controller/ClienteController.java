@@ -26,13 +26,13 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import br.com.cams7.app.controller.AbstractController;
 import br.com.cams7.casa_das_quentinhas.model.Cidade;
+import br.com.cams7.casa_das_quentinhas.model.Cliente;
+import br.com.cams7.casa_das_quentinhas.model.Cliente.TipoContribuinte;
 import br.com.cams7.casa_das_quentinhas.model.Contato;
-import br.com.cams7.casa_das_quentinhas.model.Empresa;
-import br.com.cams7.casa_das_quentinhas.model.Empresa.RegimeTributario;
 import br.com.cams7.casa_das_quentinhas.model.Endereco;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
 import br.com.cams7.casa_das_quentinhas.service.CidadeService;
-import br.com.cams7.casa_das_quentinhas.service.EmpresaService;
+import br.com.cams7.casa_das_quentinhas.service.ClienteService;
 import br.com.cams7.casa_das_quentinhas.service.UsuarioService;
 
 /**
@@ -40,9 +40,9 @@ import br.com.cams7.casa_das_quentinhas.service.UsuarioService;
  *
  */
 @Controller
-@RequestMapping("/empresa")
-@SessionAttributes({ "empresaTipos", "empresaRegimesTributarios" })
-public class EmpresaController extends AbstractController<EmpresaService, Empresa, Integer> {
+@RequestMapping("/cliente")
+@SessionAttributes("clienteTiposContribuintes")
+public class ClienteController extends AbstractController<ClienteService, Cliente, Integer> {
 
 	@Autowired
 	private UsuarioService usuarioService;
@@ -62,29 +62,29 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 	 * org.springframework.ui.ModelMap, java.lang.Integer)
 	 */
 	@Override
-	public String store(@Valid Empresa empresa, BindingResult result, ModelMap model,
+	public String store(@Valid Cliente cliente, BindingResult result, ModelMap model,
 			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
 
-		Usuario usuario = empresa.getUsuarioAcesso();
-		Cidade cidade = empresa.getCidade();
+		Usuario usuario = cliente.getUsuarioAcesso();
+		Cidade cidade = cliente.getCidade();
 
 		if (cidade.getId() == null) {
-			FieldError cidadeError = new FieldError("empresa", "cidade.id",
-					messageSource.getMessage("NotNull.empresa.cidade.id", null, Locale.getDefault()));
+			FieldError cidadeError = new FieldError("cliente", "cidade.id",
+					messageSource.getMessage("NotNull.cliente.cidade.id", null, Locale.getDefault()));
 			result.addError(cidadeError);
 		}
 
 		if (usuario.getSenha().isEmpty()) {
-			FieldError senhaError = new FieldError("empresa", "usuarioAcesso.senha",
-					messageSource.getMessage("NotEmpty.empresa.usuarioAcesso.senha", null, Locale.getDefault()));
+			FieldError senhaError = new FieldError("cliente", "usuarioAcesso.senha",
+					messageSource.getMessage("NotEmpty.cliente.usuarioAcesso.senha", null, Locale.getDefault()));
 			result.addError(senhaError);
 		}
 
 		setNotEmptyConfirmacaoError(usuario, result, true);
 		setSenhaNotEqualsConfirmacaoError(usuario, result);
 
-		setEmailNotUniqueError(empresa, result);
-		setCNPJNotUniqueError(empresa, result);
+		setEmailNotUniqueError(cliente, result);
+		setCPFNotUniqueError(cliente, result);
 
 		setUsuarioLogado(model);
 		incrementLastLoadedPage(model, lastLoadedPage);
@@ -94,13 +94,13 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 			return getCreateTilesPage();
 
 		usuario = new Usuario(usuarioService.getUsuarioIdByEmail(getUsername()));
-		empresa.setUsuarioCadastro(usuario);
+		cliente.setUsuarioCadastro(usuario);
 
-		empresa.setCnpj(empresa.getUnformattedCnpj());
-		empresa.getContato().setTelefone(empresa.getContato().getUnformattedTelefone());
-		empresa.getEndereco().setCep(empresa.getEndereco().getUnformattedCep());
+		cliente.setCpf(cliente.getUnformattedCpf());
+		cliente.getContato().setTelefone(cliente.getContato().getUnformattedTelefone());
+		cliente.getEndereco().setCep(cliente.getEndereco().getUnformattedCep());
 
-		getService().persist(empresa);
+		getService().persist(cliente);
 
 		return redirectMainPage();
 	}
@@ -114,15 +114,15 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 	 * org.springframework.ui.ModelMap, java.io.Serializable, java.lang.Integer)
 	 */
 	@Override
-	public String update(@Valid Empresa empresa, BindingResult result, ModelMap model, @PathVariable Integer id,
+	public String update(@Valid Cliente cliente, BindingResult result, ModelMap model, @PathVariable Integer id,
 			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
-		Usuario usuario = empresa.getUsuarioAcesso();
+		Usuario usuario = cliente.getUsuarioAcesso();
 
 		setNotEmptyConfirmacaoError(usuario, result, !usuario.getSenha().isEmpty());
 		setSenhaNotEqualsConfirmacaoError(usuario, result);
 
-		setEmailNotUniqueError(empresa, result);
-		setCNPJNotUniqueError(empresa, result);
+		setEmailNotUniqueError(cliente, result);
+		setCPFNotUniqueError(cliente, result);
 
 		setEditPage(model);
 		setUsuarioLogado(model);
@@ -132,11 +132,11 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 		if (result.hasErrors())
 			return getEditTilesPage();
 
-		empresa.setCnpj(empresa.getUnformattedCnpj());
-		empresa.getContato().setTelefone(empresa.getContato().getUnformattedTelefone());
-		empresa.getEndereco().setCep(empresa.getEndereco().getUnformattedCep());
+		cliente.setCpf(cliente.getUnformattedCpf());
+		cliente.getContato().setTelefone(cliente.getContato().getUnformattedTelefone());
+		cliente.getEndereco().setCep(cliente.getEndereco().getUnformattedCep());
 
-		getService().update(empresa);
+		getService().update(cliente);
 
 		return redirectMainPage();
 	}
@@ -160,7 +160,7 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 	 */
 	private void setNotEmptyConfirmacaoError(Usuario usuario, BindingResult result, boolean senhaInformada) {
 		if (senhaInformada && usuario.getConfirmacaoSenha().isEmpty()) {
-			FieldError confirmacaoError = new FieldError("empresa", "usuarioAcesso.confirmacaoSenha",
+			FieldError confirmacaoError = new FieldError("cliente", "usuarioAcesso.confirmacaoSenha",
 					messageSource.getMessage("NotEmpty.usuario.confirmacaoSenha", null, Locale.getDefault()));
 			result.addError(confirmacaoError);
 		}
@@ -179,7 +179,7 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 
 		if (!usuario.getSenha().isEmpty() && !usuario.getConfirmacaoSenha().isEmpty()
 				&& !usuario.getSenha().equals(usuario.getConfirmacaoSenha())) {
-			FieldError confirmacaoError = new FieldError("empresa", "usuarioAcesso.confirmacaoSenha",
+			FieldError confirmacaoError = new FieldError("cliente", "usuarioAcesso.confirmacaoSenha",
 					messageSource.getMessage("NotEquals.usuario.confirmacaoSenha", null, Locale.getDefault()));
 			result.addError(confirmacaoError);
 		}
@@ -188,19 +188,19 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 	/**
 	 * Verifica se o e-mail informado não foi cadastrado anteriormente
 	 * 
-	 * @param empresa
+	 * @param cliente
 	 * @param result
 	 */
-	private void setEmailNotUniqueError(Empresa empresa, BindingResult result) {
+	private void setEmailNotUniqueError(Cliente cliente, BindingResult result) {
 		if (result.getFieldErrorCount("contato.email") > 0)
 			return;
 
-		Usuario usuario = empresa.getUsuarioAcesso();
-		Contato contato = empresa.getContato();
+		Usuario usuario = cliente.getUsuarioAcesso();
+		Contato contato = cliente.getContato();
 
-		if (!getService().isEmailUnique(empresa.getId(), usuario.getId(), contato.getEmail())) {
-			FieldError emailError = new FieldError("empresa", "contato.email", messageSource
-					.getMessage("NonUnique.empresa.contato.email", new String[] { contato.getEmail() }, Locale.getDefault()));
+		if (!getService().isEmailUnique(cliente.getId(), usuario.getId(), contato.getEmail())) {
+			FieldError emailError = new FieldError("cliente", "contato.email", messageSource.getMessage(
+					"NonUnique.cliente.contato.email", new String[] { contato.getEmail() }, Locale.getDefault()));
 			result.addError(emailError);
 		}
 	}
@@ -208,100 +208,91 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 	/**
 	 * Verifica se o CPF informado não foi cadastrado anteriormente
 	 * 
-	 * @param empresa
+	 * @param cliente
 	 * @param result
 	 */
-	private void setCNPJNotUniqueError(Empresa empresa, BindingResult result) {
-		if (result.getFieldErrorCount("cnpj") > 0)
+	private void setCPFNotUniqueError(Cliente cliente, BindingResult result) {
+		if (result.getFieldErrorCount("cpf") > 0)
 			return;
 
-		String cnpj = empresa.getUnformattedCnpj();
+		String cpf = cliente.getUnformattedCpf();
 
-		if (!getService().isCNPJUnique(empresa.getId(), cnpj)) {
-			FieldError cnpjError = new FieldError("empresa", "cnpj", messageSource.getMessage("NonUnique.empresa.cnpj",
-					new String[] { empresa.getCnpj() }, Locale.getDefault()));
-			result.addError(cnpjError);
+		if (!getService().isCPFUnique(cliente.getId(), cpf)) {
+			FieldError cpfError = new FieldError("cliente", "cpf", messageSource.getMessage("NonUnique.cliente.cpf",
+					new String[] { cliente.getCpf() }, Locale.getDefault()));
+			result.addError(cpfError);
 		}
 	}
 
 	/**
-	 * Possiveis tipos de empresa
+	 * Possiveis tipos de contribuintes
 	 */
-	@ModelAttribute("empresaTipos")
-	public Empresa.Tipo[] initializeTipos() {
-		Empresa.Tipo[] tipos = Empresa.Tipo.values();
+	@ModelAttribute("clienteTiposContribuintes")
+	public TipoContribuinte[] initializeTipos() {
+		TipoContribuinte[] tipos = TipoContribuinte.values();
 		return tipos;
-	}
-
-	/**
-	 * Possiveis regimes tributários
-	 */
-	@ModelAttribute("empresaRegimesTributarios")
-	public RegimeTributario[] initializeRegimesTributarios() {
-		RegimeTributario[] regimesTributarios = RegimeTributario.values();
-		return regimesTributarios;
 	}
 
 	@Override
 	protected String getEntityName() {
-		return "empresa";
+		return "cliente";
 	}
 
 	@Override
 	protected String getListName() {
-		return "empresas";
+		return "clientes";
 	}
 
 	@Override
 	protected String getMainPage() {
-		return "empresa";
+		return "cliente";
 	}
 
 	@Override
 	protected String getIndexTilesPage() {
-		return "empresa_index";
+		return "cliente_index";
 	}
 
 	@Override
 	protected String getCreateTilesPage() {
-		return "empresa_create";
+		return "cliente_create";
 	}
 
 	@Override
 	protected String getShowTilesPage() {
-		return "empresa_show";
+		return "cliente_show";
 	}
 
 	@Override
 	protected String getEditTilesPage() {
-		return "empresa_edit";
+		return "cliente_edit";
 	}
 
 	@Override
 	protected String getListTilesPage() {
-		return "empresa_list";
+		return "cliente_list";
 	}
 
 	@Override
 	protected String[] getGlobalFilters() {
-		return new String[] { "razaoSocial", "cnpj", "contato.email", "contato.telefone", "cidade.nome" };
+		return new String[] { "nome", "cpf", "contato.email", "contato.telefone", "cidade.nome" };
 	}
 
 	@Override
-	protected Empresa getNewEntity() {
-		Empresa empresa = new Empresa();
-		empresa.setCidade(new Cidade());
-		empresa.setUsuarioAcesso(new Usuario());
-		empresa.setEndereco(new Endereco());
-		empresa.setContato(new Contato());
+	protected Cliente getNewEntity() {
+		Cliente cliente = new Cliente();
+		cliente.setCidade(new Cidade());
+		cliente.setUsuarioAcesso(new Usuario());
+		cliente.setEndereco(new Endereco());
+		cliente.setContato(new Contato());
 
-		return empresa;
+		return cliente;
 	}
 
 	@Override
-	protected Empresa getEntity(Integer id) {
-		Empresa empresa = getService().getEmpresaById(id);
-		return empresa;
+	protected Cliente getEntity(Integer id) {
+		Cliente cliente = getService().getClienteById(id);
+		return cliente;
 	}
 
 }

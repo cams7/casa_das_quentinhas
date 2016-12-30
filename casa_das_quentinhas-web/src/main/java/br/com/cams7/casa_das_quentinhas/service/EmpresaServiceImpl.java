@@ -81,7 +81,7 @@ public class EmpresaServiceImpl extends AbstractService<EmpresaDAO, Empresa, Int
 	 */
 	@Override
 	public void delete(Integer id) {
-		Integer usuarioId = usuarioService.getUsuarioAcessoIdByEmpresaId(id);
+		Integer usuarioId = getUsuarioAcessoIdByEmpresaId(id);
 
 		super.delete(id);
 
@@ -131,6 +131,30 @@ public class EmpresaServiceImpl extends AbstractService<EmpresaDAO, Empresa, Int
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see br.com.cams7.casa_das_quentinhas.dao.EmpresaDAO#
+	 * getUsuarioAcessoIdByEmpresaId(java.lang.Integer)
+	 */
+	@Override
+	public Integer getUsuarioAcessoIdByEmpresaId(Integer empresaId) {
+		Integer usuarioId = getDao().getUsuarioAcessoIdByEmpresaId(empresaId);
+		return usuarioId;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.casa_das_quentinhas.dao.EmpresaDAO#
+	 * getEmpresasByRazaoSocialOrCnpj(java.lang.String)
+	 */
+	@Override
+	public Map<Integer, String> getEmpresasByRazaoSocialOrCnpj(String razaoSocialOrCnpj) {
+		Map<Integer, String> empresas = getDao().getEmpresasByRazaoSocialOrCnpj(razaoSocialOrCnpj);
+		return empresas;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see
 	 * br.com.cams7.casa_das_quentinhas.service.EmpresaService#isCNPJUnique(java
 	 * .lang.Integer, java.lang.String)
@@ -171,18 +195,6 @@ public class EmpresaServiceImpl extends AbstractService<EmpresaDAO, Empresa, Int
 			return true;
 
 		return usuarioId != null && id == usuarioId;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see br.com.cams7.casa_das_quentinhas.dao.EmpresaDAO#
-	 * getEmpresasByRazaoSocialOrCnpj(java.lang.String)
-	 */
-	@Override
-	public Map<Integer, String> getEmpresasByRazaoSocialOrCnpj(String razaoSocialOrCnpj) {
-		Map<Integer, String> empresas = getDao().getEmpresasByRazaoSocialOrCnpj(razaoSocialOrCnpj);
-		return empresas;
 	}
 
 }

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC  "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"  "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+	<!-- Lista de Clientes -->
+	<definition name="cliente_index" extends="default">
+		<put-attribute name="title" value="Lista de Clientes" />
+		<put-attribute name="body" value="/WEB-INF/views/cliente/index.jsp" />
+	</definition>
+
+	<!-- Adicionar Cliente -->
+	<definition name="cliente_create" extends="default">
+		<put-attribute name="title" value="Adicionar Cliente" />
+		<put-attribute name="body" value="/WEB-INF/views/cliente/create.jsp" />
+	</definition>
+
+	<!-- Editar Cliente -->
+	<definition name="cliente_edit" extends="default">
+		<put-attribute name="title" value="Editar Cliente" />
+		<put-attribute name="body" value="/WEB-INF/views/cliente/edit.jsp" />
+	</definition>
+
+	<!-- Visualizar Cliente -->
+	<definition name="cliente_show" extends="default">
+		<put-attribute name="title" value="Visualizar Cliente" />
+		<put-attribute name="body" value="/WEB-INF/views/cliente/show.jsp" />
+	</definition>
+
+	<!-- Paginação de Clientes -->
+	<definition name="cliente_list" extends="empty">
+		<put-attribute name="body" value="/WEB-INF/views/cliente/list.jsp" />
+	</definition>
+</tiles-definitions>

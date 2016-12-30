@@ -316,6 +316,27 @@ public class Cliente extends AbstractEntity<Integer> {
 	}
 
 	/**
+	 * @return Nome com o CPF formatado
+	 */
+	public String getNomeWithCpf() {
+		return getNomeWithCpf(nome, cpf);
+	}
+
+	/**
+	 * @param nome
+	 *            Nome do cliente
+	 * @param cpf
+	 *            CPF do cliente
+	 * @return Nome com o CPF formatado
+	 */
+	public static String getNomeWithCpf(String nome, String cpf) {
+		if (nome == null || cpf == null)
+			return null;
+
+		return nome + " < " + cpf.replaceAll("(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})", "$1.$2.$3/$4-$5") + " >";
+	}
+
+	/**
 	 * @param tipoContribuinte
 	 *            Tipo de contribuinte
 	 * @return Código do tipo de contribuinte
@@ -333,6 +354,39 @@ public class Cliente extends AbstractEntity<Integer> {
 		}
 
 		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.app.model.AbstractEntity#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int PRIME = 31;
+		int hashCode = super.hashCode();
+		hashCode = PRIME * hashCode + ((cpf == null) ? 0 : cpf.hashCode());
+		return hashCode;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.app.model.AbstractEntity#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object object) {
+		if (!super.equals(object))
+			return false;
+
+		Cliente cliente = (Cliente) object;
+		if (cpf == null) {
+			if (cliente.cpf != null)
+				return false;
+		} else if (!cpf.equals(cliente.cpf))
+			return false;
+
+		return true;
 	}
 
 	/**

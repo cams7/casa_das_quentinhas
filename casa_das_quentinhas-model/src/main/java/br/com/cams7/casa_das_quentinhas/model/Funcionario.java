@@ -310,6 +310,11 @@ public class Funcionario extends AbstractEntity<Integer> {
 		return formatCelular(celular);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.app.model.AbstractEntity#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 		final int PRIME = 31;
@@ -318,6 +323,11 @@ public class Funcionario extends AbstractEntity<Integer> {
 		return hashCode;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.app.model.AbstractEntity#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object object) {
 		if (!super.equals(object))

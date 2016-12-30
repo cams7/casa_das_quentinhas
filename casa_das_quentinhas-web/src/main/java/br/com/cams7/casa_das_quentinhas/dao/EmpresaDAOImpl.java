@@ -25,6 +25,7 @@ import br.com.cams7.casa_das_quentinhas.model.Empresa;
 import br.com.cams7.casa_das_quentinhas.model.Empresa_;
 import br.com.cams7.casa_das_quentinhas.model.Estado;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
+import br.com.cams7.casa_das_quentinhas.model.Usuario_;
 
 /**
  * @author César Magalhães
@@ -103,9 +104,9 @@ public class EmpresaDAOImpl extends AbstractDAO<Empresa, Integer> implements Emp
 		cq.where(cb.equal(from.get(Empresa_.id), id));
 
 		TypedQuery<Empresa> tq = getEntityManager().createQuery(cq);
-		Empresa funcionario = tq.getSingleResult();
+		Empresa empresa = tq.getSingleResult();
 
-		return funcionario;
+		return empresa;
 	}
 
 	/*
@@ -165,6 +166,36 @@ public class EmpresaDAOImpl extends AbstractDAO<Empresa, Integer> implements Emp
 		try {
 			Integer empresaId = tq.getSingleResult();
 			return empresaId;
+		} catch (NoResultException e) {
+			LOGGER.warn("E-mail not found...");
+		}
+
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.casa_das_quentinhas.dao.EmpresaDAO#
+	 * getUsuarioAcessoIdByEmpresaId(java.lang.Integer)
+	 */
+	@Override
+	public Integer getUsuarioAcessoIdByEmpresaId(Integer empresaId) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Integer> cq = cb.createQuery(Integer.class);
+
+		Root<Empresa> from = cq.from(ENTITY_TYPE);
+		Join<Empresa, Usuario> join = (Join<Empresa, Usuario>) from.join(Empresa_.usuarioAcesso, JoinType.LEFT);
+
+		cq.select(join.get(Usuario_.id));
+
+		cq.where(cb.equal(from.get(Empresa_.id), empresaId));
+
+		TypedQuery<Integer> tq = getEntityManager().createQuery(cq);
+
+		try {
+			Integer usuarioId = tq.getSingleResult();
+			return usuarioId;
 		} catch (NoResultException e) {
 			LOGGER.warn("E-mail not found...");
 		}

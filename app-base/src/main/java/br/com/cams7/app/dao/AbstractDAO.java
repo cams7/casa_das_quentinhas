@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -27,7 +28,6 @@ import org.slf4j.LoggerFactory;
 import br.com.cams7.app.model.AbstractEntity;
 import br.com.cams7.app.utils.AppHelper;
 import br.com.cams7.app.utils.SearchParams;
-import javax.persistence.Entity;
 
 public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Serializable> implements BaseDAO<E, PK> {
 
