@@ -262,7 +262,7 @@ public class FuncionarioController extends AbstractController<FuncionarioService
 
 	@Override
 	protected String[] getGlobalFilters() {
-		return new String[] { "nome", "cpf", "usuario.email", "empresa.razaoSocial", "empresa.cnpj" };
+		return new String[] { "nome", "cpf", "celular", "usuario.email", "empresa.razaoSocial", "empresa.cnpj" };
 	}
 
 	@Override

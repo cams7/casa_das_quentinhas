@@ -21,6 +21,9 @@
 						<th
 							class="${sortField eq 'usuario.email' ? sortOrder : 'sorting' }"
 							id="usuario.email">E-mail</th>
+						<th
+							class="${sortField eq 'celular' ? sortOrder : 'sorting' }"
+							id="celular">Celular</th>
 						<th class="${sortField eq 'funcao' ? sortOrder : 'sorting' }"
 							id="funcao">Função</th>
 						<th
@@ -38,6 +41,7 @@
 							<td>${funcionario.nome}</td>
 							<td>${funcionario.formattedCpf}</td>
 							<td>${funcionario.usuario.email}</td>
+							<td>${funcionario.formattedCelular}</td>
 							<td>${funcionario.funcao.descricao}</td>
 							<td><a href="<c:url value='/empresa/${funcionario.empresa.id}' />">${funcionario.empresa.razaoSocialWithCnpj}</a></td>
 

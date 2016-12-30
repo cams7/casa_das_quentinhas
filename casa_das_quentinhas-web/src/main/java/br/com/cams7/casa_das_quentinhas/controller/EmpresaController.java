@@ -282,7 +282,7 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 
 	@Override
 	protected String[] getGlobalFilters() {
-		return new String[] { "razaoSocial", "nomeFantasia", "cnpj", "email" };
+		return new String[] { "razaoSocial", "cnpj", "email", "telefone", "cidade.nome" };
 	}
 
 	@Override

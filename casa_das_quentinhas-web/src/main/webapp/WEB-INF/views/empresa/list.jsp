@@ -21,6 +21,9 @@
 						<th
 							class="${sortField eq 'email' ? sortOrder : 'sorting' }"
 							id="email">E-mail</th>
+						<th
+							class="${sortField eq 'telefone' ? sortOrder : 'sorting' }"
+							id="telefone">Telefone</th>
 						<th class="${sortField eq 'tipo' ? sortOrder : 'sorting' }"
 							id="tipo">Tipo de empresa</th>
 						<th
@@ -39,6 +42,7 @@
 							<td>${empresa.razaoSocial}</td>
 							<td>${empresa.formattedCnpj}</td>
 							<td>${empresa.email}</td>
+							<td>${empresa.formattedTelefone}</td>
 							<td>${empresa.tipo.descricao}</td>	
 							<td>${empresa.cidade.nomeWithEstadoSigla}</td>						
 
