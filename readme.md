@@ -195,7 +195,7 @@ su - dono_da_cozinha
 psql -d casa_das_quentinhas -U dono_da_cozinha
 ```
 
-* No banco de dados *casa_das_quentinhas*, execute os comandos SQL do arquivo **casa_das_quentinhas-psql-ddl.sql** que está localizado no diretório *database*.
+* No banco de dados *casa_das_quentinhas*, execute os comandos SQL dos arquivos **casa_das_quentinhas-psql-ddl.sql**, **uf-pgsql-dml.sql**, **cidade-ddd31-pgsql-dml.sql**, **usuario-pgsql-dml.sql**, **empresa-pgsql-dml.sql**, **funcionario-pgsql-dml.sql** e **cliente-pgsql-dml.sql** na ordem que foram informados. Esses arquivos estão localizados no diretório *database*.
 * Em seguida, execute as linhas abaixo:
 ```sh
 \q
@@ -210,7 +210,7 @@ java $JAVA_OPTS -jar casa_das_quentinhas-web/target/dependency/jetty-runner.jar 
 ```
 
 * No **Windows**, abra um navegador e informe o endereço **http://localhost:8090**
-* Para logar na aplicação, a senha é **12345** e os e-mails de acesso são: **gerente@casa-das-quentinhas.com**, **atendente@casa-das-quentinhas.com**, **entregador@casa-das-quentinhas.com**.
+* Para logar na aplicação, a senha é **12345** e os e-mails de acesso são: **gerente@casa-das-quentinhas.com**, **atendente@casa-das-quentinhas.com**, **entregador@casa-das-quentinhas.com**, **empresa@casa-das-quentinhas.com**, **cliente@casa-das-quentinhas.com**.
 	
 * Caso deseje rodar o *casa_das_quentinhas* num [PAAS](https://pt.wikipedia.org/wiki/Plataforma_como_serviço), primeiro e necessário ter uma conta no **Heroku**. Após criar uma conta nesse site, execute as linhas abaixo:				
 ```sh		
@@ -221,14 +221,14 @@ heroku addons:add heroku-postgresql:hobby-dev
 heroku pg:psql DATABASE_URL --app <Nome da aplicação>
 ```
 
-* No seu *banco de dados* do *Heroku*, execute os comandos SQL do arquivo **casa_das_quentinhas-psql-ddl.sql** que está localizado no diretório *database*.
+* No seu *banco de dados* do *Heroku*, execute os comandos SQL dos arquivos **casa_das_quentinhas-psql-ddl.sql**, **uf-pgsql-dml.sql**, **cidade-ddd31-pgsql-dml.sql**, **usuario-pgsql-dml.sql**, **empresa-pgsql-dml.sql**, **funcionario-pgsql-dml.sql** e **cliente-pgsql-dml.sql** na ordem que foram informados. Esses arquivos estão localizados no diretório *database*.
 * Em seguida, feche o *banco de dados* e execute a linha abaixo:	 
 ```sh
 git push heroku -u master
 ```
 
 * No **Windows**, abra um navegador e informe o endereço da sua aplicação no *Heroku*.
-* Para logar na aplicação, a senha é **12345** e os e-mails de acesso são: **gerente@casa-das-quentinhas.com**, **atendente@casa-das-quentinhas.com**, **entregador@casa-das-quentinhas.com**.
+* Para logar na aplicação, a senha é **12345** e os e-mails de acesso são: **gerente@casa-das-quentinhas.com**, **atendente@casa-das-quentinhas.com**, **entregador@casa-das-quentinhas.com**, **empresa@casa-das-quentinhas.com**, **cliente@casa-das-quentinhas.com**.
 
 * Caso deseje remover a aplicação do seu *PAAS*, execute a linha abaixo:
 ```sh		
