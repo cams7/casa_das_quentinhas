@@ -18,7 +18,7 @@ import org.springframework.web.servlet.view.tiles3.TilesViewResolver;
 @Configuration
 @Import(JpaConfiguration.class)
 @EnableWebMvc
-@ComponentScan(basePackages = "br.com.cams7.casa_das_quentinhas")
+@ComponentScan(basePackages = { "br.com.cams7.casa_das_quentinhas", "br.com.cams7.app.common" })
 public class AppConfig extends WebMvcConfigurerAdapter {
 
 	/**

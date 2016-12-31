@@ -3,6 +3,7 @@
  */
 package br.com.cams7.casa_das_quentinhas.model;
 
+import static br.com.cams7.app.common.DateEditor.DATE_FORMAT;
 import static br.com.cams7.app.validator.CpfValidator.formatCpf;
 import static br.com.cams7.app.validator.CpfValidator.unformatCpf;
 
@@ -313,6 +314,14 @@ public class Cliente extends AbstractEntity<Integer> {
 			return null;
 
 		return formatCpf(cpf);
+	}
+
+	public String getFormattedNascimento() {
+		if (nascimento == null)
+			return null;
+
+		String formattedNascimento = DATE_FORMAT.format(nascimento);
+		return formattedNascimento;
 	}
 
 	/**

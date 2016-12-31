@@ -44,7 +44,7 @@ public class Endereco {
 	@Column(name = "complemento_endereco", length = 30)
 	private String complemento;
 
-	@Column(name = "ponto_referencia", length = 30)
+	@Column(name = "ponto_referencia", length = 100)
 	private String pontoReferencia;
 
 	/**

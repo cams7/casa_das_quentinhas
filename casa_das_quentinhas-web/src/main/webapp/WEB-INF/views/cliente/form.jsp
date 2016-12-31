@@ -29,17 +29,18 @@
 			placeholder="999.999.999-99" maxlength="14" />
 		<div class="help-block with-errors">${cpfError}</div>
 	</div>
-	
+
 	<c:set var="nascimentoError">
 		<form:errors path="nascimento" />
 	</c:set>
 	<div
 		class="form-group col-md-2 ${not empty nascimentoError ? 'has-error' : ''}">
-		<label class="control-label" for="nascimento">Data de nascimento</label>
-		<form:input type="text" path="nascimento" id="nascimento" class="form-control"
-			placeholder="99/99/9999" maxlength="10" />
+		<label class="control-label" for="nascimento">Data de
+			nascimento</label>
+		<form:input type="text" path="nascimento" id="nascimento"
+			class="form-control" placeholder="99/99/9999" maxlength="10" />
 		<div class="help-block with-errors">${nascimentoError}</div>
-	</div>	
+	</div>
 </div>
 
 <div class="row">
@@ -69,14 +70,17 @@
 	<c:set var="tipoContribuinteError">
 		<form:errors path="tipoContribuinte" />
 	</c:set>
-	<div class="form-group col-md-4 ${not empty tipoContribuinteError?'has-error':''}">
-		<label class="control-label" for="tipoContribuinte">Tipo de contribuinte</label>
+	<div
+		class="form-group col-md-4 ${not empty tipoContribuinteError?'has-error':''}">
+		<label class="control-label" for="tipoContribuinte">Tipo de
+			contribuinte</label>
 
-		<form:select path="tipoContribuinte" id="tipoContribuinte" items="${clienteTiposContribuintes}"
-			multiple="true" itemValue="tipoContribuinte" itemLabel="descricao"
+		<form:select path="tipoContribuinte" id="tipoContribuinte"
+			items="${clienteTiposContribuintes}" multiple="true"
+			itemValue="tipoContribuinte" itemLabel="descricao"
 			class="form-control" />
 		<div class="help-block with-errors">${tipoContribuinteError}</div>
-	</div>	
+	</div>
 </div>
 
 <div class="row">
@@ -161,7 +165,7 @@
 		<label class="control-label" for="endereco.pontoReferencia">Ponto
 			de referência</label>
 		<form:input type="text" path="endereco.pontoReferencia"
-			id="pontoReferencia" class="form-control" maxlength="30" />
+			id="pontoReferencia" class="form-control" maxlength="100" />
 		<div class="help-block with-errors">${pontoReferenciaError}</div>
 	</div>
 </div>

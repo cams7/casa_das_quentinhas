@@ -26,7 +26,7 @@
 		<p>
 			<strong>Data de nascimento</strong>
 		</p>
-		<p>${cliente.nascimento}</p>
+		<p>${cliente.formattedNascimento}</p>
 	</div>
 </div>
 

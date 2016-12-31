@@ -235,7 +235,7 @@
 		<label class="control-label" for="endereco.pontoReferencia">Ponto
 			de referência</label>
 		<form:input type="text" path="endereco.pontoReferencia"
-			id="pontoReferencia" class="form-control" maxlength="30" />
+			id="pontoReferencia" class="form-control" maxlength="100" />
 		<div class="help-block with-errors">${pontoReferenciaError}</div>
 	</div>
 </div>

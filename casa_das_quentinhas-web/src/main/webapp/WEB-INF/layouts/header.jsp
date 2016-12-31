@@ -20,11 +20,7 @@
 			<li class="${activePage eq 'produto_index' ? 'active' : '' }"><a
 				href="<c:url value='/produto' />">Produtos</a></li>
 			<li class="${activePage eq 'empresa_index' ? 'active' : '' }"><a
-				href="<c:url value='/empresa' />">Empresas</a></li>
-			<li class="${activePage eq 'entregador_index' ? 'active' : '' }"><a
-				href="<c:url value='/entregador' />">Entregadores</a></li>
-			<li class="${activePage eq 'taxa_index' ? 'active' : '' }"><a
-				href="<c:url value='/taxa' />">Taxas</a></li>
+				href="<c:url value='/empresa' />">Empresas</a></li>			
 			<li class="${activePage eq 'funcionario_index' ? 'active' : '' }"><a
 				href="<c:url value='/funcionario' />">Funcionários</a></li>			
 		</ul>
