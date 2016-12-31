@@ -85,13 +85,10 @@ public class FuncionarioController extends AbstractController<FuncionarioService
 		if (result.hasErrors())
 			return getCreateTilesPage();
 
-		usuario = new Usuario(usuarioService.getUsuarioIdByEmail(getUsername()));
-		funcionario.setUsuarioCadastro(usuario);
-
 		funcionario.setCpf(funcionario.getUnformattedCpf());
 		funcionario.setCelular(funcionario.getUnformattedCelular());
 
-		getService().persist(funcionario);
+		getService().persist(funcionario, getUsername());
 
 		return redirectMainPage();
 	}
@@ -111,7 +108,7 @@ public class FuncionarioController extends AbstractController<FuncionarioService
 
 		setNotEmptyConfirmacaoError(usuario, result, !usuario.getSenha().isEmpty());
 		setSenhaNotEqualsConfirmacaoError(usuario, result);
-		
+
 		setEmailNotUniqueError(usuario, result);
 		setCPFNotUniqueError(funcionario, result);
 

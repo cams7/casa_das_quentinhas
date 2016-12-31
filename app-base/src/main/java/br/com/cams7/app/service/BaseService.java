@@ -13,5 +13,5 @@ import br.com.cams7.app.model.AbstractEntity;
  *
  */
 public interface BaseService<E extends AbstractEntity<PK>, PK extends Serializable> extends BaseDAO<E, PK> {
-
+	void persist(E entity, String userName);
 }

@@ -34,15 +34,18 @@ public class EmpresaServiceImpl extends AbstractService<EmpresaDAO, Empresa, Int
 	 * 
 	 * @see
 	 * br.com.cams7.app.service.AbstractService#persist(br.com.cams7.app.model.
-	 * AbstractEntity)
+	 * AbstractEntity, java.lang.String)
 	 */
 	@Override
-	public void persist(Empresa empresa) {
+	public void persist(Empresa empresa, String userName) {
 		Usuario usuario = empresa.getUsuarioAcesso();
 
 		usuario.setEmail(empresa.getContato().getEmail());
 		usuario.setTipo(EMPRESA);
 		usuarioService.persist(usuario);
+
+		usuario = new Usuario(usuarioService.getUsuarioIdByEmail(userName));
+		empresa.setUsuarioCadastro(usuario);
 
 		Manutencao manutencao = new Manutencao();
 		manutencao.setCadastro(new Date());

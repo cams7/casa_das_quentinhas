@@ -44,18 +44,11 @@ public class EmpresaDAOImpl extends AbstractDAO<Empresa, Integer> implements Emp
 	@Override
 	protected From<?, ?>[] getFromWithFetchJoins(Root<Empresa> from) {
 		@SuppressWarnings("unchecked")
-		Join<Empresa, Usuario> joinUsuarioAcesso = (Join<Empresa, Usuario>) from.fetch(Empresa_.usuarioAcesso,
-				JoinType.LEFT);
-		@SuppressWarnings("unchecked")
-		Join<Empresa, Usuario> joinUsuarioCadastro = (Join<Empresa, Usuario>) from.fetch(Empresa_.usuarioCadastro,
-				JoinType.LEFT);
-		@SuppressWarnings("unchecked")
 		Join<Empresa, Cidade> joinCidade = (Join<Empresa, Cidade>) from.fetch(Empresa_.cidade, JoinType.LEFT);
 		@SuppressWarnings("unchecked")
 		Join<Cidade, Estado> joinEstado = (Join<Cidade, Estado>) joinCidade.fetch(Cidade_.estado, JoinType.LEFT);
 
-		From<?, ?>[] fromWithJoins = new From<?, ?>[] { from, joinUsuarioAcesso, joinUsuarioCadastro, joinCidade,
-				joinEstado };
+		From<?, ?>[] fromWithJoins = new From<?, ?>[] { from, joinCidade, joinEstado };
 
 		return fromWithJoins;
 	}
@@ -68,15 +61,10 @@ public class EmpresaDAOImpl extends AbstractDAO<Empresa, Integer> implements Emp
 	 */
 	@Override
 	protected From<?, ?>[] getFromWithJoins(Root<Empresa> from) {
-		Join<Empresa, Usuario> joinUsuarioAcesso = (Join<Empresa, Usuario>) from.join(Empresa_.usuarioAcesso,
-				JoinType.LEFT);
-		Join<Empresa, Usuario> joinUsuarioCadastro = (Join<Empresa, Usuario>) from.join(Empresa_.usuarioCadastro,
-				JoinType.LEFT);
 		Join<Empresa, Cidade> joinCidade = (Join<Empresa, Cidade>) from.join(Empresa_.cidade, JoinType.LEFT);
 		Join<Cidade, Estado> joinEstado = (Join<Cidade, Estado>) joinCidade.join(Cidade_.estado, JoinType.LEFT);
 
-		From<?, ?>[] fromWithJoins = new From<?, ?>[] { from, joinUsuarioAcesso, joinUsuarioCadastro, joinCidade,
-				joinEstado };
+		From<?, ?>[] fromWithJoins = new From<?, ?>[] { from, joinCidade, joinEstado };
 
 		return fromWithJoins;
 	}

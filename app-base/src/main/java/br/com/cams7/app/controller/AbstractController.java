@@ -123,7 +123,7 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 		if (result.hasErrors())
 			return getCreateTilesPage();
 
-		getService().persist(entity);
+		getService().persist(entity, getUsername());
 
 		return redirectMainPage();
 	}

@@ -18,6 +18,7 @@ public class Produto_ {
 	public static volatile SingularAttribute<Produto, Usuario> usuarioCadastro;
 	public static volatile SingularAttribute<Produto, String> nome;
 	public static volatile SingularAttribute<Produto, String> ingredientes;
+	public static volatile SingularAttribute<Produto, Float> custo;
 	public static volatile SingularAttribute<Produto, Tamanho> tamanho;
 	public static volatile SingularAttribute<Produto, String> codigoNcm;
 	public static volatile SingularAttribute<Produto, String> codigoCest;

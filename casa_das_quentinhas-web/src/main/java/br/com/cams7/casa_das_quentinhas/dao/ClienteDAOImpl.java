@@ -43,19 +43,13 @@ public class ClienteDAOImpl extends AbstractDAO<Cliente, Integer> implements Cli
 	 */
 	@Override
 	protected From<?, ?>[] getFromWithFetchJoins(Root<Cliente> from) {
-		@SuppressWarnings("unchecked")
-		Join<Cliente, Usuario> joinUsuarioAcesso = (Join<Cliente, Usuario>) from.fetch(Cliente_.usuarioAcesso,
-				JoinType.LEFT);
-		@SuppressWarnings("unchecked")
-		Join<Cliente, Usuario> joinUsuarioCadastro = (Join<Cliente, Usuario>) from.fetch(Cliente_.usuarioCadastro,
-				JoinType.LEFT);
+
 		@SuppressWarnings("unchecked")
 		Join<Cliente, Cidade> joinCidade = (Join<Cliente, Cidade>) from.fetch(Cliente_.cidade, JoinType.LEFT);
 		@SuppressWarnings("unchecked")
 		Join<Cidade, Estado> joinEstado = (Join<Cidade, Estado>) joinCidade.fetch(Cidade_.estado, JoinType.LEFT);
 
-		From<?, ?>[] fromWithJoins = new From<?, ?>[] { from, joinUsuarioAcesso, joinUsuarioCadastro, joinCidade,
-				joinEstado };
+		From<?, ?>[] fromWithJoins = new From<?, ?>[] { from, joinCidade, joinEstado };
 
 		return fromWithJoins;
 	}
@@ -68,15 +62,10 @@ public class ClienteDAOImpl extends AbstractDAO<Cliente, Integer> implements Cli
 	 */
 	@Override
 	protected From<?, ?>[] getFromWithJoins(Root<Cliente> from) {
-		Join<Cliente, Usuario> joinUsuarioAcesso = (Join<Cliente, Usuario>) from.join(Cliente_.usuarioAcesso,
-				JoinType.LEFT);
-		Join<Cliente, Usuario> joinUsuarioCadastro = (Join<Cliente, Usuario>) from.join(Cliente_.usuarioCadastro,
-				JoinType.LEFT);
 		Join<Cliente, Cidade> joinCidade = (Join<Cliente, Cidade>) from.join(Cliente_.cidade, JoinType.LEFT);
 		Join<Cidade, Estado> joinEstado = (Join<Cidade, Estado>) joinCidade.join(Cidade_.estado, JoinType.LEFT);
 
-		From<?, ?>[] fromWithJoins = new From<?, ?>[] { from, joinUsuarioAcesso, joinUsuarioCadastro, joinCidade,
-				joinEstado };
+		From<?, ?>[] fromWithJoins = new From<?, ?>[] { from, joinCidade, joinEstado };
 
 		return fromWithJoins;
 	}

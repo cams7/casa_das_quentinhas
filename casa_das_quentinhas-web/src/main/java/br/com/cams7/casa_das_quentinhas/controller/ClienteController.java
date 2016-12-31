@@ -3,6 +3,7 @@
  */
 package br.com.cams7.casa_das_quentinhas.controller;
 
+import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 
@@ -17,13 +18,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import br.com.cams7.app.common.DateEditor;
 import br.com.cams7.app.controller.AbstractController;
 import br.com.cams7.casa_das_quentinhas.model.Cidade;
 import br.com.cams7.casa_das_quentinhas.model.Cliente;
@@ -33,7 +37,6 @@ import br.com.cams7.casa_das_quentinhas.model.Endereco;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
 import br.com.cams7.casa_das_quentinhas.service.CidadeService;
 import br.com.cams7.casa_das_quentinhas.service.ClienteService;
-import br.com.cams7.casa_das_quentinhas.service.UsuarioService;
 
 /**
  * @author César Magalhães
@@ -43,9 +46,6 @@ import br.com.cams7.casa_das_quentinhas.service.UsuarioService;
 @RequestMapping("/cliente")
 @SessionAttributes("clienteTiposContribuintes")
 public class ClienteController extends AbstractController<ClienteService, Cliente, Integer> {
-
-	@Autowired
-	private UsuarioService usuarioService;
 
 	@Autowired
 	private CidadeService cidadeService;
@@ -93,14 +93,11 @@ public class ClienteController extends AbstractController<ClienteService, Client
 		if (result.hasErrors())
 			return getCreateTilesPage();
 
-		usuario = new Usuario(usuarioService.getUsuarioIdByEmail(getUsername()));
-		cliente.setUsuarioCadastro(usuario);
-
 		cliente.setCpf(cliente.getUnformattedCpf());
 		cliente.getContato().setTelefone(cliente.getContato().getUnformattedTelefone());
 		cliente.getEndereco().setCep(cliente.getEndereco().getUnformattedCep());
 
-		getService().persist(cliente);
+		getService().persist(cliente, getUsername());
 
 		return redirectMainPage();
 	}
@@ -146,6 +143,11 @@ public class ClienteController extends AbstractController<ClienteService, Client
 		Map<Integer, String> cidades = cidadeService.getCidadesByNomeOrIbge(nomeOrIbge);
 
 		return new ResponseEntity<Map<Integer, String>>(cidades, HttpStatus.OK);
+	}
+
+	@InitBinder
+	public void binder(WebDataBinder binder) {
+		binder.registerCustomEditor(Date.class, "nascimento", new DateEditor());
 	}
 
 	/**

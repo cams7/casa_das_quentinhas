@@ -33,7 +33,6 @@ import br.com.cams7.casa_das_quentinhas.model.Endereco;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
 import br.com.cams7.casa_das_quentinhas.service.CidadeService;
 import br.com.cams7.casa_das_quentinhas.service.EmpresaService;
-import br.com.cams7.casa_das_quentinhas.service.UsuarioService;
 
 /**
  * @author César Magalhães
@@ -43,9 +42,6 @@ import br.com.cams7.casa_das_quentinhas.service.UsuarioService;
 @RequestMapping("/empresa")
 @SessionAttributes({ "empresaTipos", "empresaRegimesTributarios" })
 public class EmpresaController extends AbstractController<EmpresaService, Empresa, Integer> {
-
-	@Autowired
-	private UsuarioService usuarioService;
 
 	@Autowired
 	private CidadeService cidadeService;
@@ -93,14 +89,11 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 		if (result.hasErrors())
 			return getCreateTilesPage();
 
-		usuario = new Usuario(usuarioService.getUsuarioIdByEmail(getUsername()));
-		empresa.setUsuarioCadastro(usuario);
-
 		empresa.setCnpj(empresa.getUnformattedCnpj());
 		empresa.getContato().setTelefone(empresa.getContato().getUnformattedTelefone());
 		empresa.getEndereco().setCep(empresa.getEndereco().getUnformattedCep());
 
-		getService().persist(empresa);
+		getService().persist(empresa, getUsername());
 
 		return redirectMainPage();
 	}
@@ -199,8 +192,8 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 		Contato contato = empresa.getContato();
 
 		if (!getService().isEmailUnique(empresa.getId(), usuario.getId(), contato.getEmail())) {
-			FieldError emailError = new FieldError("empresa", "contato.email", messageSource
-					.getMessage("NonUnique.empresa.contato.email", new String[] { contato.getEmail() }, Locale.getDefault()));
+			FieldError emailError = new FieldError("empresa", "contato.email", messageSource.getMessage(
+					"NonUnique.empresa.contato.email", new String[] { contato.getEmail() }, Locale.getDefault()));
 			result.addError(emailError);
 		}
 	}

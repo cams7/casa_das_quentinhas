@@ -3,7 +3,8 @@
  */
 package br.com.cams7.casa_das_quentinhas.model;
 
-import javax.persistence.Basic;
+import static br.com.cams7.app.common.MoneyEditor.NUMBER_FORMAT;
+
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -21,6 +22,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import br.com.cams7.app.model.AbstractEntity;
@@ -50,8 +52,8 @@ public class Produto extends AbstractEntity<Integer> {
 	private String nome;
 
 	@NotEmpty
-	@Basic(fetch = FetchType.LAZY)
 	@Lob
+	@Type(type = "org.hibernate.type.TextType")
 	@Column(nullable = false)
 	private String ingredientes;
 
@@ -59,6 +61,7 @@ public class Produto extends AbstractEntity<Integer> {
 	@Column
 	private Float custo;
 
+	@NotNull
 	@Enumerated(EnumType.ORDINAL)
 	@Column
 	private Tamanho tamanho;
@@ -224,6 +227,35 @@ public class Produto extends AbstractEntity<Integer> {
 	 */
 	public void setManutencao(Manutencao manutencao) {
 		this.manutencao = manutencao;
+	}
+
+	public String getFormattedCusto() {
+		if (custo == null)
+			return null;
+
+		String formattedCusto = NUMBER_FORMAT.format(custo);
+		return formattedCusto;
+	}
+
+	/**
+	 * @return Nome com ID
+	 */
+	public String getNomeWithId() {
+		return getNomeWithId(nome, id);
+	}
+
+	/**
+	 * @param nome
+	 *            Nome do produto
+	 * @param id
+	 *            ID do produto
+	 * @return Nome com ID
+	 */
+	public static String getNomeWithId(String nome, Integer id) {
+		if (nome == null || id == null)
+			return null;
+
+		return nome + " < " + id + " >";
 	}
 
 	/**

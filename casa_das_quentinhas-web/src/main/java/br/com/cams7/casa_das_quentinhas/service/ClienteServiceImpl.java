@@ -32,16 +32,20 @@ public class ClienteServiceImpl extends AbstractService<ClienteDAO, Cliente, Int
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see br.com.cams7.app.dao.BaseDAO#persist(br.com.cams7.app.model.
-	 * AbstractEntity)
+	 * @see
+	 * br.com.cams7.app.service.AbstractService#persist(br.com.cams7.app.model.
+	 * AbstractEntity, java.lang.String)
 	 */
 	@Override
-	public void persist(Cliente cliente) {
+	public void persist(Cliente cliente, String userName) {
 		Usuario usuario = cliente.getUsuarioAcesso();
 
 		usuario.setEmail(cliente.getContato().getEmail());
 		usuario.setTipo(CLIENTE);
 		usuarioService.persist(usuario);
+
+		usuario = new Usuario(usuarioService.getUsuarioIdByEmail(userName));
+		cliente.setUsuarioCadastro(usuario);
 
 		Manutencao manutencao = new Manutencao();
 		manutencao.setCadastro(new Date());

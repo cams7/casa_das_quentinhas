@@ -18,7 +18,7 @@ import org.springframework.web.servlet.view.tiles3.TilesViewResolver;
 @Configuration
 @Import(JpaConfiguration.class)
 @EnableWebMvc
-@ComponentScan(basePackages = { "br.com.cams7.casa_das_quentinhas", "br.com.cams7.app.common" })
+@ComponentScan(basePackages = "br.com.cams7.casa_das_quentinhas")
 public class AppConfig extends WebMvcConfigurerAdapter {
 
 	/**
@@ -29,7 +29,7 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 		TilesConfigurer tilesConfigurer = new TilesConfigurer();
 		tilesConfigurer.setDefinitions(new String[] { "/WEB-INF/layouts/tiles.xml", "/WEB-INF/views/tiles.xml",
 				"/WEB-INF/views/funcionario/tiles.xml", "/WEB-INF/views/empresa/tiles.xml",
-				"/WEB-INF/views/cliente/tiles.xml" });
+				"/WEB-INF/views/cliente/tiles.xml", "/WEB-INF/views/produto/tiles.xml" });
 		tilesConfigurer.setCheckRefresh(true);
 		return tilesConfigurer;
 	}

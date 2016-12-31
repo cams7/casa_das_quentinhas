@@ -107,10 +107,26 @@ public abstract class AbstractService<DAO extends BaseDAO<E, PK>, E extends Abst
 		return total;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.app.dao.BaseDAO#count()
+	 */
 	@Override
 	public long count() {
 		long count = getDao().count();
 		return count;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.app.service.BaseService#persist(br.com.cams7.app.model.
+	 * AbstractEntity, java.lang.String)
+	 */
+	@Override
+	public void persist(E entity, String userName) {
+		persist(entity);
 	}
 
 }
