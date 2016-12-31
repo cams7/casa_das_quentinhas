@@ -6,6 +6,7 @@ package br.com.cams7.app.common;
 import java.beans.PropertyEditorSupport;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.Locale;
 
 /**
  * @author César Magalhães
@@ -13,7 +14,7 @@ import java.text.ParseException;
  */
 public class MoneyEditor extends PropertyEditorSupport {
 
-	public static final NumberFormat NUMBER_FORMAT = NumberFormat.getCurrencyInstance();
+	public static final NumberFormat NUMBER_FORMAT = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
 
 	@Override
 	public void setAsText(String value) throws IllegalArgumentException {
