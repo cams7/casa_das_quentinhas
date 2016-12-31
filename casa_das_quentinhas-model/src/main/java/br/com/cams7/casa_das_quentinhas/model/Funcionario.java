@@ -5,9 +5,8 @@ import static br.com.cams7.app.validator.CelularValidator.unformatCelular;
 import static br.com.cams7.app.validator.CpfValidator.formatCpf;
 import static br.com.cams7.app.validator.CpfValidator.unformatCpf;
 
-import java.util.Date;
-
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -18,8 +17,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -78,13 +75,8 @@ public class Funcionario extends AbstractEntity<Integer> {
 	@Column(nullable = false, length = 11)
 	private String celular;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "data_cadastro", nullable = false)
-	private Date cadastro;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "data_alteracao", nullable = false)
-	private Date alteracao;
+	@Embedded
+	private Manutencao manutencao;
 
 	/**
 	 * 
@@ -241,33 +233,18 @@ public class Funcionario extends AbstractEntity<Integer> {
 	}
 
 	/**
-	 * @return Data do cadastro do funcionário
+	 * @return Data de cadastro e alteração
 	 */
-	public Date getCadastro() {
-		return cadastro;
+	public Manutencao getManutencao() {
+		return manutencao;
 	}
 
 	/**
-	 * @param cadastro
-	 *            Data do cadastro do funcionário
+	 * @param manutencao
+	 *            Data de cadastro e alteração
 	 */
-	public void setCadastro(Date cadastro) {
-		this.cadastro = cadastro;
-	}
-
-	/**
-	 * @return Data da alteração dos dados do funcionário
-	 */
-	public Date getAlteracao() {
-		return alteracao;
-	}
-
-	/**
-	 * @param alteracao
-	 *            Data da alteração dos dados do funcionário
-	 */
-	public void setAlteracao(Date alteracao) {
-		this.alteracao = alteracao;
+	public void setManutencao(Manutencao manutencao) {
+		this.manutencao = manutencao;
 	}
 
 	/**

@@ -89,13 +89,8 @@ public class Cliente extends AbstractEntity<Integer> {
 	@AttributeOverrides({ @AttributeOverride(name = "numeroImovel", column = @Column(name = "numero_residencial")) })
 	private Endereco endereco;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "data_cadastro", nullable = false)
-	private Date cadastro;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "data_alteracao", nullable = false)
-	private Date alteracao;
+	@Embedded
+	private Manutencao manutencao;
 
 	/**
 	 * 
@@ -267,33 +262,18 @@ public class Cliente extends AbstractEntity<Integer> {
 	}
 
 	/**
-	 * @return Data do cadastro do cliente
+	 * @return Data de cadastro e alteração
 	 */
-	public Date getCadastro() {
-		return cadastro;
+	public Manutencao getManutencao() {
+		return manutencao;
 	}
 
 	/**
-	 * @param cadastro
-	 *            Data do cadastro do cliente
+	 * @param manutencao
+	 *            Data de cadastro e alteração
 	 */
-	public void setCadastro(Date cadastro) {
-		this.cadastro = cadastro;
-	}
-
-	/**
-	 * @return Data da alteração dos dados do cliente
-	 */
-	public Date getAlteracao() {
-		return alteracao;
-	}
-
-	/**
-	 * @param alteracao
-	 *            Data da alteração dos dados do cliente
-	 */
-	public void setAlteracao(Date alteracao) {
-		this.alteracao = alteracao;
+	public void setManutencao(Manutencao manutencao) {
+		this.manutencao = manutencao;
 	}
 
 	/**

@@ -6,7 +6,6 @@ package br.com.cams7.casa_das_quentinhas.model;
 import static br.com.cams7.app.validator.CnpjValidator.formatCnpj;
 import static br.com.cams7.app.validator.CnpjValidator.unformatCnpj;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -24,8 +23,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -106,13 +103,8 @@ public class Empresa extends AbstractEntity<Integer> {
 	@Embedded
 	private Endereco endereco;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "data_cadastro", nullable = false)
-	private Date cadastro;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "data_alteracao", nullable = false)
-	private Date alteracao;
+	@Embedded
+	private Manutencao manutencao;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "empresa")
 	private List<Funcionario> funcionarios;
@@ -364,33 +356,18 @@ public class Empresa extends AbstractEntity<Integer> {
 	}
 
 	/**
-	 * @return Data do cadastro da empresa
+	 * @return Data de cadastro e alteração
 	 */
-	public Date getCadastro() {
-		return cadastro;
+	public Manutencao getManutencao() {
+		return manutencao;
 	}
 
 	/**
-	 * @param cadastro
-	 *            Data do cadastro da empresa
+	 * @param manutencao
+	 *            Data de cadastro e alteração
 	 */
-	public void setCadastro(Date cadastro) {
-		this.cadastro = cadastro;
-	}
-
-	/**
-	 * @return Data da alteração dos dados da empresa
-	 */
-	public Date getAlteracao() {
-		return alteracao;
-	}
-
-	/**
-	 * @param alteracao
-	 *            Data da alteração dos dados da empresa
-	 */
-	public void setAlteracao(Date alteracao) {
-		this.alteracao = alteracao;
+	public void setManutencao(Manutencao manutencao) {
+		this.manutencao = manutencao;
 	}
 
 	/**

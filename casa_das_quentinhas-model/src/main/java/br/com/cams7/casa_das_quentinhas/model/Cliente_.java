@@ -27,6 +27,5 @@ public class Cliente_ {
 	public static volatile SingularAttribute<Cliente, Date> nascimento;
 	public static volatile SingularAttribute<Cliente, Contato> contato;
 	public static volatile SingularAttribute<Cliente, Endereco> endereco;
-	public static volatile SingularAttribute<Cliente, Date> cadastro;
-	public static volatile SingularAttribute<Cliente, Date> alteracao;
+	public static volatile SingularAttribute<Cliente, Manutencao> manutencao;
 }

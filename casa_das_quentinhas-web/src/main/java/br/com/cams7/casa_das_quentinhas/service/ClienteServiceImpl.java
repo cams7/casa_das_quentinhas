@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.cams7.app.service.AbstractService;
 import br.com.cams7.casa_das_quentinhas.dao.ClienteDAO;
 import br.com.cams7.casa_das_quentinhas.model.Cliente;
+import br.com.cams7.casa_das_quentinhas.model.Manutencao;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
 
 /**
@@ -42,8 +43,11 @@ public class ClienteServiceImpl extends AbstractService<ClienteDAO, Cliente, Int
 		usuario.setTipo(CLIENTE);
 		usuarioService.persist(usuario);
 
-		cliente.setCadastro(new Date());
-		cliente.setAlteracao(new Date());
+		Manutencao manutencao = new Manutencao();
+		manutencao.setCadastro(new Date());
+		manutencao.setAlteracao(new Date());
+
+		cliente.setManutencao(manutencao);
 
 		super.persist(cliente);
 
@@ -65,7 +69,7 @@ public class ClienteServiceImpl extends AbstractService<ClienteDAO, Cliente, Int
 		} else
 			cliente.setUsuarioAcesso(null);
 
-		cliente.setAlteracao(new Date());
+		cliente.getManutencao().setAlteracao(new Date());
 
 		super.update(cliente);
 	}

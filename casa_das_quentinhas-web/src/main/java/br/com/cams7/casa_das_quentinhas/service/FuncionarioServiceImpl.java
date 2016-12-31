@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.cams7.app.service.AbstractService;
 import br.com.cams7.casa_das_quentinhas.dao.FuncionarioDAO;
 import br.com.cams7.casa_das_quentinhas.model.Funcionario;
+import br.com.cams7.casa_das_quentinhas.model.Manutencao;
 import br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
 
@@ -51,8 +52,11 @@ public class FuncionarioServiceImpl extends AbstractService<FuncionarioDAO, Func
 
 		funcionario.setId(usuario.getId());
 
-		funcionario.setCadastro(new Date());
-		funcionario.setAlteracao(new Date());
+		Manutencao manutencao = new Manutencao();
+		manutencao.setCadastro(new Date());
+		manutencao.setAlteracao(new Date());
+
+		funcionario.setManutencao(manutencao);
 
 		super.persist(funcionario);
 	}
@@ -69,7 +73,7 @@ public class FuncionarioServiceImpl extends AbstractService<FuncionarioDAO, Func
 		Usuario usuario = funcionario.getUsuario();
 		usuarioService.update(usuario);
 
-		funcionario.setAlteracao(new Date());
+		funcionario.getManutencao().setAlteracao(new Date());
 
 		super.update(funcionario);
 	}
