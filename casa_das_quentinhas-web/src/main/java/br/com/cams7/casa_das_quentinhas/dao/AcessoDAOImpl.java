@@ -6,6 +6,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.From;
 import javax.persistence.criteria.Root;
 
 import org.springframework.security.web.authentication.rememberme.PersistentRememberMeToken;
@@ -20,6 +21,30 @@ import br.com.cams7.casa_das_quentinhas.model.Acesso_;
 @Repository
 @Transactional
 public class AcessoDAOImpl extends AbstractDAO<Acesso, String> implements PersistentTokenRepository {
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.dao.AbstractDAO#getFetchJoins(javax.persistence.criteria
+	 * .Root)
+	 */
+	@Override
+	protected From<?, ?>[] getFetchJoins(Root<Acesso> from) {
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.dao.AbstractDAO#getJoins(javax.persistence.criteria.
+	 * Root)
+	 */
+	@Override
+	protected From<?, ?>[] getJoins(Root<Acesso> from) {
+		return null;
+	}
 
 	/*
 	 * (non-Javadoc)

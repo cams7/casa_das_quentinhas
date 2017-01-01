@@ -38,35 +38,31 @@ public class EmpresaDAOImpl extends AbstractDAO<Empresa, Integer> implements Emp
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * br.com.cams7.app.dao.AbstractDAO#getFromWithFetchJoins(javax.persistence.
-	 * criteria.Root)
+	 * br.com.cams7.app.dao.AbstractDAO#getFetchJoins(javax.persistence.criteria
+	 * .Root)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
-	protected From<?, ?>[] getFromWithFetchJoins(Root<Empresa> from) {
-		@SuppressWarnings("unchecked")
+	protected From<?, ?>[] getFetchJoins(Root<Empresa> from) {
 		Join<Empresa, Cidade> joinCidade = (Join<Empresa, Cidade>) from.fetch(Empresa_.cidade, JoinType.LEFT);
-		@SuppressWarnings("unchecked")
 		Join<Cidade, Estado> joinEstado = (Join<Cidade, Estado>) joinCidade.fetch(Cidade_.estado, JoinType.LEFT);
 
-		From<?, ?>[] fromWithJoins = new From<?, ?>[] { from, joinCidade, joinEstado };
-
-		return fromWithJoins;
+		return new From<?, ?>[] { joinCidade, joinEstado };
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see br.com.cams7.app.dao.AbstractDAO#getFromWithJoins(javax.persistence.
-	 * criteria.Root)
+	 * @see
+	 * br.com.cams7.app.dao.AbstractDAO#getJoins(javax.persistence.criteria.
+	 * Root)
 	 */
 	@Override
-	protected From<?, ?>[] getFromWithJoins(Root<Empresa> from) {
+	protected From<?, ?>[] getJoins(Root<Empresa> from) {
 		Join<Empresa, Cidade> joinCidade = (Join<Empresa, Cidade>) from.join(Empresa_.cidade, JoinType.LEFT);
 		Join<Cidade, Estado> joinEstado = (Join<Cidade, Estado>) joinCidade.join(Cidade_.estado, JoinType.LEFT);
 
-		From<?, ?>[] fromWithJoins = new From<?, ?>[] { from, joinCidade, joinEstado };
-
-		return fromWithJoins;
+		return new From<?, ?>[] { joinCidade, joinEstado };
 	}
 
 	/*

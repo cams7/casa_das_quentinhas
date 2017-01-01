@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.From;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
 
@@ -24,6 +25,30 @@ import br.com.cams7.casa_das_quentinhas.model.Produto_;
  */
 @Repository
 public class ProdutoDAOImpl extends AbstractDAO<Produto, Integer> implements ProdutoDAO {
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.dao.AbstractDAO#getFetchJoins(javax.persistence.criteria
+	 * .Root)
+	 */
+	@Override
+	protected From<?, ?>[] getFetchJoins(Root<Produto> from) {
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.dao.AbstractDAO#getJoins(javax.persistence.criteria.
+	 * Root)
+	 */
+	@Override
+	protected From<?, ?>[] getJoins(Root<Produto> from) {
+		return null;
+	}
 
 	@Override
 	public Produto getProdutoById(Integer id) {

@@ -2,6 +2,8 @@ package br.com.cams7.app.dao;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -299,11 +301,6 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 		return tq;
 	}
 
-	protected From<?, ?>[] getFromWithFetchJoins(Root<E> from) {
-		From<?, ?>[] fromWithJoins = new From<?, ?>[] { from };
-		return fromWithJoins;
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -316,7 +313,7 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 		CriteriaQuery<E> cq = cb.createQuery(ENTITY_TYPE);
 
 		Root<E> from = cq.from(ENTITY_TYPE);
-		From<?, ?>[] fromWithJoins = getFromWithFetchJoins(from);
+		From<?, ?>[] fromWithJoins = getFromWithJoins(cq, from, getFetchJoins(from));
 
 		TypedQuery<E> tq = getFilterAndPaginationAndSorting(cb, cq, fromWithJoins, params);
 		List<E> entities = tq.getResultList();
@@ -342,11 +339,6 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 		return countValue;
 	}
 
-	protected From<?, ?>[] getFromWithJoins(Root<E> from) {
-		From<?, ?>[] fromWithJoins = new From<?, ?>[] { from };
-		return fromWithJoins;
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -361,7 +353,7 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 		CriteriaQuery<Long> cq = cb.createQuery(Long.class);
 
 		Root<E> from = cq.from(ENTITY_TYPE);
-		From<?, ?>[] fromWithJoins = getFromWithJoins(from);
+		From<?, ?>[] fromWithJoins = getFromWithJoins(cq, from, getJoins(from));
 
 		cq = (CriteriaQuery<Long>) getFilter(cb, cq, fromWithJoins, filters, globalFilters);
 		long count = getCount(cb, cq, fromWithJoins);
@@ -380,13 +372,17 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 		CriteriaQuery<Long> cq = cb.createQuery(Long.class);
 
 		Root<E> from = cq.from(ENTITY_TYPE);
-		From<?, ?>[] fromWithJoins = getFromWithJoins(from);
+		From<?, ?>[] fromWithJoins = getFromWithJoins(cq, from, getJoins(from));
 
 		long count = getCount(cb, cq, fromWithJoins);
 
 		return count;
 	}
 
+	/**
+	 * @author César Magalhães
+	 *
+	 */
 	private class FromOrJoin {
 		private String attributeName;
 		private From<?, ?> from;
@@ -398,5 +394,33 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 			this.from = from;
 		}
 	}
+
+	/**
+	 * @param cq
+	 * @param from
+	 * @param fromWithJoins
+	 * @return
+	 */
+	private From<?, ?>[] getFromWithJoins(CriteriaQuery<?> cq, Root<E> from, From<?, ?>[] fromWithJoins) {
+		List<From<?, ?>> list = new ArrayList<>(Arrays.asList(from));
+
+		if (fromWithJoins != null)
+			list.addAll(Arrays.asList(fromWithJoins));
+
+		fromWithJoins = list.stream().toArray(From<?, ?>[]::new);
+		return fromWithJoins;
+	}
+
+	/**
+	 * @param from
+	 * @return
+	 */
+	protected abstract From<?, ?>[] getFetchJoins(Root<E> from);
+
+	/**
+	 * @param from
+	 * @return
+	 */
+	protected abstract From<?, ?>[] getJoins(Root<E> from);
 
 }

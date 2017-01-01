@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
@@ -27,6 +28,30 @@ import br.com.cams7.casa_das_quentinhas.model.Estado_;
  */
 @Repository
 public class CidadeDAOImpl extends AbstractDAO<Cidade, Integer> implements CidadeDAO {
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.dao.AbstractDAO#getFetchJoins(javax.persistence.criteria
+	 * .Root)
+	 */
+	@Override
+	protected From<?, ?>[] getFetchJoins(Root<Cidade> from) {
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.dao.AbstractDAO#getJoins(javax.persistence.criteria.
+	 * Root)
+	 */
+	@Override
+	protected From<?, ?>[] getJoins(Root<Cidade> from) {
+		return null;
+	}
 
 	/*
 	 * (non-Javadoc)

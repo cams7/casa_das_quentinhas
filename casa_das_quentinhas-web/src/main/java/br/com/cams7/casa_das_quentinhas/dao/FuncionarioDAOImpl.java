@@ -51,39 +51,35 @@ public class FuncionarioDAOImpl extends AbstractDAO<Funcionario, Integer> implem
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * br.com.cams7.app.dao.AbstractDAO#getFromWithFetchJoins(javax.persistence.
-	 * criteria.Root)
+	 * br.com.cams7.app.dao.AbstractDAO#getFetchJoins(javax.persistence.criteria
+	 * .Root)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
-	protected From<?, ?>[] getFromWithFetchJoins(Root<Funcionario> from) {
-		@SuppressWarnings("unchecked")
+	protected From<?, ?>[] getFetchJoins(Root<Funcionario> from) {
 		Join<Funcionario, Usuario> joinUsuario = (Join<Funcionario, Usuario>) from.fetch(Funcionario_.usuario,
 				JoinType.LEFT);
-		@SuppressWarnings("unchecked")
 		Join<Funcionario, Empresa> joinEmpresa = (Join<Funcionario, Empresa>) from.fetch(Funcionario_.empresa,
 				JoinType.LEFT);
 
-		From<?, ?>[] fromWithJoins = new From<?, ?>[] { from, joinUsuario, joinEmpresa };
-
-		return fromWithJoins;
+		return new From<?, ?>[] { joinUsuario, joinEmpresa };
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see br.com.cams7.app.dao.AbstractDAO#getFromWithJoins(javax.persistence.
-	 * criteria.Root)
+	 * @see
+	 * br.com.cams7.app.dao.AbstractDAO#getJoins(javax.persistence.criteria.
+	 * Root)
 	 */
 	@Override
-	protected From<?, ?>[] getFromWithJoins(Root<Funcionario> from) {
+	protected From<?, ?>[] getJoins(Root<Funcionario> from) {
 		Join<Funcionario, Usuario> joinUsuario = (Join<Funcionario, Usuario>) from.join(Funcionario_.usuario,
 				JoinType.LEFT);
 		Join<Funcionario, Empresa> joinEmpresa = (Join<Funcionario, Empresa>) from.join(Funcionario_.empresa,
 				JoinType.LEFT);
 
-		From<?, ?>[] fromWithJoins = new From<?, ?>[] { from, joinUsuario, joinEmpresa };
-
-		return fromWithJoins;
+		return new From<?, ?>[] { joinUsuario, joinEmpresa };
 	}
 
 	/*

@@ -4,6 +4,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.From;
 import javax.persistence.criteria.Root;
 
 import org.springframework.stereotype.Repository;
@@ -14,6 +15,30 @@ import br.com.cams7.casa_das_quentinhas.model.Usuario_;
 
 @Repository
 public class UsuarioDAOImpl extends AbstractDAO<Usuario, Integer> implements UsuarioDAO {
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.dao.AbstractDAO#getFetchJoins(javax.persistence.criteria
+	 * .Root)
+	 */
+	@Override
+	protected From<?, ?>[] getFetchJoins(Root<Usuario> from) {
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.dao.AbstractDAO#getJoins(javax.persistence.criteria.
+	 * Root)
+	 */
+	@Override
+	protected From<?, ?>[] getJoins(Root<Usuario> from) {
+		return null;
+	}
 
 	/*
 	 * (non-Javadoc)
