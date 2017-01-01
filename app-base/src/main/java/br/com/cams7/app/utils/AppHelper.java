@@ -95,8 +95,9 @@ public final class AppHelper {
 			return value;
 		} catch (SecurityException | IllegalArgumentException | NoSuchMethodException | InstantiationException
 				| IllegalAccessException | InvocationTargetException e) {
-			throw new AppException(e.getMessage(), e.getCause());
+			// throw new AppException(e.getMessage(), e.getCause());
 		}
+		return null;
 	}
 
 	/**

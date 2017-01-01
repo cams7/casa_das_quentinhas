@@ -188,16 +188,13 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 				predicate = cb.isTrue((Expression<Boolean>) getExpression(fromOrJoin));
 			else
 				predicate = cb.isFalse((Expression<Boolean>) getExpression(fromOrJoin));
-		else if (AppHelper.isNumber(fieldType))
-			predicate = cb.like(cb.lower((Expression<String>) getExpression(fromOrJoin)),
-					"%" + String.valueOf(value).toLowerCase() + "%");
 		else if (AppHelper.isDate(fieldType))
 			predicate = cb.equal(getExpression(fromOrJoin), value);
 		else if (AppHelper.isEnum(fieldType))
 			predicate = cb.equal(getExpression(fromOrJoin), value);
 		else
-			predicate = cb.like(cb.lower((Expression<String>) getExpression(fromOrJoin)),
-					"%" + String.valueOf(value).toLowerCase() + "%");
+			predicate = cb.like(cb.lower(getExpression(fromOrJoin).as(String.class)),
+					"%" + String.valueOf(fieldValue).toLowerCase() + "%");
 
 		return predicate;
 	}
