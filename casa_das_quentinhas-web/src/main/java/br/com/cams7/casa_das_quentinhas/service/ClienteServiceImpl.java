@@ -37,14 +37,14 @@ public class ClienteServiceImpl extends AbstractService<ClienteDAO, Cliente, Int
 	 * AbstractEntity, java.lang.String)
 	 */
 	@Override
-	public void persist(Cliente cliente, String userName) {
+	public void persist(Cliente cliente) {
 		Usuario usuario = cliente.getUsuarioAcesso();
 
 		usuario.setEmail(cliente.getContato().getEmail());
 		usuario.setTipo(CLIENTE);
 		usuarioService.persist(usuario);
 
-		usuario = new Usuario(usuarioService.getUsuarioIdByEmail(userName));
+		usuario = new Usuario(usuarioService.getUsuarioIdByEmail(getUsername()));
 		cliente.setUsuarioCadastro(usuario);
 
 		Manutencao manutencao = new Manutencao();

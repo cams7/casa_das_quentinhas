@@ -35,8 +35,8 @@ public class ProdutoServiceImpl extends AbstractService<ProdutoDAO, Produto, Int
 	 * AbstractEntity, java.lang.String)
 	 */
 	@Override
-	public void persist(Produto produto, String userName) {
-		Usuario usuario = new Usuario(usuarioService.getUsuarioIdByEmail(userName));
+	public void persist(Produto produto) {
+		Usuario usuario = new Usuario(usuarioService.getUsuarioIdByEmail(getUsername()));
 		produto.setUsuarioCadastro(usuario);
 
 		Manutencao manutencao = new Manutencao();

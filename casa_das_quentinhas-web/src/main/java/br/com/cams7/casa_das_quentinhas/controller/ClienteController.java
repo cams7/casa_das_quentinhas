@@ -97,7 +97,8 @@ public class ClienteController extends AbstractController<ClienteService, Client
 		cliente.getContato().setTelefone(cliente.getContato().getUnformattedTelefone());
 		cliente.getEndereco().setCep(cliente.getEndereco().getUnformattedCep());
 
-		getService().persist(cliente, getUsername());
+		getService().setUsername(getUsername());
+		getService().persist(cliente);
 
 		return redirectMainPage();
 	}

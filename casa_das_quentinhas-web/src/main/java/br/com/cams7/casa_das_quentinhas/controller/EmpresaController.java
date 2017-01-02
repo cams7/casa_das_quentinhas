@@ -93,7 +93,8 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 		empresa.getContato().setTelefone(empresa.getContato().getUnformattedTelefone());
 		empresa.getEndereco().setCep(empresa.getEndereco().getUnformattedCep());
 
-		getService().persist(empresa, getUsername());
+		getService().setUsername(getUsername());
+		getService().persist(empresa);
 
 		return redirectMainPage();
 	}

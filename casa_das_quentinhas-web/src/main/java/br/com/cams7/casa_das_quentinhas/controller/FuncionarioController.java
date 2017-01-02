@@ -88,7 +88,8 @@ public class FuncionarioController extends AbstractController<FuncionarioService
 		funcionario.setCpf(funcionario.getUnformattedCpf());
 		funcionario.setCelular(funcionario.getUnformattedCelular());
 
-		getService().persist(funcionario, getUsername());
+		getService().setUsername(getUsername());
+		getService().persist(funcionario);
 
 		return redirectMainPage();
 	}

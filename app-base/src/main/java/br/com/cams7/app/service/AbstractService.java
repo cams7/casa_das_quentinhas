@@ -25,6 +25,8 @@ public abstract class AbstractService<DAO extends BaseDAO<E, PK>, E extends Abst
 	@Autowired
 	private DAO dao;
 
+	private String username;
+
 	protected DAO getDao() {
 		return dao;
 	}
@@ -118,15 +120,16 @@ public abstract class AbstractService<DAO extends BaseDAO<E, PK>, E extends Abst
 		return count;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see br.com.cams7.app.service.BaseService#persist(br.com.cams7.app.model.
-	 * AbstractEntity, java.lang.String)
-	 */
 	@Override
-	public void persist(E entity, String userName) {
-		persist(entity);
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	/**
+	 * @return the username
+	 */
+	protected String getUsername() {
+		return username;
 	}
 
 }

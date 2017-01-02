@@ -36,11 +36,15 @@ public class FuncionarioServiceImpl extends AbstractService<FuncionarioDAO, Func
 	// return funcionario;
 	// }
 
-	/* (non-Javadoc)
-	 * @see br.com.cams7.app.service.AbstractService#persist(br.com.cams7.app.model.AbstractEntity, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.service.AbstractService#persist(br.com.cams7.app.model.
+	 * AbstractEntity, java.lang.String)
 	 */
 	@Override
-	public void persist(Funcionario funcionario, String userName) {
+	public void persist(Funcionario funcionario) {
 		Usuario usuario = funcionario.getUsuario();
 
 		usuario.setTipo(FUNCIONARIO);
@@ -48,7 +52,7 @@ public class FuncionarioServiceImpl extends AbstractService<FuncionarioDAO, Func
 
 		funcionario.setId(usuario.getId());
 
-		usuario = new Usuario(usuarioService.getUsuarioIdByEmail(userName));
+		usuario = new Usuario(usuarioService.getUsuarioIdByEmail(getUsername()));
 		funcionario.setUsuarioCadastro(usuario);
 
 		Manutencao manutencao = new Manutencao();

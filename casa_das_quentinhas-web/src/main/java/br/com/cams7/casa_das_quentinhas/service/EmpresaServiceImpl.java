@@ -37,14 +37,14 @@ public class EmpresaServiceImpl extends AbstractService<EmpresaDAO, Empresa, Int
 	 * AbstractEntity, java.lang.String)
 	 */
 	@Override
-	public void persist(Empresa empresa, String userName) {
+	public void persist(Empresa empresa) {
 		Usuario usuario = empresa.getUsuarioAcesso();
 
 		usuario.setEmail(empresa.getContato().getEmail());
 		usuario.setTipo(EMPRESA);
 		usuarioService.persist(usuario);
 
-		usuario = new Usuario(usuarioService.getUsuarioIdByEmail(userName));
+		usuario = new Usuario(usuarioService.getUsuarioIdByEmail(getUsername()));
 		empresa.setUsuarioCadastro(usuario);
 
 		Manutencao manutencao = new Manutencao();

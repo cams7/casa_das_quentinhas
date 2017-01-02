@@ -97,6 +97,7 @@ public final class AppHelper {
 				| IllegalAccessException | InvocationTargetException e) {
 			// throw new AppException(e.getMessage(), e.getCause());
 		}
+
 		return null;
 	}
 
