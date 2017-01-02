@@ -33,4 +33,5 @@ public class Empresa_ {
 	public static volatile SingularAttribute<Empresa, Endereco> endereco;
 	public static volatile SingularAttribute<Empresa, Manutencao> manutencao;
 	public static volatile ListAttribute<Empresa, Funcionario> funcionarios;
+	public static volatile ListAttribute<Empresa, Pedido> pedidos;
 }

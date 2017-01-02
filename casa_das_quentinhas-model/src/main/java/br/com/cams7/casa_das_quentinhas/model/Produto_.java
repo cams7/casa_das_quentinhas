@@ -3,6 +3,7 @@
  */
 package br.com.cams7.casa_das_quentinhas.model;
 
+import javax.persistence.metamodel.ListAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
@@ -23,4 +24,5 @@ public class Produto_ {
 	public static volatile SingularAttribute<Produto, String> codigoNcm;
 	public static volatile SingularAttribute<Produto, String> codigoCest;
 	public static volatile SingularAttribute<Produto, Manutencao> manutencao;
+	public static volatile ListAttribute<Produto, PedidoItem> itens;
 }

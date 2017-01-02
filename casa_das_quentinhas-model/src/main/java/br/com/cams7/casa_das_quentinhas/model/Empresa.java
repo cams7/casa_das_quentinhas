@@ -18,6 +18,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -108,6 +109,9 @@ public class Empresa extends AbstractEntity<Integer> {
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "empresa")
 	private List<Funcionario> funcionarios;
+
+	@ManyToMany(mappedBy = "empresas", fetch = FetchType.LAZY)
+	private List<Pedido> pedidos;
 
 	/**
 	 * 
@@ -383,6 +387,21 @@ public class Empresa extends AbstractEntity<Integer> {
 	 */
 	public void setFuncionarios(List<Funcionario> funcionarios) {
 		this.funcionarios = funcionarios;
+	}
+
+	/**
+	 * @return Pedidos da empresa
+	 */
+	public List<Pedido> getPedidos() {
+		return pedidos;
+	}
+
+	/**
+	 * @param pedidos
+	 *            Pedidos da empresa
+	 */
+	public void setPedidos(List<Pedido> pedidos) {
+		this.pedidos = pedidos;
 	}
 
 	/**

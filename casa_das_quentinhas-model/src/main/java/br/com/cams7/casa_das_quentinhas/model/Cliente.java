@@ -8,6 +8,7 @@ import static br.com.cams7.app.validator.CpfValidator.formatCpf;
 import static br.com.cams7.app.validator.CpfValidator.unformatCpf;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -21,6 +22,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
@@ -91,6 +93,9 @@ public class Cliente extends AbstractEntity<Integer> {
 
 	@Embedded
 	private Manutencao manutencao;
+
+	@ManyToMany(mappedBy = "clientes", fetch = FetchType.LAZY)
+	private List<Pedido> pedidos;
 
 	/**
 	 * 
@@ -274,6 +279,21 @@ public class Cliente extends AbstractEntity<Integer> {
 	 */
 	public void setManutencao(Manutencao manutencao) {
 		this.manutencao = manutencao;
+	}
+
+	/**
+	 * @return Pedidos do cliente
+	 */
+	public List<Pedido> getPedidos() {
+		return pedidos;
+	}
+
+	/**
+	 * @param pedidos
+	 *            Pedidos do cliente
+	 */
+	public void setPedidos(List<Pedido> pedidos) {
+		this.pedidos = pedidos;
 	}
 
 	/**

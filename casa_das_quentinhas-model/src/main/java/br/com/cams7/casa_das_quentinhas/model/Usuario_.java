@@ -26,4 +26,6 @@ public class Usuario_ {
 	public static volatile ListAttribute<Usuario, Empresa> empresas;
 	// public static volatile SingularAttribute<Usuario, Cliente> cliente;
 	public static volatile ListAttribute<Usuario, Cliente> clientes;
+	public static volatile ListAttribute<Usuario, Produto> produtos;
+	public static volatile ListAttribute<Usuario, Pedido> pedidos;
 }

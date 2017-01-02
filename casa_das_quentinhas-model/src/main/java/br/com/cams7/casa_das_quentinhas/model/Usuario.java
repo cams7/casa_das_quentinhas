@@ -63,6 +63,12 @@ public class Usuario extends AbstractEntity<Integer> {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "usuarioCadastro")
 	private List<Cliente> clientes;
 
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "usuarioCadastro")
+	private List<Produto> produtos;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "usuarioCadastro")
+	private List<Pedido> pedidos;
+
 	@Transient
 	private String senha;
 
@@ -236,6 +242,36 @@ public class Usuario extends AbstractEntity<Integer> {
 	 */
 	public void setClientes(List<Cliente> clientes) {
 		this.clientes = clientes;
+	}
+
+	/**
+	 * @return Produtos cadastrados pelo usuário
+	 */
+	public List<Produto> getProdutos() {
+		return produtos;
+	}
+
+	/**
+	 * @param produtos
+	 *            Produtos cadastrados pelo usuário
+	 */
+	public void setProdutos(List<Produto> produtos) {
+		this.produtos = produtos;
+	}
+
+	/**
+	 * @return Pedidos cadastrados pelo usuário
+	 */
+	public List<Pedido> getPedidos() {
+		return pedidos;
+	}
+
+	/**
+	 * @param pedidos
+	 *            Pedidos cadastrados pelo usuário
+	 */
+	public void setPedidos(List<Pedido> pedidos) {
+		this.pedidos = pedidos;
 	}
 
 	/**

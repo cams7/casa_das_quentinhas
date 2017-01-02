@@ -5,6 +5,8 @@ package br.com.cams7.casa_das_quentinhas.model;
 
 import static br.com.cams7.app.common.MoneyEditor.NUMBER_FORMAT;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -17,6 +19,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -74,6 +77,9 @@ public class Produto extends AbstractEntity<Integer> {
 
 	@Embedded
 	private Manutencao manutencao;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "produto")
+	private List<PedidoItem> itens;
 
 	/**
 	 * 
@@ -229,6 +235,21 @@ public class Produto extends AbstractEntity<Integer> {
 		this.manutencao = manutencao;
 	}
 
+	/**
+	 * @return Itens do pedido
+	 */
+	public List<PedidoItem> getItens() {
+		return itens;
+	}
+
+	/**
+	 * @param itens
+	 *            Itens do pedido
+	 */
+	public void setItens(List<PedidoItem> itens) {
+		this.itens = itens;
+	}
+
 	public String getFormattedCusto() {
 		if (custo == null)
 			return null;
@@ -238,24 +259,24 @@ public class Produto extends AbstractEntity<Integer> {
 	}
 
 	/**
-	 * @return Nome com ID
+	 * @return Nome com tamanho
 	 */
-	public String getNomeWithId() {
-		return getNomeWithId(nome, id);
+	public String getNomeWithTamanho() {
+		return getNomeWithTamanho(nome, tamanho);
 	}
 
 	/**
 	 * @param nome
 	 *            Nome do produto
-	 * @param id
-	 *            ID do produto
-	 * @return Nome com ID
+	 * @param tamanho
+	 *            Tamanho do produto
+	 * @return Nome com tamanho
 	 */
-	public static String getNomeWithId(String nome, Integer id) {
-		if (nome == null || id == null)
+	public static String getNomeWithTamanho(String nome, Tamanho tamanho) {
+		if (nome == null || tamanho == null)
 			return null;
 
-		return nome + " < " + id + " >";
+		return nome + " < " + tamanho.getDescricao() + " >";
 	}
 
 	/**

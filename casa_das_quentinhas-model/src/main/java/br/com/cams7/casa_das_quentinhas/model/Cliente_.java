@@ -5,11 +5,11 @@ package br.com.cams7.casa_das_quentinhas.model;
 
 import java.util.Date;
 
+import javax.persistence.metamodel.ListAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
 import br.com.cams7.casa_das_quentinhas.model.Cliente.TipoContribuinte;
-
 
 /**
  * @author cesar
@@ -28,4 +28,5 @@ public class Cliente_ {
 	public static volatile SingularAttribute<Cliente, Contato> contato;
 	public static volatile SingularAttribute<Cliente, Endereco> endereco;
 	public static volatile SingularAttribute<Cliente, Manutencao> manutencao;
+	public static volatile ListAttribute<Cliente, Pedido> pedidos;
 }

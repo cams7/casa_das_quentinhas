@@ -17,6 +17,7 @@ import org.springframework.stereotype.Repository;
 
 import br.com.cams7.app.dao.AbstractDAO;
 import br.com.cams7.casa_das_quentinhas.model.Produto;
+import br.com.cams7.casa_das_quentinhas.model.Produto.Tamanho;
 import br.com.cams7.casa_das_quentinhas.model.Produto_;
 
 /**
@@ -83,7 +84,7 @@ public class ProdutoDAOImpl extends AbstractDAO<Produto, Integer> implements Pro
 
 		Root<Produto> from = cq.from(ENTITY_TYPE);
 
-		cq.select(cb.array(from.get(Produto_.id), from.get(Produto_.nome)));
+		cq.select(cb.array(from.get(Produto_.id), from.get(Produto_.nome), from.get(Produto_.tamanho)));
 
 		nomeOrCusto = "%" + nomeOrCusto.toLowerCase() + "%";
 
@@ -97,7 +98,7 @@ public class ProdutoDAOImpl extends AbstractDAO<Produto, Integer> implements Pro
 
 		Map<Integer, String> produtos = tq.getResultList().stream()
 				.collect(Collectors.toMap(produto -> (Integer) produto[0],
-						produto -> Produto.getNomeWithId((String) produto[1], (Integer) produto[0])));
+						produto -> Produto.getNomeWithTamanho((String) produto[1], (Tamanho) produto[2])));
 
 		return produtos;
 	}
