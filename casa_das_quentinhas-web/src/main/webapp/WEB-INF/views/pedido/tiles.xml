@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC  "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"  "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+	<!-- Lista de Pedidos -->
+	<definition name="pedido_index" extends="default">
+		<put-attribute name="title" value="Lista de Pedidos" />
+		<put-attribute name="body" value="/WEB-INF/views/pedido/index.jsp" />
+	</definition>
+
+	<!-- Adicionar Pedido -->
+	<definition name="pedido_create" extends="default">
+		<put-attribute name="title" value="Adicionar Pedido" />
+		<put-attribute name="body" value="/WEB-INF/views/pedido/create.jsp" />
+	</definition>
+
+	<!-- Editar Pedido -->
+	<definition name="pedido_edit" extends="default">
+		<put-attribute name="title" value="Editar Pedido" />
+		<put-attribute name="body" value="/WEB-INF/views/pedido/edit.jsp" />
+	</definition>
+
+	<!-- Visualizar Pedido -->
+	<definition name="pedido_show" extends="default">
+		<put-attribute name="title" value="Visualizar Pedido" />
+		<put-attribute name="body" value="/WEB-INF/views/pedido/show.jsp" />
+	</definition>
+
+	<!-- Paginação de Pedidos -->
+	<definition name="pedido_list" extends="empty">
+		<put-attribute name="body" value="/WEB-INF/views/pedido/list.jsp" />
+	</definition>
+</tiles-definitions>

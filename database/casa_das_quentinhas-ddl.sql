@@ -108,6 +108,7 @@ CREATE SEQUENCE public.pedido_id_seq;
 CREATE TABLE public.pedido (
                 id_pedido BIGINT NOT NULL DEFAULT nextval('public.pedido_id_seq'),
                 id_usuario_cadastro INTEGER NOT NULL,
+				tipo_cliente SMALLINT NOT NULL,
                 quantidade_total SMALLINT NOT NULL,
                 total_nota REAL NOT NULL,
                 icms_nota REAL,

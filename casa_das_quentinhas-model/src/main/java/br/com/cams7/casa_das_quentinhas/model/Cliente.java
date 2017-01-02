@@ -342,7 +342,7 @@ public class Cliente extends AbstractEntity<Integer> {
 		if (nome == null || cpf == null)
 			return null;
 
-		return nome + " < " + cpf.replaceAll("(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})", "$1.$2.$3/$4-$5") + " >";
+		return nome + " < " + formatCpf(cpf) + " >";
 	}
 
 	/**

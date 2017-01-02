@@ -34,9 +34,8 @@ public class ProdutoController extends AbstractController<ProdutoService, Produt
 	 * Possiveis tamanhos de produtos
 	 */
 	@ModelAttribute("produtoTamanhos")
-	public Tamanho[] initializeTipos() {
-		Tamanho[] tamanhos = Tamanho.values();
-		return tamanhos;
+	public Tamanho[] initializeTamanhos() {
+		return Tamanho.values();
 	}
 
 	@Override
@@ -86,8 +85,7 @@ public class ProdutoController extends AbstractController<ProdutoService, Produt
 
 	@Override
 	protected Produto getEntity(Integer id) {
-		Produto produto = getService().getProdutoById(id);
-		return produto;
+		return getService().getProdutoById(id);
 	}
 
 }

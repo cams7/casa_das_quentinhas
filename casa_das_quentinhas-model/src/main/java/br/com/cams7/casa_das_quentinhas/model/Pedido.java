@@ -21,6 +21,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -46,6 +47,11 @@ public class Pedido extends AbstractEntity<Long> {
 	private Usuario usuarioCadastro;
 
 	@NotNull
+	@Enumerated(EnumType.ORDINAL)
+	@Column(name = "tipo_cliente")
+	private TipoCliente tipoCliente;
+
+	@NotNull
 	@Column(name = "quantidade_total")
 	private Short quantidade;
 
@@ -63,7 +69,6 @@ public class Pedido extends AbstractEntity<Long> {
 	@Column(name = "forma_pagamento")
 	private FormaPagamento formaPagamento;
 
-	@NotNull
 	@Column(name = "consumidor_final")
 	private Boolean consumidorFinal;
 
@@ -99,6 +104,12 @@ public class Pedido extends AbstractEntity<Long> {
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pedido")
 	private List<PedidoItem> itens;
+
+	@Transient
+	private String clienteNome;
+
+	@Transient
+	private Integer clienteId;
 
 	/**
 	 * 
@@ -147,6 +158,21 @@ public class Pedido extends AbstractEntity<Long> {
 	 */
 	public void setUsuarioCadastro(Usuario usuarioCadastro) {
 		this.usuarioCadastro = usuarioCadastro;
+	}
+
+	/**
+	 * @return Tipo de cliente
+	 */
+	public TipoCliente getTipoCliente() {
+		return tipoCliente;
+	}
+
+	/**
+	 * @param tipoCliente
+	 *            Tipo de cliente
+	 */
+	public void setTipoCliente(TipoCliente tipoCliente) {
+		this.tipoCliente = tipoCliente;
 	}
 
 	/**
@@ -360,6 +386,36 @@ public class Pedido extends AbstractEntity<Long> {
 	}
 
 	/**
+	 * @return Nome da pessoa fisica ou juridica
+	 */
+	public String getClienteNome() {
+		return clienteNome;
+	}
+
+	/**
+	 * @param clienteNome
+	 *            Nome da pessoa fisica ou juridica
+	 */
+	public void setClienteNome(String clienteNome) {
+		this.clienteNome = clienteNome;
+	}
+
+	/**
+	 * @return ID do cliente ou da empresa cliente
+	 */
+	public Integer getClienteId() {
+		return clienteId;
+	}
+
+	/**
+	 * @param clienteId
+	 *            ID do cliente ou da empresa cliente
+	 */
+	public void setClienteId(Integer clienteId) {
+		this.clienteId = clienteId;
+	}
+
+	/**
 	 * @param destinoOperacao
 	 *            Destino da operação
 	 * @return Código do destino da operação
@@ -494,6 +550,28 @@ public class Pedido extends AbstractEntity<Long> {
 		}
 
 		public Situacao getSituacao() {
+			return values()[ordinal()];
+		}
+
+		public String getDescricao() {
+			return descricao;
+		}
+	}
+
+	/**
+	 * @author César Magalhães
+	 *
+	 *         Tipo de cliente
+	 */
+	public enum TipoCliente {
+		PESSOA_FISICA("Pessoa física"), PESSOA_JURIDICA("Pessoa juridica");
+		private String descricao;
+
+		private TipoCliente(String descricao) {
+			this.descricao = descricao;
+		}
+
+		public TipoCliente getTipoCliente() {
 			return values()[ordinal()];
 		}
 
