@@ -13,6 +13,7 @@
 				<thead>
 					<tr>
 						<th class="${sortField eq 'id' ? sortOrder : 'sorting' }" id="id">#</th>
+						<th>Cliente</th>
 						<th class="${sortField eq 'tipoCliente' ? sortOrder : 'sorting' }"
 							id="tipoCliente">Tipo de cliente</th>
 						<th class="${sortField eq 'quantidade' ? sortOrder : 'sorting' }"
@@ -29,9 +30,10 @@
 					<c:forEach items="${pedidos}" var="pedido">
 						<tr>
 							<td>${pedido.id}</td>
+							<td>${pedido.empresa != null ? pedido.empresa.razaoSocialWithCnpj : pedido.cliente.nomeWithCpf}</td>
 							<td>${pedido.tipoCliente.descricao}</td>
 							<td>${pedido.quantidade}</td>
-							<td>${pedido.custo}</td>
+							<td>${pedido.formattedCusto}</td>
 
 							<td class="actions"><a class="btn btn-success btn-xs"
 								href="<c:url value='/pedido/${pedido.id}' />">Visualizar</a> <sec:authorize

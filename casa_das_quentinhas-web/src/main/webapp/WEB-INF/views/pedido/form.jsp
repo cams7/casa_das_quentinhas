@@ -8,15 +8,15 @@
 
 <div class="row">
 	<c:set var="clienteNomeError">
-		<form:errors path="clienteId" />
+		<form:errors path="cliente.id" />
 	</c:set>
 	<div
-		class="form-group col-md-4 ${not empty clienteNomeError ? 'has-error' : ''}">
-		<label class="control-label" for="clienteNome">Cliente</label>
-		<form:input type="text" path="clienteNome" id="cliente"
+		class="form-group col-md-6 ${not empty clienteNomeError ? 'has-error' : ''}">
+		<label class="control-label" for="cliente.nome">Cliente</label>
+		<form:input type="text" path="cliente.nome" id="cliente"
 			class="form-control" maxlength="80"
-			placeholder="Nome / CPF / Telefone" />
-		<form:input type="hidden" path="clienteId" id="cliente_id" />
+			placeholder="Nome / CPF / Telefone" value="${pedido.empresa != null ? pedido.empresa.razaoSocialWithCnpj : pedido.cliente.nomeWithCpf}"/>
+		<form:input type="hidden" path="cliente.id" id="cliente_id" />
 		<div class="help-block with-errors">${clienteNomeError}</div>
 	</div>
 
@@ -46,20 +46,18 @@
 			itemValue="formaPagamento" itemLabel="descricao" class="form-control" />
 		<div class="help-block with-errors">${formaPagamentoError}</div>
 	</div>
-
-	<c:set var="tipoAtendimentoError">
-		<form:errors path="tipoAtendimento" />
+	
+	<c:set var="situacaoError">
+		<form:errors path="situacao" />
 	</c:set>
 	<div
-		class="form-group col-md-4 ${not empty tipoAtendimentoError?'has-error':''}">
-		<label class="control-label" for="tipoAtendimento">Tipo de
-			atendimento</label>
+		class="form-group col-md-2 ${not empty situacaoError?'has-error':''}">
+		<label class="control-label" for="situacao">Situação</label>
 
-		<form:select path="tipoAtendimento" id="tipoAtendimento"
-			items="${pedidoTiposAtendimento}" multiple="true"
-			itemValue="tipoAtendimento" itemLabel="descricao"
+		<form:select path="situacao" id="situacao" items="${pedidoSituacoes}"
+			multiple="true" itemValue="situacao" itemLabel="descricao"
 			class="form-control" />
-		<div class="help-block with-errors">${tipoAtendimentoError}</div>
+		<div class="help-block with-errors">${situacaoError}</div>
 	</div>
 </div>
 
@@ -108,17 +106,19 @@
 		<div class="help-block with-errors">${custoStError}</div>
 	</div>
 
-	<c:set var="situacaoError">
-		<form:errors path="situacao" />
+	<c:set var="tipoAtendimentoError">
+		<form:errors path="tipoAtendimento" />
 	</c:set>
 	<div
-		class="form-group col-md-4 ${not empty situacaoError?'has-error':''}">
-		<label class="control-label" for="situacao">Situação</label>
+		class="form-group col-md-4 ${not empty tipoAtendimentoError?'has-error':''}">
+		<label class="control-label" for="tipoAtendimento">Tipo de
+			atendimento</label>
 
-		<form:select path="situacao" id="situacao" items="${pedidoSituacoes}"
-			multiple="true" itemValue="situacao" itemLabel="descricao"
+		<form:select path="tipoAtendimento" id="tipoAtendimento"
+			items="${pedidoTiposAtendimento}" multiple="true"
+			itemValue="tipoAtendimento" itemLabel="descricao"
 			class="form-control" />
-		<div class="help-block with-errors">${situacaoError}</div>
+		<div class="help-block with-errors">${tipoAtendimentoError}</div>
 	</div>
 </div>
 

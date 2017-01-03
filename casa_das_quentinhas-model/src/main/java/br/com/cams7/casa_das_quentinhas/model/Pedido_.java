@@ -33,7 +33,7 @@ public class Pedido_ {
 	public static volatile SingularAttribute<Pedido, String> naturezaOperacao;
 	public static volatile SingularAttribute<Pedido, Situacao> situacao;
 	public static volatile SingularAttribute<Pedido, Manutencao> manutencao;
-	public static volatile ListAttribute<Pedido, Empresa> empresas;
-	public static volatile ListAttribute<Pedido, Cliente> clientes;
+	public static volatile SingularAttribute<Pedido, Empresa> empresa;
+	public static volatile SingularAttribute<Pedido, Cliente> cliente;
 	public static volatile ListAttribute<Pedido, PedidoItem> itens;
 }

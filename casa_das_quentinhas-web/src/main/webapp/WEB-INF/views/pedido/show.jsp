@@ -14,7 +14,7 @@
 		<p>
 			<strong>Cliente</strong>
 		</p>
-		<p>${pedido.clienteNome}</p>
+		<p>${pedido.empresa != null ? pedido.empresa.razaoSocialWithCnpj : pedido.cliente.nomeWithCpf}</p>
 	</div>
 	<div class="col-md-2">
 		<p>
@@ -30,9 +30,9 @@
 	</div>
 	<div class="col-md-2">
 		<p>
-			<strong>Tipo de atendimento</strong>
+			<strong>Situação</strong>
 		</p>
-		<p>${pedido.tipoAtendimento.descricao}</p>
+		<p>${pedido.situacao.descricao}</p>
 	</div>
 </div>
 
@@ -47,26 +47,26 @@
 		<p>
 			<strong>Custo</strong>
 		</p>
-		<p>${pedido.custo}</p>
+		<p>${pedido.formattedCusto}</p>
 	</div>
 	<div class="col-md-2">
 		<p>
 			<strong>ICMS</strong>
 		</p>
-		<p>${pedido.custoIcms}</p>
+		<p>${pedido.formattedCustoIcms}</p>
 	</div>
 	<div class="col-md-2">
 		<p>
 			<strong>Subs. tributária</strong>
 		</p>
-		<p>${pedido.custoSt}</p>
+		<p>${pedido.formattedCustoSt}</p>
 	</div>
 	<div class="col-md-4">
 		<p>
-			<strong>Situação</strong>
+			<strong>Tipo de atendimento</strong>
 		</p>
-		<p>${pedido.situacao.descricao}</p>
-	</div>
+		<p>${pedido.tipoAtendimento.descricao}</p>
+	</div>	
 </div>
 
 <hr />

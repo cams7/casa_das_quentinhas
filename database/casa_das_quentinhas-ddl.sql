@@ -208,7 +208,7 @@ ALTER SEQUENCE public.empresa_id_seq OWNED BY public.empresa.id_empresa;
 ------------------------------------------------- Funcionário --------------------------------------------------
 CREATE TABLE public.funcionario (
                 id_funcionario INTEGER NOT NULL,
-                id_usuario_cadastro INTEGER,
+                id_usuario_cadastro INTEGER NOT NULL,
                 id_empresa INTEGER NOT NULL,
                 funcao SMALLINT NOT NULL,
                 nome VARCHAR(60) NOT NULL,

@@ -10,13 +10,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import br.com.cams7.app.common.MoneyEditor;
 import br.com.cams7.app.controller.AbstractController;
+import br.com.cams7.casa_das_quentinhas.model.Cliente;
 import br.com.cams7.casa_das_quentinhas.model.Pedido;
 import br.com.cams7.casa_das_quentinhas.model.Pedido.DestinoOperacao;
 import br.com.cams7.casa_das_quentinhas.model.Pedido.FormaPagamento;
@@ -55,6 +59,13 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 		Map<Integer, String> empresas = empresaService.getEmpresasByRazaoSocialOrCnpj(nomeOrCnpj);
 
 		return new ResponseEntity<Map<Integer, String>>(empresas, HttpStatus.OK);
+	}
+
+	@InitBinder
+	public void binder(WebDataBinder binder) {
+		binder.registerCustomEditor(Float.class, "custo", new MoneyEditor());
+		binder.registerCustomEditor(Float.class, "custoIcms", new MoneyEditor());
+		binder.registerCustomEditor(Float.class, "custoSt", new MoneyEditor());
 	}
 
 	/**
@@ -139,12 +150,13 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 
 	@Override
 	protected String[] getGlobalFilters() {
-		return new String[] { "quantidade", "custo" };
+		return new String[] { "cliente.nome", "empresa.razaoSocial", "quantidade", "custo" };
 	}
 
 	@Override
 	protected Pedido getNewEntity() {
 		Pedido pedido = new Pedido();
+		pedido.setCliente(new Cliente());
 		pedido.setTipoCliente(TipoCliente.PESSOA_FISICA);
 		pedido.setFormaPagamento(FormaPagamento.PAGAMENTO_A_PRAZO);
 		pedido.setTipoAtendimento(TipoAtendimento.TELEATENDIMENTO);

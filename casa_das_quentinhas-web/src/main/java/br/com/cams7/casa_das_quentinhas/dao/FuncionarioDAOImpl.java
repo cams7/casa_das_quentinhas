@@ -58,9 +58,9 @@ public class FuncionarioDAOImpl extends AbstractDAO<Funcionario, Integer> implem
 	@Override
 	protected From<?, ?>[] getFetchJoins(Root<Funcionario> from) {
 		Join<Funcionario, Usuario> joinUsuario = (Join<Funcionario, Usuario>) from.fetch(Funcionario_.usuario,
-				JoinType.LEFT);
+				JoinType.INNER);
 		Join<Funcionario, Empresa> joinEmpresa = (Join<Funcionario, Empresa>) from.fetch(Funcionario_.empresa,
-				JoinType.LEFT);
+				JoinType.INNER);
 
 		return new From<?, ?>[] { joinUsuario, joinEmpresa };
 	}
@@ -75,9 +75,9 @@ public class FuncionarioDAOImpl extends AbstractDAO<Funcionario, Integer> implem
 	@Override
 	protected From<?, ?>[] getJoins(Root<Funcionario> from) {
 		Join<Funcionario, Usuario> joinUsuario = (Join<Funcionario, Usuario>) from.join(Funcionario_.usuario,
-				JoinType.LEFT);
+				JoinType.INNER);
 		Join<Funcionario, Empresa> joinEmpresa = (Join<Funcionario, Empresa>) from.join(Funcionario_.empresa,
-				JoinType.LEFT);
+				JoinType.INNER);
 
 		return new From<?, ?>[] { joinUsuario, joinEmpresa };
 	}
@@ -96,9 +96,9 @@ public class FuncionarioDAOImpl extends AbstractDAO<Funcionario, Integer> implem
 
 		Root<Funcionario> from = cq.from(ENTITY_TYPE);
 
-		from.fetch(Funcionario_.usuario, JoinType.LEFT);
-		from.fetch(Funcionario_.usuarioCadastro, JoinType.LEFT);
-		from.fetch(Funcionario_.empresa, JoinType.LEFT);
+		from.fetch(Funcionario_.usuario, JoinType.INNER);
+		from.fetch(Funcionario_.usuarioCadastro, JoinType.INNER);
+		from.fetch(Funcionario_.empresa, JoinType.INNER);
 
 		cq.select(from);
 

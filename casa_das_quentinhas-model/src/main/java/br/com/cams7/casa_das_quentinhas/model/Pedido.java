@@ -3,6 +3,8 @@
  */
 package br.com.cams7.casa_das_quentinhas.model;
 
+import static br.com.cams7.app.common.MoneyEditor.NUMBER_FORMAT;
+
 import java.util.List;
 
 import javax.persistence.Column;
@@ -16,12 +18,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -92,24 +92,18 @@ public class Pedido extends AbstractEntity<Long> {
 	@Embedded
 	private Manutencao manutencao;
 
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinTable(name = "empresa_pedido", joinColumns = { @JoinColumn(name = "id_pedido") }, inverseJoinColumns = {
 			@JoinColumn(name = "id_empresa") })
-	private List<Empresa> empresas;
+	private Empresa empresa;
 
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinTable(name = "cliente_pedido", joinColumns = { @JoinColumn(name = "id_pedido") }, inverseJoinColumns = {
 			@JoinColumn(name = "id_cliente") })
-	private List<Cliente> clientes;
+	private Cliente cliente;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pedido")
 	private List<PedidoItem> itens;
-
-	@Transient
-	private String clienteNome;
-
-	@Transient
-	private Integer clienteId;
 
 	/**
 	 * 
@@ -341,33 +335,33 @@ public class Pedido extends AbstractEntity<Long> {
 	}
 
 	/**
-	 * @return Empresas
+	 * @return Empresa
 	 */
-	public List<Empresa> getEmpresas() {
-		return empresas;
+	public Empresa getEmpresa() {
+		return empresa;
 	}
 
 	/**
-	 * @param empresas
-	 *            Empresas
+	 * @param empresa
+	 *            Empresa
 	 */
-	public void setEmpresas(List<Empresa> empresas) {
-		this.empresas = empresas;
+	public void setEmpresa(Empresa empresa) {
+		this.empresa = empresa;
 	}
 
 	/**
-	 * @return Clientes
+	 * @return Cliente
 	 */
-	public List<Cliente> getClientes() {
-		return clientes;
+	public Cliente getCliente() {
+		return cliente;
 	}
 
 	/**
-	 * @param clientes
-	 *            Clientes
+	 * @param cliente
+	 *            Cliente
 	 */
-	public void setClientes(List<Cliente> clientes) {
-		this.clientes = clientes;
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
 	}
 
 	/**
@@ -385,34 +379,25 @@ public class Pedido extends AbstractEntity<Long> {
 		this.itens = itens;
 	}
 
-	/**
-	 * @return Nome da pessoa fisica ou juridica
-	 */
-	public String getClienteNome() {
-		return clienteNome;
+	public String getFormattedCusto() {
+		if (custo == null)
+			return null;
+
+		return NUMBER_FORMAT.format(custo);
 	}
 
-	/**
-	 * @param clienteNome
-	 *            Nome da pessoa fisica ou juridica
-	 */
-	public void setClienteNome(String clienteNome) {
-		this.clienteNome = clienteNome;
+	public String getFormattedCustoIcms() {
+		if (custoIcms == null)
+			return null;
+
+		return NUMBER_FORMAT.format(custoIcms);
 	}
 
-	/**
-	 * @return ID do cliente ou da empresa cliente
-	 */
-	public Integer getClienteId() {
-		return clienteId;
-	}
+	public String getFormattedCustoSt() {
+		if (custoSt == null)
+			return null;
 
-	/**
-	 * @param clienteId
-	 *            ID do cliente ou da empresa cliente
-	 */
-	public void setClienteId(Integer clienteId) {
-		this.clienteId = clienteId;
+		return NUMBER_FORMAT.format(custoSt);
 	}
 
 	/**

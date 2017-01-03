@@ -44,8 +44,8 @@ public class ClienteDAOImpl extends AbstractDAO<Cliente, Integer> implements Cli
 	@SuppressWarnings("unchecked")
 	@Override
 	protected From<?, ?>[] getFetchJoins(Root<Cliente> from) {
-		Join<Cliente, Cidade> joinCidade = (Join<Cliente, Cidade>) from.fetch(Cliente_.cidade, JoinType.LEFT);
-		Join<Cidade, Estado> joinEstado = (Join<Cidade, Estado>) joinCidade.fetch(Cidade_.estado, JoinType.LEFT);
+		Join<Cliente, Cidade> joinCidade = (Join<Cliente, Cidade>) from.fetch(Cliente_.cidade, JoinType.INNER);
+		Join<Cidade, Estado> joinEstado = (Join<Cidade, Estado>) joinCidade.fetch(Cidade_.estado, JoinType.INNER);
 
 		return new From<?, ?>[] { joinCidade, joinEstado };
 	}
@@ -59,8 +59,8 @@ public class ClienteDAOImpl extends AbstractDAO<Cliente, Integer> implements Cli
 	 */
 	@Override
 	protected From<?, ?>[] getJoins(Root<Cliente> from) {
-		Join<Cliente, Cidade> joinCidade = (Join<Cliente, Cidade>) from.join(Cliente_.cidade, JoinType.LEFT);
-		Join<Cidade, Estado> joinEstado = (Join<Cidade, Estado>) joinCidade.join(Cidade_.estado, JoinType.LEFT);
+		Join<Cliente, Cidade> joinCidade = (Join<Cliente, Cidade>) from.join(Cliente_.cidade, JoinType.INNER);
+		Join<Cidade, Estado> joinEstado = (Join<Cidade, Estado>) joinCidade.join(Cidade_.estado, JoinType.INNER);
 
 		return new From<?, ?>[] { joinCidade, joinEstado };
 	}
@@ -80,8 +80,8 @@ public class ClienteDAOImpl extends AbstractDAO<Cliente, Integer> implements Cli
 		Root<Cliente> from = cq.from(ENTITY_TYPE);
 
 		from.fetch(Cliente_.usuarioAcesso, JoinType.LEFT);
-		from.fetch(Cliente_.usuarioCadastro, JoinType.LEFT);
-		from.fetch(Cliente_.cidade, JoinType.LEFT).fetch(Cidade_.estado, JoinType.LEFT);
+		from.fetch(Cliente_.usuarioCadastro, JoinType.INNER);
+		from.fetch(Cliente_.cidade, JoinType.INNER).fetch(Cidade_.estado, JoinType.INNER);
 
 		cq.select(from);
 
@@ -169,7 +169,7 @@ public class ClienteDAOImpl extends AbstractDAO<Cliente, Integer> implements Cli
 		CriteriaQuery<Integer> cq = cb.createQuery(Integer.class);
 
 		Root<Cliente> from = cq.from(ENTITY_TYPE);
-		Join<Cliente, Usuario> join = (Join<Cliente, Usuario>) from.join(Cliente_.usuarioAcesso, JoinType.LEFT);
+		Join<Cliente, Usuario> join = (Join<Cliente, Usuario>) from.join(Cliente_.usuarioAcesso, JoinType.INNER);
 
 		cq.select(join.get(Usuario_.id));
 

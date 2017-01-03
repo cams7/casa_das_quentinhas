@@ -44,8 +44,8 @@ public class EmpresaDAOImpl extends AbstractDAO<Empresa, Integer> implements Emp
 	@SuppressWarnings("unchecked")
 	@Override
 	protected From<?, ?>[] getFetchJoins(Root<Empresa> from) {
-		Join<Empresa, Cidade> joinCidade = (Join<Empresa, Cidade>) from.fetch(Empresa_.cidade, JoinType.LEFT);
-		Join<Cidade, Estado> joinEstado = (Join<Cidade, Estado>) joinCidade.fetch(Cidade_.estado, JoinType.LEFT);
+		Join<Empresa, Cidade> joinCidade = (Join<Empresa, Cidade>) from.fetch(Empresa_.cidade, JoinType.INNER);
+		Join<Cidade, Estado> joinEstado = (Join<Cidade, Estado>) joinCidade.fetch(Cidade_.estado, JoinType.INNER);
 
 		return new From<?, ?>[] { joinCidade, joinEstado };
 	}
@@ -59,8 +59,8 @@ public class EmpresaDAOImpl extends AbstractDAO<Empresa, Integer> implements Emp
 	 */
 	@Override
 	protected From<?, ?>[] getJoins(Root<Empresa> from) {
-		Join<Empresa, Cidade> joinCidade = (Join<Empresa, Cidade>) from.join(Empresa_.cidade, JoinType.LEFT);
-		Join<Cidade, Estado> joinEstado = (Join<Cidade, Estado>) joinCidade.join(Cidade_.estado, JoinType.LEFT);
+		Join<Empresa, Cidade> joinCidade = (Join<Empresa, Cidade>) from.join(Empresa_.cidade, JoinType.INNER);
+		Join<Cidade, Estado> joinEstado = (Join<Cidade, Estado>) joinCidade.join(Cidade_.estado, JoinType.INNER);
 
 		return new From<?, ?>[] { joinCidade, joinEstado };
 	}
@@ -80,8 +80,8 @@ public class EmpresaDAOImpl extends AbstractDAO<Empresa, Integer> implements Emp
 		Root<Empresa> from = cq.from(ENTITY_TYPE);
 
 		from.fetch(Empresa_.usuarioAcesso, JoinType.LEFT);
-		from.fetch(Empresa_.usuarioCadastro, JoinType.LEFT);
-		from.fetch(Empresa_.cidade, JoinType.LEFT).fetch(Cidade_.estado, JoinType.LEFT);
+		from.fetch(Empresa_.usuarioCadastro, JoinType.INNER);
+		from.fetch(Empresa_.cidade, JoinType.INNER).fetch(Cidade_.estado, JoinType.INNER);
 
 		cq.select(from);
 
@@ -169,7 +169,7 @@ public class EmpresaDAOImpl extends AbstractDAO<Empresa, Integer> implements Emp
 		CriteriaQuery<Integer> cq = cb.createQuery(Integer.class);
 
 		Root<Empresa> from = cq.from(ENTITY_TYPE);
-		Join<Empresa, Usuario> join = (Join<Empresa, Usuario>) from.join(Empresa_.usuarioAcesso, JoinType.LEFT);
+		Join<Empresa, Usuario> join = (Join<Empresa, Usuario>) from.join(Empresa_.usuarioAcesso, JoinType.INNER);
 
 		cq.select(join.get(Usuario_.id));
 
