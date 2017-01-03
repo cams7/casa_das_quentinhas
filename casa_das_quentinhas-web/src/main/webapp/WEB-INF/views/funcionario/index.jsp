@@ -41,10 +41,10 @@
 
 <script type="text/javascript">
 	var MAIN_PAGE = '<c:url value='/${mainPage}' />';
-	var MODAL_LABEL = 'Excluir Funcionário';
-	var MODAL_BODY = 'Deseja realmente excluir este Funcionário?';
+	var LIST_PAGE = MAIN_PAGE + '/list';
+	var DELETE_PAGE = MAIN_PAGE;
 </script>
-<script src="<c:url value='/static/js/casa_das_quentinhas-index.js' />"></script>
+<script src="<c:url value='/static/js/casa_das_quentinhas-list.js' />"></script>
 
 <%@include file="../../layouts/delete_modal.jsp"%>
 

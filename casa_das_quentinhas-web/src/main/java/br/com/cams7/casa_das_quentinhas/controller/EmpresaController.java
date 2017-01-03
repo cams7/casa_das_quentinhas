@@ -3,6 +3,8 @@
  */
 package br.com.cams7.casa_das_quentinhas.controller;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -25,14 +27,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import br.com.cams7.app.controller.AbstractController;
+import br.com.cams7.app.utils.SearchParams;
+import br.com.cams7.app.utils.SearchParams.SortOrder;
 import br.com.cams7.casa_das_quentinhas.model.Cidade;
 import br.com.cams7.casa_das_quentinhas.model.Contato;
 import br.com.cams7.casa_das_quentinhas.model.Empresa;
 import br.com.cams7.casa_das_quentinhas.model.Empresa.RegimeTributario;
 import br.com.cams7.casa_das_quentinhas.model.Endereco;
+import br.com.cams7.casa_das_quentinhas.model.Funcionario;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
 import br.com.cams7.casa_das_quentinhas.service.CidadeService;
 import br.com.cams7.casa_das_quentinhas.service.EmpresaService;
+import br.com.cams7.casa_das_quentinhas.service.FuncionarioService;
 
 /**
  * @author César Magalhães
@@ -45,6 +51,9 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 
 	@Autowired
 	private CidadeService cidadeService;
+
+	@Autowired
+	private FuncionarioService funcionarioService;
 
 	@Autowired
 	private MessageSource messageSource;
@@ -103,6 +112,21 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 	 * (non-Javadoc)
 	 * 
 	 * @see
+	 * br.com.cams7.app.controller.AbstractController#show(java.io.Serializable,
+	 * org.springframework.ui.ModelMap)
+	 */
+	@Override
+	public String show(@PathVariable Integer id, ModelMap model) {
+
+		getFuncionarios(id, model, 0, "id", SortOrder.DESCENDING);
+
+		return super.show(id, model);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
 	 * br.com.cams7.app.controller.AbstractController#update(br.com.cams7.app.
 	 * model.AbstractEntity, org.springframework.validation.BindingResult,
 	 * org.springframework.ui.ModelMap, java.io.Serializable, java.lang.Integer)
@@ -133,6 +157,36 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 		getService().update(empresa);
 
 		return redirectMainPage();
+	}
+
+	@GetMapping(value = { "/{empresaId}/funcionarios" })
+	public String getFuncionarios(@PathVariable Integer empresaId, ModelMap model,
+			@RequestParam(value = "offset", required = true) Integer offset,
+			@RequestParam(value = "f", required = true) String sortField,
+			@RequestParam(value = "s", required = true) String sortOrder,
+			@RequestParam(value = "q", required = true) String query) {
+
+		getFuncionarios(empresaId, model, offset, sortField, SortOrder.get(sortOrder));
+
+		return "funcionario_list";
+	}
+
+	private void getFuncionarios(Integer empresaId, ModelMap model, Integer offset, String sortField,
+			SortOrder sortOrder) {
+		final short MAX_RESULTS = 5;
+
+		Map<String, Object> filters = new HashMap<>();
+		filters.put("empresa.id", empresaId);
+
+		SearchParams params = new SearchParams(offset, MAX_RESULTS, sortField, sortOrder, filters);
+
+		List<Funcionario> funcionarios = funcionarioService.search(params);
+		long count = funcionarioService.getTotalElements(filters);
+
+		model.addAttribute("funcionarios", funcionarios);
+		model.addAttribute("encondeEmpresa", true);
+
+		setPaginationAttribute(model, offset, sortField, sortOrder, null, count);
 	}
 
 	@GetMapping(value = { "/cidades/{nomeOrIbge}" }, produces = MediaType.APPLICATION_JSON_VALUE)

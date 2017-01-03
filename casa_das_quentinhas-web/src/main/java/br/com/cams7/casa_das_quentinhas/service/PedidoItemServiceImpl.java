@@ -20,4 +20,16 @@ import br.com.cams7.casa_das_quentinhas.model.PedidoItemPK;
 public class PedidoItemServiceImpl extends AbstractService<PedidoItemDAO, PedidoItem, PedidoItemPK>
 		implements PedidoItemService {
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.casa_das_quentinhas.dao.PedidoItemDAO#deleteByPedido(java.
+	 * lang.Long)
+	 */
+	@Override
+	public int deleteByPedido(Long pedidoId) {
+		return getDao().deleteByPedido(pedidoId);
+	}
+
 }

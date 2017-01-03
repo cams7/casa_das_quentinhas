@@ -66,7 +66,6 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 		Integer offset = 0;
 		String sortField = "id";
 		SortOrder sortOrder = SortOrder.DESCENDING;
-		String query = "";
 
 		SearchParams params = new SearchParams(offset, MAX_RESULTS, sortField, sortOrder, null);
 
@@ -75,7 +74,7 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 
 		model.addAttribute(getListName(), entities);
 
-		setPaginationAttribute(model, offset, sortField, sortOrder, query, count);
+		setPaginationAttribute(model, offset, sortField, sortOrder, null, count);
 
 		setUsuarioLogado(model);
 		setActivePage(model);
@@ -252,7 +251,7 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 		return "redirect:/" + getMainPage();
 	}
 
-	private void setPaginationAttribute(ModelMap model, Integer offset, String sortField, SortOrder sortOrder,
+	protected void setPaginationAttribute(ModelMap model, Integer offset, String sortField, SortOrder sortOrder,
 			String query, Long count) {
 		model.addAttribute("offset", offset);
 		model.addAttribute("sortField", sortField);

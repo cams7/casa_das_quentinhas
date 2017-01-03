@@ -170,8 +170,8 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	private Predicate getExpression(CriteriaBuilder cb, From<?, ?>[] fromWithJoins, String fieldName,
-			Object fieldValue) {
+	private Predicate getExpression(CriteriaBuilder cb, From<?, ?>[] fromWithJoins, String fieldName, Object fieldValue,
+			boolean isGlobalFilter) {
 		Object value = AppHelper.getFieldValue(ENTITY_TYPE, fieldName, fieldValue);
 
 		if (value == null)
@@ -180,20 +180,22 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 		Class<?> fieldType = value.getClass();
 
 		FromOrJoin fromOrJoin = getFromOrJoin(fromWithJoins, fieldName);
+		Expression<?> expression = getExpression(fromOrJoin);
 
 		Predicate predicate;
 
-		if (AppHelper.isBoolean(fieldType))
+		if (AppHelper.isBoolean(fieldType)) {
+			Expression<Boolean> booleanExpression = (Expression<Boolean>) expression;
+
 			if (((Boolean) value).booleanValue())
-				predicate = cb.isTrue((Expression<Boolean>) getExpression(fromOrJoin));
+				predicate = cb.isTrue(booleanExpression);
 			else
-				predicate = cb.isFalse((Expression<Boolean>) getExpression(fromOrJoin));
-		else if (AppHelper.isDate(fieldType))
-			predicate = cb.equal(getExpression(fromOrJoin), value);
-		else if (AppHelper.isEnum(fieldType))
-			predicate = cb.equal(getExpression(fromOrJoin), value);
+				predicate = cb.isFalse(booleanExpression);
+		} else if (AppHelper.isEnum(fieldType) || AppHelper.isDate(fieldType)
+				|| (!isGlobalFilter && AppHelper.isNumber(fieldType)))
+			predicate = cb.equal(expression, value);
 		else
-			predicate = cb.like(cb.lower(getExpression(fromOrJoin).as(String.class)),
+			predicate = cb.like(cb.lower(expression.as(String.class)),
 					"%" + String.valueOf(fieldValue).toLowerCase() + "%");
 
 		return predicate;
@@ -222,7 +224,7 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 					continue;
 				}
 
-				Predicate expression = getExpression(cb, fromWithJoins, filter.getKey(), filter.getValue());
+				Predicate expression = getExpression(cb, fromWithJoins, filter.getKey(), filter.getValue(), false);
 				if (expression != null)
 					and.add(expression);
 			}
@@ -234,7 +236,7 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 				Set<Predicate> or = new HashSet<>();
 				for (String globalFilter : globalFilters) {
 					Predicate expression = getExpression(cb, fromWithJoins, globalFilter,
-							filters.get(SearchParams.GLOBAL_FILTER));
+							filters.get(SearchParams.GLOBAL_FILTER), true);
 					if (expression != null)
 						or.add(expression);
 				}

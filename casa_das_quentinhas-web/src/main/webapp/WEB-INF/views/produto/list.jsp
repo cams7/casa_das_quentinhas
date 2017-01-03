@@ -17,9 +17,8 @@
 							id="nome">Nome</th>
 						<th class="${sortField eq 'tamanho' ? sortOrder : 'sorting' }"
 							id="tamanho">Tamanho</th>
-						<th
-							class="${sortField eq 'custo' ? sortOrder : 'sorting' }"
-							id="custo">Custo</th>						
+						<th class="${sortField eq 'custo' ? sortOrder : 'sorting' }"
+							id="custo">Custo</th>
 
 						<sec:authorize access="hasRole('GERENTE') or hasRole('ATENDENTE')">
 							<th class="actions">Ações</th>
@@ -41,7 +40,8 @@
 										href="<c:url value='/produto/${produto.id}/edit' />">Alterar</a>
 								</sec:authorize> <sec:authorize access="hasRole('GERENTE')">
 									<button class="btn btn-danger btn-xs delete"
-										value="${produto.id}">Excluir</button>
+										value="${produto.id}"
+										title="Deseja realmente excluir o produto ( ${produto.nome} )">Excluir</button>
 								</sec:authorize></td>
 						</tr>
 					</c:forEach>

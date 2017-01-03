@@ -4,6 +4,7 @@
 package br.com.cams7.casa_das_quentinhas.service;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,8 @@ import br.com.cams7.app.service.AbstractService;
 import br.com.cams7.casa_das_quentinhas.dao.PedidoDAO;
 import br.com.cams7.casa_das_quentinhas.model.Manutencao;
 import br.com.cams7.casa_das_quentinhas.model.Pedido;
+import br.com.cams7.casa_das_quentinhas.model.PedidoItem;
+import br.com.cams7.casa_das_quentinhas.model.PedidoItemPK;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
 
 /**
@@ -26,14 +29,30 @@ public class PedidoServiceImpl extends AbstractService<PedidoDAO, Pedido, Long> 
 	@Autowired
 	private UsuarioService usuarioService;
 
+	@Autowired
+	private PedidoItemService itemService;
+
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see br.com.cams7.app.dao.BaseDAO#persist(br.com.cams7.app.model.
-	 * AbstractEntity)
+	 * @see
+	 * br.com.cams7.casa_das_quentinhas.dao.PedidoDAO#getPedidoById(java.lang.
+	 * Long)
 	 */
 	@Override
-	public void persist(Pedido pedido) {
+	public Pedido getPedidoById(Long id) {
+		return getDao().getPedidoById(id);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.casa_das_quentinhas.service.PedidoService#persist(br.com.
+	 * cams7.casa_das_quentinhas.model.Pedido, java.util.List)
+	 */
+	@Override
+	public void persist(Pedido pedido, List<PedidoItem> itens) {
 		Usuario usuario = new Usuario(usuarioService.getUsuarioIdByEmail(getUsername()));
 		pedido.setUsuarioCadastro(usuario);
 
@@ -45,19 +64,10 @@ public class PedidoServiceImpl extends AbstractService<PedidoDAO, Pedido, Long> 
 
 		super.persist(pedido);
 
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see br.com.cams7.app.dao.BaseDAO#update(br.com.cams7.app.model.
-	 * AbstractEntity)
-	 */
-	@Override
-	public void update(Pedido pedido) {
-		pedido.getManutencao().setAlteracao(new Date());
-
-		super.update(pedido);
+		itens.forEach(item -> {
+			item.getId().setPedidoId(pedido.getId());
+			itemService.persist(item);
+		});
 
 	}
 
@@ -65,13 +75,34 @@ public class PedidoServiceImpl extends AbstractService<PedidoDAO, Pedido, Long> 
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * br.com.cams7.casa_das_quentinhas.dao.PedidoDAO#getPedidoById(java.lang.
-	 * Long)
+	 * br.com.cams7.casa_das_quentinhas.service.PedidoService#update(br.com.
+	 * cams7.casa_das_quentinhas.model.Pedido, java.util.List)
 	 */
 	@Override
-	public Pedido getPedidoById(Long id) {
-		Pedido pedido = getDao().getPedidoById(id);
-		return pedido;
+	public void update(Pedido pedido, List<PedidoItem> itens) {
+		pedido.getManutencao().setAlteracao(new Date());
+
+		super.update(pedido);
+
+		/* int total = */ itemService.deleteByPedido(pedido.getId());
+
+		itens.forEach(item -> {
+			item.getId().setPedidoId(pedido.getId());
+			itemService.persist(item);
+		});
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.casa_das_quentinhas.service.PedidoService#deleteItem(java.
+	 * lang.Long, java.lang.Integer)
+	 */
+	@Override
+	public void deleteItem(Long pedidoId, Integer produtoId) {
+		itemService.delete(new PedidoItemPK(pedidoId, produtoId));
 	}
 
 }

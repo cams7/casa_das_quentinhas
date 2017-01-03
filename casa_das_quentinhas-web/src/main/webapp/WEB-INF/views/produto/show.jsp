@@ -59,7 +59,8 @@
 				href="<c:url value='/produto/${produto.id}/edit' />">Alterar</a>
 		</sec:authorize>
 		<sec:authorize access="hasRole('GERENTE')">
-			<button id="delete" class="btn btn-danger" value="${produto.id}">Excluir</button>
+			<button id="delete" class="btn btn-danger" value="${produto.id}"
+				title="Deseja realmente excluir o produto ( ${produto.nome} )">Excluir</button>
 		</sec:authorize>
 		<a href="javascript:history.back()" class="btn btn-default">Cancelar</a>
 	</div>
@@ -67,8 +68,8 @@
 
 <script type="text/javascript">
 	var MAIN_PAGE = '<c:url value='/${mainPage}' />';
-	var MODAL_LABEL = 'Excluir Produto';
-	var MODAL_BODY = 'Deseja realmente excluir este Produto?';
+	var LIST_PAGE = MAIN_PAGE + '/${produto.id}/pedidos';
+	var DELETE_PAGE = 'pedido';
 </script>
 <script src="<c:url value='/static/js/casa_das_quentinhas-show.js' />"></script>
 

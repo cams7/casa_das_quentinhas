@@ -3,24 +3,34 @@
  */
 package br.com.cams7.casa_das_quentinhas.controller;
 
+import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Map;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import br.com.cams7.app.common.MoneyEditor;
 import br.com.cams7.app.controller.AbstractController;
 import br.com.cams7.casa_das_quentinhas.model.Cliente;
+import br.com.cams7.casa_das_quentinhas.model.Empresa;
 import br.com.cams7.casa_das_quentinhas.model.Pedido;
 import br.com.cams7.casa_das_quentinhas.model.Pedido.DestinoOperacao;
 import br.com.cams7.casa_das_quentinhas.model.Pedido.FormaPagamento;
@@ -46,6 +56,51 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 
 	@Autowired
 	private EmpresaService empresaService;
+
+	@Autowired
+	private MessageSource messageSource;
+
+	@Override
+	public String store(@Valid Pedido pedido, BindingResult result, ModelMap model,
+			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
+
+		Cliente cliente = pedido.getCliente();
+
+		if (cliente.getId() == null) {
+			FieldError clienteError = new FieldError("pedido", "cliente.id",
+					messageSource.getMessage("NotNull.pedido.cliente.id", null, Locale.getDefault()));
+			result.addError(clienteError);
+		}
+
+		setUsuarioLogado(model);
+		incrementLastLoadedPage(model, lastLoadedPage);
+		setMainPage(model);
+
+		if (result.hasErrors())
+			return getCreateTilesPage();
+
+		getService().setUsername(getUsername());
+		getService().persist(pedido, new ArrayList<>());
+
+		return redirectMainPage();
+	}
+
+	@Override
+	public String update(@Valid Pedido pedido, BindingResult result, ModelMap model, @PathVariable Long id,
+			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
+
+		setEditPage(model);
+		setUsuarioLogado(model);
+		incrementLastLoadedPage(model, lastLoadedPage);
+		setMainPage(model);
+
+		if (result.hasErrors())
+			return getEditTilesPage();
+
+		getService().update(pedido, new ArrayList<>());
+
+		return redirectMainPage();
+	}
 
 	@GetMapping(value = { "/clientes/{nomeOrCpfOrTelefone}" }, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Map<Integer, String>> getClientes(@PathVariable String nomeOrCpfOrTelefone) {
@@ -166,7 +221,28 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 
 	@Override
 	protected Pedido getEntity(Long id) {
-		return getService().getPedidoById(id);
+		Pedido pedido = getService().getPedidoById(id);
+
+		switch (pedido.getTipoCliente()) {
+		case PESSOA_FISICA: {
+			Cliente cliente = pedido.getCliente();
+			cliente.setNome(cliente.getNomeWithCpf());
+			break;
+		}
+		case PESSOA_JURIDICA: {
+			Empresa empresa = pedido.getEmpresa();
+
+			Cliente cliente = new Cliente(empresa.getId());
+			cliente.setNome(empresa.getRazaoSocialWithCnpj());
+
+			pedido.setCliente(cliente);
+			break;
+		}
+		default:
+			break;
+		}
+
+		return pedido;
 	}
 
 }

@@ -35,7 +35,7 @@
 		<p>${funcionario.empresa.razaoSocialWithCnpj}</p>
 	</div>
 </div>
-<div class="row">	
+<div class="row">
 	<div class="col-md-4">
 		<p>
 			<strong>E-mail</strong>
@@ -53,7 +53,7 @@
 			<strong>RG</strong>
 		</p>
 		<p>${funcionario.rg}</p>
-	</div>	
+	</div>
 </div>
 
 <hr />
@@ -64,7 +64,8 @@
 				href="<c:url value='/funcionario/${funcionario.id}/edit' />">Alterar</a>
 		</sec:authorize>
 		<sec:authorize access="hasRole('GERENTE')">
-			<button id="delete" class="btn btn-danger" value="${funcionario.id}">Excluir</button>
+			<button id="delete" class="btn btn-danger" value="${funcionario.id}"
+				title="Deseja realmente excluir o funcionário ( ${funcionario.nome} )">Excluir</button>
 		</sec:authorize>
 		<a href="javascript:history.back()" class="btn btn-default">Cancelar</a>
 	</div>
@@ -72,8 +73,8 @@
 
 <script type="text/javascript">
 	var MAIN_PAGE = '<c:url value='/${mainPage}' />';
-	var MODAL_LABEL = 'Excluir Funcionário';
-	var MODAL_BODY = 'Deseja realmente excluir este Funcionário?';
+	var LIST_PAGE = MAIN_PAGE + '/${funcionario.id}/pedidos';
+	var DELETE_PAGE = 'pedido';
 </script>
 <script src="<c:url value='/static/js/casa_das_quentinhas-show.js' />"></script>
 

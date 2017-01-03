@@ -1,4 +1,41 @@
+function loadTable(offset, sortField, sortOrder, query) {		
+	if(offset == null){
+    	offset = $('#dataTable_offset').val();
+    	offset = offset != undefined ? offset : '0';
+    }
+    
+    if(sortField == null){
+    	sortField = $('#dataTable_sortField').val();
+    	sortField = sortField != undefined ? sortField : 'id';
+    }
+    
+    if(sortOrder == null){
+    	sortOrder = $('#dataTable_sortOrder').val();
+    	sortOrder = sortOrder != undefined ? sortOrder : 'sorting_desc';
+    }
+    
+    if(query == null){
+		query = $('#dataTable_query').val();
+	    query = query != undefined ? query : '';
+	}
+    
+    console.log('get: list?offset=' + offset + '&f=' + sortField + '&s=' + sortOrder + '&q=' + query);
+	
+	$.get(LIST_PAGE + '?offset=' + offset + '&f=' + sortField + '&s=' + sortOrder + '&q=' + query, data => {
+        // console.log(data);
+		$('.content').html(data);
+		//location.hash = offset;
+   	});
+}
+
 $(document).ready(function() {
+	$('#search_btn').click(event => {
+		event.preventDefault();
+		
+		query = $('#search_query').val();
+		loadTable(0, null, null, query);
+	});
+	
 	$(document).on('click', '.pagination a', event => {
 	    event.preventDefault();
 	    
@@ -10,14 +47,7 @@ $(document).ready(function() {
 		
 		// console.log(offset);
 		loadTable(offset, null, null, null);
-	});
-	
-	$('#search_btn').click(event => {
-		event.preventDefault();
-		
-		query = $('#search_query').val();
-		loadTable(0, null, null, query);
-	});
+	});	
 			
 	$(document).on('click', 'table.dataTable tr:eq(0)', event => {
 		event.preventDefault();
@@ -33,57 +63,27 @@ $(document).ready(function() {
 			// sortOrder);
 			loadTable(null, sortField, sortOrder, null);			
 		}			
-	});
-			
-	function loadTable(offset, sortField, sortOrder, query) {		
-		if(offset == null){
-	    	offset = $('#dataTable_offset').val();
-	    	offset = offset != undefined ? offset : '0';
-	    }
-	    
-	    if(sortField == null){
-	    	sortField = $('#dataTable_sortField').val();
-	    	sortField = sortField != undefined ? sortField : 'id';
-	    }
-	    
-	    if(sortOrder == null){
-	    	sortOrder = $('#dataTable_sortOrder').val();
-	    	sortOrder = sortOrder != undefined ? sortOrder : 'sorting_desc';
-	    }
-	    
-	    if(query == null){
-			query = $('#dataTable_query').val();
-		    query = query != undefined ? query : '';
-		}
-	    
-	    // console.log('get: list?offset=' + offset + '&f=' + sortField +
-		// '&s=' + sortOrder + '&q=' + query);
-		
-		$.get(MAIN_PAGE + '/list?offset=' + offset + '&f=' + sortField + '&s=' + sortOrder + '&q=' + query, data => {
-	        // console.log(data);
-			$('.content').html(data);
-			location.hash = offset;
-	   	});
-	}
+	});	
 	
     $(document).on('click', 'table.dataTable button.delete', event => {
         event.preventDefault();
-        
-        var id = event.target.value;
-        
-        $('div#delete_modal #delete_form').attr('action', MAIN_PAGE + '/' + id + '/delete');
-        $('div#delete_modal h4#modalLabel').html(MODAL_LABEL);
-        $('div#delete_modal div.modal-body').html(MODAL_BODY);
+                
+        $('div#delete_modal #delete_form').attr('action', DELETE_PAGE + '/' + event.target.value + '/delete');
+        $("div#delete_modal #delete_form :input[name='event_from']").val('list_page');
+        $('div#delete_modal div.modal-body').html(event.target.title);
         $('div#delete_modal').modal('show');
     });
     
     $('div#delete_modal #delete_form').on('submit', event => {
         event.preventDefault();
-
+        
         var form = event.target;
         
+        if($(form.event_from).val() != 'list_page')
+        	return;             
+        
         var url = form.action;
-        // console.log('DELETE ' + url);
+        //console.log('DELETE ' + url);
 
         $.ajax({
             url: url,

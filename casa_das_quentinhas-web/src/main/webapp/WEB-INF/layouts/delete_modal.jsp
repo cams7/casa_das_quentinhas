@@ -13,10 +13,11 @@
 					aria-label="Fechar">
 					<span aria-hidden="true">&times;</span>
 				</button>
-				<h4 class="modal-title" id="modalLabel">Title</h4>
+				<h4 class="modal-title" id="modalLabel">Excluir</h4>
 			</div>
 			<div class="modal-body">Message</div>
 			<form:form id="delete_form" method="POST">
+				<input type="hidden" name="event_from">
 				<div class="modal-footer">
 					<input type="submit" value="Sim" class="btn btn-primary" />
 					<button type="button" class="btn btn-default" data-dismiss="modal">N&atilde;o</button>

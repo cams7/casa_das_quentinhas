@@ -12,8 +12,7 @@
 			<table class="table table-striped table-bordered dataTable">
 				<thead>
 					<tr>
-						<th class="${sortField eq 'id' ? sortOrder : 'sorting' }"
-							id="id">#</th>
+						<th class="${sortField eq 'id' ? sortOrder : 'sorting' }" id="id">#</th>
 						<th class="${sortField eq 'nome' ? sortOrder : 'sorting' }"
 							id="nome">Nome</th>
 						<th class="${sortField eq 'cpf' ? sortOrder : 'sorting' }"
@@ -21,14 +20,15 @@
 						<th
 							class="${sortField eq 'usuario.email' ? sortOrder : 'sorting' }"
 							id="usuario.email">E-mail</th>
-						<th
-							class="${sortField eq 'celular' ? sortOrder : 'sorting' }"
+						<th class="${sortField eq 'celular' ? sortOrder : 'sorting' }"
 							id="celular">Celular</th>
 						<th class="${sortField eq 'funcao' ? sortOrder : 'sorting' }"
 							id="funcao">Função</th>
-						<th
-							class="${sortField eq 'empresa.razaoSocial' ? sortOrder : 'sorting' }"
-							id="empresa.razaoSocial">Empresa</th>
+						<c:if test="${not encondeEmpresa }">
+							<th
+								class="${sortField eq 'empresa.razaoSocial' ? sortOrder : 'sorting' }"
+								id="empresa.razaoSocial">Empresa</th>
+						</c:if>
 						<sec:authorize access="hasRole('GERENTE') or hasRole('ATENDENTE')">
 							<th class="actions">Ações</th>
 						</sec:authorize>
@@ -43,8 +43,10 @@
 							<td>${funcionario.usuario.email}</td>
 							<td>${funcionario.formattedCelular}</td>
 							<td>${funcionario.funcao.descricao}</td>
-							<td><a href="<c:url value='/empresa/${funcionario.empresa.id}' />">${funcionario.empresa.razaoSocialWithCnpj}</a></td>
-
+							<c:if test="${not encondeEmpresa }">
+								<td><a
+									href="<c:url value='/empresa/${funcionario.empresa.id}' />">${funcionario.empresa.razaoSocialWithCnpj}</a></td>
+							</c:if>
 							<td class="actions"><a class="btn btn-success btn-xs"
 								href="<c:url value='/funcionario/${funcionario.id}' />">Visualizar</a>
 								<sec:authorize
@@ -53,7 +55,8 @@
 										href="<c:url value='/funcionario/${funcionario.id}/edit' />">Alterar</a>
 								</sec:authorize> <sec:authorize access="hasRole('GERENTE')">
 									<button class="btn btn-danger btn-xs delete"
-										value="${funcionario.id}">Excluir</button>
+										value="${funcionario.id}"
+										title="Deseja realmente excluir o funcionário ( ${funcionario.nome} )">Excluir</button>
 								</sec:authorize></td>
 						</tr>
 					</c:forEach>

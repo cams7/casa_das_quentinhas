@@ -36,7 +36,7 @@
 	</div>
 </div>
 
-<div class="row">	
+<div class="row">
 	<div class="col-md-6">
 		<p>
 			<strong>E-mail</strong>
@@ -54,7 +54,7 @@
 			<strong>Regime tributário</strong>
 		</p>
 		<p>${empresa.regimeTributario.descricao}</p>
-	</div>	
+	</div>
 </div>
 
 <div class="row">
@@ -84,7 +84,7 @@
 	</div>
 </div>
 
-<div class="row">	
+<div class="row">
 	<div class="col-md-6">
 		<p>
 			<strong>Cidade</strong>
@@ -102,10 +102,10 @@
 			<strong>Bairro</strong>
 		</p>
 		<p>${empresa.endereco.bairro}</p>
-	</div>	
+	</div>
 </div>
 
-<div class="row">	
+<div class="row">
 	<div class="col-md-8">
 		<p>
 			<strong>Logradouro</strong>
@@ -117,10 +117,10 @@
 			<strong>Número do imóvel</strong>
 		</p>
 		<p>${empresa.endereco.numeroImovel}</p>
-	</div>	
+	</div>
 </div>
 
-<div class="row">	
+<div class="row">
 	<div class="col-md-6">
 		<p>
 			<strong>Complemento</strong>
@@ -132,7 +132,7 @@
 			<strong>Ponto de referência</strong>
 		</p>
 		<p>${empresa.endereco.pontoReferencia}</p>
-	</div>	
+	</div>
 </div>
 
 <hr />
@@ -143,17 +143,29 @@
 				href="<c:url value='/empresa/${empresa.id}/edit' />">Alterar</a>
 		</sec:authorize>
 		<sec:authorize access="hasRole('GERENTE')">
-			<button id="delete" class="btn btn-danger" value="${empresa.id}">Excluir</button>
+			<button id="delete" class="btn btn-danger" value="${empresa.id}"
+				title="Deseja realmente excluir a empresa ( ${empresa.razaoSocial} )">Excluir</button>
 		</sec:authorize>
 		<a href="javascript:history.back()" class="btn btn-default">Cancelar</a>
 	</div>
 </div>
 
+<c:if test="${count > 0}">
+	 <h3 class="page-header">Funcionários</h3>
+</c:if>
+<div class="content">
+	<%@include file="../funcionario/list.jsp"%>
+</div>
+
+<link rel="stylesheet"
+	href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css">
+
 <script type="text/javascript">
 	var MAIN_PAGE = '<c:url value='/${mainPage}' />';
-	var MODAL_LABEL = 'Excluir Empresa';
-	var MODAL_BODY = 'Deseja realmente excluir esta Empresa?';
+	var LIST_PAGE = MAIN_PAGE + '/${empresa.id}/funcionarios';
+	var DELETE_PAGE = '<c:url value='/funcionario' />';
 </script>
 <script src="<c:url value='/static/js/casa_das_quentinhas-show.js' />"></script>
+<script src="<c:url value='/static/js/casa_das_quentinhas-list.js' />"></script>
 
 <%@include file="../../layouts/delete_modal.jsp"%>

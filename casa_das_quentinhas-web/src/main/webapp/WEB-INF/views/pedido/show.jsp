@@ -14,7 +14,7 @@
 		<p>
 			<strong>Cliente</strong>
 		</p>
-		<p>${pedido.empresa != null ? pedido.empresa.razaoSocialWithCnpj : pedido.cliente.nomeWithCpf}</p>
+		<p>${pedido.cliente.nome}</p>
 	</div>
 	<div class="col-md-2">
 		<p>
@@ -66,7 +66,7 @@
 			<strong>Tipo de atendimento</strong>
 		</p>
 		<p>${pedido.tipoAtendimento.descricao}</p>
-	</div>	
+	</div>
 </div>
 
 <hr />
@@ -77,7 +77,8 @@
 				href="<c:url value='/pedido/${pedido.id}/edit' />">Alterar</a>
 		</sec:authorize>
 		<sec:authorize access="hasRole('GERENTE')">
-			<button id="delete" class="btn btn-danger" value="${pedido.id}">Excluir</button>
+			<button id="delete" class="btn btn-danger" value="${pedido.id}"
+				title="Deseja realmente excluir o pedido ( ${pedido.id} )">Excluir</button>
 		</sec:authorize>
 		<a href="javascript:history.back()" class="btn btn-default">Cancelar</a>
 	</div>
@@ -85,8 +86,8 @@
 
 <script type="text/javascript">
 	var MAIN_PAGE = '<c:url value='/${mainPage}' />';
-	var MODAL_LABEL = 'Excluir Pedido';
-	var MODAL_BODY = 'Deseja realmente excluir este Pedido?';
+	var LIST_PAGE = MAIN_PAGE + '/${pedido.id}/itens';
+	var DELETE_PAGE = MAIN_PAGE + '/item';
 </script>
 <script src="<c:url value='/static/js/casa_das_quentinhas-show.js' />"></script>
 

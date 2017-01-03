@@ -15,7 +15,7 @@
 			<strong>Nome</strong>
 		</p>
 		<p>${cliente.nome}</p>
-	</div>	
+	</div>
 	<div class="col-md-2">
 		<p>
 			<strong>CPF</strong>
@@ -30,7 +30,7 @@
 	</div>
 </div>
 
-<div class="row">	
+<div class="row">
 	<div class="col-md-6">
 		<p>
 			<strong>E-mail</strong>
@@ -48,10 +48,10 @@
 			<strong>Tipo de contribuinte</strong>
 		</p>
 		<p>${cliente.tipoContribuinte.descricao}</p>
-	</div>	
+	</div>
 </div>
 
-<div class="row">	
+<div class="row">
 	<div class="col-md-6">
 		<p>
 			<strong>Cidade</strong>
@@ -69,10 +69,10 @@
 			<strong>Bairro</strong>
 		</p>
 		<p>${cliente.endereco.bairro}</p>
-	</div>	
+	</div>
 </div>
 
-<div class="row">	
+<div class="row">
 	<div class="col-md-8">
 		<p>
 			<strong>Logradouro</strong>
@@ -84,10 +84,10 @@
 			<strong>Número do imóvel</strong>
 		</p>
 		<p>${cliente.endereco.numeroImovel}</p>
-	</div>	
+	</div>
 </div>
 
-<div class="row">	
+<div class="row">
 	<div class="col-md-6">
 		<p>
 			<strong>Complemento</strong>
@@ -99,7 +99,7 @@
 			<strong>Ponto de referência</strong>
 		</p>
 		<p>${cliente.endereco.pontoReferencia}</p>
-	</div>	
+	</div>
 </div>
 
 <hr />
@@ -110,7 +110,8 @@
 				href="<c:url value='/cliente/${cliente.id}/edit' />">Alterar</a>
 		</sec:authorize>
 		<sec:authorize access="hasRole('GERENTE')">
-			<button id="delete" class="btn btn-danger" value="${cliente.id}">Excluir</button>
+			<button id="delete" class="btn btn-danger" value="${cliente.id}"
+				title="Deseja realmente excluir o cliente ( ${cliente.nome} )">Excluir</button>
 		</sec:authorize>
 		<a href="javascript:history.back()" class="btn btn-default">Cancelar</a>
 	</div>
@@ -118,8 +119,8 @@
 
 <script type="text/javascript">
 	var MAIN_PAGE = '<c:url value='/${mainPage}' />';
-	var MODAL_LABEL = 'Excluir Cliente';
-	var MODAL_BODY = 'Deseja realmente excluir este Cliente?';
+	var LIST_PAGE = MAIN_PAGE + '/${cliente.id}/pedidos';
+	var DELETE_PAGE = 'pedido';
 </script>
 <script src="<c:url value='/static/js/casa_das_quentinhas-show.js' />"></script>
 

@@ -42,7 +42,8 @@
 										href="<c:url value='/pedido/${pedido.id}/edit' />">Alterar</a>
 								</sec:authorize> <sec:authorize access="hasRole('GERENTE')">
 									<button class="btn btn-danger btn-xs delete"
-										value="${pedido.id}">Excluir</button>
+										value="${pedido.id}"
+										title="Deseja realmente excluir o pedido ( ${pedido.id} )">Excluir</button>
 								</sec:authorize></td>
 						</tr>
 					</c:forEach>

@@ -12,8 +12,7 @@
 			<table class="table table-striped table-bordered dataTable">
 				<thead>
 					<tr>
-						<th class="${sortField eq 'id' ? sortOrder : 'sorting' }"
-							id="id">#</th>
+						<th class="${sortField eq 'id' ? sortOrder : 'sorting' }" id="id">#</th>
 						<th class="${sortField eq 'razaoSocial' ? sortOrder : 'sorting' }"
 							id="razaoSocial">Razão social</th>
 						<th class="${sortField eq 'cnpj' ? sortOrder : 'sorting' }"
@@ -26,10 +25,9 @@
 							id="contato.telefone">Telefone</th>
 						<th class="${sortField eq 'tipo' ? sortOrder : 'sorting' }"
 							id="tipo">Tipo de empresa</th>
-						<th
-							class="${sortField eq 'cidade.nome' ? sortOrder : 'sorting' }"
+						<th class="${sortField eq 'cidade.nome' ? sortOrder : 'sorting' }"
 							id="cidade.nome">Cidade</th>
-						
+
 						<sec:authorize access="hasRole('GERENTE') or hasRole('ATENDENTE')">
 							<th class="actions">Ações</th>
 						</sec:authorize>
@@ -43,18 +41,18 @@
 							<td>${empresa.formattedCnpj}</td>
 							<td>${empresa.contato.email}</td>
 							<td>${empresa.contato.formattedTelefone}</td>
-							<td>${empresa.tipo.descricao}</td>	
-							<td>${empresa.cidade.nomeWithEstadoSigla}</td>						
+							<td>${empresa.tipo.descricao}</td>
+							<td>${empresa.cidade.nomeWithEstadoSigla}</td>
 
 							<td class="actions"><a class="btn btn-success btn-xs"
-								href="<c:url value='/empresa/${empresa.id}' />">Visualizar</a>
-								<sec:authorize
+								href="<c:url value='/empresa/${empresa.id}' />">Visualizar</a> <sec:authorize
 									access="hasRole('GERENTE') or hasRole('ATENDENTE')">
 									<a class="btn btn-warning btn-xs"
 										href="<c:url value='/empresa/${empresa.id}/edit' />">Alterar</a>
 								</sec:authorize> <sec:authorize access="hasRole('GERENTE')">
 									<button class="btn btn-danger btn-xs delete"
-										value="${empresa.id}">Excluir</button>
+										value="${empresa.id}"
+										title="Deseja realmente excluir a empresa ( ${empresa.razaoSocial} )">Excluir</button>
 								</sec:authorize></td>
 						</tr>
 					</c:forEach>

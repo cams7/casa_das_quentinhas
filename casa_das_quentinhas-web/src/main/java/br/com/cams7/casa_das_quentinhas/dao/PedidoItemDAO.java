@@ -13,4 +13,11 @@ import br.com.cams7.casa_das_quentinhas.model.PedidoItemPK;
  */
 public interface PedidoItemDAO extends BaseDAO<PedidoItem, PedidoItemPK> {
 
+	/**
+	 * Remove todos os itens de pedido
+	 * 
+	 * @param pedidoId
+	 *            ID do pedido
+	 */
+	int deleteByPedido(Long pedidoId);
 }

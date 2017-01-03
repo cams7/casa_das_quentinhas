@@ -15,7 +15,7 @@
 		<label class="control-label" for="cliente.nome">Cliente</label>
 		<form:input type="text" path="cliente.nome" id="cliente"
 			class="form-control" maxlength="80"
-			placeholder="Nome / CPF / Telefone" value="${pedido.empresa != null ? pedido.empresa.razaoSocialWithCnpj : pedido.cliente.nomeWithCpf}"/>
+			placeholder="${pedido.tipoCliente eq 'PESSOA_JURIDICA' ? 'Razão social / CNPJ' : 'Nome / CPF / Telefone' }" />
 		<form:input type="hidden" path="cliente.id" id="cliente_id" />
 		<div class="help-block with-errors">${clienteNomeError}</div>
 	</div>
@@ -46,7 +46,7 @@
 			itemValue="formaPagamento" itemLabel="descricao" class="form-control" />
 		<div class="help-block with-errors">${formaPagamentoError}</div>
 	</div>
-	
+
 	<c:set var="situacaoError">
 		<form:errors path="situacao" />
 	</c:set>
