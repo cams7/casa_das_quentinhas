@@ -33,12 +33,15 @@ import br.com.cams7.casa_das_quentinhas.model.Cidade;
 import br.com.cams7.casa_das_quentinhas.model.Contato;
 import br.com.cams7.casa_das_quentinhas.model.Empresa;
 import br.com.cams7.casa_das_quentinhas.model.Empresa.RegimeTributario;
+import br.com.cams7.casa_das_quentinhas.model.Empresa.Tipo;
 import br.com.cams7.casa_das_quentinhas.model.Endereco;
 import br.com.cams7.casa_das_quentinhas.model.Funcionario;
+import br.com.cams7.casa_das_quentinhas.model.Pedido;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
 import br.com.cams7.casa_das_quentinhas.service.CidadeService;
 import br.com.cams7.casa_das_quentinhas.service.EmpresaService;
 import br.com.cams7.casa_das_quentinhas.service.FuncionarioService;
+import br.com.cams7.casa_das_quentinhas.service.PedidoService;
 
 /**
  * @author César Magalhães
@@ -56,7 +59,12 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 	private FuncionarioService funcionarioService;
 
 	@Autowired
+	private PedidoService pedidoService;
+
+	@Autowired
 	private MessageSource messageSource;
+
+	private final short MAX_RESULTS = 5;
 
 	/*
 	 * (non-Javadoc)
@@ -118,7 +126,19 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 	@Override
 	public String show(@PathVariable Integer id, ModelMap model) {
 
-		getFuncionarios(id, model, 0, "id", SortOrder.DESCENDING);
+		Tipo tipo = getService().getEmpresaIipoById(id);
+
+		if (tipo != null)
+			switch (tipo) {
+			case CLIENTE:
+				getPedidos(id, model, 0, "id", SortOrder.DESCENDING);
+				break;
+			case ENTREGA:
+				getFuncionarios(id, model, 0, "id", SortOrder.DESCENDING);
+				break;
+			default:
+				break;
+			}
 
 		return super.show(id, model);
 	}
@@ -171,10 +191,20 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 		return "funcionario_list";
 	}
 
+	@GetMapping(value = { "/{empresaId}/pedidos" })
+	public String getPedidos(@PathVariable Integer empresaId, ModelMap model,
+			@RequestParam(value = "offset", required = true) Integer offset,
+			@RequestParam(value = "f", required = true) String sortField,
+			@RequestParam(value = "s", required = true) String sortOrder,
+			@RequestParam(value = "q", required = true) String query) {
+
+		getPedidos(empresaId, model, offset, sortField, SortOrder.get(sortOrder));
+
+		return "pedido_list";
+	}
+
 	private void getFuncionarios(Integer empresaId, ModelMap model, Integer offset, String sortField,
 			SortOrder sortOrder) {
-		final short MAX_RESULTS = 5;
-
 		Map<String, Object> filters = new HashMap<>();
 		filters.put("empresa.id", empresaId);
 
@@ -184,7 +214,22 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 		long count = funcionarioService.getTotalElements(filters);
 
 		model.addAttribute("funcionarios", funcionarios);
-		model.addAttribute("encondeEmpresa", true);
+		model.addAttribute("escondeEmpresa", true);
+
+		setPaginationAttribute(model, offset, sortField, sortOrder, null, count);
+	}
+
+	private void getPedidos(Integer empresaId, ModelMap model, Integer offset, String sortField, SortOrder sortOrder) {
+		Map<String, Object> filters = new HashMap<>();
+		filters.put("empresa.id", empresaId);
+
+		SearchParams params = new SearchParams(offset, MAX_RESULTS, sortField, sortOrder, filters);
+
+		List<Pedido> pedidos = pedidoService.search(params);
+		long count = pedidoService.getTotalElements(filters);
+
+		model.addAttribute("pedidos", pedidos);
+		model.addAttribute("escondeCliente", true);
 
 		setPaginationAttribute(model, offset, sortField, sortOrder, null, count);
 	}

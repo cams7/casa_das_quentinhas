@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.cams7.app.service.AbstractService;
 import br.com.cams7.casa_das_quentinhas.dao.EmpresaDAO;
 import br.com.cams7.casa_das_quentinhas.model.Empresa;
+import br.com.cams7.casa_das_quentinhas.model.Empresa.Tipo;
 import br.com.cams7.casa_das_quentinhas.model.Manutencao;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
 
@@ -103,8 +104,7 @@ public class EmpresaServiceImpl extends AbstractService<EmpresaDAO, Empresa, Int
 	 */
 	@Override
 	public Empresa getEmpresaById(Integer id) {
-		Empresa empresa = getDao().getEmpresaById(id);
-		return empresa;
+		return getDao().getEmpresaById(id);
 	}
 
 	/*
@@ -116,8 +116,7 @@ public class EmpresaServiceImpl extends AbstractService<EmpresaDAO, Empresa, Int
 	 */
 	@Override
 	public Integer getEmpresaIdByCnpj(String cnpj) {
-		Integer empresaId = getDao().getEmpresaIdByCnpj(cnpj);
-		return empresaId;
+		return getDao().getEmpresaIdByCnpj(cnpj);
 	}
 
 	/*
@@ -129,8 +128,7 @@ public class EmpresaServiceImpl extends AbstractService<EmpresaDAO, Empresa, Int
 	 */
 	@Override
 	public Integer getEmpresaIdByEmail(String email) {
-		Integer empresaId = getDao().getEmpresaIdByEmail(email);
-		return empresaId;
+		return getDao().getEmpresaIdByEmail(email);
 	}
 
 	/*
@@ -141,8 +139,19 @@ public class EmpresaServiceImpl extends AbstractService<EmpresaDAO, Empresa, Int
 	 */
 	@Override
 	public Integer getUsuarioAcessoIdByEmpresaId(Integer empresaId) {
-		Integer usuarioId = getDao().getUsuarioAcessoIdByEmpresaId(empresaId);
-		return usuarioId;
+		return getDao().getUsuarioAcessoIdByEmpresaId(empresaId);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.casa_das_quentinhas.dao.EmpresaDAO#getEmpresaIipoById(java.
+	 * lang.Integer)
+	 */
+	@Override
+	public Tipo getEmpresaIipoById(Integer id) {
+		return getDao().getEmpresaIipoById(id);
 	}
 
 	/*
@@ -153,8 +162,7 @@ public class EmpresaServiceImpl extends AbstractService<EmpresaDAO, Empresa, Int
 	 */
 	@Override
 	public Map<Integer, String> getEmpresasByRazaoSocialOrCnpj(String razaoSocialOrCnpj) {
-		Map<Integer, String> empresas = getDao().getEmpresasByRazaoSocialOrCnpj(razaoSocialOrCnpj);
-		return empresas;
+		return getDao().getEmpresasByRazaoSocialOrCnpj(razaoSocialOrCnpj);
 	}
 
 	/*

@@ -13,7 +13,9 @@
 				<thead>
 					<tr>
 						<th class="${sortField eq 'id' ? sortOrder : 'sorting' }" id="id">#</th>
-						<th>Cliente</th>
+						<c:if test="${not escondeCliente }">
+							<th>Cliente</th>
+						</c:if>
 						<th class="${sortField eq 'tipoCliente' ? sortOrder : 'sorting' }"
 							id="tipoCliente">Tipo de cliente</th>
 						<th class="${sortField eq 'quantidade' ? sortOrder : 'sorting' }"
@@ -30,7 +32,9 @@
 					<c:forEach items="${pedidos}" var="pedido">
 						<tr>
 							<td>${pedido.id}</td>
-							<td>${pedido.empresa != null ? pedido.empresa.razaoSocialWithCnpj : pedido.cliente.nomeWithCpf}</td>
+							<c:if test="${not escondeCliente }">
+								<td>${pedido.empresa != null ? pedido.empresa.razaoSocialWithCnpj : pedido.cliente.nomeWithCpf}</td>
+							</c:if>
 							<td>${pedido.tipoCliente.descricao}</td>
 							<td>${pedido.quantidade}</td>
 							<td>${pedido.formattedCusto}</td>

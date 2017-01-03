@@ -24,7 +24,7 @@
 							id="celular">Celular</th>
 						<th class="${sortField eq 'funcao' ? sortOrder : 'sorting' }"
 							id="funcao">Função</th>
-						<c:if test="${not encondeEmpresa }">
+						<c:if test="${not escondeEmpresa }">
 							<th
 								class="${sortField eq 'empresa.razaoSocial' ? sortOrder : 'sorting' }"
 								id="empresa.razaoSocial">Empresa</th>
@@ -43,7 +43,7 @@
 							<td>${funcionario.usuario.email}</td>
 							<td>${funcionario.formattedCelular}</td>
 							<td>${funcionario.funcao.descricao}</td>
-							<c:if test="${not encondeEmpresa }">
+							<c:if test="${not escondeEmpresa }">
 								<td><a
 									href="<c:url value='/empresa/${funcionario.empresa.id}' />">${funcionario.empresa.razaoSocialWithCnpj}</a></td>
 							</c:if>

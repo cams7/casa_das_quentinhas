@@ -22,6 +22,7 @@ import br.com.cams7.casa_das_quentinhas.model.Cidade;
 import br.com.cams7.casa_das_quentinhas.model.Cidade_;
 import br.com.cams7.casa_das_quentinhas.model.Contato_;
 import br.com.cams7.casa_das_quentinhas.model.Empresa;
+import br.com.cams7.casa_das_quentinhas.model.Empresa.Tipo;
 import br.com.cams7.casa_das_quentinhas.model.Empresa_;
 import br.com.cams7.casa_das_quentinhas.model.Estado;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
@@ -182,6 +183,34 @@ public class EmpresaDAOImpl extends AbstractDAO<Empresa, Integer> implements Emp
 			return usuarioId;
 		} catch (NoResultException e) {
 			LOGGER.warn("E-mail not found...");
+		}
+
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.casa_das_quentinhas.dao.EmpresaDAO#getEmpresaIipoById(java.
+	 * lang.Integer)
+	 */
+	@Override
+	public Tipo getEmpresaIipoById(Integer id) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Tipo> cq = cb.createQuery(Tipo.class);
+
+		Root<Empresa> from = cq.from(ENTITY_TYPE);
+		cq.where(cb.equal(from.get(Empresa_.id), id));
+		cq.select(from.get(Empresa_.tipo));
+
+		TypedQuery<Tipo> tq = getEntityManager().createQuery(cq);
+
+		try {
+			Tipo tipo = tq.getSingleResult();
+			return tipo;
+		} catch (NoResultException e) {
+			LOGGER.warn("Tipo de empresa not found...");
 		}
 
 		return null;

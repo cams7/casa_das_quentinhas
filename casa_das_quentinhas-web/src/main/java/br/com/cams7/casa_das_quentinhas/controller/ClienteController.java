@@ -4,6 +4,8 @@
 package br.com.cams7.casa_das_quentinhas.controller;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -29,14 +31,18 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import br.com.cams7.app.common.DateEditor;
 import br.com.cams7.app.controller.AbstractController;
+import br.com.cams7.app.utils.SearchParams;
+import br.com.cams7.app.utils.SearchParams.SortOrder;
 import br.com.cams7.casa_das_quentinhas.model.Cidade;
 import br.com.cams7.casa_das_quentinhas.model.Cliente;
 import br.com.cams7.casa_das_quentinhas.model.Cliente.TipoContribuinte;
 import br.com.cams7.casa_das_quentinhas.model.Contato;
 import br.com.cams7.casa_das_quentinhas.model.Endereco;
+import br.com.cams7.casa_das_quentinhas.model.Pedido;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
 import br.com.cams7.casa_das_quentinhas.service.CidadeService;
 import br.com.cams7.casa_das_quentinhas.service.ClienteService;
+import br.com.cams7.casa_das_quentinhas.service.PedidoService;
 
 /**
  * @author César Magalhães
@@ -49,6 +55,9 @@ public class ClienteController extends AbstractController<ClienteService, Client
 
 	@Autowired
 	private CidadeService cidadeService;
+
+	@Autowired
+	private PedidoService pedidoService;
 
 	@Autowired
 	private MessageSource messageSource;
@@ -107,6 +116,21 @@ public class ClienteController extends AbstractController<ClienteService, Client
 	 * (non-Javadoc)
 	 * 
 	 * @see
+	 * br.com.cams7.app.controller.AbstractController#show(java.io.Serializable,
+	 * org.springframework.ui.ModelMap)
+	 */
+	@Override
+	public String show(@PathVariable Integer id, ModelMap model) {
+
+		getPedidos(id, model, 0, "id", SortOrder.DESCENDING);
+
+		return super.show(id, model);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
 	 * br.com.cams7.app.controller.AbstractController#update(br.com.cams7.app.
 	 * model.AbstractEntity, org.springframework.validation.BindingResult,
 	 * org.springframework.ui.ModelMap, java.io.Serializable, java.lang.Integer)
@@ -137,6 +161,35 @@ public class ClienteController extends AbstractController<ClienteService, Client
 		getService().update(cliente);
 
 		return redirectMainPage();
+	}
+
+	@GetMapping(value = { "/{clienteId}/pedidos" })
+	public String getPedidos(@PathVariable Integer clienteId, ModelMap model,
+			@RequestParam(value = "offset", required = true) Integer offset,
+			@RequestParam(value = "f", required = true) String sortField,
+			@RequestParam(value = "s", required = true) String sortOrder,
+			@RequestParam(value = "q", required = true) String query) {
+
+		getPedidos(clienteId, model, offset, sortField, SortOrder.get(sortOrder));
+
+		return "pedido_list";
+	}
+
+	private void getPedidos(Integer clienteId, ModelMap model, Integer offset, String sortField, SortOrder sortOrder) {
+		final short MAX_RESULTS = 5;
+
+		Map<String, Object> filters = new HashMap<>();
+		filters.put("cliente.id", clienteId);
+
+		SearchParams params = new SearchParams(offset, MAX_RESULTS, sortField, sortOrder, filters);
+
+		List<Pedido> pedidos = pedidoService.search(params);
+		long count = pedidoService.getTotalElements(filters);
+
+		model.addAttribute("pedidos", pedidos);
+		model.addAttribute("escondeCliente", true);
+
+		setPaginationAttribute(model, offset, sortField, sortOrder, null, count);
 	}
 
 	@GetMapping(value = { "/cidades/{nomeOrIbge}" }, produces = MediaType.APPLICATION_JSON_VALUE)
