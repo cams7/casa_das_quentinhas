@@ -33,7 +33,14 @@
 						<tr>
 							<td>${pedido.id}</td>
 							<c:if test="${not escondeCliente }">
-								<td>${pedido.empresa != null ? pedido.empresa.razaoSocialWithCnpj : pedido.cliente.nomeWithCpf}</td>
+								<td><c:choose>
+										<c:when test="${pedido.empresa != null}">
+											<a href="<c:url value='/empresa/${pedido.empresa.id}' />">${pedido.empresa.razaoSocialWithCnpj}</a>
+										</c:when>
+										<c:otherwise>
+											<a href="<c:url value='/cliente/${pedido.cliente.id}' />">${pedido.cliente.nomeWithCpf}</a>
+										</c:otherwise>
+									</c:choose></td>
 							</c:if>
 							<td>${pedido.tipoCliente.descricao}</td>
 							<td>${pedido.quantidade}</td>
