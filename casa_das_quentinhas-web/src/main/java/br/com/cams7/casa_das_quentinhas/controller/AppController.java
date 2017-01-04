@@ -25,8 +25,11 @@ public class AppController {
 	AuthenticationTrustResolver authenticationTrustResolver;
 
 	@GetMapping
-	public String home() {
-		return "redirect:/funcionario";
+	public String home(ModelMap model) {
+		model.addAttribute("loggedinuser", getUsername());
+		model.addAttribute("mainPage", "home");
+
+		return "home";
 	}
 
 	/**
@@ -62,7 +65,7 @@ public class AppController {
 	 */
 	@GetMapping(value = "/acesso_negado")
 	public String accessDeniedPage(ModelMap model) {
-		model.addAttribute("loggedinuser", getPrincipal());
+		model.addAttribute("loggedinuser", getUsername());
 		return "acesso_negado";
 	}
 
@@ -78,7 +81,7 @@ public class AppController {
 	/**
 	 * This method returns the principal[user-name] of logged-in user.
 	 */
-	private String getPrincipal() {
+	private String getUsername() {
 		String username = null;
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 

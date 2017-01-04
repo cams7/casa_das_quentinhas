@@ -81,9 +81,8 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 			result.addError(clienteError);
 		}
 
-		setUsuarioLogado(model);
+		setCommonAttributes(model);
 		incrementLastLoadedPage(model, lastLoadedPage);
-		setMainPage(model);
 
 		if (result.hasErrors())
 			return getCreateTilesPage();
@@ -113,10 +112,9 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 	public String update(@Valid Pedido pedido, BindingResult result, ModelMap model, @PathVariable Long id,
 			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
 
+		setCommonAttributes(model);
 		setEditPage(model);
-		setUsuarioLogado(model);
 		incrementLastLoadedPage(model, lastLoadedPage);
-		setMainPage(model);
 
 		if (result.hasErrors())
 			return getEditTilesPage();

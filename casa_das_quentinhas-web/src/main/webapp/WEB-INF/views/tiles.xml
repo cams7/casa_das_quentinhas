@@ -2,6 +2,11 @@
 <!DOCTYPE tiles-definitions PUBLIC  "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"  "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
 
 <tiles-definitions>
+	<definition name="home" extends="default">
+		<put-attribute name="title" value="Página inicial" />
+		<put-attribute name="body" value="/WEB-INF/views/index.jsp" />
+	</definition>
+
 	<definition name="login" extends="public">
 		<put-attribute name="title" value="Pagina de login" />
 		<put-attribute name="body" value="/WEB-INF/views/login.jsp" />

@@ -99,9 +99,8 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 		setEmailNotUniqueError(empresa, result);
 		setCNPJNotUniqueError(empresa, result);
 
-		setUsuarioLogado(model);
+		setCommonAttributes(model);
 		incrementLastLoadedPage(model, lastLoadedPage);
-		setMainPage(model);
 
 		if (result.hasErrors())
 			return getCreateTilesPage();
@@ -162,10 +161,9 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 		setEmailNotUniqueError(empresa, result);
 		setCNPJNotUniqueError(empresa, result);
 
+		setCommonAttributes(model);
 		setEditPage(model);
-		setUsuarioLogado(model);
 		incrementLastLoadedPage(model, lastLoadedPage);
-		setMainPage(model);
 
 		if (result.hasErrors())
 			return getEditTilesPage();

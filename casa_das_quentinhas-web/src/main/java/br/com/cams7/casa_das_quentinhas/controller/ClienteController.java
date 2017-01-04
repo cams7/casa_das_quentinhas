@@ -95,9 +95,8 @@ public class ClienteController extends AbstractController<ClienteService, Client
 		setEmailNotUniqueError(cliente, result);
 		setCPFNotUniqueError(cliente, result);
 
-		setUsuarioLogado(model);
+		setCommonAttributes(model);
 		incrementLastLoadedPage(model, lastLoadedPage);
-		setMainPage(model);
 
 		if (result.hasErrors())
 			return getCreateTilesPage();
@@ -146,10 +145,9 @@ public class ClienteController extends AbstractController<ClienteService, Client
 		setEmailNotUniqueError(cliente, result);
 		setCPFNotUniqueError(cliente, result);
 
+		setCommonAttributes(model);
 		setEditPage(model);
-		setUsuarioLogado(model);
 		incrementLastLoadedPage(model, lastLoadedPage);
-		setMainPage(model);
 
 		if (result.hasErrors())
 			return getEditTilesPage();

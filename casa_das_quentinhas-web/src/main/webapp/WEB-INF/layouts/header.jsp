@@ -11,18 +11,19 @@
 			<a class="navbar-brand" href="#">Casa das Quentinhas</a>
 		</div>
 		<ul class="nav navbar-nav">
-			<li class="${activePage eq 'home' ? 'active' : '' }"><a href="/">Início</a></li>
+			<li class="${mainPage eq 'home' ? 'active' : '' }"><a
+				href="<c:url value='/' />">Início</a></li>
 
-			<li class="${activePage eq 'cliente_index' ? 'active' : '' }"><a
-				href="<c:url value='/cliente' />">Clientes</a></li>
-			<li class="${activePage eq 'pedido_index' ? 'active' : '' }"><a
-				href="<c:url value='/pedido' />">Pedidos</a></li>
-			<li class="${activePage eq 'produto_index' ? 'active' : '' }"><a
-				href="<c:url value='/produto' />">Produtos</a></li>
-			<li class="${activePage eq 'empresa_index' ? 'active' : '' }"><a
-				href="<c:url value='/empresa' />">Empresas</a></li>			
-			<li class="${activePage eq 'funcionario_index' ? 'active' : '' }"><a
-				href="<c:url value='/funcionario' />">Funcionários</a></li>			
+			<li class="${mainPage eq 'cliente' ? 'active' : '' }"><a
+				href="<c:url value='/cliente' />">Cliente(s)</a></li>
+			<li class="${mainPage eq 'pedido' ? 'active' : '' }"><a
+				href="<c:url value='/pedido' />">Pedido(s)</a></li>
+			<li class="${mainPage eq 'produto' ? 'active' : '' }"><a
+				href="<c:url value='/produto' />">Produto(s)</a></li>
+			<li class="${mainPage eq 'empresa' ? 'active' : '' }"><a
+				href="<c:url value='/empresa' />">Empresa(s)</a></li>
+			<li class="${mainPage eq 'funcionario' ? 'active' : '' }"><a
+				href="<c:url value='/funcionario' />">Funcionário(s)</a></li>
 		</ul>
 		<ul class="nav navbar-nav navbar-right">
 			<li><a href="#"><span class="glyphicon glyphicon-user"></span>

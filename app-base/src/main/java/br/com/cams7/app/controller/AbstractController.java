@@ -76,9 +76,7 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 
 		setPaginationAttribute(model, offset, sortField, sortOrder, null, count, MAX_RESULTS);
 
-		setUsuarioLogado(model);
-		setActivePage(model);
-		setMainPage(model);
+		setCommonAttributes(model);
 
 		return getIndexTilesPage();
 	}
@@ -96,9 +94,8 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 
 		model.addAttribute(getEntityName(), entity);
 
-		setUsuarioLogado(model);
+		setCommonAttributes(model);
 		setLastLoadedPage(model, 1);
-		setMainPage(model);
 
 		return getCreateTilesPage();
 	}
@@ -115,9 +112,8 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 	public String store(@Valid E entity, BindingResult result, ModelMap model,
 			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
 
-		setUsuarioLogado(model);
+		setCommonAttributes(model);
 		incrementLastLoadedPage(model, lastLoadedPage);
-		setMainPage(model);
 
 		if (result.hasErrors())
 			return getCreateTilesPage();
@@ -141,8 +137,7 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 
 		model.addAttribute(getEntityName(), entity);
 
-		setUsuarioLogado(model);
-		setMainPage(model);
+		setCommonAttributes(model);
 
 		return getShowTilesPage();
 	}
@@ -160,10 +155,9 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 
 		model.addAttribute(getEntityName(), entity);
 
+		setCommonAttributes(model);
 		setEditPage(model);
-		setUsuarioLogado(model);
 		setLastLoadedPage(model, 1);
-		setMainPage(model);
 
 		return getEditTilesPage();
 	}
@@ -180,10 +174,9 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 	public String update(@Valid E entity, BindingResult result, ModelMap model, @PathVariable PK id,
 			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
 
+		setCommonAttributes(model);
 		setEditPage(model);
-		setUsuarioLogado(model);
 		incrementLastLoadedPage(model, lastLoadedPage);
-		setMainPage(model);
 
 		if (result.hasErrors())
 			return getEditTilesPage();
@@ -262,20 +255,21 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 		model.addAttribute("count", count);
 	}
 
-	protected void setMainPage(ModelMap model) {
-		model.addAttribute("mainPage", getMainPage());
+	protected void setCommonAttributes(ModelMap model) {
+		setUsuarioLogado(model);
+		setMainPage(model);
 	}
 
-	private void setActivePage(ModelMap model) {
-		model.addAttribute("activePage", getIndexTilesPage());
+	private void setUsuarioLogado(ModelMap model) {
+		model.addAttribute("loggedinuser", getUsername());
+	}
+
+	private void setMainPage(ModelMap model) {
+		model.addAttribute("mainPage", getMainPage());
 	}
 
 	protected void setEditPage(ModelMap model) {
 		model.addAttribute("edit", true);
-	}
-
-	protected void setUsuarioLogado(ModelMap model) {
-		model.addAttribute("loggedinuser", getUsername());
 	}
 
 	private void setLastLoadedPage(ModelMap model, Integer lastLoadedPage) {

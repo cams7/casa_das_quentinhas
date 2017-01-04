@@ -78,9 +78,8 @@ public class FuncionarioController extends AbstractController<FuncionarioService
 		setEmailNotUniqueError(usuario, result);
 		setCPFNotUniqueError(funcionario, result);
 
-		setUsuarioLogado(model);
+		setCommonAttributes(model);
 		incrementLastLoadedPage(model, lastLoadedPage);
-		setMainPage(model);
 
 		if (result.hasErrors())
 			return getCreateTilesPage();
@@ -113,10 +112,9 @@ public class FuncionarioController extends AbstractController<FuncionarioService
 		setEmailNotUniqueError(usuario, result);
 		setCPFNotUniqueError(funcionario, result);
 
+		setCommonAttributes(model);
 		setEditPage(model);
-		setUsuarioLogado(model);
 		incrementLastLoadedPage(model, lastLoadedPage);
-		setMainPage(model);
 
 		if (result.hasErrors())
 			return getEditTilesPage();
