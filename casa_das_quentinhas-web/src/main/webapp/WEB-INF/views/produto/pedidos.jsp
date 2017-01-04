@@ -12,13 +12,14 @@
 			<table class="table table-striped table-bordered dataTable">
 				<thead>
 					<tr>
-						<th class="${sortField eq 'id' ? sortOrder : 'sorting' }" id="id">#</th>
-						<th class="${sortField eq 'nome' ? sortOrder : 'sorting' }"
-							id="nome">Nome</th>
-						<th class="${sortField eq 'tamanho' ? sortOrder : 'sorting' }"
-							id="tamanho">Tamanho</th>
-						<th class="${sortField eq 'custo' ? sortOrder : 'sorting' }"
-							id="custo">Custo</th>
+						<th class="${sortField eq 'id.pedidoId' ? sortOrder : 'sorting' }"
+							id="id.pedidoId">Pedido</th>
+						<th
+							class="${sortField eq 'pedido.manutencao.cadastro' ? sortOrder : 'sorting' }"
+							id="pedido.manutencao.cadastro">Data do pedido</th>
+						<th>Cliente</th>
+						<th class="${sortField eq 'quantidade' ? sortOrder : 'sorting' }"
+							id="quantidade">Quantidade</th>
 
 						<sec:authorize access="hasRole('GERENTE') or hasRole('ATENDENTE')">
 							<th class="actions">Ações</th>
@@ -26,22 +27,30 @@
 					</tr>
 				</thead>
 				<tbody>
-					<c:forEach items="${produtos}" var="produto">
+					<c:forEach items="${itens}" var="item">
 						<tr>
-							<td>${produto.id}</td>
-							<td>${produto.nome}</td>
-							<td>${produto.tamanho.descricao}</td>
-							<td>${produto.formattedCusto}</td>
+							<td>${item.id.pedidoId}</td>
+							<td>${item.pedido.manutencao.formattedCadastro}</td>
+							<td><c:choose>
+									<c:when test="${item.pedido.empresa != null}">
+										<a href="<c:url value='/empresa/${item.pedido.empresa.id}' />">${item.pedido.empresa.razaoSocialWithCnpj}</a>
+									</c:when>
+									<c:otherwise>
+										<a href="<c:url value='/cliente/${item.pedido.cliente.id}' />">${item.pedido.cliente.nomeWithCpf}</a>
+									</c:otherwise>
+								</c:choose></td>
+							<td>${item.quantidade}</td>
 
 							<td class="actions"><a class="btn btn-success btn-xs"
-								href="<c:url value='/produto/${produto.id}' />">Visualizar</a> <sec:authorize
+								href="<c:url value='/pedido/${item.id.pedidoId}' />">Visualizar</a>
+								<sec:authorize
 									access="hasRole('GERENTE') or hasRole('ATENDENTE')">
 									<a class="btn btn-warning btn-xs"
-										href="<c:url value='/produto/${produto.id}/edit' />">Alterar</a>
+										href="<c:url value='/pedido/${item.id.pedidoId}/edit' />">Alterar</a>
 								</sec:authorize> <sec:authorize access="hasRole('GERENTE')">
 									<button class="btn btn-danger btn-xs delete"
-										value="${produto.id}"
-										title="Deseja realmente excluir o produto ( ${produto.nome} )">Excluir</button>
+										value="${item.id.pedidoId}"
+										title="Deseja realmente excluir o pedido ( ${item.id.pedidoId} )">Excluir</button>
 								</sec:authorize></td>
 						</tr>
 					</c:forEach>
@@ -59,13 +68,13 @@
 	<input type="hidden" id="dataTable_count" value="${count}">
 
 	<c:set var="paginateUri">
-		<c:url value='/produto/list' />
+		<c:url value='/produto/${itens[0].id.produtoId}/pedidos' />
 	</c:set>
 
 	<div class="row">
 		<div class="col-sm-5">
 			<div class="dataTables_info" role="status">
-				No total, <span class="badge">${count}</span> produtos foram
+				No total, <span class="badge">${count}</span> pedido foram
 				retornadas
 			</div>
 		</div>

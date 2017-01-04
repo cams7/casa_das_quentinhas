@@ -30,4 +30,9 @@
 	<definition name="produto_list" extends="empty">
 		<put-attribute name="body" value="/WEB-INF/views/produto/list.jsp" />
 	</definition>
+	
+	<!-- Paginação dos pedidos -->
+	<definition name="produto_pedidos" extends="empty">
+		<put-attribute name="body" value="/WEB-INF/views/produto/pedidos.jsp" />
+	</definition>
 </tiles-definitions>

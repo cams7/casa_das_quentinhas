@@ -30,4 +30,9 @@
 	<definition name="pedido_list" extends="empty">
 		<put-attribute name="body" value="/WEB-INF/views/pedido/list.jsp" />
 	</definition>
+	
+	<!-- Paginação dos Itens do pedidos -->
+	<definition name="pedido_itens" extends="empty">
+		<put-attribute name="body" value="/WEB-INF/views/pedido/itens.jsp" />
+	</definition>
 </tiles-definitions>

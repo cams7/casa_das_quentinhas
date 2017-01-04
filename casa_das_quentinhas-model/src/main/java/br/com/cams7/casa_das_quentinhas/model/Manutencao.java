@@ -3,6 +3,7 @@
  */
 package br.com.cams7.casa_das_quentinhas.model;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -16,6 +17,12 @@ import javax.persistence.TemporalType;
  */
 @Embeddable
 public class Manutencao {
+
+	private static final SimpleDateFormat DATE_FORMAT;
+
+	static {
+		DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+	}
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "data_cadastro", nullable = false)
@@ -54,4 +61,25 @@ public class Manutencao {
 	public void setAlteracao(Date alteracao) {
 		this.alteracao = alteracao;
 	}
+
+	/**
+	 * @return
+	 */
+	public String getFormattedCadastro() {
+		if (cadastro == null)
+			return null;
+
+		return DATE_FORMAT.format(cadastro);
+	}
+
+	/**
+	 * @return
+	 */
+	public String getFormattedAlteracao() {
+		if (alteracao == null)
+			return null;
+
+		return DATE_FORMAT.format(alteracao);
+	}
+
 }

@@ -4,6 +4,8 @@
 package br.com.cams7.casa_das_quentinhas.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -29,6 +31,8 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import br.com.cams7.app.common.MoneyEditor;
 import br.com.cams7.app.controller.AbstractController;
+import br.com.cams7.app.utils.SearchParams;
+import br.com.cams7.app.utils.SearchParams.SortOrder;
 import br.com.cams7.casa_das_quentinhas.model.Cliente;
 import br.com.cams7.casa_das_quentinhas.model.Empresa;
 import br.com.cams7.casa_das_quentinhas.model.Pedido;
@@ -37,8 +41,10 @@ import br.com.cams7.casa_das_quentinhas.model.Pedido.FormaPagamento;
 import br.com.cams7.casa_das_quentinhas.model.Pedido.Situacao;
 import br.com.cams7.casa_das_quentinhas.model.Pedido.TipoAtendimento;
 import br.com.cams7.casa_das_quentinhas.model.Pedido.TipoCliente;
+import br.com.cams7.casa_das_quentinhas.model.PedidoItem;
 import br.com.cams7.casa_das_quentinhas.service.ClienteService;
 import br.com.cams7.casa_das_quentinhas.service.EmpresaService;
+import br.com.cams7.casa_das_quentinhas.service.PedidoItemService;
 import br.com.cams7.casa_das_quentinhas.service.PedidoService;
 
 /**
@@ -56,6 +62,9 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 
 	@Autowired
 	private EmpresaService empresaService;
+
+	@Autowired
+	private PedidoItemService itemService;
 
 	@Autowired
 	private MessageSource messageSource;
@@ -85,6 +94,21 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 		return redirectMainPage();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.controller.AbstractController#show(java.io.Serializable,
+	 * org.springframework.ui.ModelMap)
+	 */
+	@Override
+	public String show(@PathVariable Long id, ModelMap model) {
+
+		getItens(id, model, 0, "id", SortOrder.DESCENDING);
+
+		return super.show(id, model);
+	}
+
 	@Override
 	public String update(@Valid Pedido pedido, BindingResult result, ModelMap model, @PathVariable Long id,
 			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
@@ -100,6 +124,34 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 		getService().update(pedido, new ArrayList<>());
 
 		return redirectMainPage();
+	}
+
+	@GetMapping(value = { "/{pedidoId}/itens" })
+	public String getItens(@PathVariable Long pedidoId, ModelMap model,
+			@RequestParam(value = "offset", required = true) Integer offset,
+			@RequestParam(value = "f", required = true) String sortField,
+			@RequestParam(value = "s", required = true) String sortOrder,
+			@RequestParam(value = "q", required = true) String query) {
+
+		getItens(pedidoId, model, offset, sortField, SortOrder.get(sortOrder));
+
+		return "pedido_itens";
+	}
+
+	private void getItens(Long pedidoId, ModelMap model, Integer offset, String sortField, SortOrder sortOrder) {
+		final short MAX_RESULTS = 5;
+
+		Map<String, Object> filters = new HashMap<>();
+		filters.put("id.pedidoId", pedidoId);
+
+		SearchParams params = new SearchParams(offset, MAX_RESULTS, sortField, sortOrder, filters);
+
+		List<PedidoItem> itens = itemService.search(params);
+		long count = itemService.getTotalElements(filters);
+
+		model.addAttribute("itens", itens);
+
+		setPaginationAttribute(model, offset, sortField, sortOrder, null, count, MAX_RESULTS);
 	}
 
 	@GetMapping(value = { "/clientes/{nomeOrCpfOrTelefone}" }, produces = MediaType.APPLICATION_JSON_VALUE)

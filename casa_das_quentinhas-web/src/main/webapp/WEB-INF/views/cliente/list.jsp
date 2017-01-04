@@ -48,7 +48,8 @@
 										href="<c:url value='/cliente/${cliente.id}/edit' />">Alterar</a>
 								</sec:authorize> <sec:authorize access="hasRole('GERENTE')">
 									<button class="btn btn-danger btn-xs delete"
-										value="${cliente.id}" title="Deseja realmente excluir o cliente ( ${cliente.nome} )">Excluir</button>
+										value="${cliente.id}"
+										title="Deseja realmente excluir o cliente ( ${cliente.nome} )">Excluir</button>
 								</sec:authorize></td>
 						</tr>
 					</c:forEach>
@@ -78,8 +79,9 @@
 		</div>
 		<div class="col-sm-7">
 			<div class="dataTables_paginate paging_simple_numbers">
-				<p:paginate max="15" steps="${maxResults}" offset="${offset}" count="${count}"
-					uri="${paginateUri}" next="&raquo;" previous="&laquo;" />
+				<p:paginate max="15" steps="${maxResults}" offset="${offset}"
+					count="${count}" uri="${paginateUri}" next="&raquo;"
+					previous="&laquo;" />
 			</div>
 		</div>
 	</div>

@@ -379,6 +379,9 @@ public class Pedido extends AbstractEntity<Long> {
 		this.itens = itens;
 	}
 
+	/**
+	 * @return
+	 */
 	public String getFormattedCusto() {
 		if (custo == null)
 			return null;
@@ -386,6 +389,9 @@ public class Pedido extends AbstractEntity<Long> {
 		return NUMBER_FORMAT.format(custo);
 	}
 
+	/**
+	 * @return
+	 */
 	public String getFormattedCustoIcms() {
 		if (custoIcms == null)
 			return null;
@@ -393,6 +399,9 @@ public class Pedido extends AbstractEntity<Long> {
 		return NUMBER_FORMAT.format(custoIcms);
 	}
 
+	/**
+	 * @return
+	 */
 	public String getFormattedCustoSt() {
 		if (custoSt == null)
 			return null;
