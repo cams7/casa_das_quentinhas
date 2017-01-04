@@ -12,7 +12,7 @@
 <div class="row">
 	<div class="col-md-6">
 		<p>
-			<strong>Cliente</strong>
+			<strong>${pedido.tipoCliente eq 'PESSOA_JURIDICA' ? 'Empresa' : 'Cliente' }</strong>
 		</p>
 		<p>${pedido.cliente.nome}</p>
 	</div>

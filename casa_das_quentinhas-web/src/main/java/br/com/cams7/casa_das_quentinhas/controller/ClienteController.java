@@ -37,6 +37,7 @@ import br.com.cams7.casa_das_quentinhas.model.Cidade;
 import br.com.cams7.casa_das_quentinhas.model.Cliente;
 import br.com.cams7.casa_das_quentinhas.model.Cliente.TipoContribuinte;
 import br.com.cams7.casa_das_quentinhas.model.Contato;
+import br.com.cams7.casa_das_quentinhas.model.Empresa;
 import br.com.cams7.casa_das_quentinhas.model.Endereco;
 import br.com.cams7.casa_das_quentinhas.model.Pedido;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
@@ -173,6 +174,7 @@ public class ClienteController extends AbstractController<ClienteService, Client
 		return "pedido_list";
 	}
 
+	@SuppressWarnings("unchecked")
 	private void getPedidos(Integer clienteId, ModelMap model, Integer offset, String sortField, SortOrder sortOrder) {
 		final short MAX_RESULTS = 5;
 
@@ -181,6 +183,7 @@ public class ClienteController extends AbstractController<ClienteService, Client
 
 		SearchParams params = new SearchParams(offset, MAX_RESULTS, sortField, sortOrder, filters);
 
+		pedidoService.setIgnoredJoins(Cliente.class, Empresa.class);
 		List<Pedido> pedidos = pedidoService.search(params);
 		long count = pedidoService.getTotalElements(filters);
 

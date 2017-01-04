@@ -13,8 +13,8 @@
 				<thead>
 					<tr>
 						<th class="${sortField eq 'id' ? sortOrder : 'sorting' }" id="id">#</th>
-						<c:if test="${not escondeCliente }">
-							<th>Cliente</th>
+						<c:if test="${not escondeCliente}">
+							<th>Cliente/Empresa</th>
 						</c:if>
 						<th class="${sortField eq 'tipoCliente' ? sortOrder : 'sorting' }"
 							id="tipoCliente">Tipo de cliente</th>
@@ -32,7 +32,7 @@
 					<c:forEach items="${pedidos}" var="pedido">
 						<tr>
 							<td>${pedido.id}</td>
-							<c:if test="${not escondeCliente }">
+							<c:if test="${not escondeCliente}">
 								<td><c:choose>
 										<c:when test="${pedido.empresa != null}">
 											<a href="<c:url value='/empresa/${pedido.empresa.id}' />">${pedido.empresa.razaoSocialWithCnpj}</a>

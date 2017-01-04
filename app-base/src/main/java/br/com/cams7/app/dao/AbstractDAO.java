@@ -127,16 +127,16 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 	 */
 	private FromOrJoin getFromOrJoin(From<?, ?>[] fromWithJoins, String attributeName) {
 		From<?, ?> fromOrJoin = fromWithJoins[0];
-
 		String[] atributes = attributeName.split("\\.");
 
-		if (atributes.length > 1) {
+		if (fromWithJoins.length > 1 && atributes.length > 1) {
 			Class<E> entityType = AppHelper.getFieldTypes(ENTITY_TYPE, attributeName).getEntityType();
 
 			boolean isEntity = entityType.isAnnotationPresent(Entity.class);
 
 			if (isEntity) {
-				attributeName = atributes[atributes.length - 1];
+				boolean isJoin = false;
+
 				String entityName = atributes[atributes.length - 2];
 
 				for (short i = 1; i < fromWithJoins.length; i++) {
@@ -144,9 +144,13 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 
 					if (entityType.equals(join.getJavaType()) && entityName.equals(join.getAttribute().getName())) {
 						fromOrJoin = join;
+						isJoin = true;
 						break;
 					}
 				}
+
+				if (isJoin)
+					attributeName = atributes[atributes.length - 1];
 			}
 		}
 

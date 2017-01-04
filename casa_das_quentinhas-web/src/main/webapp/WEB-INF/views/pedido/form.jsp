@@ -12,7 +12,7 @@
 	</c:set>
 	<div
 		class="form-group col-md-6 ${not empty clienteNomeError ? 'has-error' : ''}">
-		<label class="control-label" for="cliente.nome">Cliente</label>
+		<label class="control-label" for="cliente.nome">${pedido.tipoCliente eq 'PESSOA_JURIDICA' ? 'Empresa' : 'Cliente' }</label>
 		<form:input type="text" path="cliente.nome" id="cliente"
 			class="form-control" maxlength="80"
 			placeholder="${pedido.tipoCliente eq 'PESSOA_JURIDICA' ? 'Razão social / CNPJ' : 'Nome / CPF / Telefone' }" />

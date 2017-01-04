@@ -59,7 +59,7 @@ public class ProdutoDAOImpl extends AbstractDAO<Produto, Integer> implements Pro
 
 		Root<Produto> from = cq.from(ENTITY_TYPE);
 
-		from.fetch(Produto_.usuarioCadastro, JoinType.LEFT);
+		from.fetch(Produto_.usuarioCadastro, JoinType.INNER);
 
 		cq.select(from);
 

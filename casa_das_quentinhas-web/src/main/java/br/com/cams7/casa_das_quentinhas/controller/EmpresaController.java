@@ -30,6 +30,7 @@ import br.com.cams7.app.controller.AbstractController;
 import br.com.cams7.app.utils.SearchParams;
 import br.com.cams7.app.utils.SearchParams.SortOrder;
 import br.com.cams7.casa_das_quentinhas.model.Cidade;
+import br.com.cams7.casa_das_quentinhas.model.Cliente;
 import br.com.cams7.casa_das_quentinhas.model.Contato;
 import br.com.cams7.casa_das_quentinhas.model.Empresa;
 import br.com.cams7.casa_das_quentinhas.model.Empresa.RegimeTributario;
@@ -201,6 +202,7 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 		return "pedido_list";
 	}
 
+	@SuppressWarnings("unchecked")
 	private void getFuncionarios(Integer empresaId, ModelMap model, Integer offset, String sortField,
 			SortOrder sortOrder) {
 		Map<String, Object> filters = new HashMap<>();
@@ -208,6 +210,7 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 
 		SearchParams params = new SearchParams(offset, MAX_RESULTS, sortField, sortOrder, filters);
 
+		funcionarioService.setIgnoredJoins(Empresa.class);
 		List<Funcionario> funcionarios = funcionarioService.search(params);
 		long count = funcionarioService.getTotalElements(filters);
 
@@ -217,12 +220,14 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 		setPaginationAttribute(model, offset, sortField, sortOrder, null, count, MAX_RESULTS);
 	}
 
+	@SuppressWarnings("unchecked")
 	private void getPedidos(Integer empresaId, ModelMap model, Integer offset, String sortField, SortOrder sortOrder) {
 		Map<String, Object> filters = new HashMap<>();
 		filters.put("empresa.id", empresaId);
 
 		SearchParams params = new SearchParams(offset, MAX_RESULTS, sortField, sortOrder, filters);
 
+		pedidoService.setIgnoredJoins(Cliente.class, Empresa.class);
 		List<Pedido> pedidos = pedidoService.search(params);
 		long count = pedidoService.getTotalElements(filters);
 

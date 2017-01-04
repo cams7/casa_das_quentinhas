@@ -41,11 +41,20 @@ public class PedidoDAOImpl extends AbstractDAO<Pedido, Long> implements PedidoDA
 	protected List<From<?, ?>> getFetchJoins(Root<Pedido> from) {
 		List<From<?, ?>> fetchJoins = new ArrayList<>();
 
-		Join<Pedido, Cliente> joinCliente = (Join<Pedido, Cliente>) from.fetch(Pedido_.cliente, JoinType.LEFT);
-		Join<Pedido, Empresa> joinEmpresa = (Join<Pedido, Empresa>) from.fetch(Pedido_.empresa, JoinType.LEFT);
+		boolean noneMatch = getIgnoredJoins() == null
+				|| getIgnoredJoins().stream().noneMatch(type -> type.equals(Cliente.class));
+		if (noneMatch) {
+			Join<Pedido, Cliente> joinCliente = (Join<Pedido, Cliente>) from.fetch(Pedido_.cliente, JoinType.LEFT);
+			fetchJoins.add(joinCliente);
+		}
 
-		fetchJoins.add(joinCliente);
-		fetchJoins.add(joinEmpresa);
+		noneMatch = getIgnoredJoins() == null
+				|| getIgnoredJoins().stream().noneMatch(type -> type.equals(Empresa.class));
+		if (noneMatch) {
+			Join<Pedido, Empresa> joinEmpresa = (Join<Pedido, Empresa>) from.fetch(Pedido_.empresa, JoinType.LEFT);
+
+			fetchJoins.add(joinEmpresa);
+		}
 
 		return fetchJoins;
 	}
@@ -61,11 +70,19 @@ public class PedidoDAOImpl extends AbstractDAO<Pedido, Long> implements PedidoDA
 	protected List<From<?, ?>> getJoins(Root<Pedido> from) {
 		List<From<?, ?>> fetchJoins = new ArrayList<>();
 
-		Join<Pedido, Cliente> joinCliente = (Join<Pedido, Cliente>) from.join(Pedido_.cliente, JoinType.LEFT);
-		Join<Pedido, Empresa> joinEmpresa = (Join<Pedido, Empresa>) from.join(Pedido_.empresa, JoinType.LEFT);
+		boolean noneMatch = getIgnoredJoins() == null
+				|| getIgnoredJoins().stream().noneMatch(type -> type.equals(Cliente.class));
+		if (noneMatch) {
+			Join<Pedido, Cliente> joinCliente = (Join<Pedido, Cliente>) from.join(Pedido_.cliente, JoinType.LEFT);
+			fetchJoins.add(joinCliente);
+		}
 
-		fetchJoins.add(joinCliente);
-		fetchJoins.add(joinEmpresa);
+		noneMatch = getIgnoredJoins() == null
+				|| getIgnoredJoins().stream().noneMatch(type -> type.equals(Empresa.class));
+		if (noneMatch) {
+			Join<Pedido, Empresa> joinEmpresa = (Join<Pedido, Empresa>) from.join(Pedido_.empresa, JoinType.LEFT);
+			fetchJoins.add(joinEmpresa);
+		}
 
 		return fetchJoins;
 	}

@@ -2,10 +2,13 @@ $(document).ready(function($) {
 	$('#tipoCliente').change(event => {
 		event.preventDefault();
 		$('#cliente, #cliente_id').val('');
-		if(event.target.value == 'PESSOA_JURIDICA')
+		if(event.target.value == 'PESSOA_JURIDICA'){
 			$('#cliente').attr('placeholder', 'Razão social / CNPJ');
-		else
+			$('label[for="cliente.nome"]').html('Empresa');
+		}else{
 			$('#cliente').attr('placeholder', 'Nome / CPF / Telefone');
+			$('label[for="cliente.nome"]').html('Cliente');
+		}
 	});
 	
     $('#cliente').autocomplete({

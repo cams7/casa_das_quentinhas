@@ -61,6 +61,7 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 	 * br.com.cams7.app.controller.BaseController#index(org.springframework.ui.
 	 * ModelMap)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public String index(ModelMap model) {
 		Integer offset = 0;
@@ -69,6 +70,7 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 
 		SearchParams params = new SearchParams(offset, MAX_RESULTS, sortField, sortOrder, null);
 
+		getService().setIgnoredJoins();
 		List<E> entities = getService().search(params);
 		long count = getService().count();
 
@@ -210,6 +212,7 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 	 * ModelMap, java.lang.Integer, java.lang.String, java.lang.String,
 	 * java.lang.String)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public String list(ModelMap model, @RequestParam(value = "offset", required = true) Integer offset,
 			@RequestParam(value = "f", required = true) String sortField,
@@ -230,6 +233,7 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 
 		SearchParams params = new SearchParams(offset, MAX_RESULTS, sortField, sorting, filters, globalFilters);
 
+		getService().setIgnoredJoins();
 		List<E> entities = getService().search(params);
 		long count = getService().getTotalElements(filters, globalFilters);
 

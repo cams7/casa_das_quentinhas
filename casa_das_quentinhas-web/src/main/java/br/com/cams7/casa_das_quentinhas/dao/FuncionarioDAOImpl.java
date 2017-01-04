@@ -28,31 +28,6 @@ public class FuncionarioDAOImpl extends AbstractDAO<Funcionario, Integer> implem
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see br.com.cams7.casa_das_quentinhas.dao.FuncionarioDAO#
-	 * getFuncionarioByFuncao(br.com.cams7.casa_das_quentinhas.model.Funcionario
-	 * .Funcao)
-	 */
-	// @Override
-	// public Set<Funcionario> getFuncionariosByFuncao(Funcao funcao) {
-	// CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-	// CriteriaQuery<Funcionario> cq = cb.createQuery(ENTITY_TYPE);
-	//
-	// Root<Funcionario> from = cq.from(ENTITY_TYPE);
-	//
-	// cq.select(from);
-	// cq.where(cb.equal(from.get(Funcionario_.funcao), funcao));
-	//
-	// TypedQuery<Funcionario> tq = getEntityManager().createQuery(cq);
-	//
-	// Set<Funcionario> funcionario = new
-	// HashSet<Funcionario>(tq.getResultList());
-	//
-	// return funcionario;
-	// }
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see
 	 * br.com.cams7.app.dao.AbstractDAO#getFetchJoins(javax.persistence.criteria
 	 * .Root)
@@ -64,11 +39,15 @@ public class FuncionarioDAOImpl extends AbstractDAO<Funcionario, Integer> implem
 
 		Join<Funcionario, Usuario> joinUsuario = (Join<Funcionario, Usuario>) from.fetch(Funcionario_.usuario,
 				JoinType.INNER);
-		Join<Funcionario, Empresa> joinEmpresa = (Join<Funcionario, Empresa>) from.fetch(Funcionario_.empresa,
-				JoinType.INNER);
-
 		fetchJoins.add(joinUsuario);
-		fetchJoins.add(joinEmpresa);
+
+		boolean noneMatch = getIgnoredJoins() == null
+				|| getIgnoredJoins().stream().noneMatch(type -> type.equals(Empresa.class));
+		if (noneMatch) {
+			Join<Funcionario, Empresa> joinEmpresa = (Join<Funcionario, Empresa>) from.fetch(Funcionario_.empresa,
+					JoinType.INNER);
+			fetchJoins.add(joinEmpresa);
+		}
 
 		return fetchJoins;
 	}
@@ -86,11 +65,15 @@ public class FuncionarioDAOImpl extends AbstractDAO<Funcionario, Integer> implem
 
 		Join<Funcionario, Usuario> joinUsuario = (Join<Funcionario, Usuario>) from.join(Funcionario_.usuario,
 				JoinType.INNER);
-		Join<Funcionario, Empresa> joinEmpresa = (Join<Funcionario, Empresa>) from.join(Funcionario_.empresa,
-				JoinType.INNER);
-
 		fetchJoins.add(joinUsuario);
-		fetchJoins.add(joinEmpresa);
+
+		boolean noneMatch = getIgnoredJoins() == null
+				|| getIgnoredJoins().stream().noneMatch(type -> type.equals(Empresa.class));
+		if (noneMatch) {
+			Join<Funcionario, Empresa> joinEmpresa = (Join<Funcionario, Empresa>) from.join(Funcionario_.empresa,
+					JoinType.INNER);
+			fetchJoins.add(joinEmpresa);
+		}
 
 		return fetchJoins;
 	}
