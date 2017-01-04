@@ -158,11 +158,12 @@ public class EmpresaServiceImpl extends AbstractService<EmpresaDAO, Empresa, Int
 	 * (non-Javadoc)
 	 * 
 	 * @see br.com.cams7.casa_das_quentinhas.dao.EmpresaDAO#
-	 * getEmpresasByRazaoSocialOrCnpj(java.lang.String)
+	 * getEmpresasByRazaoSocialOrCnpj(java.lang.String,
+	 * br.com.cams7.casa_das_quentinhas.model.Empresa.Tipo)
 	 */
 	@Override
-	public Map<Integer, String> getEmpresasByRazaoSocialOrCnpj(String razaoSocialOrCnpj) {
-		return getDao().getEmpresasByRazaoSocialOrCnpj(razaoSocialOrCnpj);
+	public Map<Integer, String> getEmpresasByRazaoSocialOrCnpj(String razaoSocialOrCnpj, Tipo tipo) {
+		return getDao().getEmpresasByRazaoSocialOrCnpj(razaoSocialOrCnpj, tipo);
 	}
 
 	/*

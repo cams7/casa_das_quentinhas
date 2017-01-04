@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import br.com.cams7.app.controller.AbstractController;
 import br.com.cams7.casa_das_quentinhas.model.Empresa;
+import br.com.cams7.casa_das_quentinhas.model.Empresa.Tipo;
 import br.com.cams7.casa_das_quentinhas.model.Funcionario;
 import br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
@@ -129,7 +130,7 @@ public class FuncionarioController extends AbstractController<FuncionarioService
 
 	@GetMapping(value = { "/empresas/{razaoSocialOrCnpj}" }, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Map<Integer, String>> getEmpresas(@PathVariable String razaoSocialOrCnpj) {
-		Map<Integer, String> empresas = empresaService.getEmpresasByRazaoSocialOrCnpj(razaoSocialOrCnpj);
+		Map<Integer, String> empresas = empresaService.getEmpresasByRazaoSocialOrCnpj(razaoSocialOrCnpj, Tipo.ENTREGA);
 
 		return new ResponseEntity<Map<Integer, String>>(empresas, HttpStatus.OK);
 	}

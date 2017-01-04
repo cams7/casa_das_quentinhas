@@ -35,6 +35,7 @@ import br.com.cams7.app.utils.SearchParams;
 import br.com.cams7.app.utils.SearchParams.SortOrder;
 import br.com.cams7.casa_das_quentinhas.model.Cliente;
 import br.com.cams7.casa_das_quentinhas.model.Empresa;
+import br.com.cams7.casa_das_quentinhas.model.Empresa.Tipo;
 import br.com.cams7.casa_das_quentinhas.model.Pedido;
 import br.com.cams7.casa_das_quentinhas.model.Pedido.DestinoOperacao;
 import br.com.cams7.casa_das_quentinhas.model.Pedido.FormaPagamento;
@@ -163,7 +164,7 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 
 	@GetMapping(value = { "/empresas/{nomeOrCnpj}" }, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Map<Integer, String>> getEmpresas(@PathVariable String nomeOrCnpj) {
-		Map<Integer, String> empresas = empresaService.getEmpresasByRazaoSocialOrCnpj(nomeOrCnpj);
+		Map<Integer, String> empresas = empresaService.getEmpresasByRazaoSocialOrCnpj(nomeOrCnpj, Tipo.CLIENTE);
 
 		return new ResponseEntity<Map<Integer, String>>(empresas, HttpStatus.OK);
 	}

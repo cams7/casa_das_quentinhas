@@ -53,7 +53,9 @@ public interface EmpresaDAO extends BaseDAO<Empresa, Integer> {
 	/**
 	 * @param nomeOrCnpj
 	 *            Nome ou CNPJ
+	 * @param tipo
+	 *            Tipo de empresa
 	 * @return Empresas
 	 */
-	Map<Integer, String> getEmpresasByRazaoSocialOrCnpj(String nomeOrCnpj);
+	Map<Integer, String> getEmpresasByRazaoSocialOrCnpj(String nomeOrCnpj, Tipo tipo);
 }

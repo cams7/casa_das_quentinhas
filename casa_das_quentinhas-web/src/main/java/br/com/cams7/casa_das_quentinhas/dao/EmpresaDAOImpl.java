@@ -232,10 +232,11 @@ public class EmpresaDAOImpl extends AbstractDAO<Empresa, Integer> implements Emp
 	 * (non-Javadoc)
 	 * 
 	 * @see br.com.cams7.casa_das_quentinhas.dao.EmpresaDAO#
-	 * getEmpresasByRazaoSocialOrCnpj(java.lang.String)
+	 * getEmpresasByRazaoSocialOrCnpj(java.lang.String,
+	 * br.com.cams7.casa_das_quentinhas.model.Empresa.Tipo)
 	 */
 	@Override
-	public Map<Integer, String> getEmpresasByRazaoSocialOrCnpj(String razaoSocialOrCnpj) {
+	public Map<Integer, String> getEmpresasByRazaoSocialOrCnpj(String razaoSocialOrCnpj, Tipo tipo) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Object[]> cq = cb.createQuery(Object[].class);
 
@@ -245,8 +246,10 @@ public class EmpresaDAOImpl extends AbstractDAO<Empresa, Integer> implements Emp
 
 		razaoSocialOrCnpj = "%" + razaoSocialOrCnpj.toLowerCase() + "%";
 
-		cq.where(cb.or(cb.like(cb.lower(from.get(Empresa_.razaoSocial)), razaoSocialOrCnpj),
-				cb.like(from.get(Empresa_.cnpj), razaoSocialOrCnpj)));
+		cq.where(
+				cb.or(cb.like(cb.lower(from.get(Empresa_.razaoSocial)), razaoSocialOrCnpj),
+						cb.like(from.get(Empresa_.cnpj), razaoSocialOrCnpj)),
+				cb.and(cb.equal(from.get(Empresa_.tipo), tipo), cb.notEqual(from.get(Empresa_.id), 1)));
 
 		cq.orderBy(cb.asc(from.get(Empresa_.razaoSocial)));
 
