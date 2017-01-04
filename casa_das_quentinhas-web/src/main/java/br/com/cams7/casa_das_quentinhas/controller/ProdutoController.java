@@ -68,6 +68,7 @@ public class ProdutoController extends AbstractController<ProdutoService, Produt
 		return "produto_pedidos";
 	}
 
+	@SuppressWarnings("unchecked")
 	private void getPedidos(Integer produtoId, ModelMap model, Integer offset, String sortField, SortOrder sortOrder) {
 		final short MAX_RESULTS = 5;
 
@@ -76,6 +77,7 @@ public class ProdutoController extends AbstractController<ProdutoService, Produt
 
 		SearchParams params = new SearchParams(offset, MAX_RESULTS, sortField, sortOrder, filters);
 
+		itemService.setIgnoredJoins(Produto.class);
 		List<PedidoItem> itens = itemService.search(params);
 		long count = itemService.getTotalElements(filters);
 

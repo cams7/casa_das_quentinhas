@@ -3,6 +3,9 @@
  */
 package br.com.cams7.casa_das_quentinhas.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.From;
@@ -39,14 +42,33 @@ public class PedidoItemDAOImpl extends AbstractDAO<PedidoItem, PedidoItemPK> imp
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	protected From<?, ?>[] getFetchJoins(Root<PedidoItem> from) {
-		Join<PedidoItem, Pedido> joinPedido = (Join<PedidoItem, Pedido>) from.fetch(PedidoItem_.pedido, JoinType.INNER);
-		Join<Pedido, Cliente> joinCliente = (Join<Pedido, Cliente>) joinPedido.fetch(Pedido_.cliente, JoinType.LEFT);
-		Join<Pedido, Empresa> joinEmpresa = (Join<Pedido, Empresa>) joinPedido.fetch(Pedido_.empresa, JoinType.LEFT);
-		Join<PedidoItem, Produto> joinProduto = (Join<PedidoItem, Produto>) from.fetch(PedidoItem_.produto,
-				JoinType.INNER);
+	protected List<From<?, ?>> getFetchJoins(Root<PedidoItem> from) {
+		List<From<?, ?>> fetchJoins = new ArrayList<>();
 
-		return new From<?, ?>[] { joinPedido, joinCliente, joinEmpresa, joinProduto };
+		boolean noneMatch = getIgnoredJoins() == null
+				|| getIgnoredJoins().stream().noneMatch(type -> type.equals(Pedido.class));
+		if (noneMatch) {
+			Join<PedidoItem, Pedido> joinPedido = (Join<PedidoItem, Pedido>) from.fetch(PedidoItem_.pedido,
+					JoinType.INNER);
+			Join<Pedido, Cliente> joinCliente = (Join<Pedido, Cliente>) joinPedido.fetch(Pedido_.cliente,
+					JoinType.LEFT);
+			Join<Pedido, Empresa> joinEmpresa = (Join<Pedido, Empresa>) joinPedido.fetch(Pedido_.empresa,
+					JoinType.LEFT);
+
+			fetchJoins.add(joinPedido);
+			fetchJoins.add(joinCliente);
+			fetchJoins.add(joinEmpresa);
+		}
+
+		noneMatch = getIgnoredJoins() == null
+				|| getIgnoredJoins().stream().noneMatch(type -> type.equals(Produto.class));
+		if (noneMatch) {
+			Join<PedidoItem, Produto> joinProduto = (Join<PedidoItem, Produto>) from.fetch(PedidoItem_.produto,
+					JoinType.INNER);
+			fetchJoins.add(joinProduto);
+		}
+
+		return fetchJoins;
 	}
 
 	/*
@@ -57,13 +79,30 @@ public class PedidoItemDAOImpl extends AbstractDAO<PedidoItem, PedidoItemPK> imp
 	 * Root)
 	 */
 	@Override
-	protected From<?, ?>[] getJoins(Root<PedidoItem> from) {
-		Join<PedidoItem, Pedido> joinPedido = (Join<PedidoItem, Pedido>) from.join(PedidoItem_.pedido, JoinType.INNER);
-		Join<Pedido, Cliente> joinCliente = (Join<Pedido, Cliente>) joinPedido.join(Pedido_.cliente, JoinType.LEFT);
-		Join<Pedido, Empresa> joinEmpresa = (Join<Pedido, Empresa>) joinPedido.join(Pedido_.empresa, JoinType.LEFT);
-		Join<PedidoItem, Produto> joinProduto = (Join<PedidoItem, Produto>) from.join(PedidoItem_.produto,
-				JoinType.INNER);
-		return new From<?, ?>[] { joinPedido, joinCliente, joinEmpresa, joinProduto };
+	protected List<From<?, ?>> getJoins(Root<PedidoItem> from) {
+		List<From<?, ?>> fetchJoins = new ArrayList<>();
+
+		boolean noneMatch = getIgnoredJoins() == null
+				|| getIgnoredJoins().stream().noneMatch(type -> type.equals(Pedido.class));
+		if (noneMatch) {
+			Join<PedidoItem, Pedido> joinPedido = (Join<PedidoItem, Pedido>) from.join(PedidoItem_.pedido,
+					JoinType.INNER);
+			Join<Pedido, Cliente> joinCliente = (Join<Pedido, Cliente>) joinPedido.join(Pedido_.cliente, JoinType.LEFT);
+			Join<Pedido, Empresa> joinEmpresa = (Join<Pedido, Empresa>) joinPedido.join(Pedido_.empresa, JoinType.LEFT);
+			fetchJoins.add(joinPedido);
+			fetchJoins.add(joinCliente);
+			fetchJoins.add(joinEmpresa);
+		}
+
+		noneMatch = getIgnoredJoins() == null
+				|| getIgnoredJoins().stream().noneMatch(type -> type.equals(Produto.class));
+		if (noneMatch) {
+			Join<PedidoItem, Produto> joinProduto = (Join<PedidoItem, Produto>) from.join(PedidoItem_.produto,
+					JoinType.INNER);
+			fetchJoins.add(joinProduto);
+		}
+
+		return fetchJoins;
 	}
 
 	@Override

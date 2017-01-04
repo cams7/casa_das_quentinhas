@@ -1,5 +1,7 @@
 package br.com.cams7.casa_das_quentinhas.dao;
 
+import java.util.List;
+
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -24,7 +26,7 @@ public class UsuarioDAOImpl extends AbstractDAO<Usuario, Integer> implements Usu
 	 * .Root)
 	 */
 	@Override
-	protected From<?, ?>[] getFetchJoins(Root<Usuario> from) {
+	protected List<From<?, ?>> getFetchJoins(Root<Usuario> from) {
 		return null;
 	}
 
@@ -36,7 +38,7 @@ public class UsuarioDAOImpl extends AbstractDAO<Usuario, Integer> implements Usu
 	 * Root)
 	 */
 	@Override
-	protected From<?, ?>[] getJoins(Root<Usuario> from) {
+	protected List<From<?, ?>> getJoins(Root<Usuario> from) {
 		return null;
 	}
 

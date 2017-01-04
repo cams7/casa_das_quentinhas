@@ -3,6 +3,7 @@
  */
 package br.com.cams7.casa_das_quentinhas.dao;
 
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -37,7 +38,7 @@ public class CidadeDAOImpl extends AbstractDAO<Cidade, Integer> implements Cidad
 	 * .Root)
 	 */
 	@Override
-	protected From<?, ?>[] getFetchJoins(Root<Cidade> from) {
+	protected List<From<?, ?>> getFetchJoins(Root<Cidade> from) {
 		return null;
 	}
 
@@ -49,7 +50,7 @@ public class CidadeDAOImpl extends AbstractDAO<Cidade, Integer> implements Cidad
 	 * Root)
 	 */
 	@Override
-	protected From<?, ?>[] getJoins(Root<Cidade> from) {
+	protected List<From<?, ?>> getJoins(Root<Cidade> from) {
 		return null;
 	}
 

@@ -1,5 +1,8 @@
 package br.com.cams7.casa_das_quentinhas.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -56,13 +59,18 @@ public class FuncionarioDAOImpl extends AbstractDAO<Funcionario, Integer> implem
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	protected From<?, ?>[] getFetchJoins(Root<Funcionario> from) {
+	protected List<From<?, ?>> getFetchJoins(Root<Funcionario> from) {
+		List<From<?, ?>> fetchJoins = new ArrayList<>();
+
 		Join<Funcionario, Usuario> joinUsuario = (Join<Funcionario, Usuario>) from.fetch(Funcionario_.usuario,
 				JoinType.INNER);
 		Join<Funcionario, Empresa> joinEmpresa = (Join<Funcionario, Empresa>) from.fetch(Funcionario_.empresa,
 				JoinType.INNER);
 
-		return new From<?, ?>[] { joinUsuario, joinEmpresa };
+		fetchJoins.add(joinUsuario);
+		fetchJoins.add(joinEmpresa);
+
+		return fetchJoins;
 	}
 
 	/*
@@ -73,13 +81,18 @@ public class FuncionarioDAOImpl extends AbstractDAO<Funcionario, Integer> implem
 	 * Root)
 	 */
 	@Override
-	protected From<?, ?>[] getJoins(Root<Funcionario> from) {
+	protected List<From<?, ?>> getJoins(Root<Funcionario> from) {
+		List<From<?, ?>> fetchJoins = new ArrayList<>();
+
 		Join<Funcionario, Usuario> joinUsuario = (Join<Funcionario, Usuario>) from.join(Funcionario_.usuario,
 				JoinType.INNER);
 		Join<Funcionario, Empresa> joinEmpresa = (Join<Funcionario, Empresa>) from.join(Funcionario_.empresa,
 				JoinType.INNER);
 
-		return new From<?, ?>[] { joinUsuario, joinEmpresa };
+		fetchJoins.add(joinUsuario);
+		fetchJoins.add(joinEmpresa);
+
+		return fetchJoins;
 	}
 
 	/*

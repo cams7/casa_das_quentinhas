@@ -120,6 +120,16 @@ public abstract class AbstractService<DAO extends BaseDAO<E, PK>, E extends Abst
 		return count;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.app.dao.BaseDAO#setIgnoredJoins(java.lang.Class[])
+	 */
+	@Override
+	public void setIgnoredJoins(@SuppressWarnings("unchecked") Class<? extends AbstractEntity<?>>... ignoredJoins) {
+		getDao().setIgnoredJoins(ignoredJoins);
+	}
+
 	@Override
 	public void setUsername(String username) {
 		this.username = username;

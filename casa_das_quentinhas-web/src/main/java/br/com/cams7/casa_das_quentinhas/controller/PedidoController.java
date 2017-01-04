@@ -136,6 +136,7 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 		return "pedido_itens";
 	}
 
+	@SuppressWarnings("unchecked")
 	private void getItens(Long pedidoId, ModelMap model, Integer offset, String sortField, SortOrder sortOrder) {
 		final short MAX_RESULTS = 5;
 
@@ -144,6 +145,7 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 
 		SearchParams params = new SearchParams(offset, MAX_RESULTS, sortField, sortOrder, filters);
 
+		itemService.setIgnoredJoins(Pedido.class);
 		List<PedidoItem> itens = itemService.search(params);
 		long count = itemService.getTotalElements(filters);
 

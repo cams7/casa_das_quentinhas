@@ -78,4 +78,10 @@ public interface BaseDAO<E extends AbstractEntity<PK>, PK extends Serializable> 
 	 */
 	long count();
 
+	/**
+	 * @param ignoredJoins
+	 *            Joins que serão ignorados
+	 */
+	void setIgnoredJoins(@SuppressWarnings("unchecked") Class<? extends AbstractEntity<?>>... ignoredJoins);
+
 }

@@ -1,6 +1,7 @@
 package br.com.cams7.casa_das_quentinhas.dao;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
@@ -30,7 +31,7 @@ public class AcessoDAOImpl extends AbstractDAO<Acesso, String> implements Persis
 	 * .Root)
 	 */
 	@Override
-	protected From<?, ?>[] getFetchJoins(Root<Acesso> from) {
+	protected List<From<?, ?>> getFetchJoins(Root<Acesso> from) {
 		return null;
 	}
 
@@ -42,7 +43,7 @@ public class AcessoDAOImpl extends AbstractDAO<Acesso, String> implements Persis
 	 * Root)
 	 */
 	@Override
-	protected From<?, ?>[] getJoins(Root<Acesso> from) {
+	protected List<From<?, ?>> getJoins(Root<Acesso> from) {
 		return null;
 	}
 

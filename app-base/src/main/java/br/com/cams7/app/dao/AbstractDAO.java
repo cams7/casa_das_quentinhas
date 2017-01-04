@@ -36,6 +36,8 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 	protected final Class<E> ENTITY_TYPE;
 	protected final Logger LOGGER;
 
+	private List<Class<? extends AbstractEntity<?>>> ignoredJoins;
+
 	@SuppressWarnings("unchecked")
 	public AbstractDAO() {
 		super();
@@ -378,6 +380,50 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 		return count;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.app.dao.BaseDAO#setIgnoredJoins(java.lang.Class[])
+	 */
+	@Override
+	public void setIgnoredJoins(@SuppressWarnings("unchecked") Class<? extends AbstractEntity<?>>... ignoredJoins) {
+		this.ignoredJoins = Arrays.asList(ignoredJoins);
+	}
+
+	/**
+	 * @return the ignoredJoins
+	 */
+	protected List<Class<? extends AbstractEntity<?>>> getIgnoredJoins() {
+		return ignoredJoins;
+	}
+
+	/**
+	 * @param cq
+	 * @param from
+	 * @param fromWithJoins
+	 * @return
+	 */
+	private From<?, ?>[] getFromWithJoins(CriteriaQuery<?> cq, Root<E> from, List<From<?, ?>> fromWithJoins) {
+		if (fromWithJoins == null)
+			fromWithJoins = new ArrayList<>();
+
+		fromWithJoins.add(0, from);
+
+		return fromWithJoins.stream().toArray(From<?, ?>[]::new);
+	}
+
+	/**
+	 * @param from
+	 * @return
+	 */
+	protected abstract List<From<?, ?>> getFetchJoins(Root<E> from);
+
+	/**
+	 * @param from
+	 * @return
+	 */
+	protected abstract List<From<?, ?>> getJoins(Root<E> from);
+
 	/**
 	 * @author César Magalhães
 	 *
@@ -393,33 +439,5 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 			this.from = from;
 		}
 	}
-
-	/**
-	 * @param cq
-	 * @param from
-	 * @param fromWithJoins
-	 * @return
-	 */
-	private From<?, ?>[] getFromWithJoins(CriteriaQuery<?> cq, Root<E> from, From<?, ?>[] fromWithJoins) {
-		List<From<?, ?>> list = new ArrayList<>(Arrays.asList(from));
-
-		if (fromWithJoins != null)
-			list.addAll(Arrays.asList(fromWithJoins));
-
-		fromWithJoins = list.stream().toArray(From<?, ?>[]::new);
-		return fromWithJoins;
-	}
-
-	/**
-	 * @param from
-	 * @return
-	 */
-	protected abstract From<?, ?>[] getFetchJoins(Root<E> from);
-
-	/**
-	 * @param from
-	 * @return
-	 */
-	protected abstract From<?, ?>[] getJoins(Root<E> from);
 
 }

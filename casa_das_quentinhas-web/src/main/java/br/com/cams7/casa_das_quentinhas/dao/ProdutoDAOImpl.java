@@ -3,6 +3,7 @@
  */
 package br.com.cams7.casa_das_quentinhas.dao;
 
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -35,7 +36,7 @@ public class ProdutoDAOImpl extends AbstractDAO<Produto, Integer> implements Pro
 	 * .Root)
 	 */
 	@Override
-	protected From<?, ?>[] getFetchJoins(Root<Produto> from) {
+	protected List<From<?, ?>> getFetchJoins(Root<Produto> from) {
 		return null;
 	}
 
@@ -47,7 +48,7 @@ public class ProdutoDAOImpl extends AbstractDAO<Produto, Integer> implements Pro
 	 * Root)
 	 */
 	@Override
-	protected From<?, ?>[] getJoins(Root<Produto> from) {
+	protected List<From<?, ?>> getJoins(Root<Produto> from) {
 		return null;
 	}
 

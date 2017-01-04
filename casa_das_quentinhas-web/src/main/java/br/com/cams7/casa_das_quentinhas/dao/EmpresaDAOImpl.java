@@ -3,6 +3,8 @@
  */
 package br.com.cams7.casa_das_quentinhas.dao;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -44,11 +46,16 @@ public class EmpresaDAOImpl extends AbstractDAO<Empresa, Integer> implements Emp
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	protected From<?, ?>[] getFetchJoins(Root<Empresa> from) {
+	protected List<From<?, ?>> getFetchJoins(Root<Empresa> from) {
+		List<From<?, ?>> fetchJoins = new ArrayList<>();
+
 		Join<Empresa, Cidade> joinCidade = (Join<Empresa, Cidade>) from.fetch(Empresa_.cidade, JoinType.INNER);
 		Join<Cidade, Estado> joinEstado = (Join<Cidade, Estado>) joinCidade.fetch(Cidade_.estado, JoinType.INNER);
 
-		return new From<?, ?>[] { joinCidade, joinEstado };
+		fetchJoins.add(joinCidade);
+		fetchJoins.add(joinEstado);
+
+		return fetchJoins;
 	}
 
 	/*
@@ -59,11 +66,16 @@ public class EmpresaDAOImpl extends AbstractDAO<Empresa, Integer> implements Emp
 	 * Root)
 	 */
 	@Override
-	protected From<?, ?>[] getJoins(Root<Empresa> from) {
+	protected List<From<?, ?>> getJoins(Root<Empresa> from) {
+		List<From<?, ?>> fetchJoins = new ArrayList<>();
+
 		Join<Empresa, Cidade> joinCidade = (Join<Empresa, Cidade>) from.join(Empresa_.cidade, JoinType.INNER);
 		Join<Cidade, Estado> joinEstado = (Join<Cidade, Estado>) joinCidade.join(Cidade_.estado, JoinType.INNER);
 
-		return new From<?, ?>[] { joinCidade, joinEstado };
+		fetchJoins.add(joinCidade);
+		fetchJoins.add(joinEstado);
+
+		return fetchJoins;
 	}
 
 	/*

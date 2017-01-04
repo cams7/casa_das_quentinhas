@@ -3,6 +3,9 @@
  */
 package br.com.cams7.casa_das_quentinhas.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -35,10 +38,16 @@ public class PedidoDAOImpl extends AbstractDAO<Pedido, Long> implements PedidoDA
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	protected From<?, ?>[] getFetchJoins(Root<Pedido> from) {
+	protected List<From<?, ?>> getFetchJoins(Root<Pedido> from) {
+		List<From<?, ?>> fetchJoins = new ArrayList<>();
+
 		Join<Pedido, Cliente> joinCliente = (Join<Pedido, Cliente>) from.fetch(Pedido_.cliente, JoinType.LEFT);
 		Join<Pedido, Empresa> joinEmpresa = (Join<Pedido, Empresa>) from.fetch(Pedido_.empresa, JoinType.LEFT);
-		return new From<?, ?>[] { joinCliente, joinEmpresa };
+
+		fetchJoins.add(joinCliente);
+		fetchJoins.add(joinEmpresa);
+
+		return fetchJoins;
 	}
 
 	/*
@@ -49,10 +58,16 @@ public class PedidoDAOImpl extends AbstractDAO<Pedido, Long> implements PedidoDA
 	 * Root)
 	 */
 	@Override
-	protected From<?, ?>[] getJoins(Root<Pedido> from) {
+	protected List<From<?, ?>> getJoins(Root<Pedido> from) {
+		List<From<?, ?>> fetchJoins = new ArrayList<>();
+
 		Join<Pedido, Cliente> joinCliente = (Join<Pedido, Cliente>) from.join(Pedido_.cliente, JoinType.LEFT);
 		Join<Pedido, Empresa> joinEmpresa = (Join<Pedido, Empresa>) from.join(Pedido_.empresa, JoinType.LEFT);
-		return new From<?, ?>[] { joinCliente, joinEmpresa };
+
+		fetchJoins.add(joinCliente);
+		fetchJoins.add(joinEmpresa);
+
+		return fetchJoins;
 	}
 
 	/*
