@@ -216,7 +216,7 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 		model.addAttribute("funcionarios", funcionarios);
 		model.addAttribute("escondeEmpresa", true);
 
-		setPaginationAttribute(model, offset, sortField, sortOrder, null, count);
+		setPaginationAttribute(model, offset, sortField, sortOrder, null, count, MAX_RESULTS);
 	}
 
 	private void getPedidos(Integer empresaId, ModelMap model, Integer offset, String sortField, SortOrder sortOrder) {
@@ -231,7 +231,7 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 		model.addAttribute("pedidos", pedidos);
 		model.addAttribute("escondeCliente", true);
 
-		setPaginationAttribute(model, offset, sortField, sortOrder, null, count);
+		setPaginationAttribute(model, offset, sortField, sortOrder, null, count, MAX_RESULTS);
 	}
 
 	@GetMapping(value = { "/cidades/{nomeOrIbge}" }, produces = MediaType.APPLICATION_JSON_VALUE)

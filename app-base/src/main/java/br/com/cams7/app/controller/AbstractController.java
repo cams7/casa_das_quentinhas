@@ -74,7 +74,7 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 
 		model.addAttribute(getListName(), entities);
 
-		setPaginationAttribute(model, offset, sortField, sortOrder, null, count);
+		setPaginationAttribute(model, offset, sortField, sortOrder, null, count, MAX_RESULTS);
 
 		setUsuarioLogado(model);
 		setActivePage(model);
@@ -242,7 +242,7 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 
 		model.addAttribute(getListName(), entities);
 
-		setPaginationAttribute(model, offset, sortField, sorting, query, count);
+		setPaginationAttribute(model, offset, sortField, sorting, query, count, MAX_RESULTS);
 
 		return getListTilesPage();
 	}
@@ -252,13 +252,13 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 	}
 
 	protected void setPaginationAttribute(ModelMap model, Integer offset, String sortField, SortOrder sortOrder,
-			String query, Long count) {
+			String query, Long count, short maxResults) {
 		model.addAttribute("offset", offset);
 		model.addAttribute("sortField", sortField);
 		model.addAttribute("sortOrder", sortOrder.getSorting());
 		model.addAttribute("query", query);
 
-		model.addAttribute("maxResults", MAX_RESULTS);
+		model.addAttribute("maxResults", maxResults);
 		model.addAttribute("count", count);
 	}
 

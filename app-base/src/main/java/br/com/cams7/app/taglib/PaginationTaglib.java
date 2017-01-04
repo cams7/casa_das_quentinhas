@@ -40,12 +40,12 @@ public class PaginationTaglib extends SimpleTagSupport {
 			else
 				out.write(constructLink(offset - steps, previous, null, false));
 
-			for (int itr = 0; itr < count; itr += steps) {
-				if (offset == itr)
-					out.write(constructLink((itr / 10 + 1) - 1 * steps, String.valueOf(itr / 10 + 1), "active", true));
+			for (int i = 0; i < count; i += steps)
+				if (offset == i)
+					out.write(
+							constructLink((i / steps + 1) - 1 * steps, String.valueOf(i / steps + 1), "active", true));
 				else
-					out.write(constructLink(itr / 10 * steps, String.valueOf(itr / 10 + 1), null, false));
-			}
+					out.write(constructLink(i / steps * steps, String.valueOf(i / steps + 1), null, false));
 
 			if (offset + steps >= count)
 				out.write(constructLink(offset + steps, next, "disabled", true));
@@ -60,6 +60,7 @@ public class PaginationTaglib extends SimpleTagSupport {
 	}
 
 	private String constructLink(int page, String text, String className, boolean disabled) {
+
 		StringBuilder link = new StringBuilder("<li");
 		if (className != null) {
 			link.append(" class=\"");

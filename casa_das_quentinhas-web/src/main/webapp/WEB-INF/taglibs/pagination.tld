@@ -44,5 +44,10 @@
 			<rtexprvalue>true</rtexprvalue>
 			<type>int</type>
 		</attribute>
+		<attribute>
+			<name>steps</name>
+			<rtexprvalue>true</rtexprvalue>
+			<type>int</type>
+		</attribute>
 	</tag>
 </taglib>

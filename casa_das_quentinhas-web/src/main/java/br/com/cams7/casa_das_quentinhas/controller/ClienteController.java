@@ -189,7 +189,7 @@ public class ClienteController extends AbstractController<ClienteService, Client
 		model.addAttribute("pedidos", pedidos);
 		model.addAttribute("escondeCliente", true);
 
-		setPaginationAttribute(model, offset, sortField, sortOrder, null, count);
+		setPaginationAttribute(model, offset, sortField, sortOrder, null, count, MAX_RESULTS);
 	}
 
 	@GetMapping(value = { "/cidades/{nomeOrIbge}" }, produces = MediaType.APPLICATION_JSON_VALUE)
