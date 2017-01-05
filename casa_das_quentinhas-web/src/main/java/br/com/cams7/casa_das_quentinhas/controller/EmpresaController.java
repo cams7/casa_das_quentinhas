@@ -178,7 +178,7 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 		return redirectMainPage();
 	}
 
-	@GetMapping(value = { "/{empresaId}/funcionarios" })
+	@GetMapping(value = "/{empresaId}/funcionarios")
 	public String getFuncionarios(@PathVariable Integer empresaId, ModelMap model,
 			@RequestParam(value = "offset", required = true) Integer offset,
 			@RequestParam(value = "f", required = true) String sortField,
@@ -190,7 +190,7 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 		return "funcionario_list";
 	}
 
-	@GetMapping(value = { "/{empresaId}/pedidos" })
+	@GetMapping(value = "/{empresaId}/pedidos")
 	public String getPedidos(@PathVariable Integer empresaId, ModelMap model,
 			@RequestParam(value = "offset", required = true) Integer offset,
 			@RequestParam(value = "f", required = true) String sortField,
@@ -237,7 +237,7 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 		setPaginationAttribute(model, offset, sortField, sortOrder, null, count, MAX_RESULTS);
 	}
 
-	@GetMapping(value = { "/cidades/{nomeOrIbge}" }, produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/cidades/{nomeOrIbge}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Map<Integer, String>> getCidades(@PathVariable String nomeOrIbge) {
 		Map<Integer, String> cidades = cidadeService.getCidadesByNomeOrIbge(nomeOrIbge);
 

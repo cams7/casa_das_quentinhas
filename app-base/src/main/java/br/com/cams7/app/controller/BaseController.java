@@ -39,7 +39,7 @@ public interface BaseController<E extends AbstractEntity<PK>, PK extends Seriali
 	 * @param model
 	 * @return
 	 */
-	@GetMapping(value = { "/create" })
+	@GetMapping(value = "/create")
 	String create(ModelMap model);
 
 	/**
@@ -50,7 +50,7 @@ public interface BaseController<E extends AbstractEntity<PK>, PK extends Seriali
 	 * @param model
 	 * @return
 	 */
-	@PostMapping(value = { "/create" })
+	@PostMapping(value = "/create")
 	String store(E entity, BindingResult result, ModelMap model, Integer lastLoadedPage);
 
 	/**
@@ -60,7 +60,7 @@ public interface BaseController<E extends AbstractEntity<PK>, PK extends Seriali
 	 * @param model
 	 * @return
 	 */
-	@GetMapping(value = { "/{id}" })
+	@GetMapping(value = "/{id}")
 	String show(PK id, ModelMap model);
 
 	/**
@@ -70,7 +70,7 @@ public interface BaseController<E extends AbstractEntity<PK>, PK extends Seriali
 	 * @param model
 	 * @return
 	 */
-	@GetMapping(value = { "/{id}/edit" })
+	@GetMapping(value = "/{id}/edit")
 	String edit(PK id, ModelMap model);
 
 	/**
@@ -82,7 +82,7 @@ public interface BaseController<E extends AbstractEntity<PK>, PK extends Seriali
 	 * @param model
 	 * @return
 	 */
-	@PostMapping(value = { "/{id}/edit" })
+	@PostMapping(value = "/{id}/edit")
 	// @PutMapping
 	String update(E entity, BindingResult result, ModelMap model, PK id, Integer lastLoadedPage);
 
@@ -92,10 +92,10 @@ public interface BaseController<E extends AbstractEntity<PK>, PK extends Seriali
 	 * @param id
 	 * @return
 	 */
-	@GetMapping(value = { "/{id}/delete" })
-	//@DeleteMapping(value = { "/{id}/delete" })
+	@GetMapping(value = "/{id}/delete")
+	// @DeleteMapping(value = "/{id}/delete")
 	ResponseEntity<Void> destroy(PK id);
 
-	@GetMapping(value = { "/list" })
+	@GetMapping(value = "/list")
 	String list(ModelMap model, Integer offset, String sortField, String sortOrder, String query);
 }

@@ -1,35 +1,36 @@
 function loadTable(offset, sortField, sortOrder, query) {		
 	if(offset == null){
-    	offset = $('#dataTable_offset').val();
+    	offset = $('input#dataTable_offset').val();
     	offset = offset != undefined ? offset : '0';
     }
     
     if(sortField == null){
-    	sortField = $('#dataTable_sortField').val();
+    	sortField = $('input#dataTable_sortField').val();
     	sortField = sortField != undefined ? sortField : 'id';
     }
     
     if(sortOrder == null){
-    	sortOrder = $('#dataTable_sortOrder').val();
+    	sortOrder = $('input#dataTable_sortOrder').val();
     	sortOrder = sortOrder != undefined ? sortOrder : 'sorting_desc';
     }
     
     if(query == null){
-		query = $('#dataTable_query').val();
+		query = $('input#dataTable_query').val();
 	    query = query != undefined ? query : '';
 	}
     
-    console.log('get: list?offset=' + offset + '&f=' + sortField + '&s=' + sortOrder + '&q=' + query);
+    // console.log('get: list?offset=' + offset + '&f=' + sortField + '&s=' +
+	// sortOrder + '&q=' + query);
 	
 	$.get(LIST_PAGE + '?offset=' + offset + '&f=' + sortField + '&s=' + sortOrder + '&q=' + query, data => {
         // console.log(data);
 		$('.content').html(data);
-		//location.hash = offset;
+		// location.hash = offset;
    	});
 }
 
-$(document).ready(function() {
-	$('#search_btn').click(event => {
+$(document).ready(function($) {
+	$('button#search_btn').click(event => {
 		event.preventDefault();
 		
 		query = $('#search_query').val();
@@ -69,7 +70,7 @@ $(document).ready(function() {
         event.preventDefault();
                 
         $('div#delete_modal #delete_form').attr('action', DELETE_PAGE + '/' + event.target.value + '/delete');
-        $("div#delete_modal #delete_form :input[name='event_from']").val('list_page');
+        $('div#delete_modal #delete_form :input[name="event_from"]').val('list_page');
         $('div#delete_modal div.modal-body').html(event.target.title);
         $('div#delete_modal').modal('show');
     });
@@ -83,12 +84,12 @@ $(document).ready(function() {
         	return;             
         
         var url = form.action;
-        //console.log('DELETE ' + url);
+        // console.log('DELETE ' + url);
 
         $.ajax({
             url: url,
             type: 'GET',
-            // contentType: "application/json",
+            // contentType: 'application/json',
             // dataType: 'JSON',
             /*
 			 * data: { 'id': 1, '_method': 'DELETE' },
@@ -98,10 +99,10 @@ $(document).ready(function() {
                 // console.log('Sucess:');
                 // console.log(data);
             	
-            	offset = $('#dataTable_offset').val();
+            	offset = $('input#dataTable_offset').val();
             	if(offset > 0) {
-            		maxResults = $('#dataTable_maxResults').val();
-            		count = $('#dataTable_count').val();
+            		maxResults = $('input#dataTable_maxResults').val();
+            		count = $('input#dataTable_count').val();
             		
             		if(count % maxResults == 1)
             			offset -= maxResults;

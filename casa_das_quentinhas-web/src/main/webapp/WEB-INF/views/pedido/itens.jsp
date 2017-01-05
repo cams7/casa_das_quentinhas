@@ -7,6 +7,8 @@
 <%@ taglib prefix="p" uri="/WEB-INF/taglibs/pagination.tld"%>
 
 <c:if test="${count > 0}">
+	<h3 class="page-header">Itens</h3>
+
 	<div id="list" class="row">
 		<div class="table-responsive col-md-12">
 			<table class="table table-striped table-bordered dataTable">
@@ -34,17 +36,19 @@
 						<tr>
 							<td>${item.quantidade}</td>
 							<td>${item.produto.formattedCusto}</td>
-							<td><a href="<c:url value='/produto/${item.id.produtoId}' />">${item.produto.nome}</a></td>
+							<td><a
+								href="<c:url value='/produto/${item.id.produtoId}' />">${item.produto.nome}</a></td>
 							<td>${item.produto.tamanho.descricao}</td>
 
-							<td class="actions">
-								<a class="btn btn-success btn-xs" href="<c:url value='/item/${item.id}' />">Visualizar</a> 
-								<sec:authorize access="hasRole('GERENTE') or hasRole('ATENDENTE')">
-									<a class="btn btn-warning btn-xs" href="<c:url value='/item/${item.id}/edit' />">Alterar</a>
+							<td class="actions"><sec:authorize
+									access="hasRole('GERENTE') or hasRole('ATENDENTE')">
+									<button class="btn btn-warning btn-xs item-updade"
+										value="${item.id.produtoId}">Alterar</button>
 								</sec:authorize> <sec:authorize access="hasRole('GERENTE')">
-									<button class="btn btn-danger btn-xs delete" value="${item.id}" title="Deseja realmente excluir o item ( ${item.id} )">Excluir</button>
-								</sec:authorize>
-							</td>
+									<button class="btn btn-danger btn-xs item-delete"
+										value="${item.id.produtoId}"
+										title="Deseja realmente excluir o item que contém o produto ( ${item.id.produtoId} )">Excluir</button>
+								</sec:authorize></td>
 						</tr>
 					</c:forEach>
 				</tbody>

@@ -1,9 +1,9 @@
-$(document).ready(function() {	
+$(document).ready(function($) {	
     $(document).on('click', 'button#delete', event => {
         event.preventDefault();
                 
         $('div#delete_modal #delete_form').attr('action', MAIN_PAGE + '/' + event.target.value + '/delete');
-        $("div#delete_modal #delete_form :input[name='event_from']").val('view_page');
+        $('div#delete_modal #delete_form :input[name="event_from"]').val('view_page');
         $('div#delete_modal div.modal-body').html(event.target.title);
         $('div#delete_modal').modal('show');
     });
@@ -22,7 +22,7 @@ $(document).ready(function() {
         $.ajax({
             url: url,
             type: 'GET',
-            // contentType: "application/json",
+            // contentType: 'application/json',
             // dataType: 'JSON',
           
 			// data: { 'id': 1, '_method': 'DELETE' },

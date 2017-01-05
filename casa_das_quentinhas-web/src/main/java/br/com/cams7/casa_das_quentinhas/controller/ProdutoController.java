@@ -56,7 +56,7 @@ public class ProdutoController extends AbstractController<ProdutoService, Produt
 		return super.show(id, model);
 	}
 
-	@GetMapping(value = { "/{produtoId}/pedidos" })
+	@GetMapping(value = "/{produtoId}/pedidos")
 	public String getPedidos(@PathVariable Integer produtoId, ModelMap model,
 			@RequestParam(value = "offset", required = true) Integer offset,
 			@RequestParam(value = "f", required = true) String sortField,

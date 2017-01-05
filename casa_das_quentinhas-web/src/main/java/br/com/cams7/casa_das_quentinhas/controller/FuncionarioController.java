@@ -128,7 +128,7 @@ public class FuncionarioController extends AbstractController<FuncionarioService
 		return redirectMainPage();
 	}
 
-	@GetMapping(value = { "/empresas/{razaoSocialOrCnpj}" }, produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/empresas/{razaoSocialOrCnpj}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Map<Integer, String>> getEmpresas(@PathVariable String razaoSocialOrCnpj) {
 		Map<Integer, String> empresas = empresaService.getEmpresasByRazaoSocialOrCnpj(razaoSocialOrCnpj, Tipo.ENTREGA);
 

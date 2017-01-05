@@ -162,7 +162,7 @@ public class ClienteController extends AbstractController<ClienteService, Client
 		return redirectMainPage();
 	}
 
-	@GetMapping(value = { "/{clienteId}/pedidos" })
+	@GetMapping(value = "/{clienteId}/pedidos")
 	public String getPedidos(@PathVariable Integer clienteId, ModelMap model,
 			@RequestParam(value = "offset", required = true) Integer offset,
 			@RequestParam(value = "f", required = true) String sortField,
@@ -193,7 +193,7 @@ public class ClienteController extends AbstractController<ClienteService, Client
 		setPaginationAttribute(model, offset, sortField, sortOrder, null, count, MAX_RESULTS);
 	}
 
-	@GetMapping(value = { "/cidades/{nomeOrIbge}" }, produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/cidades/{nomeOrIbge}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Map<Integer, String>> getCidades(@PathVariable String nomeOrIbge) {
 		Map<Integer, String> cidades = cidadeService.getCidadesByNomeOrIbge(nomeOrIbge);
 

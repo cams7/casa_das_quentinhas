@@ -9,15 +9,35 @@
 <form:form method="POST" modelAttribute="pedido">
 	<form:input type="hidden" path="id" />
 	<form:input type="hidden" path="manutencao.cadastro.time" />
-	<form:input type="hidden" path="usuarioCadastro.id" />		
+	<form:input type="hidden" path="usuarioCadastro.id" />
 
 	<%@include file="form.jsp"%>
 
 	<hr />
 	<div id="actions" class="row">
 		<div class="col-md-12">
+			<button id="item_add" class="btn btn-success">Novo Item</button>
+			<button id="itens_refresh" class="btn btn-default">Atualizar
+				Itens</button>
 			<input type="submit" value="Alterar" class="btn btn-primary" />
 			<button id="cancelar" class="btn btn-default">Cancelar</button>
 		</div>
 	</div>
 </form:form>
+
+<script type="text/javascript">
+	var LIST_PAGE = MAIN_PAGE + '/${pedido.id}/itens';
+</script>
+
+<div class="content">
+	<%@include file="itens.jsp"%>
+</div>
+
+<link rel="stylesheet"
+	href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css">
+<script src="<c:url value='/static/js/casa_das_quentinhas-list.js' />"></script>
+
+<script src="<c:url value='/static/js/validator.min.js' />"></script>
+<script
+	src="<c:url value='/static/js/casa_das_quentinhas-pedido_item.js' />"></script>
+<%@include file="item_modal.jsp"%>

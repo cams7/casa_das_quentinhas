@@ -1,0 +1,160 @@
+/*
+loadItens = function () {
+    $.get(MAIN_PAGE + '/0/itens', data => {
+        console.log(data);
+        //$('.content').html(data);
+    });
+}
+
+setPedido = function(data) {
+    //console.log(data);
+
+    $('#quantidade_total').val(data.quantidade_total > 0 ? data.quantidade_total : '');
+
+    if(data.total_pedido > 0) {
+        taxa = $('#taxa').val().trim();
+        taxa = taxa != '' ? Number(taxa.replace(/[,]/g, '.').replace(/[\R\$]/g, '')) : 0;
+
+        $('#total_pedido').val(Number(data.total_pedido + taxa).formatMoney());
+    } else
+        $('#total_pedido').val('');
+}*/
+
+$(document).ready(function($) {
+    $('div#item_modal form#item_form :input[name="produto"]').autocomplete({
+        source : function(request, response) {
+           $.getJSON(MAIN_PAGE + '/produtos/' + request.term, data => {                                      
+                response(
+                    $.map(data, function (nomeWithTamanho, i) {
+                        return {                            
+                        	id: i,
+                        	label: nomeWithTamanho,
+                            value: nomeWithTamanho                            
+                        };
+                    })
+                );
+            });
+        }, 
+        select: function (event, ui) {
+            $('div#item_modal form#item_form :input[name="produto_id"]').val(ui.item.id);
+        },
+        open: function(event, ui) {
+            $('.ui-autocomplete').css('z-index', '1050');
+        },
+        close: function (event, ui) {                   
+            $('.ui-autocomplete').css('z-index', '0');
+        },
+        minLength : 1
+    }); 
+
+    $('button#itens_refresh').click(event => {
+    	event.preventDefault();
+        // loadItens();
+    }); 
+
+    $('button#item_add').click(event => {
+    	event.preventDefault();
+    	
+        $('div#item_modal form#item_form').trigger('reset');
+        $('div#item_modal form#item_form :input[name="produto_id"]').val('');
+        $('div#item_modal form#item_form :input[name="produto"]').prop('readonly', false);
+        $('input#modal_state').val('add');        
+        $('div#item_modal').modal('show');
+    });
+ 
+    $(document).on('click', 'button.item-updade', event => {
+        event.preventDefault();
+
+        $('div#item_modal form#item_form').trigger('reset');
+        $('div#item_modal form#item_form :input[name="produto"]').prop('readonly', true);
+
+        var id = event.target.value;
+
+        var url = $('div#item_modal form#item_form').attr('action');
+        url = url + '/' + id;
+        console.log('GET ' + url);
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: data => { 
+                console.log('Sucess:');
+                console.log(data);
+
+                $('div#item_modal form#item_form :input[name="produto_id"]').val(data.id.produtoId);
+                $('div#item_modal form#item_form :input[name="produto"]').val(data.produto.nomeWithTamanho);
+                $('div#item_modal form#item_form :input[name="quantidade"]').val(data.quantidade);
+
+                $('input#modal_state').val('update');
+                $('div#item_modal').modal('show');
+            },
+            error: data => {
+                console.log('Error:');
+                console.log(data);
+            }
+        });        
+    });   
+
+    $(document).on('click', 'button.item-delete', event => {
+        event.preventDefault();
+
+        var id = event.target.value;
+        
+        var url = $('div#item_modal form#item_form').attr('action') + '/' + id + '/delete';
+        console.log('DELETE ' + url);
+
+        $.ajax({
+            url: url,
+            type: 'GET',         
+            success: data => {
+                console.log('Sucess:');
+                console.log(data);
+                // setPedido(data);
+
+                // loadItens();
+            },
+            error: data => {
+                console.log('Error:');
+                console.log(data);
+            }
+        });
+    });
+
+    $('div#item_modal form#item_form').validator().on('submit', event => {      
+        if (event.isDefaultPrevented()) 
+            return; 
+        
+        event.preventDefault();
+        
+        var form = event.target;
+        
+        if($(form.produto_id).val() == '' || $(form.quantidade).val() < 1)
+            return;
+ 
+		// $.ajaxSetup({
+		// header:$(':input[name="_csrf"]').val()
+		// })
+
+       
+        var state = $('input#modal_state').val();    
+        
+        $.ajax({
+            type: 'GET',
+            url: form.action,
+            data: $(form).serialize(),            
+            success: data => {
+                console.log('Sucess:');
+                console.log(data);
+                // setPedido(data);
+
+                // loadItens();
+
+                $('div#item_modal').modal('hide');
+            },
+            error: data => {
+                console.log('Error:');
+                console.log(data);
+            }
+        })        
+    });
+});

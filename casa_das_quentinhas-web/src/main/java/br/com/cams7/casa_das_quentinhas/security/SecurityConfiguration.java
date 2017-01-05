@@ -47,6 +47,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.antMatchers("/*", "/*/*").access("hasRole('GERENTE') or hasRole('ATENDENTE') or hasRole('ENTREGADOR') or hasRole('EMPRESA') or hasRole('CLIENTE')")
 		
 		.anyRequest().authenticated()
+//		.antMatchers("/**").permitAll()
 		.and()
 		
 		.formLogin().loginPage("/login").loginProcessingUrl("/login")

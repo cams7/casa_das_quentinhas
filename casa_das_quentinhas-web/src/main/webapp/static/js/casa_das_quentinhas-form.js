@@ -1,6 +1,6 @@
-$(document).ready(function() {
-	$('#cancelar').click(event => {
+$(document).ready(function($) {
+	$('button#cancelar').click(event => {
 		event.preventDefault();
-		window.history.go(-$("#lastLoadedPage").val());
+		window.history.go(-$('input#lastLoadedPage').val());
 	});
 });
