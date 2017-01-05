@@ -24,6 +24,18 @@ public class PedidoItemServiceImpl extends AbstractService<PedidoItemDAO, Pedido
 	 * (non-Javadoc)
 	 * 
 	 * @see
+	 * br.com.cams7.casa_das_quentinhas.dao.PedidoItemDAO#getItemById(java.lang.
+	 * Long, java.lang.Integer)
+	 */
+	@Override
+	public PedidoItem getItemById(Long pedidoId, Integer produtoId) {
+		return getDao().getItemById(pedidoId, produtoId);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
 	 * br.com.cams7.casa_das_quentinhas.dao.PedidoItemDAO#deleteByPedido(java.
 	 * lang.Long)
 	 */

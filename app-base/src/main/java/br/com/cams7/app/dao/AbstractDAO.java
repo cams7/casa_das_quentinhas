@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -137,14 +137,13 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 			if (isEntity) {
 				String entityName = atributes[atributes.length - 2];
 
-				try {
-					fromOrJoin = fromWithJoins.stream().filter(from -> entityType.equals(from.getJavaType()))
-							.filter(from -> from instanceof Join<?, ?>
-									&& entityName.equals(((Join<?, ?>) from).getAttribute().getName()))
-							.findAny().get();
+				java.util.function.Predicate<From<?, ?>> predicate = from -> entityType.equals(from.getJavaType())
+						&& from instanceof Join<?, ?>
+						&& entityName.equals(((Join<?, ?>) from).getAttribute().getName());
 
+				if (fromWithJoins.stream().anyMatch(predicate)) {
+					fromOrJoin = fromWithJoins.stream().filter(predicate).findFirst().get();
 					attributeName = atributes[atributes.length - 1];
-				} catch (NoSuchElementException e) {
 				}
 			}
 		}
@@ -218,8 +217,11 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 			Set<Predicate> predicates = new HashSet<>();
 			Set<Predicate> and = new HashSet<>();
 
-			filters.entrySet().stream().filter(f -> !SearchParams.GLOBAL_FILTER.equals(f.getKey())).forEach(f -> {
-				Predicate expression = getExpression(cb, fromWithJoins, f.getKey(), f.getValue(), false);
+			java.util.function.Predicate<Entry<String, Object>> predicate = filter -> !SearchParams.GLOBAL_FILTER
+					.equals(filter.getKey());
+
+			filters.entrySet().stream().filter(predicate).forEach(filter -> {
+				Predicate expression = getExpression(cb, fromWithJoins, filter.getKey(), filter.getValue(), false);
 
 				if (expression != null)
 					and.add(expression);
@@ -228,8 +230,7 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 			if (!and.isEmpty())
 				predicates.add(cb.and(and.toArray(new Predicate[] {})));
 
-			boolean containsKeyGlobalFilter = filters.entrySet().stream()
-					.anyMatch(f -> SearchParams.GLOBAL_FILTER.equals(f.getKey()));
+			boolean containsKeyGlobalFilter = !filters.entrySet().stream().allMatch(predicate);
 
 			if (containsKeyGlobalFilter && globalFilters.length > 0) {
 				Set<Predicate> or = new HashSet<>();

@@ -119,6 +119,17 @@ public class Pedido extends AbstractEntity<Long> {
 		super(id);
 	}
 
+	/**
+	 * @param quantidade
+	 * @param custo
+	 */
+	public Pedido(Short quantidade, Float custo) {
+		this();
+
+		this.quantidade = quantidade;
+		this.custo = custo;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 

@@ -44,10 +44,9 @@ import br.com.cams7.casa_das_quentinhas.model.Pedido.TipoAtendimento;
 import br.com.cams7.casa_das_quentinhas.model.Pedido.TipoCliente;
 import br.com.cams7.casa_das_quentinhas.model.PedidoItem;
 import br.com.cams7.casa_das_quentinhas.model.Produto;
-import br.com.cams7.casa_das_quentinhas.model.Produto.Tamanho;
 import br.com.cams7.casa_das_quentinhas.service.ClienteService;
 import br.com.cams7.casa_das_quentinhas.service.EmpresaService;
-import br.com.cams7.casa_das_quentinhas.service.PedidoItemService;
+import br.com.cams7.casa_das_quentinhas.service.PedidoItemFacade;
 import br.com.cams7.casa_das_quentinhas.service.PedidoService;
 import br.com.cams7.casa_das_quentinhas.service.ProdutoService;
 
@@ -68,7 +67,7 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 	private EmpresaService empresaService;
 
 	@Autowired
-	private PedidoItemService itemService;
+	private PedidoItemFacade itemFacade;
 
 	@Autowired
 	private ProdutoService produtoService;
@@ -87,8 +86,8 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 	 */
 	@Override
 	public String create(ModelMap model) {
-
-		getItens(1L, model, 0, "id", SortOrder.DESCENDING);
+		itemFacade.init();
+		loadItens(0L, model, 0, "quantidade", SortOrder.DESCENDING);
 
 		return super.create(model);
 	}
@@ -107,6 +106,8 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 
 		setCommonAttributes(model);
 		incrementLastLoadedPage(model, lastLoadedPage);
+
+		loadItens(0L, model, 0, "quantidade", SortOrder.DESCENDING);
 
 		if (result.hasErrors())
 			return getCreateTilesPage();
@@ -127,7 +128,7 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 	@Override
 	public String show(@PathVariable Long id, ModelMap model) {
 
-		getItens(id, model, 0, "id", SortOrder.DESCENDING);
+		loadItens(id, model, 0, "quantidade", SortOrder.DESCENDING);
 
 		return super.show(id, model);
 	}
@@ -135,7 +136,7 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 	@Override
 	public String edit(@PathVariable Long id, ModelMap model) {
 
-		getItens(id, model, 0, "id", SortOrder.DESCENDING);
+		loadItens(id, model, 0, "quantidade", SortOrder.DESCENDING);
 
 		return super.edit(id, model);
 	}
@@ -148,6 +149,9 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 		setEditPage(model);
 		incrementLastLoadedPage(model, lastLoadedPage);
 
+		itemFacade.init();
+		loadItens(id, model, 0, "quantidade", SortOrder.DESCENDING);
+
 		if (result.hasErrors())
 			return getEditTilesPage();
 
@@ -157,58 +161,59 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 	}
 
 	@GetMapping(value = "/{pedidoId}/item", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<PedidoItem> storeItem(@PathVariable Long pedidoId, ModelMap model,
+	public ResponseEntity<Pedido> storeItem(@PathVariable Long pedidoId, ModelMap model,
 			@RequestParam(value = "produto_id", required = true) Integer produtoId,
 			@RequestParam(value = "quantidade", required = true) Short quantidade) {
 
 		PedidoItem item = new PedidoItem(pedidoId, produtoId);
 		item.setQuantidade(quantidade);
 
-		return new ResponseEntity<PedidoItem>(item, HttpStatus.OK);
+		Produto produto = produtoService.getById(produtoId);
+
+		item.setProduto(produto);
+
+		Pedido pedido = itemFacade.addItem(item);
+
+		return new ResponseEntity<Pedido>(pedido, HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/{pedidoId}/item/{produtoId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<PedidoItem> showItem(@PathVariable Long pedidoId, @PathVariable Integer produtoId) {
 
-		PedidoItem item = new PedidoItem(pedidoId, produtoId);
-
-		Produto produto = new Produto(produtoId);
-		produto.setTamanho(Tamanho.PEQUENO);
-		produto.setNome("Minha marmita");
-
-		item.setProduto(produto);
+		PedidoItem item = itemFacade.getItem(pedidoId, produtoId);
 
 		return new ResponseEntity<PedidoItem>(item, HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/{pedidoId}/item/{produtoId}/delete", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Void> destroyItem(@PathVariable Long pedidoId, @PathVariable Integer produtoId) {
+	public ResponseEntity<Pedido> destroyItem(@PathVariable Long pedidoId, @PathVariable Integer produtoId) {
 
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		Pedido pedido = itemFacade.removeItem(pedidoId, produtoId);
+
+		return new ResponseEntity<Pedido>(pedido, HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/{pedidoId}/itens")
-	public String getItens(@PathVariable Long pedidoId, ModelMap model,
+	public String itens(@PathVariable Long pedidoId, ModelMap model,
 			@RequestParam(value = "offset", required = true) Integer offset,
 			@RequestParam(value = "f", required = true) String sortField,
 			@RequestParam(value = "s", required = true) String sortOrder,
 			@RequestParam(value = "q", required = true) String query) {
 
-		getItens(pedidoId, model, offset, sortField, SortOrder.get(sortOrder));
+		loadItens(pedidoId, model, offset, sortField, SortOrder.get(sortOrder));
 
 		return "pedido_itens";
 	}
 
 	@SuppressWarnings("unchecked")
-	private void getItens(Long pedidoId, ModelMap model, Integer offset, String sortField, SortOrder sortOrder) {
+	private void loadItens(Long pedidoId, ModelMap model, Integer offset, String sortField, SortOrder sortOrder) {
 		Map<String, Object> filters = new HashMap<>();
 		filters.put("id.pedidoId", pedidoId);
 
 		SearchParams params = new SearchParams(offset, MAX_RESULTS, sortField, sortOrder, filters);
 
-		itemService.setIgnoredJoins(Pedido.class);
-		List<PedidoItem> itens = itemService.search(params);
-		long count = itemService.getTotalElements(filters);
+		List<PedidoItem> itens = itemFacade.searchWithIgnoredJoins(params, Pedido.class);
+		long count = itemFacade.getTotalElements(filters);
 
 		model.addAttribute("itens", itens);
 

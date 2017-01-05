@@ -6,8 +6,10 @@ package br.com.cams7.casa_das_quentinhas.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
+import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
@@ -65,6 +67,7 @@ public class PedidoItemDAOImpl extends AbstractDAO<PedidoItem, PedidoItemPK> imp
 		if (noneMatch) {
 			Join<PedidoItem, Produto> joinProduto = (Join<PedidoItem, Produto>) from.fetch(PedidoItem_.produto,
 					JoinType.INNER);
+
 			fetchJoins.add(joinProduto);
 		}
 
@@ -89,6 +92,7 @@ public class PedidoItemDAOImpl extends AbstractDAO<PedidoItem, PedidoItemPK> imp
 					JoinType.INNER);
 			Join<Pedido, Cliente> joinCliente = (Join<Pedido, Cliente>) joinPedido.join(Pedido_.cliente, JoinType.LEFT);
 			Join<Pedido, Empresa> joinEmpresa = (Join<Pedido, Empresa>) joinPedido.join(Pedido_.empresa, JoinType.LEFT);
+
 			fetchJoins.add(joinPedido);
 			fetchJoins.add(joinCliente);
 			fetchJoins.add(joinEmpresa);
@@ -99,12 +103,46 @@ public class PedidoItemDAOImpl extends AbstractDAO<PedidoItem, PedidoItemPK> imp
 		if (noneMatch) {
 			Join<PedidoItem, Produto> joinProduto = (Join<PedidoItem, Produto>) from.join(PedidoItem_.produto,
 					JoinType.INNER);
+
 			fetchJoins.add(joinProduto);
 		}
 
 		return fetchJoins;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.casa_das_quentinhas.dao.PedidoItemDAO#getItemById(java.lang.
+	 * Long, java.lang.Integer)
+	 */
+	@Override
+	public PedidoItem getItemById(Long pedidoId, Integer produtoId) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<PedidoItem> cq = cb.createQuery(ENTITY_TYPE);
+
+		Root<PedidoItem> from = cq.from(ENTITY_TYPE);
+
+		from.fetch(PedidoItem_.produto, JoinType.INNER);
+
+		cq.select(from);
+
+		cq.where(cb.equal(from.get(PedidoItem_.id), new PedidoItemPK(pedidoId, produtoId)));
+
+		TypedQuery<PedidoItem> tq = getEntityManager().createQuery(cq);
+		PedidoItem item = tq.getSingleResult();
+
+		return item;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.casa_das_quentinhas.dao.PedidoItemDAO#deleteByPedido(java.
+	 * lang.Long)
+	 */
 	@Override
 	public int deleteByPedido(Long pedidoId) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();

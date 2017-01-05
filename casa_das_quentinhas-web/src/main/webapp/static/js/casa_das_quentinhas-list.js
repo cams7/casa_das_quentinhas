@@ -1,4 +1,4 @@
-function loadTable(offset, sortField, sortOrder, query) {		
+function loadTable(offset = null, sortField = null, sortOrder = null, query = null) {		
 	if(offset == null){
     	offset = $('input#dataTable_offset').val();
     	offset = offset != undefined ? offset : '0';
@@ -47,7 +47,7 @@ $(document).ready(function($) {
 			offset = array[1];
 		
 		// console.log(offset);
-		loadTable(offset, null, null, null);
+		loadTable(offset);
 	});	
 			
 	$(document).on('click', 'table.dataTable tr:eq(0)', event => {
@@ -62,7 +62,7 @@ $(document).ready(function($) {
 			
 			// console.log('sortField: ' + sortField + ', sortOrder: ' +
 			// sortOrder);
-			loadTable(null, sortField, sortOrder, null);			
+			loadTable(null, sortField, sortOrder);			
 		}			
 	});	
 	
@@ -108,7 +108,7 @@ $(document).ready(function($) {
             			offset -= maxResults;
             	}
             	
-            	loadTable(offset, null, null, null);
+            	loadTable(offset);
             	$('div#delete_modal').modal('toggle');
             },
             error: data => {

@@ -6,7 +6,7 @@
 
 <h3 class="page-header">Editar Pedido</h3>
 
-<form:form method="POST" modelAttribute="pedido">
+<form:form method="POST" modelAttribute="pedido" id="pedido_form">
 	<form:input type="hidden" path="id" />
 	<form:input type="hidden" path="manutencao.cadastro.time" />
 	<form:input type="hidden" path="usuarioCadastro.id" />

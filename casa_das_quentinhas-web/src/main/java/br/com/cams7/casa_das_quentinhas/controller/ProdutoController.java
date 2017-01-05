@@ -51,25 +51,25 @@ public class ProdutoController extends AbstractController<ProdutoService, Produt
 	@Override
 	public String show(@PathVariable Integer id, ModelMap model) {
 
-		getPedidos(id, model, 0, "id.pedidoId", SortOrder.DESCENDING);
+		loadPedidos(id, model, 0, "id.pedidoId", SortOrder.DESCENDING);
 
 		return super.show(id, model);
 	}
 
 	@GetMapping(value = "/{produtoId}/pedidos")
-	public String getPedidos(@PathVariable Integer produtoId, ModelMap model,
+	public String pedidos(@PathVariable Integer produtoId, ModelMap model,
 			@RequestParam(value = "offset", required = true) Integer offset,
 			@RequestParam(value = "f", required = true) String sortField,
 			@RequestParam(value = "s", required = true) String sortOrder,
 			@RequestParam(value = "q", required = true) String query) {
 
-		getPedidos(produtoId, model, offset, sortField, SortOrder.get(sortOrder));
+		loadPedidos(produtoId, model, offset, sortField, SortOrder.get(sortOrder));
 
 		return "produto_pedidos";
 	}
 
 	@SuppressWarnings("unchecked")
-	private void getPedidos(Integer produtoId, ModelMap model, Integer offset, String sortField, SortOrder sortOrder) {
+	private void loadPedidos(Integer produtoId, ModelMap model, Integer offset, String sortField, SortOrder sortOrder) {
 		final short MAX_RESULTS = 5;
 
 		Map<String, Object> filters = new HashMap<>();

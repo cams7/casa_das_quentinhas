@@ -122,7 +122,7 @@ public class ClienteController extends AbstractController<ClienteService, Client
 	@Override
 	public String show(@PathVariable Integer id, ModelMap model) {
 
-		getPedidos(id, model, 0, "id", SortOrder.DESCENDING);
+		loadPedidos(id, model, 0, "id", SortOrder.DESCENDING);
 
 		return super.show(id, model);
 	}
@@ -163,19 +163,19 @@ public class ClienteController extends AbstractController<ClienteService, Client
 	}
 
 	@GetMapping(value = "/{clienteId}/pedidos")
-	public String getPedidos(@PathVariable Integer clienteId, ModelMap model,
+	public String pedidos(@PathVariable Integer clienteId, ModelMap model,
 			@RequestParam(value = "offset", required = true) Integer offset,
 			@RequestParam(value = "f", required = true) String sortField,
 			@RequestParam(value = "s", required = true) String sortOrder,
 			@RequestParam(value = "q", required = true) String query) {
 
-		getPedidos(clienteId, model, offset, sortField, SortOrder.get(sortOrder));
+		loadPedidos(clienteId, model, offset, sortField, SortOrder.get(sortOrder));
 
 		return "pedido_list";
 	}
 
 	@SuppressWarnings("unchecked")
-	private void getPedidos(Integer clienteId, ModelMap model, Integer offset, String sortField, SortOrder sortOrder) {
+	private void loadPedidos(Integer clienteId, ModelMap model, Integer offset, String sortField, SortOrder sortOrder) {
 		final short MAX_RESULTS = 5;
 
 		Map<String, Object> filters = new HashMap<>();

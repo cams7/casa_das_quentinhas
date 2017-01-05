@@ -6,7 +6,7 @@
 
 <h3 class="page-header">Adicionar Pedido</h3>
 
-<form:form method="POST" modelAttribute="pedido">
+<form:form method="POST" modelAttribute="pedido" id="pedido_form">
 
 	<%@include file="form.jsp"%>
 
@@ -23,7 +23,7 @@
 </form:form>
 
 <script type="text/javascript">
-	var LIST_PAGE = MAIN_PAGE + '/${pedido.id}/itens';
+	var LIST_PAGE = MAIN_PAGE + '/0/itens';
 </script>
 
 <div class="content">

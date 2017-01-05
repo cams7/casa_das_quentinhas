@@ -131,10 +131,10 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 		if (tipo != null)
 			switch (tipo) {
 			case CLIENTE:
-				getPedidos(id, model, 0, "id", SortOrder.DESCENDING);
+				loadPedidos(id, model, 0, "id", SortOrder.DESCENDING);
 				break;
 			case ENTREGA:
-				getFuncionarios(id, model, 0, "id", SortOrder.DESCENDING);
+				loadFuncionarios(id, model, 0, "id", SortOrder.DESCENDING);
 				break;
 			default:
 				break;
@@ -179,31 +179,31 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 	}
 
 	@GetMapping(value = "/{empresaId}/funcionarios")
-	public String getFuncionarios(@PathVariable Integer empresaId, ModelMap model,
+	public String funcionarios(@PathVariable Integer empresaId, ModelMap model,
 			@RequestParam(value = "offset", required = true) Integer offset,
 			@RequestParam(value = "f", required = true) String sortField,
 			@RequestParam(value = "s", required = true) String sortOrder,
 			@RequestParam(value = "q", required = true) String query) {
 
-		getFuncionarios(empresaId, model, offset, sortField, SortOrder.get(sortOrder));
+		loadFuncionarios(empresaId, model, offset, sortField, SortOrder.get(sortOrder));
 
 		return "funcionario_list";
 	}
 
 	@GetMapping(value = "/{empresaId}/pedidos")
-	public String getPedidos(@PathVariable Integer empresaId, ModelMap model,
+	public String pedidos(@PathVariable Integer empresaId, ModelMap model,
 			@RequestParam(value = "offset", required = true) Integer offset,
 			@RequestParam(value = "f", required = true) String sortField,
 			@RequestParam(value = "s", required = true) String sortOrder,
 			@RequestParam(value = "q", required = true) String query) {
 
-		getPedidos(empresaId, model, offset, sortField, SortOrder.get(sortOrder));
+		loadPedidos(empresaId, model, offset, sortField, SortOrder.get(sortOrder));
 
 		return "pedido_list";
 	}
 
 	@SuppressWarnings("unchecked")
-	private void getFuncionarios(Integer empresaId, ModelMap model, Integer offset, String sortField,
+	private void loadFuncionarios(Integer empresaId, ModelMap model, Integer offset, String sortField,
 			SortOrder sortOrder) {
 		Map<String, Object> filters = new HashMap<>();
 		filters.put("empresa.id", empresaId);
@@ -221,7 +221,7 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 	}
 
 	@SuppressWarnings("unchecked")
-	private void getPedidos(Integer empresaId, ModelMap model, Integer offset, String sortField, SortOrder sortOrder) {
+	private void loadPedidos(Integer empresaId, ModelMap model, Integer offset, String sortField, SortOrder sortOrder) {
 		Map<String, Object> filters = new HashMap<>();
 		filters.put("empresa.id", empresaId);
 

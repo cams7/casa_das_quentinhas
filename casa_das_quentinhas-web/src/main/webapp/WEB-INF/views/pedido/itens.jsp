@@ -16,9 +16,7 @@
 					<tr>
 						<th class="${sortField eq 'quantidade' ? sortOrder : 'sorting' }"
 							id="quantidade">Quantidade</th>
-						<th
-							class="${sortField eq 'produto.custo' ? sortOrder : 'sorting' }"
-							id="produto.custo">Custo</th>
+						<th>Custo total</th>
 						<th
 							class="${sortField eq 'produto.nome' ? sortOrder : 'sorting' }"
 							id="produto.nome">Produto</th>
@@ -35,7 +33,7 @@
 					<c:forEach items="${itens}" var="item">
 						<tr>
 							<td>${item.quantidade}</td>
-							<td>${item.produto.formattedCusto}</td>
+							<td>${item.produto.custo * item.quantidade}</td>
 							<td><a
 								href="<c:url value='/produto/${item.id.produtoId}' />">${item.produto.nome}</a></td>
 							<td>${item.produto.tamanho.descricao}</td>
@@ -55,14 +53,6 @@
 			</table>
 		</div>
 	</div>
-
-	<input type="hidden" id="dataTable_offset" value="${offset}">
-	<input type="hidden" id="dataTable_sortField" value="${sortField}">
-	<input type="hidden" id="dataTable_sortOrder" value="${sortOrder}">
-	<input type="hidden" id="dataTable_query" value="${query}">
-
-	<input type="hidden" id="dataTable_maxResults" value="${maxResults}">
-	<input type="hidden" id="dataTable_count" value="${count}">
 
 	<c:set var="paginateUri">
 		<c:url value='/pedido/${itens[0].id.pedidoId}/itens' />
@@ -84,3 +74,11 @@
 		</div>
 	</div>
 </c:if>
+
+<input type="hidden" id="dataTable_offset" value="${offset}">
+<input type="hidden" id="dataTable_sortField" value="${sortField}">
+<input type="hidden" id="dataTable_sortOrder" value="${sortOrder}">
+<input type="hidden" id="dataTable_query" value="${query}">
+
+<input type="hidden" id="dataTable_maxResults" value="${maxResults}">
+<input type="hidden" id="dataTable_count" value="${count}">

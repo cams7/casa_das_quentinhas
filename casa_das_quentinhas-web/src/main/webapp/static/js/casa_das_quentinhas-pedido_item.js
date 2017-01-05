@@ -1,24 +1,13 @@
-/*
-loadItens = function () {
-    $.get(MAIN_PAGE + '/0/itens', data => {
-        console.log(data);
-        //$('.content').html(data);
-    });
+function setPedido (pedido) {
+    // console.log(pedido);
+
+    $('form#pedido_form :input[name="quantidade"]').val(pedido.quantidade > 0 ? pedido.quantidade : '');
+
+    if(pedido.custo > 0)
+        $('form#pedido_form :input[name="custo"]').val(Number(pedido.custo).formatMoney());
+    else
+        $('form#pedido_form :input[name="custo"]').val('');
 }
-
-setPedido = function(data) {
-    //console.log(data);
-
-    $('#quantidade_total').val(data.quantidade_total > 0 ? data.quantidade_total : '');
-
-    if(data.total_pedido > 0) {
-        taxa = $('#taxa').val().trim();
-        taxa = taxa != '' ? Number(taxa.replace(/[,]/g, '.').replace(/[\R\$]/g, '')) : 0;
-
-        $('#total_pedido').val(Number(data.total_pedido + taxa).formatMoney());
-    } else
-        $('#total_pedido').val('');
-}*/
 
 $(document).ready(function($) {
     $('div#item_modal form#item_form :input[name="produto"]').autocomplete({
@@ -49,7 +38,8 @@ $(document).ready(function($) {
 
     $('button#itens_refresh').click(event => {
     	event.preventDefault();
-        // loadItens();
+        
+    	loadTable();
     }); 
 
     $('button#item_add').click(event => {
@@ -66,6 +56,7 @@ $(document).ready(function($) {
         event.preventDefault();
 
         $('div#item_modal form#item_form').trigger('reset');
+        $('div#item_modal form#item_form :input[name="produto_id"]').val('');
         $('div#item_modal form#item_form :input[name="produto"]').prop('readonly', true);
 
         var id = event.target.value;
@@ -78,8 +69,8 @@ $(document).ready(function($) {
             url: url,
             type: 'GET',
             success: data => { 
-                console.log('Sucess:');
-                console.log(data);
+                //console.log('Sucess:');
+                //console.log(data);
 
                 $('div#item_modal form#item_form :input[name="produto_id"]').val(data.id.produtoId);
                 $('div#item_modal form#item_form :input[name="produto"]').val(data.produto.nomeWithTamanho);
@@ -107,11 +98,11 @@ $(document).ready(function($) {
             url: url,
             type: 'GET',         
             success: data => {
-                console.log('Sucess:');
-                console.log(data);
-                // setPedido(data);
+                // console.log('Sucess:');
+                // console.log(data);
+                setPedido(data);
 
-                // loadItens();
+                loadTable();
             },
             error: data => {
                 console.log('Error:');
@@ -143,13 +134,13 @@ $(document).ready(function($) {
             url: form.action,
             data: $(form).serialize(),            
             success: data => {
-                console.log('Sucess:');
-                console.log(data);
-                // setPedido(data);
+                // console.log('Sucess:');
+                // console.log(data);
+                setPedido(data);
 
-                // loadItens();
+                loadTable();
 
-                $('div#item_modal').modal('hide');
+                $('div#item_modal').modal('toggle');
             },
             error: data => {
                 console.log('Error:');
