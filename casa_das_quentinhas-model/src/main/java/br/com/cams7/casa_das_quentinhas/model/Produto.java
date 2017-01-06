@@ -254,8 +254,7 @@ public class Produto extends AbstractEntity<Integer> {
 		if (custo == null)
 			return null;
 
-		String formattedCusto = NUMBER_FORMAT.format(custo);
-		return formattedCusto;
+		return NUMBER_FORMAT.format(custo);
 	}
 
 	/**

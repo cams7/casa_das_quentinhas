@@ -61,16 +61,16 @@ $(document).ready(function($) {
 
         var id = event.target.value;
 
-        var url = $('div#item_modal form#item_form').attr('action');
-        url = url + '/' + id;
-        console.log('GET ' + url);
+        var url = ITEM_PAGE + '/' + id;//$('div#item_modal form#item_form').attr('action');
+        //url = url + '/' + id;
+        //console.log('GET ' + url);
 
         $.ajax({
             url: url,
             type: 'GET',
             success: data => { 
-                //console.log('Sucess:');
-                //console.log(data);
+                // console.log('Sucess:');
+                // console.log(data);
 
                 $('div#item_modal form#item_form :input[name="produto_id"]').val(data.id.produtoId);
                 $('div#item_modal form#item_form :input[name="produto"]').val(data.produto.nomeWithTamanho);
@@ -92,7 +92,7 @@ $(document).ready(function($) {
         var id = event.target.value;
         
         var url = $('div#item_modal form#item_form').attr('action') + '/' + id + '/delete';
-        console.log('DELETE ' + url);
+        // console.log('DELETE ' + url);
 
         $.ajax({
             url: url,
@@ -102,7 +102,7 @@ $(document).ready(function($) {
                 // console.log(data);
                 setPedido(data);
 
-                loadTable();
+                loadTable(true);
             },
             error: data => {
                 console.log('Error:');

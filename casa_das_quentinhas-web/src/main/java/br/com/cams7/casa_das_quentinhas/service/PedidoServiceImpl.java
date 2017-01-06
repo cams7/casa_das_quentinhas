@@ -76,17 +76,24 @@ public class PedidoServiceImpl extends AbstractService<PedidoDAO, Pedido, Long> 
 	 * 
 	 * @see
 	 * br.com.cams7.casa_das_quentinhas.service.PedidoService#update(br.com.
-	 * cams7.casa_das_quentinhas.model.Pedido, java.util.List)
+	 * cams7.casa_das_quentinhas.model.Pedido, java.util.List, java.util.List)
 	 */
 	@Override
-	public void update(Pedido pedido, List<PedidoItem> itens) {
+	public void update(Pedido pedido, List<PedidoItem> itens, List<PedidoItemPK> removedItens) {
 		pedido.getManutencao().setAlteracao(new Date());
 
 		super.update(pedido);
 
-		/* int total = */ itemService.deleteByPedido(pedido.getId());
+		removedItens.forEach(id -> {
+			itemService.delete(id);
+		});
 
-		itens.forEach(item -> {
+		itens.stream().filter(item -> item.getId().getPedidoId() != null).forEach(item -> {
+			item.getId().setPedidoId(pedido.getId());
+			itemService.update(item);
+		});
+
+		itens.stream().filter(item -> item.getId().getPedidoId() == null).forEach(item -> {
 			item.getId().setPedidoId(pedido.getId());
 			itemService.persist(item);
 		});
@@ -97,12 +104,13 @@ public class PedidoServiceImpl extends AbstractService<PedidoDAO, Pedido, Long> 
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * br.com.cams7.casa_das_quentinhas.service.PedidoService#deleteItem(java.
-	 * lang.Long, java.lang.Integer)
+	 * br.com.cams7.app.service.AbstractService#delete(java.io.Serializable)
 	 */
 	@Override
-	public void deleteItem(Long pedidoId, Integer produtoId) {
-		itemService.delete(new PedidoItemPK(pedidoId, produtoId));
+	public void delete(Long id) {
+		itemService.deleteByPedido(id);
+
+		super.delete(id);
 	}
 
 }

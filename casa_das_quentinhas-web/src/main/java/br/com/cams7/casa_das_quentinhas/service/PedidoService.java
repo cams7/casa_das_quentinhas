@@ -9,6 +9,7 @@ import br.com.cams7.app.service.BaseService;
 import br.com.cams7.casa_das_quentinhas.dao.PedidoDAO;
 import br.com.cams7.casa_das_quentinhas.model.Pedido;
 import br.com.cams7.casa_das_quentinhas.model.PedidoItem;
+import br.com.cams7.casa_das_quentinhas.model.PedidoItemPK;
 
 /**
  * @author César Magalhães
@@ -33,17 +34,9 @@ public interface PedidoService extends BaseService<Pedido, Long>, PedidoDAO {
 	 *            Pedido
 	 * @param itens
 	 *            Itens do pedido
+	 * @param removedItens
+	 *            Itens removidos
 	 */
-	void update(Pedido pedido, List<PedidoItem> itens);
-
-	/**
-	 * Remove um item do pedido
-	 * 
-	 * @param pedidoId
-	 *            ID do pedido
-	 * @param produtoId
-	 *            ID do produto
-	 */
-	void deleteItem(Long pedidoId, Integer produtoId);
+	void update(Pedido pedido, List<PedidoItem> itens, List<PedidoItemPK> removedItens);
 
 }

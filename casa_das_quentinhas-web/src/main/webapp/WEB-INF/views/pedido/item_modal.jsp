@@ -13,7 +13,7 @@
 				</button>
 				<h4 class="modal-title" id="modalLabel">Adicionar Item</h4>
 			</div>
-			<form action="<c:url value='/${mainPage}/${pedido.id != null ? pedido.id : 0}/item' />" method="POST"
+			<form action="<c:url value='/${mainPage}/item' />" method="POST"
 				id="item_form" data-toggle="validator" role="form">
 				<div class="modal-body">
 					<div class="row">

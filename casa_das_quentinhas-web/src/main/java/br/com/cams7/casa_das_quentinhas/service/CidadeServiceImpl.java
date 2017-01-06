@@ -29,8 +29,7 @@ public class CidadeServiceImpl extends AbstractService<CidadeDAO, Cidade, Intege
 	 */
 	@Override
 	public Map<Integer, String> getCidadesByNomeOrIbge(String nomeOrIbge) {
-		Map<Integer, String> cidades = getDao().getCidadesByNomeOrIbge(nomeOrIbge);
-		return cidades;
+		return getDao().getCidadesByNomeOrIbge(nomeOrIbge);
 	}
 
 }

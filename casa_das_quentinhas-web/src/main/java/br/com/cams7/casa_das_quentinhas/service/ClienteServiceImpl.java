@@ -103,8 +103,7 @@ public class ClienteServiceImpl extends AbstractService<ClienteDAO, Cliente, Int
 	 */
 	@Override
 	public Cliente getClienteById(Integer id) {
-		Cliente cliente = getDao().getClienteById(id);
-		return cliente;
+		return getDao().getClienteById(id);
 	}
 
 	/*
@@ -116,8 +115,7 @@ public class ClienteServiceImpl extends AbstractService<ClienteDAO, Cliente, Int
 	 */
 	@Override
 	public Integer getClienteIdByCpf(String cpf) {
-		Integer clienteId = getDao().getClienteIdByCpf(cpf);
-		return clienteId;
+		return getDao().getClienteIdByCpf(cpf);
 	}
 
 	/*
@@ -129,8 +127,7 @@ public class ClienteServiceImpl extends AbstractService<ClienteDAO, Cliente, Int
 	 */
 	@Override
 	public Integer getClienteIdByEmail(String email) {
-		Integer clienteId = getDao().getClienteIdByEmail(email);
-		return clienteId;
+		return getDao().getClienteIdByEmail(email);
 	}
 
 	/*
@@ -141,8 +138,7 @@ public class ClienteServiceImpl extends AbstractService<ClienteDAO, Cliente, Int
 	 */
 	@Override
 	public Integer getUsuarioAcessoIdByClienteId(Integer clienteId) {
-		Integer usuarioId = getDao().getUsuarioAcessoIdByClienteId(clienteId);
-		return usuarioId;
+		return getDao().getUsuarioAcessoIdByClienteId(clienteId);
 	}
 
 	/*
@@ -153,8 +149,7 @@ public class ClienteServiceImpl extends AbstractService<ClienteDAO, Cliente, Int
 	 */
 	@Override
 	public Map<Integer, String> getClientesByNomeOrCpfOrTelefone(String nomeOrCpfOrTelefone) {
-		Map<Integer, String> clientes = getDao().getClientesByNomeOrCpfOrTelefone(nomeOrCpfOrTelefone);
-		return clientes;
+		return getDao().getClientesByNomeOrCpfOrTelefone(nomeOrCpfOrTelefone);
 	}
 
 	/*

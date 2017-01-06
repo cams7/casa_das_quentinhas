@@ -26,19 +26,6 @@ public class FuncionarioServiceImpl extends AbstractService<FuncionarioDAO, Func
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see br.com.cams7.casa_das_quentinhas.dao.FuncionarioDAO#
-	 * getFuncionarioByFuncao(br.com.cams7.casa_das_quentinhas.model.Funcionario
-	 * .Funcao)
-	 */
-	// @Override
-	// public Set<Funcionario> getFuncionariosByFuncao(Funcao funcao) {
-	// Set<Funcionario> funcionario = getDao().getFuncionariosByFuncao(funcao);
-	// return funcionario;
-	// }
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see
 	 * br.com.cams7.app.service.AbstractService#persist(br.com.cams7.app.model.
 	 * AbstractEntity, java.lang.String)
@@ -90,6 +77,7 @@ public class FuncionarioServiceImpl extends AbstractService<FuncionarioDAO, Func
 	@Override
 	public void delete(Integer id) {
 		super.delete(id);
+
 		usuarioService.delete(id);
 	}
 
@@ -102,8 +90,7 @@ public class FuncionarioServiceImpl extends AbstractService<FuncionarioDAO, Func
 	 */
 	@Override
 	public Funcionario getFuncionarioById(Integer id) {
-		Funcionario funcionario = getDao().getFuncionarioById(id);
-		return funcionario;
+		return getDao().getFuncionarioById(id);
 	}
 
 	/*
@@ -115,8 +102,18 @@ public class FuncionarioServiceImpl extends AbstractService<FuncionarioDAO, Func
 	 */
 	@Override
 	public Integer getFuncionarioIdByCpf(String cpf) {
-		Integer funcionarioId = getDao().getFuncionarioIdByCpf(cpf);
-		return funcionarioId;
+		return getDao().getFuncionarioIdByCpf(cpf);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.casa_das_quentinhas.dao.FuncionarioDAO#
+	 * getFuncionarioFuncaoById(java.lang.Integer)
+	 */
+	@Override
+	public Funcao getFuncionarioFuncaoById(Integer id) {
+		return getDao().getFuncionarioFuncaoById(id);
 	}
 
 	/*
@@ -138,30 +135,5 @@ public class FuncionarioServiceImpl extends AbstractService<FuncionarioDAO, Func
 
 		return id != null && funcionarioId == id;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see br.com.cams7.casa_das_quentinhas.dao.FuncionarioDAO#
-	 * getFuncionarioFuncaoById(java.lang.Integer)
-	 */
-	@Override
-	public Funcao getFuncionarioFuncaoById(Integer id) {
-		Funcao funcao = getDao().getFuncionarioFuncaoById(id);
-		return funcao;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see br.com.cams7.casa_das_quentinhas.dao.FuncionarioDAO#
-	 * getFuncionariosByUsuarioId(java.lang.Integer)
-	 */
-	// @Override
-	// public Set<Funcionario> getFuncionariosByUsuarioId(Integer usuarioId) {
-	// Set<Funcionario> funcionarios =
-	// getDao().getFuncionariosByUsuarioId(usuarioId);
-	// return funcionarios;
-	// }
 
 }

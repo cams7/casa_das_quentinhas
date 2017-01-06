@@ -71,8 +71,7 @@ public class ProdutoServiceImpl extends AbstractService<ProdutoDAO, Produto, Int
 	 */
 	@Override
 	public Produto getProdutoById(Integer id) {
-		Produto produto = getDao().getProdutoById(id);
-		return produto;
+		return getDao().getProdutoById(id);
 	}
 
 	/*
@@ -84,8 +83,7 @@ public class ProdutoServiceImpl extends AbstractService<ProdutoDAO, Produto, Int
 	 */
 	@Override
 	public Map<Integer, String> getProdutosByNomeOrCusto(String nomeOrCusto) {
-		Map<Integer, String> produtos = getDao().getProdutosByNomeOrCusto(nomeOrCusto);
-		return produtos;
+		return getDao().getProdutosByNomeOrCusto(nomeOrCusto);
 	}
 
 }

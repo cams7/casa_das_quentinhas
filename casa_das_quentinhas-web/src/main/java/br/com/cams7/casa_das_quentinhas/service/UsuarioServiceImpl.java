@@ -20,19 +20,6 @@ public class UsuarioServiceImpl extends AbstractService<UsuarioDAO, Usuario, Int
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * br.com.cams7.casa_das_quentinhas.service.UsuarioService#getUsuarioById(
-	 * java.lang.Integer)
-	 */
-	// @Override
-	// public Usuario getUsuarioById(Integer id) {
-	// Usuario usuario = getDao().getUsuarioById(id);
-	// return usuario;
-	// }
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
 	 * br.com.cams7.app.service.AbstractService#persist(br.com.cams7.app.model.
 	 * AbstractEntity)
 	 */
@@ -40,6 +27,7 @@ public class UsuarioServiceImpl extends AbstractService<UsuarioDAO, Usuario, Int
 	public void persist(Usuario usuario) {
 		String senhaCriptografada = passwordEncoder.encode(usuario.getSenha());
 		usuario.setSenhaCriptografada(senhaCriptografada);
+
 		super.persist(usuario);
 	}
 
@@ -69,8 +57,7 @@ public class UsuarioServiceImpl extends AbstractService<UsuarioDAO, Usuario, Int
 	 */
 	@Override
 	public Usuario getUsuarioByEmail(String email) {
-		Usuario usuario = getDao().getUsuarioByEmail(email);
-		return usuario;
+		return getDao().getUsuarioByEmail(email);
 	}
 
 	/*
@@ -82,8 +69,7 @@ public class UsuarioServiceImpl extends AbstractService<UsuarioDAO, Usuario, Int
 	 */
 	@Override
 	public Integer getUsuarioIdByEmail(String email) {
-		Integer usuarioId = getDao().getUsuarioIdByEmail(email);
-		return usuarioId;
+		return getDao().getUsuarioIdByEmail(email);
 	}
 
 	/*
@@ -95,8 +81,7 @@ public class UsuarioServiceImpl extends AbstractService<UsuarioDAO, Usuario, Int
 	 */
 	@Override
 	public String getUsuarioSenhaById(Integer id) {
-		String senhaCriptografada = getDao().getUsuarioSenhaById(id);
-		return senhaCriptografada;
+		return getDao().getUsuarioSenhaById(id);
 	}
 
 	/*

@@ -87,6 +87,7 @@
 <script type="text/javascript">
 	var MAIN_PAGE = '<c:url value='/${mainPage}' />';
 	var LIST_PAGE = MAIN_PAGE + '/${pedido.id}/itens';
+	var ITEM_PAGE = MAIN_PAGE + '/${pedido.id}/item';
 </script>
 
 <div class="content">

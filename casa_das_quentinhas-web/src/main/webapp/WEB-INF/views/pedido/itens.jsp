@@ -16,6 +16,9 @@
 					<tr>
 						<th class="${sortField eq 'quantidade' ? sortOrder : 'sorting' }"
 							id="quantidade">Quantidade</th>
+						<th
+							class="${sortField eq 'produto.custo' ? sortOrder : 'sorting' }"
+							id="produto.custo">Custo unitário</th>
 						<th>Custo total</th>
 						<th
 							class="${sortField eq 'produto.nome' ? sortOrder : 'sorting' }"
@@ -24,29 +27,35 @@
 							class="${sortField eq 'produto.tamanho' ? sortOrder : 'sorting' }"
 							id="produto.tamanho">Tamanho</th>
 
-						<sec:authorize access="hasRole('GERENTE') or hasRole('ATENDENTE')">
-							<th class="actions">Ações</th>
-						</sec:authorize>
+						<c:if test="${not escondeAcoes}">
+							<sec:authorize
+								access="hasRole('GERENTE') or hasRole('ATENDENTE')">
+								<th class="actions">Ações</th>
+							</sec:authorize>
+						</c:if>
 					</tr>
 				</thead>
 				<tbody>
 					<c:forEach items="${itens}" var="item">
 						<tr>
 							<td>${item.quantidade}</td>
-							<td>${item.produto.custo * item.quantidade}</td>
+							<td>${item.produto.formattedCusto}</td>
+							<td>${item.formattedCusto}</td>
 							<td><a
 								href="<c:url value='/produto/${item.id.produtoId}' />">${item.produto.nome}</a></td>
 							<td>${item.produto.tamanho.descricao}</td>
 
-							<td class="actions"><sec:authorize
-									access="hasRole('GERENTE') or hasRole('ATENDENTE')">
-									<button class="btn btn-warning btn-xs item-updade"
-										value="${item.id.produtoId}">Alterar</button>
-								</sec:authorize> <sec:authorize access="hasRole('GERENTE')">
-									<button class="btn btn-danger btn-xs item-delete"
-										value="${item.id.produtoId}"
-										title="Deseja realmente excluir o item que contém o produto ( ${item.id.produtoId} )">Excluir</button>
-								</sec:authorize></td>
+							<c:if test="${not escondeAcoes}">
+								<td class="actions"><sec:authorize
+										access="hasRole('GERENTE') or hasRole('ATENDENTE')">
+										<button class="btn btn-warning btn-xs item-updade"
+											value="${item.id.produtoId}">Alterar</button>
+									</sec:authorize> <sec:authorize access="hasRole('GERENTE')">
+										<button class="btn btn-danger btn-xs item-delete"
+											value="${item.id.produtoId}"
+											title="Deseja realmente excluir o item que contém o produto ( ${item.id.produtoId} )">Excluir</button>
+									</sec:authorize></td>
+							</c:if>
 						</tr>
 					</c:forEach>
 				</tbody>

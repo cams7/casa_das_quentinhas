@@ -24,6 +24,7 @@
 
 <script type="text/javascript">
 	var LIST_PAGE = MAIN_PAGE + '/0/itens';
+	var ITEM_PAGE = MAIN_PAGE + '/0/item';
 </script>
 
 <div class="content">

@@ -3,6 +3,8 @@
  */
 package br.com.cams7.casa_das_quentinhas.model;
 
+import static br.com.cams7.app.common.MoneyEditor.NUMBER_FORMAT;
+
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -234,6 +236,13 @@ public class PedidoItem extends AbstractEntity<PedidoItemPK> {
 	 */
 	public void setCodigoCsosn(String codigoCsosn) {
 		this.codigoCsosn = codigoCsosn;
+	}
+
+	public String getFormattedCusto() {
+		if (quantidade == null || produto == null)
+			return null;
+
+		return NUMBER_FORMAT.format(produto.getCusto() * quantidade);
 	}
 
 }

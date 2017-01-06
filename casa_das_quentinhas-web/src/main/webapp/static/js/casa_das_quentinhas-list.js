@@ -1,7 +1,15 @@
-function loadTable(offset = null, sortField = null, sortOrder = null, query = null) {		
+function loadTable(removedRow = false, offset = null, sortField = null, sortOrder = null, query = null) {		
 	if(offset == null){
     	offset = $('input#dataTable_offset').val();
-    	offset = offset != undefined ? offset : '0';
+    	offset = offset != undefined ? offset : 0;
+    	
+    	if(removedRow && offset > 0) {
+    		var maxResults = $('input#dataTable_maxResults').val();
+    		var count = $('input#dataTable_count').val();
+    		
+    		if(count % maxResults == 1)
+    			offset -= maxResults;
+    	}
     }
     
     if(sortField == null){
@@ -34,7 +42,7 @@ $(document).ready(function($) {
 		event.preventDefault();
 		
 		query = $('#search_query').val();
-		loadTable(0, null, null, query);
+		loadTable(false, 0, null, null, query);
 	});
 	
 	$(document).on('click', '.pagination a', event => {
@@ -47,7 +55,7 @@ $(document).ready(function($) {
 			offset = array[1];
 		
 		// console.log(offset);
-		loadTable(offset);
+		loadTable(false, offset);
 	});	
 			
 	$(document).on('click', 'table.dataTable tr:eq(0)', event => {
@@ -62,7 +70,7 @@ $(document).ready(function($) {
 			
 			// console.log('sortField: ' + sortField + ', sortOrder: ' +
 			// sortOrder);
-			loadTable(null, sortField, sortOrder);			
+			loadTable(false, null, sortField, sortOrder);			
 		}			
 	});	
 	
@@ -99,16 +107,7 @@ $(document).ready(function($) {
                 // console.log('Sucess:');
                 // console.log(data);
             	
-            	offset = $('input#dataTable_offset').val();
-            	if(offset > 0) {
-            		maxResults = $('input#dataTable_maxResults').val();
-            		count = $('input#dataTable_count').val();
-            		
-            		if(count % maxResults == 1)
-            			offset -= maxResults;
-            	}
-            	
-            	loadTable(offset);
+            	loadTable(true);
             	$('div#delete_modal').modal('toggle');
             },
             error: data => {
