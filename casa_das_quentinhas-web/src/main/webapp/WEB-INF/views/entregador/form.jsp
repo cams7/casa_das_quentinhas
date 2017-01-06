@@ -13,7 +13,7 @@
 		<form:errors path="nome" />
 	</c:set>
 	<div
-		class="form-group col-md-6 ${not empty nomeError ? 'has-error' : ''}">
+		class="form-group col-md-4 ${not empty nomeError ? 'has-error' : ''}">
 		<label class="control-label" for="nome">Nome</label>
 		<form:input type="text" path="nome" id="nome" class="form-control"
 			maxlength="60" />
@@ -35,11 +35,11 @@
 		<form:errors path="empresa.id" />
 	</c:set>
 	<div
-		class="form-group col-md-4 ${not empty empresaError ? 'has-error' : ''}">
+		class="form-group col-md-6 ${not empty empresaError ? 'has-error' : ''}">
 		<label class="control-label" for="empresa.razaoSocial">Empresa</label>
 		<form:input type="text" path="empresa.razaoSocial" id="empresa"
 			class="form-control" maxlength="60" placeholder="Nome / CNPJ"
-			value="${funcionario.empresa.razaoSocialWithCnpj}" />
+			value="${entregador.empresa.razaoSocialWithCnpj}" />
 		<form:input type="hidden" path="empresa.id" id="empresa_id" />
 		<div class="help-block with-errors">${empresaError}</div>
 	</div>
@@ -80,33 +80,11 @@
 	</div>
 </div>
 <div class="row">
-	<c:set var="funcaoError">
-		<form:errors path="funcao" />
-	</c:set>
-	<div
-		class="form-group col-md-2 ${not empty funcaoError?'has-error':''}">		
-
-		<label class="control-label" for="funcao">Função</label>
-		<c:choose>
-			<c:when test="${edit and not isGerente}">
-				<input type="text" value="${funcionario.funcao.descricao}"
-					class="form-control" readonly="readonly" id="funcao" />
-				<form:input type="hidden" path="funcao" />
-			</c:when>
-			<c:otherwise>
-				<form:select path="funcao" id="funcao" items="${funcionarioFuncoes}"
-					multiple="true" itemValue="funcao" itemLabel="descricao"
-					class="form-control" />
-				<div class="help-block with-errors">${funcaoError}</div>
-			</c:otherwise>
-		</c:choose>
-	</div>
-
 	<c:set var="senhaError">
 		<form:errors path="usuario.senha" />
 	</c:set>
 	<div
-		class="form-group col-md-5 ${not empty senhaError ? 'has-error' : ''}">
+		class="form-group col-md-6 ${not empty senhaError ? 'has-error' : ''}">
 		<label class="control-label" for="usuario.senha">Senha</label>
 
 		<form:input type="password" path="usuario.senha" id="senha"
@@ -118,7 +96,7 @@
 		<form:errors path="usuario.confirmacaoSenha" />
 	</c:set>
 	<div
-		class="form-group col-md-5 ${not empty confirmacaoError ? 'has-error' : ''}">
+		class="form-group col-md-6 ${not empty confirmacaoError ? 'has-error' : ''}">
 		<label class="control-label" for="usuario.confirmacaoSenha">Confirmação</label>
 
 		<form:input type="password" path="usuario.confirmacaoSenha"
@@ -135,4 +113,4 @@
 	var MAIN_PAGE = '<c:url value='/${mainPage}' />';
 </script>
 <script
-	src="<c:url value='/static/js/casa_das_quentinhas-funcionario-form.js' />"></script>
+	src="<c:url value='/static/js/casa_das_quentinhas-entregador-form.js' />"></script>

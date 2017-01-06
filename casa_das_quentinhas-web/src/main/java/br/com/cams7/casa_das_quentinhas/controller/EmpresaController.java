@@ -3,6 +3,9 @@
  */
 package br.com.cams7.casa_das_quentinhas.controller;
 
+import static br.com.cams7.casa_das_quentinhas.model.Empresa.Tipo.CLIENTE;
+import static br.com.cams7.casa_das_quentinhas.model.Empresa.Tipo.ENTREGA;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -37,6 +40,7 @@ import br.com.cams7.casa_das_quentinhas.model.Empresa.RegimeTributario;
 import br.com.cams7.casa_das_quentinhas.model.Empresa.Tipo;
 import br.com.cams7.casa_das_quentinhas.model.Endereco;
 import br.com.cams7.casa_das_quentinhas.model.Funcionario;
+import br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao;
 import br.com.cams7.casa_das_quentinhas.model.Pedido;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
 import br.com.cams7.casa_das_quentinhas.service.CidadeService;
@@ -57,7 +61,7 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 	private CidadeService cidadeService;
 
 	@Autowired
-	private FuncionarioService funcionarioService;
+	private FuncionarioService entregadorService;
 
 	@Autowired
 	private PedidoService pedidoService;
@@ -134,7 +138,7 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 				loadPedidos(id, model, 0, "id", SortOrder.DESCENDING);
 				break;
 			case ENTREGA:
-				loadFuncionarios(id, model, 0, "id", SortOrder.DESCENDING);
+				loadEntregadores(id, model, 0, "id", SortOrder.DESCENDING);
 				break;
 			default:
 				break;
@@ -178,16 +182,16 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 		return redirectMainPage();
 	}
 
-	@GetMapping(value = "/{empresaId}/funcionarios")
-	public String funcionarios(@PathVariable Integer empresaId, ModelMap model,
+	@GetMapping(value = "/{empresaId}/entregadores")
+	public String entregadores(@PathVariable Integer empresaId, ModelMap model,
 			@RequestParam(value = "offset", required = true) Integer offset,
 			@RequestParam(value = "f", required = true) String sortField,
 			@RequestParam(value = "s", required = true) String sortOrder,
 			@RequestParam(value = "q", required = true) String query) {
 
-		loadFuncionarios(empresaId, model, offset, sortField, SortOrder.get(sortOrder));
+		loadEntregadores(empresaId, model, offset, sortField, SortOrder.get(sortOrder));
 
-		return "funcionario_list";
+		return "entregador_list";
 	}
 
 	@GetMapping(value = "/{empresaId}/pedidos")
@@ -203,18 +207,19 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 	}
 
 	@SuppressWarnings("unchecked")
-	private void loadFuncionarios(Integer empresaId, ModelMap model, Integer offset, String sortField,
+	private void loadEntregadores(Integer empresaId, ModelMap model, Integer offset, String sortField,
 			SortOrder sortOrder) {
 		Map<String, Object> filters = new HashMap<>();
 		filters.put("empresa.id", empresaId);
+		filters.put("funcao", Funcao.ENTREGADOR);
 
 		SearchParams params = new SearchParams(offset, MAX_RESULTS, sortField, sortOrder, filters);
 
-		funcionarioService.setIgnoredJoins(Empresa.class);
-		List<Funcionario> funcionarios = funcionarioService.search(params);
-		long count = funcionarioService.getTotalElements(filters);
+		entregadorService.setIgnoredJoins(Empresa.class);
+		List<Funcionario> entregadores = entregadorService.search(params);
+		long count = entregadorService.getTotalElements(filters);
 
-		model.addAttribute("funcionarios", funcionarios);
+		model.addAttribute("entregadores", entregadores);
 		model.addAttribute("escondeEmpresa", true);
 
 		setPaginationAttribute(model, offset, sortField, sortOrder, null, count, MAX_RESULTS);
@@ -324,9 +329,8 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 	 * Possiveis tipos de empresa
 	 */
 	@ModelAttribute("empresaTipos")
-	public Empresa.Tipo[] initializeTipos() {
-		Empresa.Tipo[] tipos = Empresa.Tipo.values();
-		return tipos;
+	public Tipo[] initializeTipos() {
+		return Tipo.values();
 	}
 
 	/**
@@ -334,8 +338,7 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 	 */
 	@ModelAttribute("empresaRegimesTributarios")
 	public RegimeTributario[] initializeRegimesTributarios() {
-		RegimeTributario[] regimesTributarios = RegimeTributario.values();
-		return regimesTributarios;
+		return RegimeTributario.values();
 	}
 
 	@Override
@@ -396,8 +399,14 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 
 	@Override
 	protected Empresa getEntity(Integer id) {
-		Empresa empresa = getService().getEmpresaById(id);
-		return empresa;
+		return getService().getEmpresaById(id);
+	}
+
+	@Override
+	protected Map<String, Object> getFilters() {
+		Map<String, Object> filters = new HashMap<>();
+		filters.put("tipo", new Tipo[] { CLIENTE, ENTREGA });
+		return filters;
 	}
 
 }

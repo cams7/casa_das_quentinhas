@@ -18,7 +18,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -42,9 +41,8 @@ public class Funcionario extends AbstractEntity<Integer> {
 	@PrimaryKeyJoinColumn(name = "id_funcionario", referencedColumnName = "id_usuario")
 	private Usuario usuario;
 
-	@NotNull
 	@Enumerated(EnumType.ORDINAL)
-	@Column
+	@Column(nullable = false)
 	private Funcao funcao;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -285,6 +283,27 @@ public class Funcionario extends AbstractEntity<Integer> {
 			return null;
 
 		return formatCelular(celular);
+	}
+
+	/**
+	 * @return Nome com o CPF formatado
+	 */
+	public String getNomeWithCpf() {
+		return getNomeWithCpf(nome, cpf);
+	}
+
+	/**
+	 * @param nome
+	 *            Nome do funcionário
+	 * @param cpf
+	 *            CPF do funcionário
+	 * @return Nome com o CPF formatado
+	 */
+	public static String getNomeWithCpf(String nome, String cpf) {
+		if (nome == null || cpf == null)
+			return null;
+
+		return nome + " < " + formatCpf(cpf) + " >";
 	}
 
 	/*

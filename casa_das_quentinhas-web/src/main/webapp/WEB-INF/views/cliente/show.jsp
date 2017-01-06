@@ -111,7 +111,7 @@
 		</sec:authorize>
 		<sec:authorize access="hasRole('GERENTE')">
 			<button id="delete" class="btn btn-danger" value="${cliente.id}"
-				title="Deseja realmente excluir o cliente ( ${cliente.nome} )">Excluir</button>
+				title="Deseja realmente excluir o(a) cliente ( ${cliente.nomeWithCpf} )">Excluir</button>
 		</sec:authorize>
 		<a href="javascript:history.back()" class="btn btn-default">Cancelar</a>
 	</div>

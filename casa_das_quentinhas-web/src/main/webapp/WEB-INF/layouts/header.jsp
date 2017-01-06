@@ -22,8 +22,8 @@
 				href="<c:url value='/produto' />">Produto(s)</a></li>
 			<li class="${mainPage eq 'empresa' ? 'active' : '' }"><a
 				href="<c:url value='/empresa' />">Empresa(s)</a></li>
-			<li class="${mainPage eq 'funcionario' ? 'active' : '' }"><a
-				href="<c:url value='/funcionario' />">Funcionário(s)</a></li>
+			<li class="${mainPage eq 'entregador' ? 'active' : '' }"><a
+				href="<c:url value='/entregador' />">Entregador(es)</a></li>
 		</ul>
 		<ul class="nav navbar-nav navbar-right">
 			<li><a href="#"><span class="glyphicon glyphicon-user"></span>

@@ -10,7 +10,7 @@
 </h3>
 
 <div class="row">
-	<div class="col-md-6">
+	<div class="col-md-4">
 		<p>
 			<strong>${pedido.tipoCliente eq 'PESSOA_JURIDICA' ? 'Empresa' : 'Cliente' }</strong>
 		</p>
@@ -33,6 +33,12 @@
 			<strong>Situação</strong>
 		</p>
 		<p>${pedido.situacao.descricao}</p>
+	</div>
+	<div class="col-md-2">
+		<p>
+			<strong>Data do pedido</strong>
+		</p>
+		<p>${pedido.manutencao.formattedCadastro}</p>
 	</div>
 </div>
 
@@ -78,7 +84,7 @@
 		</sec:authorize>
 		<sec:authorize access="hasRole('GERENTE')">
 			<button id="delete" class="btn btn-danger" value="${pedido.id}"
-				title="Deseja realmente excluir o pedido ( ${pedido.id} )">Excluir</button>
+				title="Deseja realmente excluir o pedido ( ${pedido.idWithCadastro} )">Excluir</button>
 		</sec:authorize>
 		<a href="javascript:history.back()" class="btn btn-default">Cancelar</a>
 	</div>

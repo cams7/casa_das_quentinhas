@@ -60,7 +60,7 @@
 		</sec:authorize>
 		<sec:authorize access="hasRole('GERENTE')">
 			<button id="delete" class="btn btn-danger" value="${produto.id}"
-				title="Deseja realmente excluir o produto ( ${produto.nome} )">Excluir</button>
+				title="Deseja realmente excluir o produto ( ${produto.nomeWithTamanho} )">Excluir</button>
 		</sec:authorize>
 		<a href="javascript:history.back()" class="btn btn-default">Cancelar</a>
 	</div>

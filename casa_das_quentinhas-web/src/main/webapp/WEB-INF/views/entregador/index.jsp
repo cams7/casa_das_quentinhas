@@ -7,7 +7,7 @@
 
 <div id="top" class="row">
 	<div class="col-sm-3">
-		<h2>Funcionários</h2>
+		<h2>Entregadores</h2>
 	</div>
 
 	<div class="col-sm-6">
@@ -24,8 +24,8 @@
 
 	<div class="col-sm-3">
 		<sec:authorize access="hasRole('GERENTE')">
-			<a href="<c:url value='/funcionario/create' />"
-				class="btn btn-primary pull-right h2">Novo Funcionário</a>
+			<a href="<c:url value='/entregador/create' />"
+				class="btn btn-primary pull-right h2">Novo Entregador</a>
 		</sec:authorize>
 	</div>
 </div>

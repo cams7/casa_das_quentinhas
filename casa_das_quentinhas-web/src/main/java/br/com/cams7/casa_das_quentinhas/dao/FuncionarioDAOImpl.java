@@ -165,27 +165,4 @@ public class FuncionarioDAOImpl extends AbstractDAO<Funcionario, Integer> implem
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see br.com.cams7.casa_das_quentinhas.dao.FuncionarioDAO#
-	 * getFuncionariosByUsuarioId(java.lang.Integer)
-	 */
-	// @Override
-	// public Set<Funcionario> getFuncionariosByUsuarioId(Integer usuarioId) {
-	// CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-	// CriteriaQuery<Funcionario> cq = cb.createQuery(Funcionario.class);
-	//
-	// Root<Usuario> from = cq.from(Usuario.class);
-	// cq.where(cb.equal(from.get(Usuario_.id), usuarioId));
-	//
-	// SetJoin<Usuario, Funcionario> join = from.join(Usuario_.funcionario);
-	// cq.select(join);
-	// TypedQuery<Funcionario> query = getEntityManager().createQuery(cq);
-	//
-	// Set<Funcionario> funcionarios = new
-	// HashSet<Funcionario>(query.getResultList());
-	// return funcionarios;
-	// }
-
 }

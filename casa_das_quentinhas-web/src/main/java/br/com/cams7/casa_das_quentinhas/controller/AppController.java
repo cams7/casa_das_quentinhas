@@ -41,7 +41,7 @@ public class AppController {
 		if (isCurrentAuthenticationAnonymous())
 			return "login";
 
-		return "redirect:/funcionario";
+		return "redirect:/";
 	}
 
 	/**

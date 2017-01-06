@@ -49,7 +49,7 @@
 								</sec:authorize> <sec:authorize access="hasRole('GERENTE')">
 									<button class="btn btn-danger btn-xs delete"
 										value="${cliente.id}"
-										title="Deseja realmente excluir o cliente ( ${cliente.nome} )">Excluir</button>
+										title="Deseja realmente excluir o(a) cliente ( ${cliente.nomeWithCpf} )">Excluir</button>
 								</sec:authorize></td>
 						</tr>
 					</c:forEach>

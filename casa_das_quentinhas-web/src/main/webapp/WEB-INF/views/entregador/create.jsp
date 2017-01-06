@@ -4,9 +4,9 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<h3 class="page-header">Adicionar Funcionário</h3>
+<h3 class="page-header">Adicionar Entregador</h3>
 
-<form:form method="POST" modelAttribute="funcionario">
+<form:form method="POST" modelAttribute="entregador">
 
 	<%@include file="form.jsp"%>
 

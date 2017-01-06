@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC  "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"  "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+	<!-- Lista de Entregadores -->
+	<definition name="entregador_index" extends="default">
+		<put-attribute name="title" value="Lista de Entregadores" />
+		<put-attribute name="body" value="/WEB-INF/views/entregador/index.jsp" />
+	</definition>
+
+	<!-- Adicionar Entregador -->
+	<definition name="entregador_create" extends="default">
+		<put-attribute name="title" value="Adicionar Entregador" />
+		<put-attribute name="body" value="/WEB-INF/views/entregador/create.jsp" />
+	</definition>
+
+	<!-- Editar Entregador -->
+	<definition name="entregador_edit" extends="default">
+		<put-attribute name="title" value="Editar Entregador" />
+		<put-attribute name="body" value="/WEB-INF/views/entregador/edit.jsp" />
+	</definition>
+
+	<!-- Visualizar Entregador -->
+	<definition name="entregador_show" extends="default">
+		<put-attribute name="title" value="Visualizar Entregador" />
+		<put-attribute name="body" value="/WEB-INF/views/entregador/show.jsp" />
+	</definition>
+
+	<!-- Paginação de Entregadores -->
+	<definition name="entregador_list" extends="empty">
+		<put-attribute name="body" value="/WEB-INF/views/entregador/list.jsp" />
+	</definition>
+</tiles-definitions>

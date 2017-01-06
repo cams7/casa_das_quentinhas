@@ -68,11 +68,11 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 		String sortField = "id";
 		SortOrder sortOrder = SortOrder.DESCENDING;
 
-		SearchParams params = new SearchParams(offset, MAX_RESULTS, sortField, sortOrder, null);
+		SearchParams params = new SearchParams(offset, MAX_RESULTS, sortField, sortOrder, getFilters());
 
 		getService().setIgnoredJoins();
 		List<E> entities = getService().search(params);
-		long count = getService().count();
+		long count = getService().getTotalElements(getFilters());
 
 		model.addAttribute(getListName(), entities);
 
@@ -222,12 +222,10 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 		SortOrder sorting = SortOrder.get(sortOrder);
 
 		Map<String, Object> filters = new HashMap<>();
-		// and
-		// filters.put("nome", query);
-		// filters.put("sobrenome", query);
-		// filters.put("email", query);
 
-		// or
+		if (getFilters() != null)
+			filters.putAll(getFilters());
+
 		filters.put(SearchParams.GLOBAL_FILTER, query);
 		final String[] globalFilters = getGlobalFilters();
 
@@ -307,6 +305,10 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 	protected E getNewEntity() {
 		E entity = AppHelper.getNewEntity(ENTITY_TYPE);
 		return entity;
+	}
+
+	protected Map<String, Object> getFilters() {
+		return null;
 	}
 
 	protected abstract String getEntityName();

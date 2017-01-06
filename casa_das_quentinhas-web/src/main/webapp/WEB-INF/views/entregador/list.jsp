@@ -21,9 +21,7 @@
 							class="${sortField eq 'usuario.email' ? sortOrder : 'sorting' }"
 							id="usuario.email">E-mail</th>
 						<th class="${sortField eq 'celular' ? sortOrder : 'sorting' }"
-							id="celular">Celular</th>
-						<th class="${sortField eq 'funcao' ? sortOrder : 'sorting' }"
-							id="funcao">Função</th>
+							id="celular">Celular</th>						
 						<c:if test="${not escondeEmpresa}">
 							<th
 								class="${sortField eq 'empresa.razaoSocial' ? sortOrder : 'sorting' }"
@@ -35,28 +33,27 @@
 					</tr>
 				</thead>
 				<tbody>
-					<c:forEach items="${funcionarios}" var="funcionario">
+					<c:forEach items="${entregadores}" var="entregador">
 						<tr>
-							<td>${funcionario.id}</td>
-							<td>${funcionario.nome}</td>
-							<td>${funcionario.formattedCpf}</td>
-							<td>${funcionario.usuario.email}</td>
-							<td>${funcionario.formattedCelular}</td>
-							<td>${funcionario.funcao.descricao}</td>
+							<td>${entregador.id}</td>
+							<td>${entregador.nome}</td>
+							<td>${entregador.formattedCpf}</td>
+							<td>${entregador.usuario.email}</td>
+							<td>${entregador.formattedCelular}</td>
 							<c:if test="${not escondeEmpresa}">
 								<td><a
-									href="<c:url value='/empresa/${funcionario.empresa.id}' />">${funcionario.empresa.razaoSocialWithCnpj}</a></td>
+									href="<c:url value='/empresa/${entregador.empresa.id}' />">${entregador.empresa.razaoSocialWithCnpj}</a></td>
 							</c:if>
 							<td class="actions"><a class="btn btn-success btn-xs"
-								href="<c:url value='/funcionario/${funcionario.id}' />">Visualizar</a>
+								href="<c:url value='/entregador/${entregador.id}' />">Visualizar</a>
 								<sec:authorize
 									access="hasRole('GERENTE') or hasRole('ATENDENTE')">
 									<a class="btn btn-warning btn-xs"
-										href="<c:url value='/funcionario/${funcionario.id}/edit' />">Alterar</a>
+										href="<c:url value='/entregador/${entregador.id}/edit' />">Alterar</a>
 								</sec:authorize> <sec:authorize access="hasRole('GERENTE')">
 									<button class="btn btn-danger btn-xs delete"
-										value="${funcionario.id}"
-										title="Deseja realmente excluir o funcionário ( ${funcionario.nome} )">Excluir</button>
+										value="${entregador.id}"
+										title="Deseja realmente excluir o(a) entregador(a) ( ${entregador.nomeWithCpf} )">Excluir</button>
 								</sec:authorize></td>
 						</tr>
 					</c:forEach>
@@ -74,13 +71,13 @@
 	<input type="hidden" id="dataTable_count" value="${count}">
 
 	<c:set var="paginateUri">
-		<c:url value='/funcionario/list' />
+		<c:url value='/entregador/list' />
 	</c:set>
 
 	<div class="row">
 		<div class="col-sm-5">
 			<div class="dataTables_info" role="status">
-				No total, <span class="badge">${count}</span> funcionários foram
+				No total, <span class="badge">${count}</span> entregadores foram
 				retornados
 			</div>
 		</div>

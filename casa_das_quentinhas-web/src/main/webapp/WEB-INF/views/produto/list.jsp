@@ -41,7 +41,7 @@
 								</sec:authorize> <sec:authorize access="hasRole('GERENTE')">
 									<button class="btn btn-danger btn-xs delete"
 										value="${produto.id}"
-										title="Deseja realmente excluir o produto ( ${produto.nome} )">Excluir</button>
+										title="Deseja realmente excluir o produto ( ${produto.nomeWithTamanho} )">Excluir</button>
 								</sec:authorize></td>
 						</tr>
 					</c:forEach>

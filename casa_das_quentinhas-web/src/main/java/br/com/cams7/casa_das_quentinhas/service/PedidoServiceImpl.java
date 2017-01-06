@@ -3,6 +3,8 @@
  */
 package br.com.cams7.casa_das_quentinhas.service;
 
+import static br.com.cams7.casa_das_quentinhas.model.Pedido.TipoCliente.PESSOA_JURIDICA;
+
 import java.util.Date;
 import java.util.List;
 
@@ -12,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.cams7.app.service.AbstractService;
 import br.com.cams7.casa_das_quentinhas.dao.PedidoDAO;
+import br.com.cams7.casa_das_quentinhas.model.Empresa;
 import br.com.cams7.casa_das_quentinhas.model.Manutencao;
 import br.com.cams7.casa_das_quentinhas.model.Pedido;
 import br.com.cams7.casa_das_quentinhas.model.PedidoItem;
@@ -62,6 +65,11 @@ public class PedidoServiceImpl extends AbstractService<PedidoDAO, Pedido, Long> 
 
 		pedido.setManutencao(manutencao);
 
+		if (pedido.getTipoCliente() == PESSOA_JURIDICA) {
+			pedido.setEmpresa(new Empresa(pedido.getCliente().getId()));
+			pedido.setCliente(null);
+		}
+
 		super.persist(pedido);
 
 		itens.forEach(item -> {
@@ -81,6 +89,11 @@ public class PedidoServiceImpl extends AbstractService<PedidoDAO, Pedido, Long> 
 	@Override
 	public void update(Pedido pedido, List<PedidoItem> itens, List<PedidoItemPK> removedItens) {
 		pedido.getManutencao().setAlteracao(new Date());
+
+		if (pedido.getTipoCliente() == PESSOA_JURIDICA) {
+			pedido.setEmpresa(new Empresa(pedido.getCliente().getId()));
+			pedido.setCliente(null);
+		}
 
 		super.update(pedido);
 

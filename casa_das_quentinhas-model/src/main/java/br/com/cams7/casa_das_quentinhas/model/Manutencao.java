@@ -63,9 +63,18 @@ public class Manutencao {
 	}
 
 	/**
-	 * @return
+	 * @return Data do cadastro formatada
 	 */
 	public String getFormattedCadastro() {
+		return getFormattedCadastro(cadastro);
+	}
+
+	/**
+	 * @param cadastro
+	 *            Data do cadastro
+	 * @return Data do cadastro formatada
+	 */
+	public static String getFormattedCadastro(Date cadastro) {
 		if (cadastro == null)
 			return null;
 

@@ -221,10 +221,24 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 					.equals(filter.getKey());
 
 			filters.entrySet().stream().filter(predicate).forEach(filter -> {
-				Predicate expression = getExpression(cb, fromWithJoins, filter.getKey(), filter.getValue(), false);
+				if (filter.getValue() instanceof Object[]) {
+					Object[] array = (Object[]) filter.getValue();
 
-				if (expression != null)
-					and.add(expression);
+					Set<Predicate> or = new HashSet<>();
+					for (Object fieldValue : array) {
+						Predicate expression = getExpression(cb, fromWithJoins, filter.getKey(), fieldValue, false);
+						if (expression != null)
+							or.add(expression);
+					}
+
+					if (!or.isEmpty())
+						and.add(cb.or(or.toArray(new Predicate[] {})));
+				} else {
+					Predicate expression = getExpression(cb, fromWithJoins, filter.getKey(), filter.getValue(), false);
+
+					if (expression != null)
+						and.add(expression);
+				}
 			});
 
 			if (!and.isEmpty())

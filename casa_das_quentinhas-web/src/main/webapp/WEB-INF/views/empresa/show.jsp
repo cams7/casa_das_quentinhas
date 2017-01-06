@@ -144,7 +144,7 @@
 		</sec:authorize>
 		<sec:authorize access="hasRole('GERENTE')">
 			<button id="delete" class="btn btn-danger" value="${empresa.id}"
-				title="Deseja realmente excluir a empresa ( ${empresa.razaoSocial} )">Excluir</button>
+				title="Deseja realmente excluir a empresa ( ${empresa.razaoSocialWithCnpj} )">Excluir</button>
 		</sec:authorize>
 		<a href="javascript:history.back()" class="btn btn-default">Cancelar</a>
 	</div>
@@ -171,16 +171,16 @@
 	</c:when>
 	<c:when test="${empresa.tipo eq 'ENTREGA'}">
 		<c:if test="${count > 0}">
-			<h3 class="page-header">Funcionários</h3>
+			<h3 class="page-header">Entregadores</h3>
 		</c:if>
 		<div class="content">
-			<%@include file="../funcionario/list.jsp"%>
+			<%@include file="../entregador/list.jsp"%>
 		</div>
 
 		<script type="text/javascript">
 			var MAIN_PAGE = '<c:url value='/${mainPage}' />';
-			var LIST_PAGE = MAIN_PAGE + '/${empresa.id}/funcionarios';
-			var DELETE_PAGE = '<c:url value='/funcionario' />';
+			var LIST_PAGE = MAIN_PAGE + '/${empresa.id}/entregadores';
+			var DELETE_PAGE = '<c:url value='/entregador' />';
 		</script>
 
 		<link rel="stylesheet"

@@ -4,10 +4,11 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<h3 class="page-header">Editar Funcionário</h3>
+<h3 class="page-header">Editar Entregador</h3>
 
-<form:form method="POST" modelAttribute="funcionario">
+<form:form method="POST" modelAttribute="entregador">
 	<form:input type="hidden" path="id" />
+	<form:input type="hidden" path="funcao" />
 	<form:input type="hidden" path="manutencao.cadastro.time" />
 	<form:input type="hidden" path="usuario.id" />
 	<form:input type="hidden" path="usuario.tipo" />

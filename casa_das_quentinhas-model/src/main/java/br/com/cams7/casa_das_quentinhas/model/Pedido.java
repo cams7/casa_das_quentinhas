@@ -5,6 +5,7 @@ package br.com.cams7.casa_das_quentinhas.model;
 
 import static br.com.cams7.app.common.MoneyEditor.NUMBER_FORMAT;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -418,6 +419,27 @@ public class Pedido extends AbstractEntity<Long> {
 			return null;
 
 		return NUMBER_FORMAT.format(custoSt);
+	}
+
+	/**
+	 * @return ID com data de cadastro
+	 */
+	public String getIdWithCadastro() {
+		return getIdWithCadastro(id, manutencao != null ? manutencao.getCadastro() : null);
+	}
+
+	/**
+	 * @param id
+	 *            ID do pedido
+	 * @param cadastro
+	 *            Data de cadastro do pedido
+	 * @return ID com data de cadastro
+	 */
+	public static String getIdWithCadastro(Long id, Date cadastro) {
+		if (id == null || cadastro == null)
+			return null;
+
+		return id + " < " + Manutencao.getFormattedCadastro(cadastro) + " >";
 	}
 
 	/**

@@ -52,7 +52,7 @@
 								</sec:authorize> <sec:authorize access="hasRole('GERENTE')">
 									<button class="btn btn-danger btn-xs delete"
 										value="${empresa.id}"
-										title="Deseja realmente excluir a empresa ( ${empresa.razaoSocial} )">Excluir</button>
+										title="Deseja realmente excluir a empresa ( ${empresa.razaoSocialWithCnpj} )">Excluir</button>
 								</sec:authorize></td>
 						</tr>
 					</c:forEach>

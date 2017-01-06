@@ -22,6 +22,9 @@
 							id="quantidade">Quantidade</th>
 						<th class="${sortField eq 'custo' ? sortOrder : 'sorting' }"
 							id="custo">Custo</th>
+						<th
+							class="${sortField eq 'manutencao.cadastro' ? sortOrder : 'sorting' }"
+							id="manutencao.cadastro">Data do pedido</th>
 
 						<sec:authorize access="hasRole('GERENTE') or hasRole('ATENDENTE')">
 							<th class="actions">Ações</th>
@@ -45,6 +48,7 @@
 							<td>${pedido.tipoCliente.descricao}</td>
 							<td>${pedido.quantidade}</td>
 							<td>${pedido.formattedCusto}</td>
+							<td>${pedido.manutencao.formattedCadastro}</td>
 
 							<td class="actions"><a class="btn btn-success btn-xs"
 								href="<c:url value='/pedido/${pedido.id}' />">Visualizar</a> <sec:authorize
@@ -54,7 +58,7 @@
 								</sec:authorize> <sec:authorize access="hasRole('GERENTE')">
 									<button class="btn btn-danger btn-xs delete"
 										value="${pedido.id}"
-										title="Deseja realmente excluir o pedido ( ${pedido.id} )">Excluir</button>
+										title="Deseja realmente excluir o pedido ( ${pedido.idWithCadastro} )">Excluir</button>
 								</sec:authorize></td>
 						</tr>
 					</c:forEach>

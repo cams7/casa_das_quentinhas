@@ -86,7 +86,7 @@ public final class AppHelper {
 		if (fieldValue == null)
 			return null;
 
-		if (attributeType.equals(String.class))
+		if (attributeType.equals(String.class) || isEnum(attributeType))
 			return fieldValue;
 
 		try {
