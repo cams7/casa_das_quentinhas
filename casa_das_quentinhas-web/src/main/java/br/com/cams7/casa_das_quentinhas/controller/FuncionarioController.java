@@ -14,10 +14,13 @@ import javax.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
+import br.com.cams7.casa_das_quentinhas.model.Empresa;
 import br.com.cams7.casa_das_quentinhas.model.Funcionario;
 import br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao;
 
@@ -27,6 +30,7 @@ import br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao;
  */
 @Controller
 @RequestMapping("/" + FuncionarioController.MODEL_NAME)
+@SessionAttributes("funcionarioFuncoes")
 public class FuncionarioController extends AbstractFuncionarioController {
 
 	public static final String MODEL_NAME = "funcionario";
@@ -62,6 +66,14 @@ public class FuncionarioController extends AbstractFuncionarioController {
 		return updateFuncionario(funcionario, result, model, id, lastLoadedPage);
 	}
 
+	/**
+	 * Possiveis funções do funcionário
+	 */
+	@ModelAttribute("funcionarioFuncoes")
+	public Funcao[] initializeFuncoes() {
+		return new Funcao[] { GERENTE, ATENDENTE };
+	}
+
 	@Override
 	protected String getModelName() {
 		return MODEL_NAME;
@@ -73,9 +85,21 @@ public class FuncionarioController extends AbstractFuncionarioController {
 	}
 
 	@Override
+	protected String[] getGlobalFilters() {
+		return new String[] { "nome", "cpf", "celular", "usuario.email" };
+	}
+
+	@Override
 	protected Funcionario getNewEntity() {
 		Funcionario funcionario = super.getNewEntity();
-		funcionario.setFuncao(ATENDENTE);
+		funcionario.setEmpresa(new Empresa(1));
+		return funcionario;
+	}
+
+	@Override
+	protected Funcionario getEntity(Integer id) {
+		Funcionario funcionario = super.getEntity(id);
+		funcionario.setEmpresa(new Empresa(1));
 		return funcionario;
 	}
 
@@ -84,6 +108,12 @@ public class FuncionarioController extends AbstractFuncionarioController {
 		Map<String, Object> filters = new HashMap<>();
 		filters.put("funcao", new Funcao[] { GERENTE, ATENDENTE });
 		return filters;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	protected Class<?>[] getIgnoredJoins() {
+		return new Class<?>[] { Empresa.class };
 	}
 
 }

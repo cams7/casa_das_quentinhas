@@ -34,13 +34,7 @@ $(document).ready(function($) {
             $('.ui-autocomplete').css('z-index', '0');
         },
         minLength : 1
-    }); 
-
-    $('button#itens_refresh').click(event => {
-    	event.preventDefault();
-        
-    	loadTable();
-    }); 
+    });     
 
     $('button#item_add').click(event => {
     	event.preventDefault();
@@ -61,9 +55,10 @@ $(document).ready(function($) {
 
         var id = event.target.value;
 
-        var url = ITEM_PAGE + '/' + id;//$('div#item_modal form#item_form').attr('action');
-        //url = url + '/' + id;
-        //console.log('GET ' + url);
+        var url = ITEM_PAGE + '/' + id;// $('div#item_modal
+										// form#item_form').attr('action');
+        // url = url + '/' + id;
+        // console.log('GET ' + url);
 
         $.ajax({
             url: url,

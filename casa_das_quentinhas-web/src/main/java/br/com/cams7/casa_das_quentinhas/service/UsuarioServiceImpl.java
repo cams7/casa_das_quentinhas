@@ -101,7 +101,7 @@ public class UsuarioServiceImpl extends AbstractService<UsuarioDAO, Usuario, Int
 		if (usuarioId == null)
 			return true;
 
-		return id != null && usuarioId == id;
+		return id != null && usuarioId.equals(id);
 	}
 
 }

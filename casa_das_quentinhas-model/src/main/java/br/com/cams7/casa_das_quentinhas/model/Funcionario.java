@@ -18,6 +18,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -41,14 +42,16 @@ public class Funcionario extends AbstractEntity<Integer> {
 	@PrimaryKeyJoinColumn(name = "id_funcionario", referencedColumnName = "id_usuario")
 	private Usuario usuario;
 
+	@NotNull
 	@Enumerated(EnumType.ORDINAL)
-	@Column(nullable = false)
+	@Column
 	private Funcao funcao;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_usuario_cadastro", referencedColumnName = "id_usuario")
 	private Usuario usuarioCadastro;
 
+	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "id_empresa", referencedColumnName = "id_empresa")
 	private Empresa empresa;

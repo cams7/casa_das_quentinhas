@@ -14,8 +14,6 @@
 	<div id="actions" class="row">
 		<div class="col-md-12">
 			<button id="item_add" class="btn btn-success">Novo Item</button>
-			<button id="itens_refresh" class="btn btn-default">Atualizar
-				Itens</button>
 			<input type="submit" value="Salvar" class="btn btn-primary" />
 			<button id="cancelar" class="btn btn-default">Cancelar</button>
 		</div>

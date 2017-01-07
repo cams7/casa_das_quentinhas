@@ -183,7 +183,7 @@ public class EmpresaServiceImpl extends AbstractService<EmpresaDAO, Empresa, Int
 		if (empresaId == null)
 			return true;
 
-		return id != null && empresaId == id;
+		return id != null && empresaId.equals(id);
 	}
 
 	/*
@@ -208,7 +208,7 @@ public class EmpresaServiceImpl extends AbstractService<EmpresaDAO, Empresa, Int
 		if (id == null)
 			return true;
 
-		return usuarioId != null && id == usuarioId;
+		return usuarioId != null && id.equals(usuarioId);
 	}
 
 }

@@ -169,7 +169,7 @@ public class ClienteServiceImpl extends AbstractService<ClienteDAO, Cliente, Int
 		if (clienteId == null)
 			return true;
 
-		return id != null && clienteId == id;
+		return id != null && clienteId.equals(id);
 	}
 
 	/*
@@ -194,7 +194,7 @@ public class ClienteServiceImpl extends AbstractService<ClienteDAO, Cliente, Int
 		if (id == null)
 			return true;
 
-		return usuarioId != null && id == usuarioId;
+		return usuarioId != null && id.equals(usuarioId);
 	}
 
 }

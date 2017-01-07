@@ -1,22 +1,15 @@
 package br.com.cams7.casa_das_quentinhas.controller;
 
 import java.util.Locale;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import br.com.cams7.app.controller.AbstractController;
 import br.com.cams7.casa_das_quentinhas.model.Empresa;
-import br.com.cams7.casa_das_quentinhas.model.Empresa.Tipo;
 import br.com.cams7.casa_das_quentinhas.model.Funcionario;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
 import br.com.cams7.casa_das_quentinhas.service.EmpresaService;
@@ -35,15 +28,6 @@ public abstract class AbstractFuncionarioController
 	@Autowired
 	private MessageSource messageSource;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * br.com.cams7.casa_das_quentinhas.controller.AbstractController#store(br.
-	 * com.cams7.casa_das_quentinhas.model.AbstractEntity,
-	 * org.springframework.validation.BindingResult,
-	 * org.springframework.ui.ModelMap)
-	 */
 	protected String storeFuncionario(Funcionario funcionario, BindingResult result, ModelMap model,
 			Integer lastLoadedPage) {
 		Usuario usuario = funcionario.getUsuario();
@@ -82,14 +66,6 @@ public abstract class AbstractFuncionarioController
 		return redirectMainPage();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * br.com.cams7.app.controller.AbstractController#update(br.com.cams7.app.
-	 * model.AbstractEntity, org.springframework.validation.BindingResult,
-	 * org.springframework.ui.ModelMap, java.io.Serializable, java.lang.Integer)
-	 */
 	protected String updateFuncionario(Funcionario funcionario, BindingResult result, ModelMap model, Integer id,
 			Integer lastLoadedPage) {
 		Usuario usuario = funcionario.getUsuario();
@@ -113,13 +89,6 @@ public abstract class AbstractFuncionarioController
 		getService().update(funcionario);
 
 		return redirectMainPage();
-	}
-
-	@GetMapping(value = "/empresas/{razaoSocialOrCnpj}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Map<Integer, String>> getEmpresas(@PathVariable String razaoSocialOrCnpj) {
-		Map<Integer, String> empresas = empresaService.getEmpresasByRazaoSocialOrCnpj(razaoSocialOrCnpj, Tipo.ENTREGA);
-
-		return new ResponseEntity<Map<Integer, String>>(empresas, HttpStatus.OK);
 	}
 
 	/**
@@ -197,21 +166,27 @@ public abstract class AbstractFuncionarioController
 	}
 
 	@Override
-	protected String[] getGlobalFilters() {
-		return new String[] { "nome", "cpf", "celular", "usuario.email", "empresa.razaoSocial", "empresa.cnpj" };
-	}
-
-	@Override
 	protected Funcionario getNewEntity() {
 		Funcionario funcionario = new Funcionario();
 		funcionario.setUsuario(new Usuario());
-		funcionario.setEmpresa(new Empresa());
 		return funcionario;
 	}
 
 	@Override
 	protected Funcionario getEntity(Integer id) {
 		return getService().getFuncionarioById(id);
+	}
+
+	protected UsuarioService getUsuarioService() {
+		return usuarioService;
+	}
+
+	protected EmpresaService getEmpresaService() {
+		return empresaService;
+	}
+
+	protected MessageSource getMessageSource() {
+		return messageSource;
 	}
 
 }

@@ -8,14 +8,14 @@
 
 <sec:authorize access="hasRole('GERENTE')" var="isGerente"></sec:authorize>
 
-<form:input type="hidden" path="funcao" />
+<form:input type="hidden" path="empresa.id" />
 
 <div class="row">
 	<c:set var="nomeError">
 		<form:errors path="nome" />
 	</c:set>
 	<div
-		class="form-group col-md-4 ${not empty nomeError ? 'has-error' : ''}">
+		class="form-group col-md-6 ${not empty nomeError ? 'has-error' : ''}">
 		<label class="control-label" for="nome">Nome</label>
 		<form:input type="text" path="nome" id="nome" class="form-control"
 			maxlength="60" />
@@ -26,24 +26,32 @@
 		<form:errors path="celular" />
 	</c:set>
 	<div
-		class="form-group col-md-2 ${not empty celularError ? 'has-error' : ''}">
+		class="form-group col-md-3 ${not empty celularError ? 'has-error' : ''}">
 		<label class="control-label" for="celular">Celular</label>
 		<form:input type="text" path="celular" id="celular"
 			class="form-control" placeholder="(99) 99999-9999" maxlength="15" />
 		<div class="help-block with-errors">${celularError}</div>
 	</div>
 
-	<c:set var="empresaError">
-		<form:errors path="empresa.id" />
+	<c:set var="funcaoError">
+		<form:errors path="funcao" />
 	</c:set>
 	<div
-		class="form-group col-md-6 ${not empty empresaError ? 'has-error' : ''}">
-		<label class="control-label" for="empresa.razaoSocial">Empresa</label>
-		<form:input type="text" path="empresa.razaoSocial" id="empresa"
-			class="form-control" maxlength="60" placeholder="Nome / CNPJ"
-			value="${funcionario.empresa.razaoSocialWithCnpj}" />
-		<form:input type="hidden" path="empresa.id" id="empresa_id" />
-		<div class="help-block with-errors">${empresaError}</div>
+		class="form-group col-md-3 ${not empty funcaoError ? 'has-error' : ''}">
+		<label class="control-label" for="funcao">Função</label>
+		<c:choose>
+			<c:when test="${edit and not isGerente}">
+				<input type="text" value="${funcionario.funcao}"
+					class="form-control" readonly="readonly" id="funcao" />
+				<form:input type="hidden" path="funcao" />
+			</c:when>
+			<c:otherwise>
+				<form:select path="funcao" id="funcao" items="${funcionarioFuncoes}"
+					multiple="true" itemValue="funcao" itemLabel="descricao"
+					class="form-control" />
+				<div class="help-block with-errors">${funcaoError}</div>
+			</c:otherwise>
+		</c:choose>
 	</div>
 </div>
 <div class="row">

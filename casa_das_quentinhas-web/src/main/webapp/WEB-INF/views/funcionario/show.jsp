@@ -10,23 +10,23 @@
 </h3>
 
 <div class="row">
-	<div class="col-md-4">
+	<div class="col-md-6">
 		<p>
 			<strong>Nome</strong>
 		</p>
 		<p>${funcionario.nome}</p>
 	</div>	
-	<div class="col-md-2">
+	<div class="col-md-3">
 		<p>
 			<strong>Celular</strong>
 		</p>
 		<p>${funcionario.formattedCelular}</p>
 	</div>
-	<div class="col-md-6">
+	<div class="col-md-3">
 		<p>
-			<strong>Empresa</strong>
+			<strong>Função</strong>
 		</p>
-		<p>${funcionario.empresa.razaoSocialWithCnpj}</p>
+		<p>${funcionario.funcao.descricao}</p>
 	</div>
 </div>
 <div class="row">

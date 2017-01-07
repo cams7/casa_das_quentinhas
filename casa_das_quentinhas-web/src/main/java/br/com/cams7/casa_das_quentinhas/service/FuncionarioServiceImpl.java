@@ -133,7 +133,7 @@ public class FuncionarioServiceImpl extends AbstractService<FuncionarioDAO, Func
 		if (funcionarioId == null)
 			return true;
 
-		return id != null && funcionarioId == id;
+		return id != null && funcionarioId.equals(id);
 	}
 
 }
