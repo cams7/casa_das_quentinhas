@@ -14,15 +14,20 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import br.com.cams7.casa_das_quentinhas.service.EmpresaService;
+
 @Controller
 @RequestMapping("/")
 public class AppController {
 
 	@Autowired
-	PersistentTokenBasedRememberMeServices persistentTokenBasedRememberMeServices;
+	private PersistentTokenBasedRememberMeServices persistentTokenBasedRememberMeServices;
 
 	@Autowired
-	AuthenticationTrustResolver authenticationTrustResolver;
+	private AuthenticationTrustResolver authenticationTrustResolver;
+
+	@Autowired
+	private EmpresaService empresaService;
 
 	@GetMapping
 	public String home(ModelMap model) {
@@ -30,6 +35,14 @@ public class AppController {
 		model.addAttribute("mainPage", "home");
 
 		return "home";
+	}
+
+	@GetMapping(value = "info")
+	public String info(ModelMap model) {
+		model.addAttribute("loggedinuser", getUsername());
+		model.addAttribute("empresa", empresaService.getEmpresaById(1));
+
+		return "info";
 	}
 
 	/**

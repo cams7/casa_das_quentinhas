@@ -6,6 +6,11 @@
 		<put-attribute name="title" value="Página inicial" />
 		<put-attribute name="body" value="/WEB-INF/views/index.jsp" />
 	</definition>
+	
+	<definition name="info" extends="default">
+		<put-attribute name="title" value="Casa das Quentinhas" />
+		<put-attribute name="body" value="/WEB-INF/views/info.jsp" />
+	</definition>
 
 	<definition name="login" extends="public">
 		<put-attribute name="title" value="Pagina de login" />
