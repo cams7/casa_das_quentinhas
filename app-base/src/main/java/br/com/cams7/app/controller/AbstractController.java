@@ -46,12 +46,10 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 		return service;
 	}
 
-	@SuppressWarnings("unchecked")
 	public AbstractController() {
 		super();
 
-		ENTITY_TYPE = (Class<E>) ((ParameterizedType) this.getClass().getGenericSuperclass())
-				.getActualTypeArguments()[1];
+		ENTITY_TYPE = getEntityType();
 	}
 
 	/*
@@ -340,5 +338,19 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 	protected abstract String getListName();
 
 	protected abstract String[] getGlobalFilters();
+
+	/**
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	private Class<E> getEntityType() {
+		try {
+			return (Class<E>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[1];
+		} catch (ClassCastException e) {
+		}
+
+		return (Class<E>) ((ParameterizedType) this.getClass().getSuperclass().getGenericSuperclass())
+				.getActualTypeArguments()[1];
+	}
 
 }

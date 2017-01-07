@@ -8,7 +8,7 @@
 <nav class="navbar navbar-inverse">
 	<div class="container-fluid">
 		<div class="navbar-header">
-			<a class="navbar-brand" href="#">Casa das Quentinhas</a>
+			<a class="navbar-brand" href="<c:url value='/' />">Casa das Quentinhas</a>
 		</div>
 		<ul class="nav navbar-nav">
 			<li class="${mainPage eq 'home' ? 'active' : '' }"><a
@@ -24,6 +24,8 @@
 				href="<c:url value='/empresa' />">Empresa(s)</a></li>
 			<li class="${mainPage eq 'entregador' ? 'active' : '' }"><a
 				href="<c:url value='/entregador' />">Entregador(es)</a></li>
+			<li class="${mainPage eq 'funcionario' ? 'active' : '' }"><a
+				href="<c:url value='/funcionario' />">Funcionário(s)</a></li>
 		</ul>
 		<ul class="nav navbar-nav navbar-right">
 			<li><a href="#"><span class="glyphicon glyphicon-user"></span>

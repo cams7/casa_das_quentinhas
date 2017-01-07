@@ -3,7 +3,8 @@
  */
 package br.com.cams7.casa_das_quentinhas.controller;
 
-import static br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao.ENTREGADOR;
+import static br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao.ATENDENTE;
+import static br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao.GERENTE;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,23 +14,23 @@ import javax.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import br.com.cams7.casa_das_quentinhas.model.Funcionario;
+import br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao;
 
 /**
  * @author César Magalhães
  *
  */
 @Controller
-@RequestMapping("/" + EntregadorController.MODEL_NAME)
-public class EntregadorController extends AbstractFuncionarioController {
+@RequestMapping("/" + FuncionarioController.MODEL_NAME)
+public class FuncionarioController extends AbstractFuncionarioController {
 
-	public static final String MODEL_NAME = "entregador";
-	public static final String LIST_NAME = "entregadores";
+	public static final String MODEL_NAME = "funcionario";
+	public static final String LIST_NAME = "funcionarios";
 
 	/*
 	 * (non-Javadoc)
@@ -41,9 +42,9 @@ public class EntregadorController extends AbstractFuncionarioController {
 	 * org.springframework.ui.ModelMap, java.lang.Integer)
 	 */
 	@Override
-	public String store(@Valid @ModelAttribute(MODEL_NAME) Funcionario entregador, BindingResult result, ModelMap model,
+	public String store(@Valid Funcionario funcionario, BindingResult result, ModelMap model,
 			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
-		return storeFuncionario(entregador, result, model, lastLoadedPage);
+		return storeFuncionario(funcionario, result, model, lastLoadedPage);
 	}
 
 	/*
@@ -56,10 +57,9 @@ public class EntregadorController extends AbstractFuncionarioController {
 	 * org.springframework.ui.ModelMap, java.lang.Integer, java.lang.Integer)
 	 */
 	@Override
-	public String update(@Valid @ModelAttribute(MODEL_NAME) Funcionario entregador, BindingResult result,
-			ModelMap model, @PathVariable Integer id,
+	public String update(@Valid Funcionario funcionario, BindingResult result, ModelMap model, @PathVariable Integer id,
 			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
-		return updateFuncionario(entregador, result, model, id, lastLoadedPage);
+		return updateFuncionario(funcionario, result, model, id, lastLoadedPage);
 	}
 
 	@Override
@@ -74,15 +74,15 @@ public class EntregadorController extends AbstractFuncionarioController {
 
 	@Override
 	protected Funcionario getNewEntity() {
-		Funcionario entregador = super.getNewEntity();
-		entregador.setFuncao(ENTREGADOR);
-		return entregador;
+		Funcionario funcionario = super.getNewEntity();
+		funcionario.setFuncao(ATENDENTE);
+		return funcionario;
 	}
 
 	@Override
 	protected Map<String, Object> getFilters() {
 		Map<String, Object> filters = new HashMap<>();
-		filters.put("funcao", ENTREGADOR);
+		filters.put("funcao", new Funcao[] { GERENTE, ATENDENTE });
 		return filters;
 	}
 
