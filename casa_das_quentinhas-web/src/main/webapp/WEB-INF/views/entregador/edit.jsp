@@ -7,8 +7,7 @@
 <h3 class="page-header">Editar Entregador</h3>
 
 <form:form method="POST" modelAttribute="entregador">
-	<form:input type="hidden" path="id" />
-	<form:input type="hidden" path="funcao" />
+	<form:input type="hidden" path="id" />	
 	<form:input type="hidden" path="manutencao.cadastro.time" />
 	<form:input type="hidden" path="usuario.id" />
 	<form:input type="hidden" path="usuario.tipo" />

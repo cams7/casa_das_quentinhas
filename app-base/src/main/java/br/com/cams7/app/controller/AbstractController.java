@@ -94,7 +94,7 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 	public String create(ModelMap model) {
 		E entity = getNewEntity();
 
-		model.addAttribute(getEntityName(), entity);
+		model.addAttribute(getModelName(), entity);
 
 		setCommonAttributes(model);
 		setLastLoadedPage(model, 1);
@@ -137,7 +137,7 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 	public String show(@PathVariable PK id, ModelMap model) {
 		E entity = getEntity(id);
 
-		model.addAttribute(getEntityName(), entity);
+		model.addAttribute(getModelName(), entity);
 
 		setCommonAttributes(model);
 
@@ -155,7 +155,7 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 	public String edit(@PathVariable PK id, ModelMap model) {
 		E entity = getEntity(id);
 
-		model.addAttribute(getEntityName(), entity);
+		model.addAttribute(getModelName(), entity);
 
 		setCommonAttributes(model);
 		setEditPage(model);
@@ -311,21 +311,33 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 		return null;
 	}
 
-	protected abstract String getEntityName();
+	protected String getMainPage() {
+		return getModelName();
+	}
+
+	protected String getIndexTilesPage() {
+		return getModelName() + "_index";
+	}
+
+	protected String getCreateTilesPage() {
+		return getModelName() + "_create";
+	}
+
+	protected String getShowTilesPage() {
+		return getModelName() + "_show";
+	}
+
+	protected String getEditTilesPage() {
+		return getModelName() + "_edit";
+	}
+
+	protected String getListTilesPage() {
+		return getModelName() + "_list";
+	}
+
+	protected abstract String getModelName();
 
 	protected abstract String getListName();
-
-	protected abstract String getMainPage();
-
-	protected abstract String getIndexTilesPage();
-
-	protected abstract String getCreateTilesPage();
-
-	protected abstract String getShowTilesPage();
-
-	protected abstract String getEditTilesPage();
-
-	protected abstract String getListTilesPage();
 
 	protected abstract String[] getGlobalFilters();
 

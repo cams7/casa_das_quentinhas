@@ -32,8 +32,11 @@ import br.com.cams7.casa_das_quentinhas.service.FuncionarioService;
 import br.com.cams7.casa_das_quentinhas.service.UsuarioService;
 
 @Controller
-@RequestMapping("/entregador")
+@RequestMapping("/" + EntregadorController.MODEL_NAME)
 public class EntregadorController extends AbstractController<FuncionarioService, Funcionario, Integer> {
+
+	public static final String MODEL_NAME = "entregador";
+	public static final String LIST_NAME = "entregadores";
 
 	@Autowired
 	private UsuarioService usuarioService;
@@ -54,20 +57,20 @@ public class EntregadorController extends AbstractController<FuncionarioService,
 	 * org.springframework.ui.ModelMap)
 	 */
 	@Override
-	public String store(@Valid @ModelAttribute("entregador") Funcionario entregador, BindingResult result,
+	public String store(@Valid @ModelAttribute(MODEL_NAME) Funcionario funcionario, BindingResult result,
 			ModelMap model, @RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
 
-		Usuario usuario = entregador.getUsuario();
-		Empresa empresa = entregador.getEmpresa();
+		Usuario usuario = funcionario.getUsuario();
+		Empresa empresa = funcionario.getEmpresa();
 
 		if (empresa.getId() == null) {
-			FieldError empresaError = new FieldError("entregador", "empresa.id",
-					messageSource.getMessage("NotNull.entregador.empresa.id", null, Locale.getDefault()));
+			FieldError empresaError = new FieldError(getModelName(), "empresa.id",
+					messageSource.getMessage("NotNull." + getModelName() + ".empresa.id", null, Locale.getDefault()));
 			result.addError(empresaError);
 		}
 
 		if (usuario.getSenha().isEmpty()) {
-			FieldError senhaError = new FieldError("entregador", "usuario.senha",
+			FieldError senhaError = new FieldError(getModelName(), "usuario.senha",
 					messageSource.getMessage("NotEmpty.usuario.senha", null, Locale.getDefault()));
 			result.addError(senhaError);
 		}
@@ -76,7 +79,7 @@ public class EntregadorController extends AbstractController<FuncionarioService,
 		setSenhaNotEqualsConfirmacaoError(usuario, result);
 
 		setEmailNotUniqueError(usuario, result);
-		setCPFNotUniqueError(entregador, result);
+		setCPFNotUniqueError(funcionario, result);
 
 		setCommonAttributes(model);
 		incrementLastLoadedPage(model, lastLoadedPage);
@@ -84,12 +87,11 @@ public class EntregadorController extends AbstractController<FuncionarioService,
 		if (result.hasErrors())
 			return getCreateTilesPage();
 
-		entregador.setCpf(entregador.getUnformattedCpf());
-		entregador.setCelular(entregador.getUnformattedCelular());
-		entregador.setFuncao(Funcao.ENTREGADOR);
+		funcionario.setCpf(funcionario.getUnformattedCpf());
+		funcionario.setCelular(funcionario.getUnformattedCelular());
 
 		getService().setUsername(getUsername());
-		getService().persist(entregador);
+		getService().persist(funcionario);
 
 		return redirectMainPage();
 	}
@@ -103,16 +105,16 @@ public class EntregadorController extends AbstractController<FuncionarioService,
 	 * org.springframework.ui.ModelMap, java.io.Serializable, java.lang.Integer)
 	 */
 	@Override
-	public String update(@Valid @ModelAttribute("entregador") Funcionario entregador, BindingResult result,
+	public String update(@Valid @ModelAttribute(MODEL_NAME) Funcionario funcionario, BindingResult result,
 			ModelMap model, @PathVariable Integer id,
 			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
-		Usuario usuario = entregador.getUsuario();
+		Usuario usuario = funcionario.getUsuario();
 
 		setNotEmptyConfirmacaoError(usuario, result, !usuario.getSenha().isEmpty());
 		setSenhaNotEqualsConfirmacaoError(usuario, result);
 
 		setEmailNotUniqueError(usuario, result);
-		setCPFNotUniqueError(entregador, result);
+		setCPFNotUniqueError(funcionario, result);
 
 		setCommonAttributes(model);
 		setEditPage(model);
@@ -121,10 +123,10 @@ public class EntregadorController extends AbstractController<FuncionarioService,
 		if (result.hasErrors())
 			return getEditTilesPage();
 
-		entregador.setCpf(entregador.getUnformattedCpf());
-		entregador.setCelular(entregador.getUnformattedCelular());
+		funcionario.setCpf(funcionario.getUnformattedCpf());
+		funcionario.setCelular(funcionario.getUnformattedCelular());
 
-		getService().update(entregador);
+		getService().update(funcionario);
 
 		return redirectMainPage();
 	}
@@ -148,7 +150,7 @@ public class EntregadorController extends AbstractController<FuncionarioService,
 	 */
 	private void setNotEmptyConfirmacaoError(Usuario usuario, BindingResult result, boolean senhaInformada) {
 		if (senhaInformada && usuario.getConfirmacaoSenha().isEmpty()) {
-			FieldError confirmacaoError = new FieldError("entregador", "usuario.confirmacaoSenha",
+			FieldError confirmacaoError = new FieldError(getModelName(), "usuario.confirmacaoSenha",
 					messageSource.getMessage("NotEmpty.usuario.confirmacaoSenha", null, Locale.getDefault()));
 			result.addError(confirmacaoError);
 		}
@@ -167,7 +169,7 @@ public class EntregadorController extends AbstractController<FuncionarioService,
 
 		if (!usuario.getSenha().isEmpty() && !usuario.getConfirmacaoSenha().isEmpty()
 				&& !usuario.getSenha().equals(usuario.getConfirmacaoSenha())) {
-			FieldError confirmacaoError = new FieldError("entregador", "usuario.confirmacaoSenha",
+			FieldError confirmacaoError = new FieldError(getModelName(), "usuario.confirmacaoSenha",
 					messageSource.getMessage("NotEquals.usuario.confirmacaoSenha", null, Locale.getDefault()));
 			result.addError(confirmacaoError);
 		}
@@ -184,7 +186,7 @@ public class EntregadorController extends AbstractController<FuncionarioService,
 			return;
 
 		if (!usuarioService.isEmailUnique(usuario.getId(), usuario.getEmail())) {
-			FieldError emailError = new FieldError("entregador", "usuario.email", messageSource
+			FieldError emailError = new FieldError(getModelName(), "usuario.email", messageSource
 					.getMessage("NonUnique.usuario.email", new String[] { usuario.getEmail() }, Locale.getDefault()));
 			result.addError(emailError);
 		}
@@ -193,60 +195,31 @@ public class EntregadorController extends AbstractController<FuncionarioService,
 	/**
 	 * Verifica se o CPF informado não foi cadastrado anteriormente
 	 * 
-	 * @param entregador
+	 * @param funcionario
 	 * @param result
 	 */
-	private void setCPFNotUniqueError(Funcionario entregador, BindingResult result) {
+	private void setCPFNotUniqueError(Funcionario funcionario, BindingResult result) {
 		if (result.getFieldErrorCount("cpf") > 0)
 			return;
 
-		String cpf = entregador.getUnformattedCpf();
+		String cpf = funcionario.getUnformattedCpf();
 
-		if (!getService().isCPFUnique(entregador.getId(), cpf)) {
-			FieldError cpfError = new FieldError("entregador", "cpf", messageSource
-					.getMessage("NonUnique.entregador.cpf", new String[] { entregador.getCpf() }, Locale.getDefault()));
+		if (!getService().isCPFUnique(funcionario.getId(), cpf)) {
+			FieldError cpfError = new FieldError(getModelName(), "cpf",
+					messageSource.getMessage("NonUnique." + getModelName() + ".cpf",
+							new String[] { funcionario.getCpf() }, Locale.getDefault()));
 			result.addError(cpfError);
 		}
 	}
 
 	@Override
-	protected String getEntityName() {
-		return "entregador";
+	protected String getModelName() {
+		return MODEL_NAME;
 	}
 
 	@Override
 	protected String getListName() {
-		return "entregadores";
-	}
-
-	@Override
-	protected String getMainPage() {
-		return "entregador";
-	}
-
-	@Override
-	protected String getIndexTilesPage() {
-		return "entregador_index";
-	}
-
-	@Override
-	protected String getCreateTilesPage() {
-		return "entregador_create";
-	}
-
-	@Override
-	protected String getShowTilesPage() {
-		return "entregador_show";
-	}
-
-	@Override
-	protected String getEditTilesPage() {
-		return "entregador_edit";
-	}
-
-	@Override
-	protected String getListTilesPage() {
-		return "entregador_list";
+		return LIST_NAME;
 	}
 
 	@Override
@@ -256,10 +229,11 @@ public class EntregadorController extends AbstractController<FuncionarioService,
 
 	@Override
 	protected Funcionario getNewEntity() {
-		Funcionario entregador = new Funcionario();
-		entregador.setUsuario(new Usuario());
-		entregador.setEmpresa(new Empresa());
-		return entregador;
+		Funcionario funcionario = new Funcionario();
+		funcionario.setFuncao(Funcao.ENTREGADOR);
+		funcionario.setUsuario(new Usuario());
+		funcionario.setEmpresa(new Empresa());
+		return funcionario;
 	}
 
 	@Override

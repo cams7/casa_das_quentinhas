@@ -53,9 +53,12 @@ import br.com.cams7.casa_das_quentinhas.service.PedidoService;
  *
  */
 @Controller
-@RequestMapping("/empresa")
+@RequestMapping("/" + EmpresaController.MODEL_NAME)
 @SessionAttributes({ "empresaTipos", "empresaRegimesTributarios" })
 public class EmpresaController extends AbstractController<EmpresaService, Empresa, Integer> {
+
+	public static final String MODEL_NAME = "empresa";
+	public static final String LIST_NAME = "empresas";
 
 	@Autowired
 	private CidadeService cidadeService;
@@ -87,13 +90,13 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 		Cidade cidade = empresa.getCidade();
 
 		if (cidade.getId() == null) {
-			FieldError cidadeError = new FieldError("empresa", "cidade.id",
+			FieldError cidadeError = new FieldError(getModelName(), "cidade.id",
 					messageSource.getMessage("NotNull.empresa.cidade.id", null, Locale.getDefault()));
 			result.addError(cidadeError);
 		}
 
 		if (usuario.getSenha().isEmpty()) {
-			FieldError senhaError = new FieldError("empresa", "usuarioAcesso.senha",
+			FieldError senhaError = new FieldError(getModelName(), "usuarioAcesso.senha",
 					messageSource.getMessage("NotEmpty.empresa.usuarioAcesso.senha", null, Locale.getDefault()));
 			result.addError(senhaError);
 		}
@@ -261,7 +264,7 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 	 */
 	private void setNotEmptyConfirmacaoError(Usuario usuario, BindingResult result, boolean senhaInformada) {
 		if (senhaInformada && usuario.getConfirmacaoSenha().isEmpty()) {
-			FieldError confirmacaoError = new FieldError("empresa", "usuarioAcesso.confirmacaoSenha",
+			FieldError confirmacaoError = new FieldError(getModelName(), "usuarioAcesso.confirmacaoSenha",
 					messageSource.getMessage("NotEmpty.usuario.confirmacaoSenha", null, Locale.getDefault()));
 			result.addError(confirmacaoError);
 		}
@@ -280,7 +283,7 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 
 		if (!usuario.getSenha().isEmpty() && !usuario.getConfirmacaoSenha().isEmpty()
 				&& !usuario.getSenha().equals(usuario.getConfirmacaoSenha())) {
-			FieldError confirmacaoError = new FieldError("empresa", "usuarioAcesso.confirmacaoSenha",
+			FieldError confirmacaoError = new FieldError(getModelName(), "usuarioAcesso.confirmacaoSenha",
 					messageSource.getMessage("NotEquals.usuario.confirmacaoSenha", null, Locale.getDefault()));
 			result.addError(confirmacaoError);
 		}
@@ -300,7 +303,7 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 		Contato contato = empresa.getContato();
 
 		if (!getService().isEmailUnique(empresa.getId(), usuario.getId(), contato.getEmail())) {
-			FieldError emailError = new FieldError("empresa", "contato.email", messageSource.getMessage(
+			FieldError emailError = new FieldError(getModelName(), "contato.email", messageSource.getMessage(
 					"NonUnique.empresa.contato.email", new String[] { contato.getEmail() }, Locale.getDefault()));
 			result.addError(emailError);
 		}
@@ -319,8 +322,8 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 		String cnpj = empresa.getUnformattedCnpj();
 
 		if (!getService().isCNPJUnique(empresa.getId(), cnpj)) {
-			FieldError cnpjError = new FieldError("empresa", "cnpj", messageSource.getMessage("NonUnique.empresa.cnpj",
-					new String[] { empresa.getCnpj() }, Locale.getDefault()));
+			FieldError cnpjError = new FieldError(getModelName(), "cnpj", messageSource
+					.getMessage("NonUnique.empresa.cnpj", new String[] { empresa.getCnpj() }, Locale.getDefault()));
 			result.addError(cnpjError);
 		}
 	}
@@ -342,43 +345,13 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 	}
 
 	@Override
-	protected String getEntityName() {
-		return "empresa";
+	protected String getModelName() {
+		return MODEL_NAME;
 	}
 
 	@Override
 	protected String getListName() {
-		return "empresas";
-	}
-
-	@Override
-	protected String getMainPage() {
-		return "empresa";
-	}
-
-	@Override
-	protected String getIndexTilesPage() {
-		return "empresa_index";
-	}
-
-	@Override
-	protected String getCreateTilesPage() {
-		return "empresa_create";
-	}
-
-	@Override
-	protected String getShowTilesPage() {
-		return "empresa_show";
-	}
-
-	@Override
-	protected String getEditTilesPage() {
-		return "empresa_edit";
-	}
-
-	@Override
-	protected String getListTilesPage() {
-		return "empresa_list";
+		return LIST_NAME;
 	}
 
 	@Override

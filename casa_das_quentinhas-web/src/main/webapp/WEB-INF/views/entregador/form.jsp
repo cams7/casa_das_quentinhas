@@ -8,6 +8,8 @@
 
 <sec:authorize access="hasRole('GERENTE')" var="isGerente"></sec:authorize>
 
+<form:input type="hidden" path="funcao" />
+
 <div class="row">
 	<c:set var="nomeError">
 		<form:errors path="nome" />
@@ -53,8 +55,9 @@
 		<label class="control-label" for="usuario.email">E-mail</label>
 
 		<form:input type="text" path="usuario.email" id="email"
-			class="form-control" readonly="${edit and not isGerente}" maxlength="50" />
-		<div class="help-block with-errors">${emailError}</div>		
+			class="form-control" readonly="${edit and not isGerente}"
+			maxlength="50" />
+		<div class="help-block with-errors">${emailError}</div>
 	</div>
 
 	<c:set var="cpfError">

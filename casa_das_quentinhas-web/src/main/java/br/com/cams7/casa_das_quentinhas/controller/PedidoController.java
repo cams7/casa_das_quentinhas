@@ -53,10 +53,13 @@ import br.com.cams7.casa_das_quentinhas.service.ProdutoService;
  *
  */
 @Controller
-@RequestMapping("/pedido")
+@RequestMapping("/" + PedidoController.MODEL_NAME)
 @SessionAttributes({ "pedidoTiposCliente", "pedidoFormasPagamento", "pedidoDestinosOperacao", "pedidoTiposAtendimento",
 		"pedidoSituacoes" })
 public class PedidoController extends AbstractController<PedidoService, Pedido, Long> {
+
+	public static final String MODEL_NAME = "pedido";
+	public static final String LIST_NAME = "pedidos";
 
 	@Autowired
 	private ClienteService clienteService;
@@ -95,7 +98,7 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 		Cliente cliente = pedido.getCliente();
 
 		if (cliente.getId() == null) {
-			FieldError clienteError = new FieldError("pedido", "cliente.id",
+			FieldError clienteError = new FieldError(getModelName(), "cliente.id",
 					messageSource.getMessage("NotNull.pedido.cliente.id", null, Locale.getDefault()));
 			result.addError(clienteError);
 		}
@@ -304,43 +307,13 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 	}
 
 	@Override
-	protected String getEntityName() {
-		return "pedido";
+	protected String getModelName() {
+		return MODEL_NAME;
 	}
 
 	@Override
 	protected String getListName() {
-		return "pedidos";
-	}
-
-	@Override
-	protected String getMainPage() {
-		return "pedido";
-	}
-
-	@Override
-	protected String getIndexTilesPage() {
-		return "pedido_index";
-	}
-
-	@Override
-	protected String getCreateTilesPage() {
-		return "pedido_create";
-	}
-
-	@Override
-	protected String getShowTilesPage() {
-		return "pedido_show";
-	}
-
-	@Override
-	protected String getEditTilesPage() {
-		return "pedido_edit";
-	}
-
-	@Override
-	protected String getListTilesPage() {
-		return "pedido_list";
+		return LIST_NAME;
 	}
 
 	@Override

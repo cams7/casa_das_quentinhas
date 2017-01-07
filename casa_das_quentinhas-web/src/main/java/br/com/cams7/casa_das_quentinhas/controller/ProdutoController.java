@@ -34,9 +34,12 @@ import br.com.cams7.casa_das_quentinhas.service.ProdutoService;
  *
  */
 @Controller
-@RequestMapping("/produto")
+@RequestMapping("/" + ProdutoController.MODEL_NAME)
 @SessionAttributes("produtoTamanhos")
 public class ProdutoController extends AbstractController<ProdutoService, Produto, Integer> {
+
+	public static final String MODEL_NAME = "produto";
+	public static final String LIST_NAME = "produtos";
 
 	@Autowired
 	private PedidoItemService itemService;
@@ -100,43 +103,13 @@ public class ProdutoController extends AbstractController<ProdutoService, Produt
 	}
 
 	@Override
-	protected String getEntityName() {
-		return "produto";
+	protected String getModelName() {
+		return MODEL_NAME;
 	}
 
 	@Override
 	protected String getListName() {
-		return "produtos";
-	}
-
-	@Override
-	protected String getMainPage() {
-		return "produto";
-	}
-
-	@Override
-	protected String getIndexTilesPage() {
-		return "produto_index";
-	}
-
-	@Override
-	protected String getCreateTilesPage() {
-		return "produto_create";
-	}
-
-	@Override
-	protected String getShowTilesPage() {
-		return "produto_show";
-	}
-
-	@Override
-	protected String getEditTilesPage() {
-		return "produto_edit";
-	}
-
-	@Override
-	protected String getListTilesPage() {
-		return "produto_list";
+		return LIST_NAME;
 	}
 
 	@Override

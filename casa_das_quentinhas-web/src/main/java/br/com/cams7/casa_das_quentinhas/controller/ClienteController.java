@@ -50,9 +50,12 @@ import br.com.cams7.casa_das_quentinhas.service.PedidoService;
  *
  */
 @Controller
-@RequestMapping("/cliente")
+@RequestMapping("/" + ClienteController.MODEL_NAME)
 @SessionAttributes("clienteTiposContribuintes")
 public class ClienteController extends AbstractController<ClienteService, Cliente, Integer> {
+
+	public static final String MODEL_NAME = "cliente";
+	public static final String LIST_NAME = "clientes";
 
 	@Autowired
 	private CidadeService cidadeService;
@@ -79,13 +82,13 @@ public class ClienteController extends AbstractController<ClienteService, Client
 		Cidade cidade = cliente.getCidade();
 
 		if (cidade.getId() == null) {
-			FieldError cidadeError = new FieldError("cliente", "cidade.id",
+			FieldError cidadeError = new FieldError(getModelName(), "cidade.id",
 					messageSource.getMessage("NotNull.cliente.cidade.id", null, Locale.getDefault()));
 			result.addError(cidadeError);
 		}
 
 		if (usuario.getSenha().isEmpty()) {
-			FieldError senhaError = new FieldError("cliente", "usuarioAcesso.senha",
+			FieldError senhaError = new FieldError(getModelName(), "usuarioAcesso.senha",
 					messageSource.getMessage("NotEmpty.cliente.usuarioAcesso.senha", null, Locale.getDefault()));
 			result.addError(senhaError);
 		}
@@ -217,7 +220,7 @@ public class ClienteController extends AbstractController<ClienteService, Client
 	 */
 	private void setNotEmptyConfirmacaoError(Usuario usuario, BindingResult result, boolean senhaInformada) {
 		if (senhaInformada && usuario.getConfirmacaoSenha().isEmpty()) {
-			FieldError confirmacaoError = new FieldError("cliente", "usuarioAcesso.confirmacaoSenha",
+			FieldError confirmacaoError = new FieldError(getModelName(), "usuarioAcesso.confirmacaoSenha",
 					messageSource.getMessage("NotEmpty.usuario.confirmacaoSenha", null, Locale.getDefault()));
 			result.addError(confirmacaoError);
 		}
@@ -236,7 +239,7 @@ public class ClienteController extends AbstractController<ClienteService, Client
 
 		if (!usuario.getSenha().isEmpty() && !usuario.getConfirmacaoSenha().isEmpty()
 				&& !usuario.getSenha().equals(usuario.getConfirmacaoSenha())) {
-			FieldError confirmacaoError = new FieldError("cliente", "usuarioAcesso.confirmacaoSenha",
+			FieldError confirmacaoError = new FieldError(getModelName(), "usuarioAcesso.confirmacaoSenha",
 					messageSource.getMessage("NotEquals.usuario.confirmacaoSenha", null, Locale.getDefault()));
 			result.addError(confirmacaoError);
 		}
@@ -256,7 +259,7 @@ public class ClienteController extends AbstractController<ClienteService, Client
 		Contato contato = cliente.getContato();
 
 		if (!getService().isEmailUnique(cliente.getId(), usuario.getId(), contato.getEmail())) {
-			FieldError emailError = new FieldError("cliente", "contato.email", messageSource.getMessage(
+			FieldError emailError = new FieldError(getModelName(), "contato.email", messageSource.getMessage(
 					"NonUnique.cliente.contato.email", new String[] { contato.getEmail() }, Locale.getDefault()));
 			result.addError(emailError);
 		}
@@ -275,8 +278,8 @@ public class ClienteController extends AbstractController<ClienteService, Client
 		String cpf = cliente.getUnformattedCpf();
 
 		if (!getService().isCPFUnique(cliente.getId(), cpf)) {
-			FieldError cpfError = new FieldError("cliente", "cpf", messageSource.getMessage("NonUnique.cliente.cpf",
-					new String[] { cliente.getCpf() }, Locale.getDefault()));
+			FieldError cpfError = new FieldError(getModelName(), "cpf", messageSource
+					.getMessage("NonUnique.cliente.cpf", new String[] { cliente.getCpf() }, Locale.getDefault()));
 			result.addError(cpfError);
 		}
 	}
@@ -291,43 +294,13 @@ public class ClienteController extends AbstractController<ClienteService, Client
 	}
 
 	@Override
-	protected String getEntityName() {
-		return "cliente";
+	protected String getModelName() {
+		return MODEL_NAME;
 	}
 
 	@Override
 	protected String getListName() {
-		return "clientes";
-	}
-
-	@Override
-	protected String getMainPage() {
-		return "cliente";
-	}
-
-	@Override
-	protected String getIndexTilesPage() {
-		return "cliente_index";
-	}
-
-	@Override
-	protected String getCreateTilesPage() {
-		return "cliente_create";
-	}
-
-	@Override
-	protected String getShowTilesPage() {
-		return "cliente_show";
-	}
-
-	@Override
-	protected String getEditTilesPage() {
-		return "cliente_edit";
-	}
-
-	@Override
-	protected String getListTilesPage() {
-		return "cliente_list";
+		return LIST_NAME;
 	}
 
 	@Override
