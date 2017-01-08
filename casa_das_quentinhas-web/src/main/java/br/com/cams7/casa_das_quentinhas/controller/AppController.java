@@ -76,10 +76,10 @@ public class AppController {
 	/**
 	 * This method handles Access-Denied redirect.
 	 */
-	@GetMapping(value = "/acesso_negado")
+	@GetMapping(value = "/nao_autorizado")
 	public String accessDeniedPage(ModelMap model) {
 		model.addAttribute("loggedinuser", getUsername());
-		return "acesso_negado";
+		return "nao_autorizado";
 	}
 
 	/**

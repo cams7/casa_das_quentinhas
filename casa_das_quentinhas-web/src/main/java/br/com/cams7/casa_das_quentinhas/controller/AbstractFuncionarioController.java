@@ -172,11 +172,6 @@ public abstract class AbstractFuncionarioController
 		return funcionario;
 	}
 
-	@Override
-	protected Funcionario getEntity(Integer id) {
-		return getService().getFuncionarioById(id);
-	}
-
 	protected UsuarioService getUsuarioService() {
 		return usuarioService;
 	}

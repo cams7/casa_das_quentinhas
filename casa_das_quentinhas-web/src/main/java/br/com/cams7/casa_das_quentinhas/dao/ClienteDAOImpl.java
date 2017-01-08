@@ -131,7 +131,7 @@ public class ClienteDAOImpl extends AbstractDAO<Cliente, Integer> implements Cli
 			Integer clienteId = tq.getSingleResult();
 			return clienteId;
 		} catch (NoResultException e) {
-			LOGGER.warn("CPF not found...");
+			LOGGER.warn("O id do cliente (cpf: %s) não foi encontrado...", cpf);
 		}
 
 		return null;
@@ -163,7 +163,7 @@ public class ClienteDAOImpl extends AbstractDAO<Cliente, Integer> implements Cli
 			Integer clienteId = tq.getSingleResult();
 			return clienteId;
 		} catch (NoResultException e) {
-			LOGGER.warn("E-mail not found...");
+			LOGGER.warn("O id do cliente (email: %s) não foi encontrado...", email);
 		}
 
 		return null;
@@ -193,7 +193,7 @@ public class ClienteDAOImpl extends AbstractDAO<Cliente, Integer> implements Cli
 			Integer usuarioId = tq.getSingleResult();
 			return usuarioId;
 		} catch (NoResultException e) {
-			LOGGER.warn("E-mail not found...");
+			LOGGER.warn("Do cliente (id: %s), o id do usuário de acesso não foi encontrado...", clienteId);
 		}
 
 		return null;

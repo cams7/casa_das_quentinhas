@@ -98,7 +98,7 @@ public class FuncionarioController extends AbstractFuncionarioController {
 
 	@Override
 	protected Funcionario getEntity(Integer id) {
-		Funcionario funcionario = super.getEntity(id);
+		Funcionario funcionario = getService().getFuncionarioByIdAndFuncoes(id, GERENTE, ATENDENTE);
 		funcionario.setEmpresa(new Empresa(1));
 		return funcionario;
 	}

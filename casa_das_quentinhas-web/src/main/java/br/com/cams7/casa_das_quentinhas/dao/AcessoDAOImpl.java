@@ -56,7 +56,7 @@ public class AcessoDAOImpl extends AbstractDAO<Acesso, String> implements Persis
 	 */
 	@Override
 	public void createNewToken(PersistentRememberMeToken token) {
-		LOGGER.info("Creating Token for user : {}", token.getUsername());
+		LOGGER.info("Criando o token para o usuário : {}", token.getUsername());
 
 		Acesso acesso = new Acesso();
 		acesso.setEmail(token.getUsername());
@@ -93,7 +93,7 @@ public class AcessoDAOImpl extends AbstractDAO<Acesso, String> implements Persis
 			return new PersistentRememberMeToken(acesso.getEmail(), acesso.getId(), acesso.getToken(),
 					acesso.getUltimoAcesso());
 		} catch (NoResultException e) {
-			LOGGER.info("Token not found...");
+			LOGGER.warn("O acesso (id: %s) não foi encontrado...", seriesId);
 		}
 
 		return null;
@@ -125,7 +125,7 @@ public class AcessoDAOImpl extends AbstractDAO<Acesso, String> implements Persis
 
 			LOGGER.info("rememberMe was selected");
 		} catch (NoResultException e) {
-			LOGGER.warn("E-mail not found...");
+			LOGGER.warn("O acesso (email: %s) não foi encontrado...", username);
 		}
 	}
 

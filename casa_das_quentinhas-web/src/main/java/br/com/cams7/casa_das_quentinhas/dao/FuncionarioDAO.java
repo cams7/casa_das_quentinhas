@@ -6,13 +6,14 @@ import br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao;
 
 public interface FuncionarioDAO extends BaseDAO<Funcionario, Integer> {
 
-	// Set<Funcionario> getFuncionariosByFuncao(Funcao funcao);
 	/**
 	 * @param id
 	 *            ID do funcionário
+	 * @param funcoes
+	 *            Funções do funcionário
 	 * @return Funcionário
 	 */
-	Funcionario getFuncionarioById(Integer id);
+	Funcionario getFuncionarioByIdAndFuncoes(Integer id, Funcao... funcoes);
 
 	/**
 	 * @param cpf
@@ -27,6 +28,4 @@ public interface FuncionarioDAO extends BaseDAO<Funcionario, Integer> {
 	 * @return Função do funcionário
 	 */
 	Funcao getFuncionarioFuncaoById(Integer id);
-
-	// Set<Funcionario> getFuncionariosByUsuarioId(Integer usuarioId);
 }

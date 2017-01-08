@@ -10,9 +10,8 @@ import java.util.Map;
  * 
  * @author cesar
  */
+@SuppressWarnings("serial")
 public class AppException extends RuntimeException {
-
-	private static final long serialVersionUID = 1L;
 
 	private Map<String, String> messages;
 

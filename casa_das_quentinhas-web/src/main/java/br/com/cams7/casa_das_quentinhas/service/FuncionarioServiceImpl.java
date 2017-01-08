@@ -84,13 +84,13 @@ public class FuncionarioServiceImpl extends AbstractService<FuncionarioDAO, Func
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * br.com.cams7.casa_das_quentinhas.dao.FuncionarioDAO#getFuncionarioById(
-	 * java.lang.Integer)
+	 * @see br.com.cams7.casa_das_quentinhas.dao.FuncionarioDAO#
+	 * getFuncionarioByIdAndFuncoes(java.lang.Integer,
+	 * br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao[])
 	 */
 	@Override
-	public Funcionario getFuncionarioById(Integer id) {
-		return getDao().getFuncionarioById(id);
+	public Funcionario getFuncionarioByIdAndFuncoes(Integer id, Funcao... funcoes) {
+		return getDao().getFuncionarioByIdAndFuncoes(id, funcoes);
 	}
 
 	/*

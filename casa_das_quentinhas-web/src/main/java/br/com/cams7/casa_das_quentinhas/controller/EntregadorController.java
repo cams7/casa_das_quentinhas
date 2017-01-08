@@ -85,7 +85,7 @@ public class EntregadorController extends AbstractFuncionarioController {
 	protected String getListName() {
 		return LIST_NAME;
 	}
-	
+
 	@Override
 	protected String[] getGlobalFilters() {
 		return new String[] { "nome", "cpf", "celular", "usuario.email", "empresa.razaoSocial", "empresa.cnpj" };
@@ -97,6 +97,11 @@ public class EntregadorController extends AbstractFuncionarioController {
 		entregador.setFuncao(ENTREGADOR);
 		entregador.setEmpresa(new Empresa());
 		return entregador;
+	}
+
+	@Override
+	protected Funcionario getEntity(Integer id) {
+		return getService().getFuncionarioByIdAndFuncoes(id, ENTREGADOR);
 	}
 
 	@Override

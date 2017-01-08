@@ -6,10 +6,20 @@
 		<put-attribute name="title" value="Página inicial" />
 		<put-attribute name="body" value="/WEB-INF/views/index.jsp" />
 	</definition>
-	
+
 	<definition name="info" extends="default">
 		<put-attribute name="title" value="Casa das Quentinhas" />
 		<put-attribute name="body" value="/WEB-INF/views/info.jsp" />
+	</definition>
+
+	<definition name="nao_encontrado" extends="default">
+		<put-attribute name="title" value="Não encontrado" />
+		<put-attribute name="body" value="/WEB-INF/views/404.jsp" />
+	</definition>
+
+	<definition name="erro" extends="default">
+		<put-attribute name="title" value="Erro interno do servidor" />
+		<put-attribute name="body" value="/WEB-INF/views/500.jsp" />
 	</definition>
 
 	<definition name="login" extends="public">
@@ -17,8 +27,8 @@
 		<put-attribute name="body" value="/WEB-INF/views/login.jsp" />
 	</definition>
 
-	<definition name="acesso_negado" extends="public">
-		<put-attribute name="title" value="Acesso negado" />
-		<put-attribute name="body" value="/WEB-INF/views/acesso_negado.jsp" />
+	<definition name="nao_autorizado" extends="public">
+		<put-attribute name="title" value="Não autorizado" />
+		<put-attribute name="body" value="/WEB-INF/views/401.jsp" />
 	</definition>
 </tiles-definitions>

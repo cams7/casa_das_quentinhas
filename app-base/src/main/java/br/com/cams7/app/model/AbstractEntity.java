@@ -34,7 +34,7 @@ public abstract class AbstractEntity<PK extends Serializable> implements Seriali
 	 */
 	@Override
 	public String toString() {
-		return String.format("%s{id:%s}", this.getClass().getSimpleName(), getId());
+		return String.format("%s (id:%s)", this.getClass().getSimpleName(), getId());
 	}
 
 	/*

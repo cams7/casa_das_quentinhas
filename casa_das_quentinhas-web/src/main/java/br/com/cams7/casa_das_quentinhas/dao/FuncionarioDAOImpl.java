@@ -1,7 +1,9 @@
 package br.com.cams7.casa_das_quentinhas.dao;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
@@ -10,12 +12,13 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-//import javax.persistence.criteria.SetJoin;
 
 import org.springframework.stereotype.Repository;
 
 import br.com.cams7.app.dao.AbstractDAO;
+import br.com.cams7.app.utils.AppNotFoundException;
 import br.com.cams7.casa_das_quentinhas.model.Empresa;
 import br.com.cams7.casa_das_quentinhas.model.Funcionario;
 import br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao;
@@ -81,12 +84,12 @@ public class FuncionarioDAOImpl extends AbstractDAO<Funcionario, Integer> implem
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * br.com.cams7.casa_das_quentinhas.dao.FuncionarioDAO#getFuncionarioById(
-	 * java.lang.Integer)
+	 * @see br.com.cams7.casa_das_quentinhas.dao.FuncionarioDAO#
+	 * getFuncionarioByIdAndFuncoes(java.lang.Integer,
+	 * br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao[])
 	 */
 	@Override
-	public Funcionario getFuncionarioById(Integer id) {
+	public Funcionario getFuncionarioByIdAndFuncoes(Integer id, Funcao... funcoes) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Funcionario> cq = cb.createQuery(ENTITY_TYPE);
 
@@ -98,12 +101,20 @@ public class FuncionarioDAOImpl extends AbstractDAO<Funcionario, Integer> implem
 
 		cq.select(from);
 
-		cq.where(cb.equal(from.get(Funcionario_.id), id));
+		cq.where(cb.equal(from.get(Funcionario_.id), id), cb.or(Arrays.asList(funcoes).stream()
+				.map(funcao -> cb.equal(from.get(Funcionario_.funcao), funcao)).toArray(Predicate[]::new)));
 
 		TypedQuery<Funcionario> tq = getEntityManager().createQuery(cq);
-		Funcionario funcionario = tq.getSingleResult();
 
-		return funcionario;
+		try {
+			Funcionario funcionario = tq.getSingleResult();
+
+			return funcionario;
+		} catch (NoResultException e) {
+			throw new AppNotFoundException(String.format("O funcionário (id:%s, função: %s) não foi encontrado...", id,
+					"[" + Arrays.asList(funcoes).stream().map(funcao -> funcao.getDescricao())
+							.collect(Collectors.joining(", ")) + "]"));
+		}
 	}
 
 	/*
@@ -132,7 +143,7 @@ public class FuncionarioDAOImpl extends AbstractDAO<Funcionario, Integer> implem
 			Integer funcionarioId = tq.getSingleResult();
 			return funcionarioId;
 		} catch (NoResultException e) {
-			LOGGER.warn("CPF not found...");
+			LOGGER.warn("O id do funcionário (cpf: %s) não foi encontrado...", cpf);
 		}
 
 		return null;
@@ -159,7 +170,7 @@ public class FuncionarioDAOImpl extends AbstractDAO<Funcionario, Integer> implem
 			Funcao funcao = tq.getSingleResult();
 			return funcao;
 		} catch (NoResultException e) {
-			LOGGER.warn("Função not found...");
+			LOGGER.warn("A função do funcionário (id: %s) não foi encontrada...", id);
 		}
 
 		return null;
