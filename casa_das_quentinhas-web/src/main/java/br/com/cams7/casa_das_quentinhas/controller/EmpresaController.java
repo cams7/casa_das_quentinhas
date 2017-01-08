@@ -134,17 +134,18 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 	public String show(@PathVariable Integer id, ModelMap model) {
 
 		Tipo tipo = getService().getEmpresaIipoById(id);
-
-		switch (tipo) {
-		case CLIENTE:
-			loadPedidos(id, model, 0, "id", SortOrder.DESCENDING);
-			break;
-		case ENTREGA:
-			loadEntregadores(id, model, 0, "id", SortOrder.DESCENDING);
-			break;
-		default:
-			break;
-		}
+		
+		if (tipo != null)
+			switch (tipo) {
+			case CLIENTE:
+				loadPedidos(id, model, 0, "id", SortOrder.DESCENDING);
+				break;
+			case ENTREGA:
+				loadEntregadores(id, model, 0, "id", SortOrder.DESCENDING);
+				break;
+			default:
+				break;
+			}
 
 		return super.show(id, model);
 	}

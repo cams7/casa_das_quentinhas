@@ -268,12 +268,8 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 		setMainPage(model);
 	}
 
-	private void setUsuarioLogado(ModelMap model) {
-		model.addAttribute("loggedinuser", getUsername());
-	}
-
 	private void setMainPage(ModelMap model) {
-		model.addAttribute("mainPage", getMainPage());
+		setMainPage(model, getMainPage());
 	}
 
 	protected void setEditPage(ModelMap model) {
@@ -286,21 +282,6 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 
 	protected void incrementLastLoadedPage(ModelMap model, Integer lastLoadedPage) {
 		setLastLoadedPage(model, lastLoadedPage + 1);
-	}
-
-	/**
-	 * This method returns the principal[user-name] of logged-in user.
-	 */
-	protected String getUsername() {
-		String username = null;
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-		if (principal instanceof UserDetails)
-			username = ((UserDetails) principal).getUsername();
-		else
-			username = principal.toString();
-
-		return username;
 	}
 
 	protected E getEntity(PK id) {
@@ -372,6 +353,29 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 			getService().setIgnoredJoins();
 		else
 			getService().setIgnoredJoins(getIgnoredJoins());
+	}
+
+	public static void setMainPage(ModelMap model, String mainPage) {
+		model.addAttribute("mainPage", mainPage);
+	}
+
+	public static void setUsuarioLogado(ModelMap model) {
+		model.addAttribute("loggedinuser", getUsername());
+	}
+
+	/**
+	 * This method returns the principal[user-name] of logged-in user.
+	 */
+	protected static String getUsername() {
+		String username = null;
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		if (principal instanceof UserDetails)
+			username = ((UserDetails) principal).getUsername();
+		else
+			username = principal.toString();
+
+		return username;
 	}
 
 }

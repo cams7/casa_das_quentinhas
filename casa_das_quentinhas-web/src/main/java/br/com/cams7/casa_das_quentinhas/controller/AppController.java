@@ -7,13 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import br.com.cams7.app.controller.AbstractController;
 import br.com.cams7.casa_das_quentinhas.service.EmpresaService;
 
 @Controller
@@ -31,15 +31,15 @@ public class AppController {
 
 	@GetMapping
 	public String home(ModelMap model) {
-		model.addAttribute("loggedinuser", getUsername());
-		model.addAttribute("mainPage", "home");
+		AbstractController.setUsuarioLogado(model);
+		AbstractController.setMainPage(model, "home");
 
 		return "home";
 	}
 
 	@GetMapping(value = "info")
 	public String info(ModelMap model) {
-		model.addAttribute("loggedinuser", getUsername());
+		AbstractController.setUsuarioLogado(model);
 		model.addAttribute("empresa", empresaService.getEmpresaByIdAndTipos(1));
 
 		return "info";
@@ -78,7 +78,6 @@ public class AppController {
 	 */
 	@GetMapping(value = "/nao_autorizado")
 	public String accessDeniedPage(ModelMap model) {
-		model.addAttribute("loggedinuser", getUsername());
 		return "nao_autorizado";
 	}
 
@@ -89,21 +88,6 @@ public class AppController {
 	private boolean isCurrentAuthenticationAnonymous() {
 		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		return authenticationTrustResolver.isAnonymous(authentication);
-	}
-
-	/**
-	 * This method returns the principal[user-name] of logged-in user.
-	 */
-	private String getUsername() {
-		String username = null;
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-		if (principal instanceof UserDetails) {
-			username = ((UserDetails) principal).getUsername();
-		} else {
-			username = principal.toString();
-		}
-		return username;
 	}
 
 }

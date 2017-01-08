@@ -57,7 +57,6 @@ CREATE TABLE public.acesso (
                 token VARCHAR(64) NOT NULL,
                 ultimo_acesso TIMESTAMP NOT NULL,
                 CONSTRAINT acesso_pk PRIMARY KEY (series),
-				CONSTRAINT acesso_email_uk UNIQUE (email),
 				CONSTRAINT acesso_token_uk UNIQUE (token)
 );
 ------------------------------------------------- Usuário --------------------------------------------------
