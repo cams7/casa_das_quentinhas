@@ -372,7 +372,7 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 
 	@Override
 	protected Empresa getEntity(Integer id) {
-		return getService().getEmpresaById(id);
+		return getService().getEmpresaByIdAndTipos(id, CLIENTE, ENTREGA);
 	}
 
 	@Override

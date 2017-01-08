@@ -75,7 +75,7 @@ public class AcessoDAOImpl extends AbstractDAO<Acesso, String> implements Persis
 	 */
 	@Override
 	public PersistentRememberMeToken getTokenForSeries(String seriesId) {
-		LOGGER.info("Fetch Token if any for seriesId : {}", seriesId);
+		LOGGER.info("Buscando token se for o acesso (id: {})", seriesId);
 
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Acesso> cq = cb.createQuery(ENTITY_TYPE);
@@ -93,7 +93,7 @@ public class AcessoDAOImpl extends AbstractDAO<Acesso, String> implements Persis
 			return new PersistentRememberMeToken(acesso.getEmail(), acesso.getId(), acesso.getToken(),
 					acesso.getUltimoAcesso());
 		} catch (NoResultException e) {
-			LOGGER.warn("O acesso (id: %s) não foi encontrado...", seriesId);
+			LOGGER.warn("O acesso (id: {}) não foi encontrado...", seriesId);
 		}
 
 		return null;
@@ -107,7 +107,7 @@ public class AcessoDAOImpl extends AbstractDAO<Acesso, String> implements Persis
 	 */
 	@Override
 	public void removeUserTokens(String username) {
-		LOGGER.info("Removing Token if any for user : {}", username);
+		LOGGER.info("Removendo token se o usuário for: {}", username);
 
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Acesso> cq = cb.createQuery(ENTITY_TYPE);
@@ -123,9 +123,9 @@ public class AcessoDAOImpl extends AbstractDAO<Acesso, String> implements Persis
 			Acesso acesso = tq.getSingleResult();
 			delete(acesso.getId());
 
-			LOGGER.info("rememberMe was selected");
+			LOGGER.info("Lembre-me foi selecionado");
 		} catch (NoResultException e) {
-			LOGGER.warn("O acesso (email: %s) não foi encontrado...", username);
+			LOGGER.warn("O acesso (email: {}) não foi encontrado...", username);
 		}
 	}
 
@@ -138,7 +138,7 @@ public class AcessoDAOImpl extends AbstractDAO<Acesso, String> implements Persis
 	 */
 	@Override
 	public void updateToken(String seriesId, String tokenValue, Date lastUsed) {
-		LOGGER.info("Updating Token for seriesId : {}", seriesId);
+		LOGGER.info("Atualizado o token para o acesso (id: {})", seriesId);
 
 		Acesso acesso = getById(seriesId);
 		acesso.setToken(tokenValue);

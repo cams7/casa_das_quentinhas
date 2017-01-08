@@ -4,6 +4,7 @@
 package br.com.cams7.casa_das_quentinhas.dao;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -15,11 +16,13 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.springframework.stereotype.Repository;
 
 import br.com.cams7.app.dao.AbstractDAO;
+import br.com.cams7.app.utils.AppNotFoundException;
 import br.com.cams7.casa_das_quentinhas.model.Cidade;
 import br.com.cams7.casa_das_quentinhas.model.Cidade_;
 import br.com.cams7.casa_das_quentinhas.model.Contato_;
@@ -82,11 +85,11 @@ public class EmpresaDAOImpl extends AbstractDAO<Empresa, Integer> implements Emp
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * br.com.cams7.casa_das_quentinhas.dao.EmpresaDAO#getEmpresaById(java.lang.
-	 * Integer)
+	 * br.com.cams7.casa_das_quentinhas.dao.EmpresaDAO#getEmpresaByIdAndTipos(
+	 * java.lang.Integer, br.com.cams7.casa_das_quentinhas.model.Empresa.Tipo[])
 	 */
 	@Override
-	public Empresa getEmpresaById(Integer id) {
+	public Empresa getEmpresaByIdAndTipos(Integer id, Tipo... tipos) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Empresa> cq = cb.createQuery(ENTITY_TYPE);
 
@@ -98,12 +101,21 @@ public class EmpresaDAOImpl extends AbstractDAO<Empresa, Integer> implements Emp
 
 		cq.select(from);
 
-		cq.where(cb.equal(from.get(Empresa_.id), id));
+		cq.where(cb.equal(from.get(Empresa_.id), id),
+				tipos.length == 0 ? cb.isNull(from.get(Empresa_.tipo))
+						: cb.or(Arrays.asList(tipos).stream().map(tipo -> cb.equal(from.get(Empresa_.tipo), tipo))
+								.toArray(Predicate[]::new)));
 
 		TypedQuery<Empresa> tq = getEntityManager().createQuery(cq);
-		Empresa empresa = tq.getSingleResult();
 
-		return empresa;
+		try {
+			Empresa empresa = tq.getSingleResult();
+
+			return empresa;
+		} catch (NoResultException e) {
+			throw new AppNotFoundException(String.format("A empresa (id:%s, tipo: [%s]) não foi encontrada...", id,
+					Arrays.asList(tipos).stream().map(tipo -> tipo.getDescricao()).collect(Collectors.joining(", "))));
+		}
 	}
 
 	/*
@@ -132,7 +144,7 @@ public class EmpresaDAOImpl extends AbstractDAO<Empresa, Integer> implements Emp
 			Integer empresaId = tq.getSingleResult();
 			return empresaId;
 		} catch (NoResultException e) {
-			LOGGER.warn("O id da empresa (cnpj: %s) não foi encontrado...", cnpj);
+			LOGGER.warn("O id da empresa (cnpj: {}) não foi encontrado...", cnpj);
 		}
 
 		return null;
@@ -164,7 +176,7 @@ public class EmpresaDAOImpl extends AbstractDAO<Empresa, Integer> implements Emp
 			Integer empresaId = tq.getSingleResult();
 			return empresaId;
 		} catch (NoResultException e) {
-			LOGGER.warn("O id da empresa (email: %s) não foi encontrado...", email);
+			LOGGER.warn("O id da empresa (email: {}) não foi encontrado...", email);
 		}
 
 		return null;
@@ -194,7 +206,7 @@ public class EmpresaDAOImpl extends AbstractDAO<Empresa, Integer> implements Emp
 			Integer usuarioId = tq.getSingleResult();
 			return usuarioId;
 		} catch (NoResultException e) {
-			LOGGER.warn("Da empresa (id: %s), o id do usuário de acesso não foi encontrado...", empresaId);
+			LOGGER.warn("Da empresa (id: {}), o id do usuário de acesso não foi encontrado...", empresaId);
 		}
 
 		return null;
@@ -222,7 +234,7 @@ public class EmpresaDAOImpl extends AbstractDAO<Empresa, Integer> implements Emp
 			Tipo tipo = tq.getSingleResult();
 			return tipo;
 		} catch (NoResultException e) {
-			LOGGER.warn("O tipo da empresa (id: %s) não foi encontrado...", id);
+			LOGGER.warn("O tipo da empresa (id: {}) não foi encontrado...", id);
 		}
 
 		return null;

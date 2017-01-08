@@ -99,12 +99,12 @@ public class EmpresaServiceImpl extends AbstractService<EmpresaDAO, Empresa, Int
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * br.com.cams7.casa_das_quentinhas.dao.EmpresaDAO#getEmpresaById(java.lang.
-	 * Integer)
+	 * br.com.cams7.casa_das_quentinhas.dao.EmpresaDAO#getEmpresaByIdAndTipos(
+	 * java.lang.Integer, br.com.cams7.casa_das_quentinhas.model.Empresa.Tipo[])
 	 */
 	@Override
-	public Empresa getEmpresaById(Integer id) {
-		return getDao().getEmpresaById(id);
+	public Empresa getEmpresaByIdAndTipos(Integer id, Tipo... tipos) {
+		return getDao().getEmpresaByIdAndTipos(id, tipos);
 	}
 
 	/*

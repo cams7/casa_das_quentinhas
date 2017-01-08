@@ -18,9 +18,11 @@ public interface EmpresaDAO extends BaseDAO<Empresa, Integer> {
 	/**
 	 * @param id
 	 *            ID da empresa
+	 * @param tipos
+	 *            Tipos de empresa
 	 * @return Empresa
 	 */
-	Empresa getEmpresaById(Integer id);
+	Empresa getEmpresaByIdAndTipos(Integer id, Tipo... tipos);
 
 	/**
 	 * @param cnpj

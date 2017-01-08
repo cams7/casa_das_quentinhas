@@ -40,7 +40,7 @@ public class AppController {
 	@GetMapping(value = "info")
 	public String info(ModelMap model) {
 		model.addAttribute("loggedinuser", getUsername());
-		model.addAttribute("empresa", empresaService.getEmpresaById(1));
+		model.addAttribute("empresa", empresaService.getEmpresaByIdAndTipos(1));
 
 		return "info";
 	}

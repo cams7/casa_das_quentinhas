@@ -111,9 +111,9 @@ public class FuncionarioDAOImpl extends AbstractDAO<Funcionario, Integer> implem
 
 			return funcionario;
 		} catch (NoResultException e) {
-			throw new AppNotFoundException(String.format("O funcionário (id:%s, função: %s) não foi encontrado...", id,
-					"[" + Arrays.asList(funcoes).stream().map(funcao -> funcao.getDescricao())
-							.collect(Collectors.joining(", ")) + "]"));
+			throw new AppNotFoundException(String.format("O funcionário (id:%s, função: [%s]) não foi encontrado...",
+					id, Arrays.asList(funcoes).stream().map(funcao -> funcao.getDescricao())
+							.collect(Collectors.joining(", "))));
 		}
 	}
 
@@ -143,7 +143,7 @@ public class FuncionarioDAOImpl extends AbstractDAO<Funcionario, Integer> implem
 			Integer funcionarioId = tq.getSingleResult();
 			return funcionarioId;
 		} catch (NoResultException e) {
-			LOGGER.warn("O id do funcionário (cpf: %s) não foi encontrado...", cpf);
+			LOGGER.warn("O id do funcionário (cpf: {}) não foi encontrado...", cpf);
 		}
 
 		return null;
@@ -170,7 +170,7 @@ public class FuncionarioDAOImpl extends AbstractDAO<Funcionario, Integer> implem
 			Funcao funcao = tq.getSingleResult();
 			return funcao;
 		} catch (NoResultException e) {
-			LOGGER.warn("A função do funcionário (id: %s) não foi encontrada...", id);
+			LOGGER.warn("A função do funcionário (id: {}) não foi encontrada...", id);
 		}
 
 		return null;

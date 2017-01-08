@@ -68,7 +68,7 @@ public class UsuarioDAOImpl extends AbstractDAO<Usuario, Integer> implements Usu
 			Usuario usuario = tq.getSingleResult();
 			return usuario;
 		} catch (NoResultException e) {
-			LOGGER.warn("O usuário (email: %s) não foi encontrado...", email);
+			LOGGER.warn("O usuário (email: {}) não foi encontrado...", email);
 		}
 
 		return null;
@@ -100,7 +100,7 @@ public class UsuarioDAOImpl extends AbstractDAO<Usuario, Integer> implements Usu
 			Integer usuarioId = tq.getSingleResult();
 			return usuarioId;
 		} catch (NoResultException e) {
-			LOGGER.warn("O id do usuário (email: %s) não foi encontrado...", email);
+			LOGGER.warn("O id do usuário (email: {}) não foi encontrado...", email);
 		}
 
 		return null;
