@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.cams7.app.service.AbstractService;
+import br.com.cams7.app.utils.AppNotFoundException;
 import br.com.cams7.casa_das_quentinhas.dao.EmpresaDAO;
 import br.com.cams7.casa_das_quentinhas.model.Empresa;
 import br.com.cams7.casa_das_quentinhas.model.Empresa.Tipo;
@@ -178,12 +179,16 @@ public class EmpresaServiceImpl extends AbstractService<EmpresaDAO, Empresa, Int
 		if (cnpj == null || cnpj.isEmpty())
 			return true;
 
-		Integer empresaId = getEmpresaIdByCnpj(cnpj);
+		try {
+			Integer empresaId = getEmpresaIdByCnpj(cnpj);
 
-		if (empresaId == null)
-			return true;
+			boolean isUnique = id != null && empresaId.equals(id);
+			return isUnique;
+		} catch (AppNotFoundException e) {
+			LOGGER.info(e.getMessage());
+		}
 
-		return id != null && empresaId.equals(id);
+		return true;
 	}
 
 	/*
@@ -198,17 +203,27 @@ public class EmpresaServiceImpl extends AbstractService<EmpresaDAO, Empresa, Int
 		if (email == null || email.isEmpty())
 			return true;
 
-		Integer id = getEmpresaIdByEmail(email);
+		try {
+			Integer id = getEmpresaIdByEmail(email);
 
-		if (id != null && (empresaId == null || !id.equals(empresaId)))
-			return false;
+			if (empresaId == null || !id.equals(empresaId))
+				return false;
 
-		id = usuarioService.getUsuarioIdByEmail(email);
+			try {
+				id = usuarioService.getUsuarioIdByEmail(email);
 
-		if (id == null)
+				boolean isUnique = usuarioId != null && id.equals(usuarioId);
+				return isUnique;
+			} catch (AppNotFoundException e) {
+				LOGGER.info(e.getMessage());
+			}
+
 			return true;
+		} catch (AppNotFoundException e) {
+			LOGGER.info(e.getMessage());
+		}
 
-		return usuarioId != null && id.equals(usuarioId);
+		return false;
 	}
 
 }

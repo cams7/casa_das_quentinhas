@@ -144,10 +144,8 @@ public class EmpresaDAOImpl extends AbstractDAO<Empresa, Integer> implements Emp
 			Integer empresaId = tq.getSingleResult();
 			return empresaId;
 		} catch (NoResultException e) {
-			LOGGER.warn("O id da empresa (cnpj: {}) não foi encontrado...", cnpj);
+			throw new AppNotFoundException(String.format("O id da empresa (cnpj: %s) não foi encontrado...", cnpj));
 		}
-
-		return null;
 	}
 
 	/*
@@ -176,10 +174,8 @@ public class EmpresaDAOImpl extends AbstractDAO<Empresa, Integer> implements Emp
 			Integer empresaId = tq.getSingleResult();
 			return empresaId;
 		} catch (NoResultException e) {
-			LOGGER.warn("O id da empresa (email: {}) não foi encontrado...", email);
+			throw new AppNotFoundException(String.format("O id da empresa (email: %s) não foi encontrado...", email));
 		}
-
-		return null;
 	}
 
 	/*
@@ -206,10 +202,9 @@ public class EmpresaDAOImpl extends AbstractDAO<Empresa, Integer> implements Emp
 			Integer usuarioId = tq.getSingleResult();
 			return usuarioId;
 		} catch (NoResultException e) {
-			LOGGER.warn("Da empresa (id: {}), o id do usuário de acesso não foi encontrado...", empresaId);
+			throw new AppNotFoundException(
+					String.format("Da empresa (id: %s), o id do usuário de acesso não foi encontrado...", empresaId));
 		}
-
-		return null;
 	}
 
 	/*
@@ -234,10 +229,8 @@ public class EmpresaDAOImpl extends AbstractDAO<Empresa, Integer> implements Emp
 			Tipo tipo = tq.getSingleResult();
 			return tipo;
 		} catch (NoResultException e) {
-			LOGGER.warn("O tipo da empresa (id: {}) não foi encontrado...", id);
+			throw new AppNotFoundException(String.format("O tipo da empresa (id: %s) não foi encontrado...", id));
 		}
-
-		return null;
 	}
 
 	/*

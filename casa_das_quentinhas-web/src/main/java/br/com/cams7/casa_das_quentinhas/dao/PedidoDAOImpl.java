@@ -6,6 +6,7 @@ package br.com.cams7.casa_das_quentinhas.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -17,6 +18,7 @@ import javax.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
 
 import br.com.cams7.app.dao.AbstractDAO;
+import br.com.cams7.app.utils.AppNotFoundException;
 import br.com.cams7.casa_das_quentinhas.model.Cliente;
 import br.com.cams7.casa_das_quentinhas.model.Empresa;
 import br.com.cams7.casa_das_quentinhas.model.Pedido;
@@ -110,9 +112,13 @@ public class PedidoDAOImpl extends AbstractDAO<Pedido, Long> implements PedidoDA
 		cq.where(cb.equal(from.get(Pedido_.id), id));
 
 		TypedQuery<Pedido> tq = getEntityManager().createQuery(cq);
-		Pedido pedido = tq.getSingleResult();
 
-		return pedido;
+		try {
+			Pedido pedido = tq.getSingleResult();
+			return pedido;
+		} catch (NoResultException e) {
+			throw new AppNotFoundException(String.format("O pedido (id:%s) não foi encontrado...", id));
+		}
 	}
 
 }

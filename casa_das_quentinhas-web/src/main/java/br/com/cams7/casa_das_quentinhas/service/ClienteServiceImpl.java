@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.cams7.app.service.AbstractService;
+import br.com.cams7.app.utils.AppNotFoundException;
 import br.com.cams7.casa_das_quentinhas.dao.ClienteDAO;
 import br.com.cams7.casa_das_quentinhas.model.Cliente;
 import br.com.cams7.casa_das_quentinhas.model.Manutencao;
@@ -89,9 +90,7 @@ public class ClienteServiceImpl extends AbstractService<ClienteDAO, Cliente, Int
 
 		super.delete(id);
 
-		if (usuarioId != null)
-			usuarioService.delete(usuarioId);
-
+		usuarioService.delete(usuarioId);
 	}
 
 	/*
@@ -164,12 +163,16 @@ public class ClienteServiceImpl extends AbstractService<ClienteDAO, Cliente, Int
 		if (cpf == null || cpf.isEmpty())
 			return true;
 
-		Integer clienteId = getClienteIdByCpf(cpf);
+		try {
+			Integer clienteId = getClienteIdByCpf(cpf);
 
-		if (clienteId == null)
-			return true;
+			boolean isUnique = id != null && clienteId.equals(id);
+			return isUnique;
+		} catch (AppNotFoundException e) {
+			LOGGER.info(e.getMessage());
+		}
 
-		return id != null && clienteId.equals(id);
+		return true;
 	}
 
 	/*
@@ -184,17 +187,27 @@ public class ClienteServiceImpl extends AbstractService<ClienteDAO, Cliente, Int
 		if (email == null || email.isEmpty())
 			return true;
 
-		Integer id = getClienteIdByEmail(email);
+		try {
+			Integer id = getClienteIdByEmail(email);
 
-		if (id != null && (clienteId == null || !id.equals(clienteId)))
-			return false;
+			if (clienteId == null || !id.equals(clienteId))
+				return false;
 
-		id = usuarioService.getUsuarioIdByEmail(email);
+			try {
+				id = usuarioService.getUsuarioIdByEmail(email);
 
-		if (id == null)
+				boolean isUnique = usuarioId != null && id.equals(usuarioId);
+				return isUnique;
+			} catch (AppNotFoundException e) {
+				LOGGER.info(e.getMessage());
+			}
+
 			return true;
+		} catch (AppNotFoundException e) {
+			LOGGER.info(e.getMessage());
+		}
 
-		return usuarioId != null && id.equals(usuarioId);
+		return false;
 	}
 
 }

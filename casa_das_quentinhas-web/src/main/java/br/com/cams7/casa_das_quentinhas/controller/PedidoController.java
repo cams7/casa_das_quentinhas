@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import br.com.cams7.app.common.MoneyEditor;
 import br.com.cams7.app.controller.AbstractController;
+import br.com.cams7.app.utils.AppNotFoundException;
 import br.com.cams7.app.utils.SearchParams.SortOrder;
 import br.com.cams7.casa_das_quentinhas.facade.PedidoItemFacade;
 import br.com.cams7.casa_das_quentinhas.model.Cliente;
@@ -185,9 +186,15 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 
 	@GetMapping(value = "/{pedidoId}/item/{produtoId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<PedidoItem> showItem(@PathVariable Long pedidoId, @PathVariable Integer produtoId) {
-		PedidoItem item = itemFacade.getItem(pedidoId, produtoId);
 
-		return new ResponseEntity<PedidoItem>(item, HttpStatus.OK);
+		try {
+			PedidoItem item = itemFacade.getItem(pedidoId, produtoId);
+			return new ResponseEntity<PedidoItem>(item, HttpStatus.OK);
+		} catch (AppNotFoundException e) {
+			LOGGER.warn(e.getMessage());
+		}
+
+		return new ResponseEntity<PedidoItem>(HttpStatus.NOT_FOUND);
 	}
 
 	@GetMapping(value = "/item/{produtoId}/delete", produces = MediaType.APPLICATION_JSON_VALUE)

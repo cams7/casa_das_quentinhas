@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -17,6 +18,7 @@ import javax.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
 
 import br.com.cams7.app.dao.AbstractDAO;
+import br.com.cams7.app.utils.AppNotFoundException;
 import br.com.cams7.casa_das_quentinhas.model.Produto;
 import br.com.cams7.casa_das_quentinhas.model.Produto.Tamanho;
 import br.com.cams7.casa_das_quentinhas.model.Produto_;
@@ -52,6 +54,13 @@ public class ProdutoDAOImpl extends AbstractDAO<Produto, Integer> implements Pro
 		return null;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.casa_das_quentinhas.dao.ProdutoDAO#getProdutoById(java.lang.
+	 * Integer)
+	 */
 	@Override
 	public Produto getProdutoById(Integer id) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
@@ -66,9 +75,13 @@ public class ProdutoDAOImpl extends AbstractDAO<Produto, Integer> implements Pro
 		cq.where(cb.equal(from.get(Produto_.id), id));
 
 		TypedQuery<Produto> tq = getEntityManager().createQuery(cq);
-		Produto produto = tq.getSingleResult();
 
-		return produto;
+		try {
+			Produto produto = tq.getSingleResult();
+			return produto;
+		} catch (NoResultException e) {
+			throw new AppNotFoundException(String.format("O produto (id:%s) não foi encontrado...", id));
+		}
 	}
 
 	/*

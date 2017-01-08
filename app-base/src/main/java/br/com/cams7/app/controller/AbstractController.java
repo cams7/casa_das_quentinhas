@@ -11,6 +11,8 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import br.com.cams7.app.model.AbstractEntity;
 import br.com.cams7.app.service.BaseService;
 import br.com.cams7.app.utils.AppHelper;
+import br.com.cams7.app.utils.AppNotFoundException;
 import br.com.cams7.app.utils.SearchParams;
 import br.com.cams7.app.utils.SearchParams.SortOrder;
 
@@ -35,6 +38,7 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 		implements BaseController<E, PK> {
 
 	protected final Class<E> ENTITY_TYPE;
+	protected final Logger LOGGER;
 
 	protected final String LAST_LOADED_PAGE = "lastLoadedPage";
 	private final short MAX_RESULTS = 10;
@@ -50,6 +54,7 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 		super();
 
 		ENTITY_TYPE = getEntityType();
+		LOGGER = LoggerFactory.getLogger(this.getClass());
 	}
 
 	/*
@@ -195,12 +200,14 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 	 */
 	@Override
 	public ResponseEntity<Void> destroy(@PathVariable PK id) {
-		// if (((Integer) id).equals(1))
-		// return new ResponseEntity<Void>(HttpStatus.FORBIDDEN);
+		try {
+			getService().delete(id);
+			return new ResponseEntity<Void>(HttpStatus.OK);
+		} catch (AppNotFoundException e) {
+			LOGGER.warn(e.getMessage());
+		}
 
-		getService().delete(id);
-
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 	}
 
 	/*

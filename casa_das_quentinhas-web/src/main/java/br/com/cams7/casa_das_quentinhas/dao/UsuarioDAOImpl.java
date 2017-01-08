@@ -12,6 +12,7 @@ import javax.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
 
 import br.com.cams7.app.dao.AbstractDAO;
+import br.com.cams7.app.utils.AppNotFoundException;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
 import br.com.cams7.casa_das_quentinhas.model.Usuario_;
 
@@ -68,10 +69,8 @@ public class UsuarioDAOImpl extends AbstractDAO<Usuario, Integer> implements Usu
 			Usuario usuario = tq.getSingleResult();
 			return usuario;
 		} catch (NoResultException e) {
-			LOGGER.warn("O usuário (email: {}) não foi encontrado...", email);
+			throw new AppNotFoundException(String.format("O usuário (email: %s) não foi encontrado...", email));
 		}
-
-		return null;
 	}
 
 	/*
@@ -100,10 +99,8 @@ public class UsuarioDAOImpl extends AbstractDAO<Usuario, Integer> implements Usu
 			Integer usuarioId = tq.getSingleResult();
 			return usuarioId;
 		} catch (NoResultException e) {
-			LOGGER.warn("O id do usuário (email: {}) não foi encontrado...", email);
+			throw new AppNotFoundException(String.format("O id do usuário (email: %s) não foi encontrado...", email));
 		}
-
-		return null;
 	}
 
 	/*
@@ -125,9 +122,13 @@ public class UsuarioDAOImpl extends AbstractDAO<Usuario, Integer> implements Usu
 		cq.where(cb.equal(from.get(Usuario_.id), id));
 
 		TypedQuery<String> tq = getEntityManager().createQuery(cq);
-		String senhaCriptografada = tq.getSingleResult();
 
-		return senhaCriptografada;
+		try {
+			String senhaCriptografada = tq.getSingleResult();
+			return senhaCriptografada;
+		} catch (NoResultException e) {
+			throw new AppNotFoundException(String.format("A senha do usuário (id: %s) não foi encontrada...", id));
+		}
 	}
 
 }

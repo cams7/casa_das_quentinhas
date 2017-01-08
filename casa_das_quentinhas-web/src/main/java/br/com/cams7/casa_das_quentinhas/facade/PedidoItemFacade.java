@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 
+import br.com.cams7.app.utils.AppNotFoundException;
 import br.com.cams7.app.utils.SearchParams;
 import br.com.cams7.app.utils.SearchParams.SortOrder;
 import br.com.cams7.casa_das_quentinhas.model.Pedido;
@@ -94,7 +95,12 @@ public class PedidoItemFacade {
 		if (itens == null)
 			return itemService.getItemById(pedidoId, produtoId);
 
-		return itens.stream().filter(i -> produtoId.equals(i.getId().getProdutoId())).findFirst().get();
+		Predicate<PedidoItem> predicate = i -> produtoId.equals(i.getId().getProdutoId());
+		if (!itens.stream().anyMatch(predicate))
+			throw new AppNotFoundException(
+					String.format("O item de pedido (produto:%s) não foi encontrado...", produtoId));
+
+		return itens.stream().filter(predicate).findFirst().get();
 	}
 
 	/**

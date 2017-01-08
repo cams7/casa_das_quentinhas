@@ -20,6 +20,7 @@ import javax.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
 
 import br.com.cams7.app.dao.AbstractDAO;
+import br.com.cams7.app.utils.AppNotFoundException;
 import br.com.cams7.casa_das_quentinhas.model.Cidade;
 import br.com.cams7.casa_das_quentinhas.model.Cidade_;
 import br.com.cams7.casa_das_quentinhas.model.Cliente;
@@ -100,9 +101,14 @@ public class ClienteDAOImpl extends AbstractDAO<Cliente, Integer> implements Cli
 		cq.where(cb.equal(from.get(Cliente_.id), id));
 
 		TypedQuery<Cliente> tq = getEntityManager().createQuery(cq);
-		Cliente cliente = tq.getSingleResult();
 
-		return cliente;
+		try {
+			Cliente cliente = tq.getSingleResult();
+			return cliente;
+		} catch (NoResultException e) {
+			throw new AppNotFoundException(String.format("O cliente (id:%s) não foi encontrado...", id));
+		}
+
 	}
 
 	/*
@@ -131,10 +137,8 @@ public class ClienteDAOImpl extends AbstractDAO<Cliente, Integer> implements Cli
 			Integer clienteId = tq.getSingleResult();
 			return clienteId;
 		} catch (NoResultException e) {
-			LOGGER.warn("O id do cliente (cpf: {}) não foi encontrado...", cpf);
+			throw new AppNotFoundException(String.format("O id do cliente (cpf: %s) não foi encontrado...", cpf));
 		}
-
-		return null;
 	}
 
 	/*
@@ -163,10 +167,8 @@ public class ClienteDAOImpl extends AbstractDAO<Cliente, Integer> implements Cli
 			Integer clienteId = tq.getSingleResult();
 			return clienteId;
 		} catch (NoResultException e) {
-			LOGGER.warn("O id do cliente (email: {}) não foi encontrado...", email);
+			throw new AppNotFoundException(String.format("O id do cliente (email: %s) não foi encontrado...", email));
 		}
-
-		return null;
 	}
 
 	/*
@@ -193,10 +195,9 @@ public class ClienteDAOImpl extends AbstractDAO<Cliente, Integer> implements Cli
 			Integer usuarioId = tq.getSingleResult();
 			return usuarioId;
 		} catch (NoResultException e) {
-			LOGGER.warn("Do cliente (id: {}), o id do usuário de acesso não foi encontrado...", clienteId);
+			throw new AppNotFoundException(
+					String.format("Do cliente (id: %s), o id do usuário de acesso não foi encontrado...", clienteId));
 		}
-
-		return null;
 	}
 
 	/*

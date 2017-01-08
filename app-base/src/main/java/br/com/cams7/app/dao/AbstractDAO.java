@@ -12,6 +12,7 @@ import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -29,6 +30,7 @@ import org.slf4j.LoggerFactory;
 
 import br.com.cams7.app.model.AbstractEntity;
 import br.com.cams7.app.utils.AppHelper;
+import br.com.cams7.app.utils.AppNotFoundException;
 import br.com.cams7.app.utils.SearchParams;
 
 public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Serializable> implements BaseDAO<E, PK> {
@@ -63,8 +65,13 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 	 */
 	@Override
 	public E getById(PK id) {
-		E entity = getEntityManager().find(ENTITY_TYPE, id);
-		return entity;
+		try {
+			E entity = getEntityManager().find(ENTITY_TYPE, id);
+			return entity;
+		} catch (NoResultException e) {
+			throw new AppNotFoundException(
+					String.format("%s (id:%s) não foi encontrado(a)...", ENTITY_TYPE.getSimpleName(), id));
+		}
 	}
 
 	/*

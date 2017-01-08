@@ -135,17 +135,16 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 
 		Tipo tipo = getService().getEmpresaIipoById(id);
 
-		if (tipo != null)
-			switch (tipo) {
-			case CLIENTE:
-				loadPedidos(id, model, 0, "id", SortOrder.DESCENDING);
-				break;
-			case ENTREGA:
-				loadEntregadores(id, model, 0, "id", SortOrder.DESCENDING);
-				break;
-			default:
-				break;
-			}
+		switch (tipo) {
+		case CLIENTE:
+			loadPedidos(id, model, 0, "id", SortOrder.DESCENDING);
+			break;
+		case ENTREGA:
+			loadEntregadores(id, model, 0, "id", SortOrder.DESCENDING);
+			break;
+		default:
+			break;
+		}
 
 		return super.show(id, model);
 	}

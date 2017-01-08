@@ -9,10 +9,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.cams7.app.service.AbstractService;
+import br.com.cams7.app.utils.AppNotFoundException;
 import br.com.cams7.casa_das_quentinhas.dao.FuncionarioDAO;
 import br.com.cams7.casa_das_quentinhas.model.Funcionario;
-import br.com.cams7.casa_das_quentinhas.model.Manutencao;
 import br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao;
+import br.com.cams7.casa_das_quentinhas.model.Manutencao;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
 
 @Service
@@ -128,12 +129,16 @@ public class FuncionarioServiceImpl extends AbstractService<FuncionarioDAO, Func
 		if (cpf == null || cpf.isEmpty())
 			return true;
 
-		Integer funcionarioId = getFuncionarioIdByCpf(cpf);
+		try {
+			Integer funcionarioId = getFuncionarioIdByCpf(cpf);
 
-		if (funcionarioId == null)
-			return true;
+			boolean isUnique = id != null && funcionarioId.equals(id);
+			return isUnique;
+		} catch (AppNotFoundException e) {
+			LOGGER.info(e.getMessage());
+		}
 
-		return id != null && funcionarioId.equals(id);
+		return true;
 	}
 
 }

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.cams7.app.service.AbstractService;
+import br.com.cams7.app.utils.AppNotFoundException;
 import br.com.cams7.casa_das_quentinhas.dao.UsuarioDAO;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
 
@@ -96,12 +97,16 @@ public class UsuarioServiceImpl extends AbstractService<UsuarioDAO, Usuario, Int
 		if (email == null || email.isEmpty())
 			return true;
 
-		Integer usuarioId = getUsuarioIdByEmail(email);
+		try {
+			Integer usuarioId = getUsuarioIdByEmail(email);
 
-		if (usuarioId == null)
-			return true;
+			boolean isUnique = id != null && usuarioId.equals(id);
+			return isUnique;
+		} catch (AppNotFoundException e) {
+			LOGGER.info(e.getMessage());
+		}
 
-		return id != null && usuarioId.equals(id);
+		return true;
 	}
 
 }

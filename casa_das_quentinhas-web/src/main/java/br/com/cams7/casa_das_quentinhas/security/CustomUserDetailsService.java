@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.cams7.app.utils.AppNotFoundException;
 import br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
 import br.com.cams7.casa_das_quentinhas.service.FuncionarioService;
@@ -32,20 +33,26 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 	@Transactional(readOnly = true)
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-		Usuario usuario = usuarioService.getUsuarioByEmail(email);
-		LOGGER.info("Usuário: {}", usuario);
-		if (usuario == null) {
-			LOGGER.info("Usuário não encontrado");
+		try {
+			Usuario usuario = usuarioService.getUsuarioByEmail(email);
+			LOGGER.info(usuario.toString());
+
+			return new org.springframework.security.core.userdetails.User(usuario.getEmail(),
+					usuario.getSenhaCriptografada(), true, true, true, true, getGrantedAuthorities(usuario));
+		} catch (AppNotFoundException e) {
 			throw new UsernameNotFoundException("Usuário não encontrado");
 		}
-		return new org.springframework.security.core.userdetails.User(usuario.getEmail(),
-				usuario.getSenhaCriptografada(), true, true, true, true, getGrantedAuthorities(usuario));
 	}
 
 	private List<GrantedAuthority> getGrantedAuthorities(Usuario usuario) {
-		Funcao funcao = funcionarioService.getFuncionarioFuncaoById(usuario.getId());
+		String role = "ROLE_";
+		try {
+			Funcao funcao = funcionarioService.getFuncionarioFuncaoById(usuario.getId());
 
-		String role = "ROLE_" + (funcao == null ? usuario.getTipo().name() : funcao.name());
+			role += funcao.name();
+		} catch (AppNotFoundException e) {
+			role += usuario.getTipo().name();
+		}
 
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 		authorities.add(new SimpleGrantedAuthority(role));
