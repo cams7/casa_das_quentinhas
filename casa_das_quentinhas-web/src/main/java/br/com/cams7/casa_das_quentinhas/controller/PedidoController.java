@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
@@ -164,7 +165,7 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 		return redirectMainPage();
 	}
 
-	@GetMapping(value = "/item", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/item", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Pedido> addItem(ModelMap model,
 			@RequestParam(value = "produto_id", required = true) Integer produtoId,
 			@RequestParam(value = "quantidade", required = true) Short quantidade) {
@@ -197,7 +198,7 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 		return new ResponseEntity<PedidoItem>(HttpStatus.NOT_FOUND);
 	}
 
-	@GetMapping(value = "/item/{produtoId}/delete", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/item/{produtoId}/delete", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Pedido> removeItem(@PathVariable Integer produtoId) {
 		Pedido pedido = itemFacade.removeItem(produtoId);
 

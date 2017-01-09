@@ -10,18 +10,19 @@ $(document).ready(function($) {
     
     $('div#delete_modal #delete_form').on('submit', event => {
         event.preventDefault();
-               
+                       
         var form = event.target;
+        var method = form.method;
         
         if($(form.event_from).val() != 'view_page')
         	return; 
         
         var url = form.action;
-        //console.log('DELETE ' + url);
+        //console.log(method + ': ' + url);
 
         $.ajax({
             url: url,
-            type: 'GET',
+            type: method,
             // contentType: 'application/json',
             // dataType: 'JSON',
           

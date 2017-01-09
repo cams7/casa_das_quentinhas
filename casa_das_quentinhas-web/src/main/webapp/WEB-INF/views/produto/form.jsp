@@ -56,7 +56,7 @@
 			class="form-control" placeholder="Ingredientes da marmita" />
 		<div class="help-block with-errors">${ingredientesError}</div>
 	</div>
-	
+
 	<c:set var="codigoNcmError">
 		<form:errors path="codigoNcm" />
 	</c:set>

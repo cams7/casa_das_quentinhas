@@ -92,11 +92,12 @@ $(document).ready(function($) {
         	return;             
         
         var url = form.action;
-        // console.log('DELETE ' + url);
+        var method = form.method;
+        //console.log(method + ': ' + url);
 
         $.ajax({
             url: url,
-            type: 'GET',
+            type: method,
             // contentType: 'application/json',
             // dataType: 'JSON',
             /*
@@ -108,7 +109,7 @@ $(document).ready(function($) {
                 // console.log(data);
             	
             	loadTable(true);
-            	$('div#delete_modal').modal('toggle');
+            	$('div#delete_modal').modal('hide');
             },
             error: data => {
                 console.log('Error:');

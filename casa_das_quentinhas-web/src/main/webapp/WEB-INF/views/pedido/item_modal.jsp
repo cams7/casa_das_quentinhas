@@ -43,4 +43,3 @@
 	</div>
 </div>
 <input type="hidden" id="modal_state" value="add">
-<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />

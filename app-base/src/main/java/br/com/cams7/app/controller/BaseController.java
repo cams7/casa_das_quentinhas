@@ -92,8 +92,8 @@ public interface BaseController<E extends AbstractEntity<PK>, PK extends Seriali
 	 * @param id
 	 * @return
 	 */
-	@GetMapping(value = "/{id}/delete")
 	// @DeleteMapping(value = "/{id}/delete")
+	@PostMapping(value = "/{id}/delete")
 	ResponseEntity<Void> destroy(PK id);
 
 	@GetMapping(value = "/list")

@@ -12,6 +12,10 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
+<meta name="_csrf" content="${_csrf.token}" />
+<!-- default header name is X-CSRF-TOKEN -->
+<meta name="_csrf_header" content="${_csrf.headerName}" />
+
 <title><tiles:getAsString name="title" /></title>
 
 <link rel="stylesheet"
@@ -34,10 +38,28 @@
 </head>
 
 <body>
-	<tiles:insertAttribute name="header" />	
+	<tiles:insertAttribute name="header" />
 
 	<div class="container-fluid" style="margin-top: 50px">
 		<tiles:insertAttribute name="body" />
+	</div>
+
+	<div id="loading" class="modal fade" data-backdrop="static"
+		data-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true"
+		style="padding-top: 15%; overflow-y: visible; display: none;">
+		<div class="modal-dialog modal-m">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h3 style="margin: 0;">Carregando</h3>
+				</div>
+				<div class="modal-body">
+					<div class="progress progress-striped active"
+						style="margin-bottom: 0;">
+						<div class="progress-bar" style="width: 100%"></div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </body>
 </html>

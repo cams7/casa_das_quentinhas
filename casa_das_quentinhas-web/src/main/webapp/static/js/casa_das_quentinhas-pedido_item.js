@@ -83,15 +83,17 @@ $(document).ready(function($) {
 
     $(document).on('click', 'button.item-delete', event => {
         event.preventDefault();
-
+        
         var id = event.target.value;
         
         var url = $('div#item_modal form#item_form').attr('action') + '/' + id + '/delete';
-        // console.log('DELETE ' + url);
+        var method = $('div#item_modal form#item_form').attr('method');
+        
+        //console.log(method + ': ' + url);
 
         $.ajax({
             url: url,
-            type: 'GET',         
+            type: method,         
             success: data => {
                 // console.log('Sucess:');
                 // console.log(data);
@@ -114,19 +116,19 @@ $(document).ready(function($) {
         
         var form = event.target;
         
+        
         if($(form.produto_id).val() == '' || $(form.quantidade).val() < 1)
             return;
- 
-		// $.ajaxSetup({
-		// header:$(':input[name="_csrf"]').val()
-		// })
-
-       
-        var state = $('input#modal_state').val();    
+        
+        var url = form.action;
+        var method = form.method;
+                
+        //var state = $('input#modal_state').val();  
+        //console.log(method + ': ' + url);
         
         $.ajax({
-            type: 'GET',
-            url: form.action,
+        	url: url,
+        	type: method,            
             data: $(form).serialize(),            
             success: data => {
                 // console.log('Sucess:');
@@ -135,7 +137,7 @@ $(document).ready(function($) {
 
                 loadTable();
 
-                $('div#item_modal').modal('toggle');
+                $('div#item_modal').modal('hide');
             },
             error: data => {
                 console.log('Error:');

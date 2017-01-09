@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.cams7.app.dao.AbstractDAO;
+import br.com.cams7.app.utils.AppNotFoundException;
 import br.com.cams7.casa_das_quentinhas.model.Acesso;
 import br.com.cams7.casa_das_quentinhas.model.Acesso_;
 
@@ -74,8 +75,8 @@ public class AcessoDAOImpl extends AbstractDAO<Acesso, String> implements Persis
 	 * PersistentTokenRepository#getTokenForSeries(java.lang.String)
 	 */
 	@Override
-	public PersistentRememberMeToken getTokenForSeries(String seriesId) {
-		LOGGER.info("Buscando token se for o acesso (id: {})", seriesId);
+	public PersistentRememberMeToken getTokenForSeries(String id) {
+		LOGGER.info("Buscando token se for o acesso (id: {})", id);
 
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Acesso> cq = cb.createQuery(ENTITY_TYPE);
@@ -83,7 +84,7 @@ public class AcessoDAOImpl extends AbstractDAO<Acesso, String> implements Persis
 		Root<Acesso> from = cq.from(ENTITY_TYPE);
 
 		cq.select(from);
-		cq.where(cb.equal(from.get(Acesso_.id), seriesId));
+		cq.where(cb.equal(from.get(Acesso_.id), id));
 
 		TypedQuery<Acesso> tq = getEntityManager().createQuery(cq);
 
@@ -93,7 +94,7 @@ public class AcessoDAOImpl extends AbstractDAO<Acesso, String> implements Persis
 			return new PersistentRememberMeToken(acesso.getEmail(), acesso.getId(), acesso.getToken(),
 					acesso.getUltimoAcesso());
 		} catch (NoResultException e) {
-			LOGGER.warn("O acesso (id: {}) não foi encontrado...", seriesId);
+			LOGGER.warn("O acesso (id: {}) não foi encontrado...", id);
 		}
 
 		return null;
@@ -106,27 +107,23 @@ public class AcessoDAOImpl extends AbstractDAO<Acesso, String> implements Persis
 	 * PersistentTokenRepository#removeUserTokens(java.lang.String)
 	 */
 	@Override
-	public void removeUserTokens(String username) {
-		LOGGER.info("Removendo token se o usuário for: {}", username);
+	public void removeUserTokens(String email) {
+		LOGGER.info("Removendo token se for o usuário (email: {})", email);
 
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-		CriteriaQuery<Acesso> cq = cb.createQuery(ENTITY_TYPE);
+		CriteriaQuery<String> cq = cb.createQuery(String.class);
 
 		Root<Acesso> from = cq.from(ENTITY_TYPE);
 
-		cq.select(from);
-		cq.where(cb.equal(from.get(Acesso_.email), username));
+		cq.select(from.get(Acesso_.id));
+		cq.where(cb.equal(from.get(Acesso_.email), email));
 
-		TypedQuery<Acesso> tq = getEntityManager().createQuery(cq);
+		TypedQuery<String> tq = getEntityManager().createQuery(cq);
 
-		try {
-			Acesso acesso = tq.getSingleResult();
-			delete(acesso.getId());
-
-			LOGGER.info("Lembre-me foi selecionado");
-		} catch (NoResultException e) {
-			LOGGER.warn("O acesso (email: {}) não foi encontrado...", username);
-		}
+		tq.getResultList().forEach(id -> {
+			delete(id);
+			LOGGER.warn("O acesso (id: {}) foi removido...", id);
+		});
 	}
 
 	/*
@@ -137,14 +134,18 @@ public class AcessoDAOImpl extends AbstractDAO<Acesso, String> implements Persis
 	 * java.util.Date)
 	 */
 	@Override
-	public void updateToken(String seriesId, String tokenValue, Date lastUsed) {
-		LOGGER.info("Atualizado o token para o acesso (id: {})", seriesId);
+	public void updateToken(String id, String tokenValue, Date lastUsed) {
+		LOGGER.info("Atualizando o token para o acesso (id: {})", id);
 
-		Acesso acesso = getById(seriesId);
-		acesso.setToken(tokenValue);
-		acesso.setUltimoAcesso(lastUsed);
+		try {
+			Acesso acesso = getById(id);
+			acesso.setToken(tokenValue);
+			acesso.setUltimoAcesso(lastUsed);
 
-		update(acesso);
+			update(acesso);
+		} catch (AppNotFoundException e) {
+			LOGGER.warn("O acesso (id: {}) não foi encontrado...", id);
+		}
 	}
 
 }
