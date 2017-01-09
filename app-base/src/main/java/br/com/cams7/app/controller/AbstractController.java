@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -39,6 +40,8 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 
 	protected final Class<E> ENTITY_TYPE;
 	protected final Logger LOGGER;
+
+	public static final Locale LOCALE = new Locale("pt", "BR");
 
 	protected final String LAST_LOADED_PAGE = "lastLoadedPage";
 	private final short MAX_RESULTS = 10;

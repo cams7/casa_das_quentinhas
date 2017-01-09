@@ -3,8 +3,37 @@ package br.com.cams7.casa_das_quentinhas.service;
 import br.com.cams7.app.service.BaseService;
 import br.com.cams7.casa_das_quentinhas.dao.FuncionarioDAO;
 import br.com.cams7.casa_das_quentinhas.model.Funcionario;
+import br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao;
 
 public interface FuncionarioService extends BaseService<Funcionario, Integer>, FuncionarioDAO {
+
+	/**
+	 * Salva os dados do funcionário
+	 * 
+	 * @param funcionario
+	 *            Funcionário
+	 * @param funcao
+	 *            Função do funcionário
+	 */
+	/**
+	 * Salva os dados do funcionário
+	 * 
+	 * @param funcionario
+	 *            Funcionário
+	 * @param possiveisFuncoes
+	 *            Posiveis funções para o funcionário
+	 */
+	void persist(Funcionario funcionario, Funcao... possiveisFuncoes);
+
+	/**
+	 * Atualiza os dados do funcionário
+	 * 
+	 * @param funcionario
+	 *            Funcionário
+	 * @param possiveisFuncoes
+	 *            Posiveis funções para o funcionário
+	 */
+	void update(Funcionario funcionario, Funcao... possiveisFuncoes);
 
 	/**
 	 * @param id

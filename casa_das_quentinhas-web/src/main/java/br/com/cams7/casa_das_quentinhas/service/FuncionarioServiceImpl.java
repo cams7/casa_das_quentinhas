@@ -2,6 +2,7 @@ package br.com.cams7.casa_das_quentinhas.service;
 
 import static br.com.cams7.casa_das_quentinhas.model.Usuario.Tipo.FUNCIONARIO;
 
+import java.util.Arrays;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.cams7.app.service.AbstractService;
+import br.com.cams7.app.utils.AppInvalidDataException;
 import br.com.cams7.app.utils.AppNotFoundException;
 import br.com.cams7.casa_das_quentinhas.dao.FuncionarioDAO;
 import br.com.cams7.casa_das_quentinhas.model.Funcionario;
@@ -28,11 +30,15 @@ public class FuncionarioServiceImpl extends AbstractService<FuncionarioDAO, Func
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * br.com.cams7.app.service.AbstractService#persist(br.com.cams7.app.model.
-	 * AbstractEntity, java.lang.String)
+	 * br.com.cams7.casa_das_quentinhas.service.FuncionarioService#persist(br.
+	 * com.cams7.casa_das_quentinhas.model.Funcionario,
+	 * br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao[])
 	 */
 	@Override
-	public void persist(Funcionario funcionario) {
+	public void persist(Funcionario funcionario, Funcao... possiveisFuncoes) {
+
+		verificaFuncoes(funcionario, possiveisFuncoes);
+
 		Usuario usuario = funcionario.getUsuario();
 
 		usuario.setTipo(FUNCIONARIO);
@@ -56,12 +62,32 @@ public class FuncionarioServiceImpl extends AbstractService<FuncionarioDAO, Func
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * br.com.cams7.app.service.AbstractService#update(br.com.cams7.app.model.
-	 * AbstractEntity)
+	 * br.com.cams7.casa_das_quentinhas.service.FuncionarioService#update(br.com
+	 * .cams7.casa_das_quentinhas.model.Funcionario,
+	 * br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao[])
 	 */
 	@Override
-	public void update(Funcionario funcionario) {
+	public void update(Funcionario funcionario, Funcao... possiveisFuncoes) {
+
+		if (funcionario.getId() == null)
+			throw new AppInvalidDataException("O funcionário não foi informado...");
+
+		if (funcionario.getManutencao().getCadastro() == null)
+			throw new AppInvalidDataException("A data de cadastro não foi informada...");
+
+		verificaFuncoes(funcionario, possiveisFuncoes);
+
+		if (funcionario.getUsuarioCadastro().getId() == null)
+			throw new AppInvalidDataException("O usuário de cadastro não foi informado...");
+
 		Usuario usuario = funcionario.getUsuario();
+
+		if (usuario.getId() == null)
+			throw new AppInvalidDataException("O usuário de acesso não foi informado...");
+
+		if (!FUNCIONARIO.equals(usuario.getTipo()))
+			throw new AppInvalidDataException(String.format("O tipo (%s) não é válido...", usuario.getTipo()));
+
 		usuarioService.update(usuario);
 
 		funcionario.getManutencao().setAlteracao(new Date());
@@ -142,6 +168,17 @@ public class FuncionarioServiceImpl extends AbstractService<FuncionarioDAO, Func
 		}
 
 		return true;
+	}
+
+	/**
+	 * Verifica se a função informada é valida
+	 * 
+	 * @param funcionario
+	 * @param possiveisFuncoes
+	 */
+	private void verificaFuncoes(Funcionario funcionario, Funcao... possiveisFuncoes) {
+		if (!Arrays.stream(possiveisFuncoes).anyMatch(funcao -> funcao.equals(funcionario.getFuncao())))
+			throw new AppInvalidDataException(String.format("A função (%s) não é válida...", funcionario.getFuncao()));
 	}
 
 }

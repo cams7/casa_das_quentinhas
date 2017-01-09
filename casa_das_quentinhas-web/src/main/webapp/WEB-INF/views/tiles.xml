@@ -12,12 +12,17 @@
 		<put-attribute name="body" value="/WEB-INF/views/info.jsp" />
 	</definition>
 
-	<definition name="nao_encontrado" extends="default">
+	<definition name="not_found" extends="default">
 		<put-attribute name="title" value="Não encontrado" />
 		<put-attribute name="body" value="/WEB-INF/views/404.jsp" />
 	</definition>
+	
+	<definition name="bad_request" extends="default">
+		<put-attribute name="title" value="Requisição inválida" />
+		<put-attribute name="body" value="/WEB-INF/views/400.jsp" />
+	</definition>
 
-	<definition name="erro" extends="default">
+	<definition name="internal_server_error" extends="default">
 		<put-attribute name="title" value="Erro interno do servidor" />
 		<put-attribute name="body" value="/WEB-INF/views/500.jsp" />
 	</definition>
@@ -27,7 +32,7 @@
 		<put-attribute name="body" value="/WEB-INF/views/login.jsp" />
 	</definition>
 
-	<definition name="nao_autorizado" extends="public">
+	<definition name="unauthorized" extends="public">
 		<put-attribute name="title" value="Não autorizado" />
 		<put-attribute name="body" value="/WEB-INF/views/401.jsp" />
 	</definition>

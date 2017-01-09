@@ -1,6 +1,7 @@
 package br.com.cams7.casa_das_quentinhas.controller;
 
-import java.util.Locale;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -11,6 +12,7 @@ import org.springframework.validation.FieldError;
 import br.com.cams7.app.controller.AbstractController;
 import br.com.cams7.casa_das_quentinhas.model.Empresa;
 import br.com.cams7.casa_das_quentinhas.model.Funcionario;
+import br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
 import br.com.cams7.casa_das_quentinhas.service.EmpresaService;
 import br.com.cams7.casa_das_quentinhas.service.FuncionarioService;
@@ -35,13 +37,13 @@ public abstract class AbstractFuncionarioController
 
 		if (empresa.getId() == null) {
 			FieldError empresaError = new FieldError(getModelName(), "empresa.id",
-					messageSource.getMessage("NotNull." + getModelName() + ".empresa.id", null, Locale.getDefault()));
+					messageSource.getMessage("NotNull." + getModelName() + ".empresa.id", null, LOCALE));
 			result.addError(empresaError);
 		}
 
 		if (usuario.getSenha().isEmpty()) {
 			FieldError senhaError = new FieldError(getModelName(), "usuario.senha",
-					messageSource.getMessage("NotEmpty.usuario.senha", null, Locale.getDefault()));
+					messageSource.getMessage("NotEmpty.usuario.senha", null, LOCALE));
 			result.addError(senhaError);
 		}
 
@@ -61,7 +63,7 @@ public abstract class AbstractFuncionarioController
 		funcionario.setCelular(funcionario.getUnformattedCelular());
 
 		getService().setUsername(getUsername());
-		getService().persist(funcionario);
+		getService().persist(funcionario, getPossiveisFuncoes());
 
 		return redirectMainPage();
 	}
@@ -86,7 +88,7 @@ public abstract class AbstractFuncionarioController
 		funcionario.setCpf(funcionario.getUnformattedCpf());
 		funcionario.setCelular(funcionario.getUnformattedCelular());
 
-		getService().update(funcionario);
+		getService().update(funcionario, getPossiveisFuncoes());
 
 		return redirectMainPage();
 	}
@@ -104,7 +106,7 @@ public abstract class AbstractFuncionarioController
 	private void setNotEmptyConfirmacaoError(Usuario usuario, BindingResult result, boolean senhaInformada) {
 		if (senhaInformada && usuario.getConfirmacaoSenha().isEmpty()) {
 			FieldError confirmacaoError = new FieldError(getModelName(), "usuario.confirmacaoSenha",
-					messageSource.getMessage("NotEmpty.usuario.confirmacaoSenha", null, Locale.getDefault()));
+					messageSource.getMessage("NotEmpty.usuario.confirmacaoSenha", null, LOCALE));
 			result.addError(confirmacaoError);
 		}
 	}
@@ -123,7 +125,7 @@ public abstract class AbstractFuncionarioController
 		if (!usuario.getSenha().isEmpty() && !usuario.getConfirmacaoSenha().isEmpty()
 				&& !usuario.getSenha().equals(usuario.getConfirmacaoSenha())) {
 			FieldError confirmacaoError = new FieldError(getModelName(), "usuario.confirmacaoSenha",
-					messageSource.getMessage("NotEquals.usuario.confirmacaoSenha", null, Locale.getDefault()));
+					messageSource.getMessage("NotEquals.usuario.confirmacaoSenha", null, LOCALE));
 			result.addError(confirmacaoError);
 		}
 	}
@@ -139,8 +141,8 @@ public abstract class AbstractFuncionarioController
 			return;
 
 		if (!usuarioService.isEmailUnique(usuario.getId(), usuario.getEmail())) {
-			FieldError emailError = new FieldError(getModelName(), "usuario.email", messageSource
-					.getMessage("NonUnique.usuario.email", new String[] { usuario.getEmail() }, Locale.getDefault()));
+			FieldError emailError = new FieldError(getModelName(), "usuario.email",
+					messageSource.getMessage("NonUnique.usuario.email", new String[] { usuario.getEmail() }, LOCALE));
 			result.addError(emailError);
 		}
 	}
@@ -158,9 +160,8 @@ public abstract class AbstractFuncionarioController
 		String cpf = funcionario.getUnformattedCpf();
 
 		if (!getService().isCPFUnique(funcionario.getId(), cpf)) {
-			FieldError cpfError = new FieldError(getModelName(), "cpf",
-					messageSource.getMessage("NonUnique." + getModelName() + ".cpf",
-							new String[] { funcionario.getCpf() }, Locale.getDefault()));
+			FieldError cpfError = new FieldError(getModelName(), "cpf", messageSource
+					.getMessage("NonUnique." + getModelName() + ".cpf", new String[] { funcionario.getCpf() }, LOCALE));
 			result.addError(cpfError);
 		}
 	}
@@ -171,6 +172,21 @@ public abstract class AbstractFuncionarioController
 		funcionario.setUsuario(new Usuario());
 		return funcionario;
 	}
+
+	@Override
+	protected Funcionario getEntity(Integer id) {
+		Funcionario funcionario = getService().getFuncionarioByIdAndFuncoes(id, getPossiveisFuncoes());
+		return funcionario;
+	}
+
+	@Override
+	protected Map<String, Object> getFilters() {
+		Map<String, Object> filters = new HashMap<>();
+		filters.put("funcao", getPossiveisFuncoes());
+		return filters;
+	}
+
+	protected abstract Funcao[] getPossiveisFuncoes();
 
 	protected UsuarioService getUsuarioService() {
 		return usuarioService;

@@ -8,7 +8,6 @@ import static br.com.cams7.casa_das_quentinhas.model.Empresa.Tipo.ENTREGA;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -91,13 +90,13 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 
 		if (cidade.getId() == null) {
 			FieldError cidadeError = new FieldError(getModelName(), "cidade.id",
-					messageSource.getMessage("NotNull.empresa.cidade.id", null, Locale.getDefault()));
+					messageSource.getMessage("NotNull.empresa.cidade.id", null, LOCALE));
 			result.addError(cidadeError);
 		}
 
 		if (usuario.getSenha().isEmpty()) {
 			FieldError senhaError = new FieldError(getModelName(), "usuarioAcesso.senha",
-					messageSource.getMessage("NotEmpty.empresa.usuarioAcesso.senha", null, Locale.getDefault()));
+					messageSource.getMessage("NotEmpty.empresa.usuarioAcesso.senha", null, LOCALE));
 			result.addError(senhaError);
 		}
 
@@ -134,7 +133,7 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 	public String show(@PathVariable Integer id, ModelMap model) {
 
 		Tipo tipo = getService().getEmpresaIipoById(id);
-		
+
 		if (tipo != null)
 			switch (tipo) {
 			case CLIENTE:
@@ -265,7 +264,7 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 	private void setNotEmptyConfirmacaoError(Usuario usuario, BindingResult result, boolean senhaInformada) {
 		if (senhaInformada && usuario.getConfirmacaoSenha().isEmpty()) {
 			FieldError confirmacaoError = new FieldError(getModelName(), "usuarioAcesso.confirmacaoSenha",
-					messageSource.getMessage("NotEmpty.usuario.confirmacaoSenha", null, Locale.getDefault()));
+					messageSource.getMessage("NotEmpty.usuario.confirmacaoSenha", null, LOCALE));
 			result.addError(confirmacaoError);
 		}
 	}
@@ -284,7 +283,7 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 		if (!usuario.getSenha().isEmpty() && !usuario.getConfirmacaoSenha().isEmpty()
 				&& !usuario.getSenha().equals(usuario.getConfirmacaoSenha())) {
 			FieldError confirmacaoError = new FieldError(getModelName(), "usuarioAcesso.confirmacaoSenha",
-					messageSource.getMessage("NotEquals.usuario.confirmacaoSenha", null, Locale.getDefault()));
+					messageSource.getMessage("NotEquals.usuario.confirmacaoSenha", null, LOCALE));
 			result.addError(confirmacaoError);
 		}
 	}
@@ -303,8 +302,8 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 		Contato contato = empresa.getContato();
 
 		if (!getService().isEmailUnique(empresa.getId(), usuario.getId(), contato.getEmail())) {
-			FieldError emailError = new FieldError(getModelName(), "contato.email", messageSource.getMessage(
-					"NonUnique.empresa.contato.email", new String[] { contato.getEmail() }, Locale.getDefault()));
+			FieldError emailError = new FieldError(getModelName(), "contato.email", messageSource
+					.getMessage("NonUnique.empresa.contato.email", new String[] { contato.getEmail() }, LOCALE));
 			result.addError(emailError);
 		}
 	}
@@ -322,8 +321,8 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 		String cnpj = empresa.getUnformattedCnpj();
 
 		if (!getService().isCNPJUnique(empresa.getId(), cnpj)) {
-			FieldError cnpjError = new FieldError(getModelName(), "cnpj", messageSource
-					.getMessage("NonUnique.empresa.cnpj", new String[] { empresa.getCnpj() }, Locale.getDefault()));
+			FieldError cnpjError = new FieldError(getModelName(), "cnpj",
+					messageSource.getMessage("NonUnique.empresa.cnpj", new String[] { empresa.getCnpj() }, LOCALE));
 			result.addError(cnpjError);
 		}
 	}

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import br.com.cams7.app.utils.AppInvalidDataException;
 import br.com.cams7.app.utils.AppNotFoundException;
 
 /**
@@ -23,15 +24,22 @@ public class GlobalExceptionHandlerController {
 
 	@ExceptionHandler(value = AppNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
-	public String handleResourceNotFoundException(AppNotFoundException e) {
+	public String handleNotFoundException(AppNotFoundException e) {
 		LOGGER.warn(e.getMessage());
-		return "nao_encontrado";
+		return "not_found";
+	}
+
+	@ExceptionHandler(value = AppInvalidDataException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public String handleInvalidDataException(AppInvalidDataException e) {
+		LOGGER.warn(e.getMessage());
+		return "bad_request";
 	}
 
 	@ExceptionHandler(value = Exception.class)
 	@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
 	public String handleAllException(Exception e) {
 		LOGGER.error(e.getMessage());
-		return "erro";
+		return "internal_server_error";
 	}
 }

@@ -76,9 +76,9 @@ public class AppController {
 	/**
 	 * This method handles Access-Denied redirect.
 	 */
-	@GetMapping(value = "/nao_autorizado")
+	@GetMapping(value = "/unauthorized")
 	public String accessDeniedPage(ModelMap model) {
-		return "nao_autorizado";
+		return "unauthorized";
 	}
 
 	/**

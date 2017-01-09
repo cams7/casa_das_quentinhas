@@ -6,7 +6,6 @@ package br.com.cams7.casa_das_quentinhas.controller;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -83,13 +82,13 @@ public class ClienteController extends AbstractController<ClienteService, Client
 
 		if (cidade.getId() == null) {
 			FieldError cidadeError = new FieldError(getModelName(), "cidade.id",
-					messageSource.getMessage("NotNull.cliente.cidade.id", null, Locale.getDefault()));
+					messageSource.getMessage("NotNull.cliente.cidade.id", null, LOCALE));
 			result.addError(cidadeError);
 		}
 
 		if (usuario.getSenha().isEmpty()) {
 			FieldError senhaError = new FieldError(getModelName(), "usuarioAcesso.senha",
-					messageSource.getMessage("NotEmpty.cliente.usuarioAcesso.senha", null, Locale.getDefault()));
+					messageSource.getMessage("NotEmpty.cliente.usuarioAcesso.senha", null, LOCALE));
 			result.addError(senhaError);
 		}
 
@@ -221,7 +220,7 @@ public class ClienteController extends AbstractController<ClienteService, Client
 	private void setNotEmptyConfirmacaoError(Usuario usuario, BindingResult result, boolean senhaInformada) {
 		if (senhaInformada && usuario.getConfirmacaoSenha().isEmpty()) {
 			FieldError confirmacaoError = new FieldError(getModelName(), "usuarioAcesso.confirmacaoSenha",
-					messageSource.getMessage("NotEmpty.usuario.confirmacaoSenha", null, Locale.getDefault()));
+					messageSource.getMessage("NotEmpty.usuario.confirmacaoSenha", null, LOCALE));
 			result.addError(confirmacaoError);
 		}
 	}
@@ -240,7 +239,7 @@ public class ClienteController extends AbstractController<ClienteService, Client
 		if (!usuario.getSenha().isEmpty() && !usuario.getConfirmacaoSenha().isEmpty()
 				&& !usuario.getSenha().equals(usuario.getConfirmacaoSenha())) {
 			FieldError confirmacaoError = new FieldError(getModelName(), "usuarioAcesso.confirmacaoSenha",
-					messageSource.getMessage("NotEquals.usuario.confirmacaoSenha", null, Locale.getDefault()));
+					messageSource.getMessage("NotEquals.usuario.confirmacaoSenha", null, LOCALE));
 			result.addError(confirmacaoError);
 		}
 	}
@@ -259,8 +258,8 @@ public class ClienteController extends AbstractController<ClienteService, Client
 		Contato contato = cliente.getContato();
 
 		if (!getService().isEmailUnique(cliente.getId(), usuario.getId(), contato.getEmail())) {
-			FieldError emailError = new FieldError(getModelName(), "contato.email", messageSource.getMessage(
-					"NonUnique.cliente.contato.email", new String[] { contato.getEmail() }, Locale.getDefault()));
+			FieldError emailError = new FieldError(getModelName(), "contato.email", messageSource
+					.getMessage("NonUnique.cliente.contato.email", new String[] { contato.getEmail() }, LOCALE));
 			result.addError(emailError);
 		}
 	}
@@ -278,8 +277,8 @@ public class ClienteController extends AbstractController<ClienteService, Client
 		String cpf = cliente.getUnformattedCpf();
 
 		if (!getService().isCPFUnique(cliente.getId(), cpf)) {
-			FieldError cpfError = new FieldError(getModelName(), "cpf", messageSource
-					.getMessage("NonUnique.cliente.cpf", new String[] { cliente.getCpf() }, Locale.getDefault()));
+			FieldError cpfError = new FieldError(getModelName(), "cpf",
+					messageSource.getMessage("NonUnique.cliente.cpf", new String[] { cliente.getCpf() }, LOCALE));
 			result.addError(cpfError);
 		}
 	}

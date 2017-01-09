@@ -5,7 +5,6 @@ package br.com.cams7.casa_das_quentinhas.controller;
 
 import static br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao.ENTREGADOR;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -23,8 +22,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import br.com.cams7.casa_das_quentinhas.model.Empresa;
-import br.com.cams7.casa_das_quentinhas.model.Funcionario;
 import br.com.cams7.casa_das_quentinhas.model.Empresa.Tipo;
+import br.com.cams7.casa_das_quentinhas.model.Funcionario;
+import br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao;
 
 /**
  * @author César Magalhães
@@ -94,21 +94,21 @@ public class EntregadorController extends AbstractFuncionarioController {
 	@Override
 	protected Funcionario getNewEntity() {
 		Funcionario entregador = super.getNewEntity();
-		entregador.setFuncao(ENTREGADOR);
+		entregador.setFuncao(getPossiveisFuncoes()[0]);
 		entregador.setEmpresa(new Empresa());
 		return entregador;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.casa_das_quentinhas.controller.AbstractFuncionarioController
+	 * #getPossiveisFuncoes()
+	 */
 	@Override
-	protected Funcionario getEntity(Integer id) {
-		return getService().getFuncionarioByIdAndFuncoes(id, ENTREGADOR);
-	}
-
-	@Override
-	protected Map<String, Object> getFilters() {
-		Map<String, Object> filters = new HashMap<>();
-		filters.put("funcao", ENTREGADOR);
-		return filters;
+	protected Funcao[] getPossiveisFuncoes() {
+		return new Funcao[] { ENTREGADOR };
 	}
 
 }

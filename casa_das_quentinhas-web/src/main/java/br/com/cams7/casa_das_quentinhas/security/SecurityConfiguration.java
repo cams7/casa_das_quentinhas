@@ -55,7 +55,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		
 		.rememberMe().rememberMeParameter("lembre_me").tokenRepository(tokenRepository).tokenValiditySeconds(86400).and()
 		
-		.csrf().and().exceptionHandling().accessDeniedPage("/nao_autorizado");
+		.csrf().and().exceptionHandling().accessDeniedPage("/unauthorized");
 	}
 
 	@Bean

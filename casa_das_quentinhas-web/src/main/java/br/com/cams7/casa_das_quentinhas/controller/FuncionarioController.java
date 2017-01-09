@@ -6,9 +6,6 @@ package br.com.cams7.casa_das_quentinhas.controller;
 import static br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao.ATENDENTE;
 import static br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao.GERENTE;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.validation.Valid;
 
 import org.springframework.stereotype.Controller;
@@ -48,6 +45,7 @@ public class FuncionarioController extends AbstractFuncionarioController {
 	@Override
 	public String store(@Valid Funcionario funcionario, BindingResult result, ModelMap model,
 			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
+
 		return storeFuncionario(funcionario, result, model, lastLoadedPage);
 	}
 
@@ -63,6 +61,7 @@ public class FuncionarioController extends AbstractFuncionarioController {
 	@Override
 	public String update(@Valid Funcionario funcionario, BindingResult result, ModelMap model, @PathVariable Integer id,
 			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
+
 		return updateFuncionario(funcionario, result, model, id, lastLoadedPage);
 	}
 
@@ -71,7 +70,7 @@ public class FuncionarioController extends AbstractFuncionarioController {
 	 */
 	@ModelAttribute("funcionarioFuncoes")
 	public Funcao[] initializeFuncoes() {
-		return new Funcao[] { GERENTE, ATENDENTE };
+		return getPossiveisFuncoes();
 	}
 
 	@Override
@@ -98,22 +97,27 @@ public class FuncionarioController extends AbstractFuncionarioController {
 
 	@Override
 	protected Funcionario getEntity(Integer id) {
-		Funcionario funcionario = getService().getFuncionarioByIdAndFuncoes(id, GERENTE, ATENDENTE);
+		Funcionario funcionario = super.getEntity(id);
 		funcionario.setEmpresa(new Empresa(1));
 		return funcionario;
-	}
-
-	@Override
-	protected Map<String, Object> getFilters() {
-		Map<String, Object> filters = new HashMap<>();
-		filters.put("funcao", new Funcao[] { GERENTE, ATENDENTE });
-		return filters;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	protected Class<?>[] getIgnoredJoins() {
 		return new Class<?>[] { Empresa.class };
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.casa_das_quentinhas.controller.AbstractFuncionarioController
+	 * #getPossiveisFuncoes()
+	 */
+	@Override
+	protected Funcao[] getPossiveisFuncoes() {
+		return new Funcao[] { GERENTE, ATENDENTE };
 	}
 
 }

@@ -4,7 +4,6 @@
 package br.com.cams7.casa_das_quentinhas.controller;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -101,7 +100,7 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 
 		if (cliente.getId() == null) {
 			FieldError clienteError = new FieldError(getModelName(), "cliente.id",
-					messageSource.getMessage("NotNull.pedido.cliente.id", null, Locale.getDefault()));
+					messageSource.getMessage("NotNull.pedido.cliente.id", null, LOCALE));
 			result.addError(clienteError);
 		}
 
