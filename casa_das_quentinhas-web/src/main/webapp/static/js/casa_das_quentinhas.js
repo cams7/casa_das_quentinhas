@@ -9,19 +9,24 @@ Number.prototype.formatMoney = function(c, d, t) {
 					+ Math.abs(n - i).toFixed(c).slice(2) : ''));
 };
 
+var loadingShow = event => {
+	$('div#loading_modal').modal('show');
+	// console.log('loading show');
+};
+
+var loadingHide = event => {
+	$('div#loading_modal').modal('hide');
+	// console.log('loading hide');
+};
+
 $(document).ready(function($) {
-	$(document).bind("ajaxSend", function() {
-		$("div#loading").modal('show');
-		//console.log('loading show');
-	}).bind("ajaxComplete", function() {
-		$("div#loading").modal('hide');
-		//console.log('loading hide');
-	});
+	$(document).on('ajaxSend', loadingShow).on('ajaxComplete', loadingHide);
 
 	var token = $('meta[name="_csrf"]').attr('content');
 	var header = $('meta[name="_csrf_header"]').attr('content');
 	$(document).ajaxSend(function(e, xhr, options) {
 		xhr.setRequestHeader(header, token);
-//		console.log('ajaxSend(token: ' + token + ', header: ' + header + ')');
+		// console.log('ajaxSend(token: ' + token + ', header: ' + header +
+		// ')');
 	});
 });

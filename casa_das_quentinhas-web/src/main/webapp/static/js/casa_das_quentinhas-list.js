@@ -54,7 +54,6 @@ $(document).ready(function($) {
 		if(array.length > 1)
 			offset = array[1];
 		
-		// console.log(offset);
 		loadTable(false, offset);
 	});	
 			
@@ -68,8 +67,6 @@ $(document).ready(function($) {
 			var sortField = column.attr('id');
 			var sortOrder = column.hasClass('sorting') || column.hasClass('sorting_desc') ? 'sorting_asc' : 'sorting_desc';							
 			
-			// console.log('sortField: ' + sortField + ', sortOrder: ' +
-			// sortOrder);
 			loadTable(false, null, sortField, sortOrder);			
 		}			
 	});	
@@ -78,32 +75,18 @@ $(document).ready(function($) {
         event.preventDefault();
                 
         $('div#delete_modal #delete_form').attr('action', DELETE_PAGE + '/' + event.target.value + '/delete');
-        $('div#delete_modal #delete_form :input[name="event_from"]').val('list_page');
         $('div#delete_modal div.modal-body').html(event.target.title);
-        $('div#delete_modal').modal('show');
+        $('div#delete_modal').removeClass('delete_from_show_page').addClass('delete_from_list_page').modal('show');
     });
     
-    $('div#delete_modal #delete_form').on('submit', event => {
+    $(document).on('submit', 'div.delete_from_list_page #delete_form', event => {
         event.preventDefault();
-        
-        var form = event.target;
-        
-        if($(form.event_from).val() != 'list_page')
-        	return;             
-        
-        var url = form.action;
-        var method = form.method;
-        //console.log(method + ': ' + url);
-
+                
+        var form = event.target;        
+                
         $.ajax({
-            url: url,
-            type: method,
-            // contentType: 'application/json',
-            // dataType: 'JSON',
-            /*
-			 * data: { 'id': 1, '_method': 'DELETE' },
-			 */
-            // timeout: 600000,
+            url: form.action,
+            type: form.method,
             success: data => {
                 // console.log('Sucess:');
                 // console.log(data);

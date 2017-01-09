@@ -3,32 +3,18 @@ $(document).ready(function($) {
         event.preventDefault();
                 
         $('div#delete_modal #delete_form').attr('action', MAIN_PAGE + '/' + event.target.value + '/delete');
-        $('div#delete_modal #delete_form :input[name="event_from"]').val('view_page');
         $('div#delete_modal div.modal-body').html(event.target.title);
-        $('div#delete_modal').modal('show');
+        $('div#delete_modal').removeClass('delete_from_list_page').addClass('delete_from_show_page').modal('show');
     });
     
-    $('div#delete_modal #delete_form').on('submit', event => {
+    $(document).on('submit', 'div.delete_from_show_page #delete_form', event => {
         event.preventDefault();
-                       
+                               
         var form = event.target;
-        var method = form.method;
-        
-        if($(form.event_from).val() != 'view_page')
-        	return; 
-        
-        var url = form.action;
-        //console.log(method + ': ' + url);
 
         $.ajax({
-            url: url,
-            type: method,
-            // contentType: 'application/json',
-            // dataType: 'JSON',
-          
-			// data: { 'id': 1, '_method': 'DELETE' },
-			
-            // timeout: 600000,
+            url: form.action,
+            type: form.method,
             success: data => {
                 // console.log('Sucess:');
                 // console.log(data);

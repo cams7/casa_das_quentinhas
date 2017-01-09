@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page isELIgnored="false"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
 <!-- Modal -->
@@ -17,7 +16,6 @@
 			</div>
 			<div class="modal-body">Message</div>
 			<form:form id="delete_form" method="POST">
-				<input type="hidden" name="event_from">
 				<div class="modal-footer">
 					<input type="submit" value="Sim" class="btn btn-primary" />
 					<button type="button" class="btn btn-default" data-dismiss="modal">N&atilde;o</button>
