@@ -46,6 +46,7 @@ public abstract class AbstractService<DAO extends BaseDAO<E, PK>, E extends Abst
 	 * 
 	 * @see br.com.cams7.app.dao.BaseDAO#getById(java.io.Serializable)
 	 */
+	@Transactional(readOnly = true)
 	@Override
 	public E getById(PK id) {
 		E entity = getDao().getById(id);
@@ -89,6 +90,7 @@ public abstract class AbstractService<DAO extends BaseDAO<E, PK>, E extends Abst
 	 * 
 	 * @see br.com.cams7.app.dao.BaseDAO#getAll()
 	 */
+	@Transactional(readOnly = true)
 	@Override
 	public List<E> getAll() {
 		List<E> entities = getDao().getAll();
@@ -101,6 +103,7 @@ public abstract class AbstractService<DAO extends BaseDAO<E, PK>, E extends Abst
 	 * @see
 	 * br.com.cams7.app.dao.BaseDAO#search(br.com.cams7.app.utils.SearchParams)
 	 */
+	@Transactional(readOnly = true)
 	@Override
 	public List<E> search(SearchParams params) {
 		List<E> entities = getDao().search(params);
@@ -113,6 +116,7 @@ public abstract class AbstractService<DAO extends BaseDAO<E, PK>, E extends Abst
 	 * @see br.com.cams7.app.dao.BaseDAO#getTotalElements(java.util.Map,
 	 * java.lang.String[])
 	 */
+	@Transactional(readOnly = true)
 	@Override
 	public long getTotalElements(Map<String, Object> filters, String... globalFilters) {
 		long total = getDao().getTotalElements(filters, globalFilters);
@@ -124,6 +128,7 @@ public abstract class AbstractService<DAO extends BaseDAO<E, PK>, E extends Abst
 	 * 
 	 * @see br.com.cams7.app.dao.BaseDAO#count()
 	 */
+	@Transactional(readOnly = true)
 	@Override
 	public long count() {
 		long count = getDao().count();

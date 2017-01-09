@@ -103,6 +103,7 @@ public class EmpresaServiceImpl extends AbstractService<EmpresaDAO, Empresa, Int
 	 * br.com.cams7.casa_das_quentinhas.dao.EmpresaDAO#getEmpresaByIdAndTipos(
 	 * java.lang.Integer, br.com.cams7.casa_das_quentinhas.model.Empresa.Tipo[])
 	 */
+	@Transactional(readOnly = true, noRollbackFor = AppNotFoundException.class)
 	@Override
 	public Empresa getEmpresaByIdAndTipos(Integer id, Tipo... tipos) {
 		return getDao().getEmpresaByIdAndTipos(id, tipos);
@@ -115,6 +116,7 @@ public class EmpresaServiceImpl extends AbstractService<EmpresaDAO, Empresa, Int
 	 * br.com.cams7.casa_das_quentinhas.dao.EmpresaDAO#getEmpresaByCnpj(java.
 	 * lang.String)
 	 */
+	@Transactional(readOnly = true, noRollbackFor = AppNotFoundException.class)
 	@Override
 	public Integer getEmpresaIdByCnpj(String cnpj) {
 		return getDao().getEmpresaIdByCnpj(cnpj);
@@ -127,6 +129,7 @@ public class EmpresaServiceImpl extends AbstractService<EmpresaDAO, Empresa, Int
 	 * br.com.cams7.casa_das_quentinhas.dao.EmpresaDAO#getEmpresaIdByEmail(java.
 	 * lang.String)
 	 */
+	@Transactional(readOnly = true, noRollbackFor = AppNotFoundException.class)
 	@Override
 	public Integer getEmpresaIdByEmail(String email) {
 		return getDao().getEmpresaIdByEmail(email);
@@ -138,6 +141,7 @@ public class EmpresaServiceImpl extends AbstractService<EmpresaDAO, Empresa, Int
 	 * @see br.com.cams7.casa_das_quentinhas.dao.EmpresaDAO#
 	 * getUsuarioAcessoIdByEmpresaId(java.lang.Integer)
 	 */
+	@Transactional(readOnly = true, noRollbackFor = AppNotFoundException.class)
 	@Override
 	public Integer getUsuarioAcessoIdByEmpresaId(Integer empresaId) {
 		return getDao().getUsuarioAcessoIdByEmpresaId(empresaId);
@@ -150,6 +154,7 @@ public class EmpresaServiceImpl extends AbstractService<EmpresaDAO, Empresa, Int
 	 * br.com.cams7.casa_das_quentinhas.dao.EmpresaDAO#getEmpresaIipoById(java.
 	 * lang.Integer)
 	 */
+	@Transactional(readOnly = true, noRollbackFor = AppNotFoundException.class)
 	@Override
 	public Tipo getEmpresaIipoById(Integer id) {
 		return getDao().getEmpresaIipoById(id);
@@ -162,6 +167,7 @@ public class EmpresaServiceImpl extends AbstractService<EmpresaDAO, Empresa, Int
 	 * getEmpresasByRazaoSocialOrCnpj(java.lang.String,
 	 * br.com.cams7.casa_das_quentinhas.model.Empresa.Tipo)
 	 */
+	@Transactional(readOnly = true)
 	@Override
 	public Map<Integer, String> getEmpresasByRazaoSocialOrCnpj(String razaoSocialOrCnpj, Tipo tipo) {
 		return getDao().getEmpresasByRazaoSocialOrCnpj(razaoSocialOrCnpj, tipo);
@@ -206,24 +212,14 @@ public class EmpresaServiceImpl extends AbstractService<EmpresaDAO, Empresa, Int
 		try {
 			Integer id = getEmpresaIdByEmail(email);
 
-			if (empresaId == null || !id.equals(empresaId))
-				return false;
-
-			try {
-				id = usuarioService.getUsuarioIdByEmail(email);
-
-				boolean isUnique = usuarioId != null && id.equals(usuarioId);
-				return isUnique;
-			} catch (AppNotFoundException e) {
-				LOGGER.info(e.getMessage());
-			}
-
-			return true;
+			boolean isUnique = empresaId != null && id.equals(empresaId);
+			return isUnique;
 		} catch (AppNotFoundException e) {
 			LOGGER.info(e.getMessage());
 		}
 
-		return false;
+		boolean isUnique = usuarioService.isEmailUnique(usuarioId, email);
+		return isUnique;
 	}
 
 }

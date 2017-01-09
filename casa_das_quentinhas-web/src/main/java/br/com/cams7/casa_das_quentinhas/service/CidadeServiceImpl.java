@@ -27,6 +27,7 @@ public class CidadeServiceImpl extends AbstractService<CidadeDAO, Cidade, Intege
 	 * br.com.cams7.casa_das_quentinhas.dao.CidadeDAO#getCidadesByNomeOrIbge(
 	 * java.lang.String)
 	 */
+	@Transactional(readOnly = true)
 	@Override
 	public Map<Integer, String> getCidadesByNomeOrIbge(String nomeOrIbge) {
 		return getDao().getCidadesByNomeOrIbge(nomeOrIbge);

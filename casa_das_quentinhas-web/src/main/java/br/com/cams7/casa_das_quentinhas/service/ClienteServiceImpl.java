@@ -100,6 +100,7 @@ public class ClienteServiceImpl extends AbstractService<ClienteDAO, Cliente, Int
 	 * br.com.cams7.casa_das_quentinhas.dao.ClienteDAO#getClienteById(java.lang.
 	 * Integer)
 	 */
+	@Transactional(readOnly = true, noRollbackFor = AppNotFoundException.class)
 	@Override
 	public Cliente getClienteById(Integer id) {
 		return getDao().getClienteById(id);
@@ -112,6 +113,7 @@ public class ClienteServiceImpl extends AbstractService<ClienteDAO, Cliente, Int
 	 * br.com.cams7.casa_das_quentinhas.dao.ClienteDAO#getClienteIdByCpf(java.
 	 * lang.String)
 	 */
+	@Transactional(readOnly = true, noRollbackFor = AppNotFoundException.class)
 	@Override
 	public Integer getClienteIdByCpf(String cpf) {
 		return getDao().getClienteIdByCpf(cpf);
@@ -124,6 +126,7 @@ public class ClienteServiceImpl extends AbstractService<ClienteDAO, Cliente, Int
 	 * br.com.cams7.casa_das_quentinhas.dao.ClienteDAO#getClienteIdByEmail(java.
 	 * lang.String)
 	 */
+	@Transactional(readOnly = true, noRollbackFor = AppNotFoundException.class)
 	@Override
 	public Integer getClienteIdByEmail(String email) {
 		return getDao().getClienteIdByEmail(email);
@@ -135,6 +138,7 @@ public class ClienteServiceImpl extends AbstractService<ClienteDAO, Cliente, Int
 	 * @see br.com.cams7.casa_das_quentinhas.dao.ClienteDAO#
 	 * getUsuarioAcessoIdByClienteId(java.lang.Integer)
 	 */
+	@Transactional(readOnly = true, noRollbackFor = AppNotFoundException.class)
 	@Override
 	public Integer getUsuarioAcessoIdByClienteId(Integer clienteId) {
 		return getDao().getUsuarioAcessoIdByClienteId(clienteId);
@@ -146,6 +150,7 @@ public class ClienteServiceImpl extends AbstractService<ClienteDAO, Cliente, Int
 	 * @see br.com.cams7.casa_das_quentinhas.dao.ClienteDAO#
 	 * getClientesByNomeOrCpfOrTelefone(java.lang.String)
 	 */
+	@Transactional(readOnly = true)
 	@Override
 	public Map<Integer, String> getClientesByNomeOrCpfOrTelefone(String nomeOrCpfOrTelefone) {
 		return getDao().getClientesByNomeOrCpfOrTelefone(nomeOrCpfOrTelefone);
@@ -190,24 +195,14 @@ public class ClienteServiceImpl extends AbstractService<ClienteDAO, Cliente, Int
 		try {
 			Integer id = getClienteIdByEmail(email);
 
-			if (clienteId == null || !id.equals(clienteId))
-				return false;
-
-			try {
-				id = usuarioService.getUsuarioIdByEmail(email);
-
-				boolean isUnique = usuarioId != null && id.equals(usuarioId);
-				return isUnique;
-			} catch (AppNotFoundException e) {
-				LOGGER.info(e.getMessage());
-			}
-
-			return true;
+			boolean isUnique = clienteId != null && id.equals(clienteId);
+			return isUnique;
 		} catch (AppNotFoundException e) {
 			LOGGER.info(e.getMessage());
 		}
 
-		return false;
+		boolean isUnique = usuarioService.isEmailUnique(usuarioId, email);
+		return isUnique;
 	}
 
 }

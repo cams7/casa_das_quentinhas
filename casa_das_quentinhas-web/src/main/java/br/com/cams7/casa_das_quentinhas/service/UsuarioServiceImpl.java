@@ -56,6 +56,7 @@ public class UsuarioServiceImpl extends AbstractService<UsuarioDAO, Usuario, Int
 	 * br.com.cams7.casa_das_quentinhas.service.UsuarioService#getUsuarioByEmail
 	 * (java.lang.String)
 	 */
+	@Transactional(readOnly = true, noRollbackFor = AppNotFoundException.class)
 	@Override
 	public Usuario getUsuarioByEmail(String email) {
 		return getDao().getUsuarioByEmail(email);
@@ -68,6 +69,7 @@ public class UsuarioServiceImpl extends AbstractService<UsuarioDAO, Usuario, Int
 	 * br.com.cams7.casa_das_quentinhas.dao.UsuarioDAO#getUsuarioIdByEmail(java.
 	 * lang.String)
 	 */
+	@Transactional(readOnly = true, noRollbackFor = AppNotFoundException.class)
 	@Override
 	public Integer getUsuarioIdByEmail(String email) {
 		return getDao().getUsuarioIdByEmail(email);
@@ -80,6 +82,7 @@ public class UsuarioServiceImpl extends AbstractService<UsuarioDAO, Usuario, Int
 	 * br.com.cams7.casa_das_quentinhas.dao.UsuarioDAO#getUsuarioSenhaById(java.
 	 * lang.Integer)
 	 */
+	@Transactional(readOnly = true, noRollbackFor = AppNotFoundException.class)
 	@Override
 	public String getUsuarioSenhaById(Integer id) {
 		return getDao().getUsuarioSenhaById(id);

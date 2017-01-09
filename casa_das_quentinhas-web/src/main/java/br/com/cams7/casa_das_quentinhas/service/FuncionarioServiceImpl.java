@@ -89,6 +89,7 @@ public class FuncionarioServiceImpl extends AbstractService<FuncionarioDAO, Func
 	 * getFuncionarioByIdAndFuncoes(java.lang.Integer,
 	 * br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao[])
 	 */
+	@Transactional(readOnly = true, noRollbackFor = AppNotFoundException.class)
 	@Override
 	public Funcionario getFuncionarioByIdAndFuncoes(Integer id, Funcao... funcoes) {
 		return getDao().getFuncionarioByIdAndFuncoes(id, funcoes);
@@ -101,6 +102,7 @@ public class FuncionarioServiceImpl extends AbstractService<FuncionarioDAO, Func
 	 * br.com.cams7.casa_das_quentinhas.dao.FuncionarioDAO#getFuncionarioByCpf(
 	 * java.lang.String)
 	 */
+	@Transactional(readOnly = true, noRollbackFor = AppNotFoundException.class)
 	@Override
 	public Integer getFuncionarioIdByCpf(String cpf) {
 		return getDao().getFuncionarioIdByCpf(cpf);
@@ -112,6 +114,7 @@ public class FuncionarioServiceImpl extends AbstractService<FuncionarioDAO, Func
 	 * @see br.com.cams7.casa_das_quentinhas.dao.FuncionarioDAO#
 	 * getFuncionarioFuncaoById(java.lang.Integer)
 	 */
+	@Transactional(readOnly = true, noRollbackFor = AppNotFoundException.class)
 	@Override
 	public Funcao getFuncionarioFuncaoById(Integer id) {
 		return getDao().getFuncionarioFuncaoById(id);

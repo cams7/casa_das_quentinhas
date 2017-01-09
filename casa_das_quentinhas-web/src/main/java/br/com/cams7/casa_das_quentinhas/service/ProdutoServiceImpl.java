@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.cams7.app.service.AbstractService;
+import br.com.cams7.app.utils.AppNotFoundException;
 import br.com.cams7.casa_das_quentinhas.dao.ProdutoDAO;
 import br.com.cams7.casa_das_quentinhas.model.Manutencao;
 import br.com.cams7.casa_das_quentinhas.model.Produto;
@@ -69,6 +70,7 @@ public class ProdutoServiceImpl extends AbstractService<ProdutoDAO, Produto, Int
 	 * br.com.cams7.casa_das_quentinhas.dao.ProdutoDAO#getProdutoById(java.lang.
 	 * Integer)
 	 */
+	@Transactional(readOnly = true, noRollbackFor = AppNotFoundException.class)
 	@Override
 	public Produto getProdutoById(Integer id) {
 		return getDao().getProdutoById(id);
@@ -81,6 +83,7 @@ public class ProdutoServiceImpl extends AbstractService<ProdutoDAO, Produto, Int
 	 * br.com.cams7.casa_das_quentinhas.dao.ProdutoDAO#getProdutosByNomeOrId(
 	 * java.lang.String)
 	 */
+	@Transactional(readOnly = true)
 	@Override
 	public Map<Integer, String> getProdutosByNomeOrCusto(String nomeOrCusto) {
 		return getDao().getProdutosByNomeOrCusto(nomeOrCusto);

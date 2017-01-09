@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.cams7.app.service.AbstractService;
+import br.com.cams7.app.utils.AppNotFoundException;
 import br.com.cams7.casa_das_quentinhas.dao.PedidoDAO;
 import br.com.cams7.casa_das_quentinhas.model.Empresa;
 import br.com.cams7.casa_das_quentinhas.model.Manutencao;
@@ -34,18 +35,6 @@ public class PedidoServiceImpl extends AbstractService<PedidoDAO, Pedido, Long> 
 
 	@Autowired
 	private PedidoItemService itemService;
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * br.com.cams7.casa_das_quentinhas.dao.PedidoDAO#getPedidoById(java.lang.
-	 * Long)
-	 */
-	@Override
-	public Pedido getPedidoById(Long id) {
-		return getDao().getPedidoById(id);
-	}
 
 	/*
 	 * (non-Javadoc)
@@ -124,6 +113,19 @@ public class PedidoServiceImpl extends AbstractService<PedidoDAO, Pedido, Long> 
 		itemService.deleteByPedido(id);
 
 		super.delete(id);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.casa_das_quentinhas.dao.PedidoDAO#getPedidoById(java.lang.
+	 * Long)
+	 */
+	@Transactional(readOnly = true, noRollbackFor = AppNotFoundException.class)
+	@Override
+	public Pedido getPedidoById(Long id) {
+		return getDao().getPedidoById(id);
 	}
 
 }
