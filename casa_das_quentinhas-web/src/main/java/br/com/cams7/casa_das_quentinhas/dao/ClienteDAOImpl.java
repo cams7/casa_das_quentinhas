@@ -3,6 +3,8 @@
  */
 package br.com.cams7.casa_das_quentinhas.dao;
 
+import static br.com.cams7.casa_das_quentinhas.model.Usuario.Relacao.ACESSO;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +30,7 @@ import br.com.cams7.casa_das_quentinhas.model.Cliente_;
 import br.com.cams7.casa_das_quentinhas.model.Contato_;
 import br.com.cams7.casa_das_quentinhas.model.Estado;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
+import br.com.cams7.casa_das_quentinhas.model.Usuario.Relacao;
 import br.com.cams7.casa_das_quentinhas.model.Usuario_;
 
 /**
@@ -92,8 +95,6 @@ public class ClienteDAOImpl extends AbstractDAO<Cliente, Integer> implements Cli
 
 		Root<Cliente> from = cq.from(ENTITY_TYPE);
 
-		from.fetch(Cliente_.usuarioAcesso, JoinType.LEFT);
-		from.fetch(Cliente_.usuarioCadastro, JoinType.INNER);
 		from.fetch(Cliente_.cidade, JoinType.INNER).fetch(Cidade_.estado, JoinType.INNER);
 
 		cq.select(from);
@@ -174,16 +175,18 @@ public class ClienteDAOImpl extends AbstractDAO<Cliente, Integer> implements Cli
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see br.com.cams7.casa_das_quentinhas.dao.ClienteDAO#
-	 * getUsuarioAcessoIdByClienteId(java.lang.Integer)
+	 * @see
+	 * br.com.cams7.casa_das_quentinhas.dao.ClienteDAO#getUsuarioIdByClienteId(
+	 * java.lang.Integer,
+	 * br.com.cams7.casa_das_quentinhas.model.Usuario.Relacao)
 	 */
-	@Override
-	public Integer getUsuarioAcessoIdByClienteId(Integer clienteId) {
+	public Integer getUsuarioIdByClienteId(Integer clienteId, Relacao relacao) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Integer> cq = cb.createQuery(Integer.class);
 
 		Root<Cliente> from = cq.from(ENTITY_TYPE);
-		Join<Cliente, Usuario> join = (Join<Cliente, Usuario>) from.join(Cliente_.usuarioAcesso, JoinType.INNER);
+		Join<Cliente, Usuario> join = from.join(relacao == ACESSO ? Cliente_.usuarioAcesso : Cliente_.usuarioCadastro,
+				JoinType.INNER);
 
 		cq.select(join.get(Usuario_.id));
 
@@ -196,7 +199,7 @@ public class ClienteDAOImpl extends AbstractDAO<Cliente, Integer> implements Cli
 			return usuarioId;
 		} catch (NoResultException e) {
 			throw new AppNotFoundException(
-					String.format("Do cliente (id: %s), o id do usuário de acesso não foi encontrado...", clienteId));
+					String.format("Do cliente (id: %s), o id do usuário não foi encontrado...", clienteId));
 		}
 	}
 

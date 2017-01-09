@@ -3,6 +3,8 @@
  */
 package br.com.cams7.casa_das_quentinhas.service;
 
+import static br.com.cams7.casa_das_quentinhas.model.Usuario.Relacao.ACESSO;
+import static br.com.cams7.casa_das_quentinhas.model.Usuario.Relacao.CADASTRO;
 import static br.com.cams7.casa_das_quentinhas.model.Usuario.Tipo.CLIENTE;
 
 import java.util.Date;
@@ -13,11 +15,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.cams7.app.service.AbstractService;
+import br.com.cams7.app.utils.AppInvalidDataException;
 import br.com.cams7.app.utils.AppNotFoundException;
 import br.com.cams7.casa_das_quentinhas.dao.ClienteDAO;
 import br.com.cams7.casa_das_quentinhas.model.Cliente;
 import br.com.cams7.casa_das_quentinhas.model.Manutencao;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
+import br.com.cams7.casa_das_quentinhas.model.Usuario.Relacao;
 
 /**
  * @author César Magalhães
@@ -45,8 +49,8 @@ public class ClienteServiceImpl extends AbstractService<ClienteDAO, Cliente, Int
 		usuario.setTipo(CLIENTE);
 		usuarioService.persist(usuario);
 
-		usuario = new Usuario(usuarioService.getUsuarioIdByEmail(getUsername()));
-		cliente.setUsuarioCadastro(usuario);
+		Integer usuarioId = usuarioService.getUsuarioIdByEmail(getUsername());
+		cliente.setUsuarioCadastro(new Usuario(usuarioId));
 
 		Manutencao manutencao = new Manutencao();
 		manutencao.setCadastro(new Date());
@@ -66,13 +70,23 @@ public class ClienteServiceImpl extends AbstractService<ClienteDAO, Cliente, Int
 	 */
 	@Override
 	public void update(Cliente cliente) {
-		Usuario usuario = cliente.getUsuarioAcesso();
+		if (cliente.getId() == null)
+			throw new AppInvalidDataException("O cliente não foi informado...");
 
-		if (usuario != null && usuario.getId() != null) {
-			usuario.setEmail(cliente.getContato().getEmail());
-			usuarioService.update(usuario);
-		} else
+		if (cliente.getManutencao().getCadastro() == null)
+			throw new AppInvalidDataException("A data de cadastro não foi informada...");
+
+		Integer usuarioId = getUsuarioIdByClienteId(cliente.getId(), CADASTRO);
+		cliente.setUsuarioCadastro(new Usuario(usuarioId));
+
+		try {
+			usuarioId = getUsuarioIdByClienteId(cliente.getId(), ACESSO);
+			usuarioService.updateEmail(usuarioId, cliente.getContato().getEmail());
+
+			cliente.getUsuarioAcesso().setId(usuarioId);
+		} catch (AppNotFoundException e) {
 			cliente.setUsuarioAcesso(null);
+		}
 
 		cliente.getManutencao().setAlteracao(new Date());
 
@@ -86,7 +100,7 @@ public class ClienteServiceImpl extends AbstractService<ClienteDAO, Cliente, Int
 	 */
 	@Override
 	public void delete(Integer id) {
-		Integer usuarioId = getUsuarioAcessoIdByClienteId(id);
+		Integer usuarioId = getUsuarioIdByClienteId(id, ACESSO);
 
 		super.delete(id);
 
@@ -140,8 +154,8 @@ public class ClienteServiceImpl extends AbstractService<ClienteDAO, Cliente, Int
 	 */
 	@Transactional(readOnly = true, noRollbackFor = AppNotFoundException.class)
 	@Override
-	public Integer getUsuarioAcessoIdByClienteId(Integer clienteId) {
-		return getDao().getUsuarioAcessoIdByClienteId(clienteId);
+	public Integer getUsuarioIdByClienteId(Integer clienteId, Relacao relacao) {
+		return getDao().getUsuarioIdByClienteId(clienteId, relacao);
 	}
 
 	/*

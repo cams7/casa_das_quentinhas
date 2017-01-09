@@ -321,6 +321,7 @@ public class ClienteController extends AbstractController<ClienteService, Client
 	@Override
 	protected Cliente getEntity(Integer id) {
 		Cliente cliente = getService().getClienteById(id);
+		cliente.setUsuarioAcesso(new Usuario());
 		return cliente;
 	}
 

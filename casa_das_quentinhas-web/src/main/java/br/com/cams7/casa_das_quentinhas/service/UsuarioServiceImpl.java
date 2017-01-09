@@ -53,6 +53,18 @@ public class UsuarioServiceImpl extends AbstractService<UsuarioDAO, Usuario, Int
 	 * (non-Javadoc)
 	 * 
 	 * @see
+	 * br.com.cams7.casa_das_quentinhas.dao.UsuarioDAO#updateEmail(java.lang.
+	 * Integer, java.lang.String)
+	 */
+	@Override
+	public int updateEmail(Integer id, String email) {
+		return getDao().updateEmail(id, email);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
 	 * br.com.cams7.casa_das_quentinhas.service.UsuarioService#getUsuarioByEmail
 	 * (java.lang.String)
 	 */

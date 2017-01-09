@@ -6,6 +6,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.CriteriaUpdate;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Root;
 
@@ -41,6 +42,29 @@ public class UsuarioDAOImpl extends AbstractDAO<Usuario, Integer> implements Usu
 	@Override
 	protected List<From<?, ?>> getJoins(Root<Usuario> from) {
 		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.casa_das_quentinhas.dao.UsuarioDAO#updateEmail(java.lang.
+	 * Integer, java.lang.String)
+	 */
+	@Override
+	public int updateEmail(Integer id, String email) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaUpdate<Usuario> cu = cb.createCriteriaUpdate(ENTITY_TYPE);
+
+		Root<Usuario> from = cu.from(ENTITY_TYPE);
+
+		cu.where(cb.equal(from.get(Usuario_.id), id));
+
+		cu.set(Usuario_.email, email);
+
+		int updated = getEntityManager().createQuery(cu).executeUpdate();
+
+		return updated;
 	}
 
 	/*

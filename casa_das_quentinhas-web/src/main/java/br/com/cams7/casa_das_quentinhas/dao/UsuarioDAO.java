@@ -6,6 +6,15 @@ import br.com.cams7.casa_das_quentinhas.model.Usuario;
 public interface UsuarioDAO extends BaseDAO<Usuario, Integer> {
 
 	/**
+	 * @param id
+	 *            ID do usuário
+	 * @param email
+	 *            E-mail do usuário
+	 * @return Total de usuários atualizados
+	 */
+	int updateEmail(Integer id, String email);
+
+	/**
 	 * @param email
 	 *            E-mail do usuário
 	 * @return Usuário

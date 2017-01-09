@@ -359,4 +359,13 @@ public class Usuario extends AbstractEntity<Integer> {
 		}
 	}
 
+	/**
+	 * @author César Magalhães
+	 *
+	 *         Relção entre o usuário e as outras entidades
+	 */
+	public enum Relacao {
+		ACESSO, CADASTRO
+	}
+
 }

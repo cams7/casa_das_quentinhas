@@ -8,10 +8,7 @@
 
 <form:form method="POST" modelAttribute="cliente">
 	<form:input type="hidden" path="id" />
-	<form:input type="hidden" path="manutencao.cadastro.time" />
-	<form:input type="hidden" path="usuarioAcesso.id" />
-	<form:input type="hidden" path="usuarioAcesso.tipo" />
-	<form:input type="hidden" path="usuarioCadastro.id" />		
+	<form:input type="hidden" path="manutencao.cadastro.time" />			
 
 	<%@include file="form.jsp"%>
 
