@@ -10,7 +10,7 @@
 
 O que é o sistema: Casa das Quentinhas?
 -------------------
-O sistema **Casa das Quentinhas** foi desenvolvido e testado no **Tomcat 8.5** e no **Jetty**. Esse e um sistema web que utiliza, principalmente, as tecnologias **Hibernate**, **Spring MVC** e **Spring Security**. O **Maven** é utilizado para automatizar a compilação de todos os códigos da aplicação.
+Sistema web que utiliza, principalmente, as tecnologias **Hibernate**, **Spring MVC** e **Spring Security**. Além disso, foi desenvolvido e testado no **Tomcat 8.5** e no **Jetty** e por fim, o **Maven** é utilizado para automatizar a compilação de todos os códigos da aplicação. 
 
 Sistemas requeridos
 -------------------
