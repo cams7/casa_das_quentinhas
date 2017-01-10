@@ -3,6 +3,8 @@
  */
 package br.com.cams7.casa_das_quentinhas.controller;
 
+import static br.com.cams7.casa_das_quentinhas.model.Empresa.RelacionamentoEmpresa.FUNCIONARIOS;
+import static br.com.cams7.casa_das_quentinhas.model.Empresa.RelacionamentoEmpresa.PEDIDOS;
 import static br.com.cams7.casa_das_quentinhas.model.Empresa.Tipo.CLIENTE;
 import static br.com.cams7.casa_das_quentinhas.model.Empresa.Tipo.ENTREGA;
 
@@ -186,6 +188,12 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 		if (result.hasErrors())
 			return getCreateTilesPage();
 
+		// 3º validação
+		setTipoNotValidError(empresa, result);
+
+		if (result.hasErrors())
+			return getCreateTilesPage();
+
 		empresa.setCnpj(empresa.getUnformattedCnpj());
 		empresa.getContato().setTelefone(empresa.getContato().getUnformattedTelefone());
 		empresa.getEndereco().setCep(empresa.getEndereco().getUnformattedCep());
@@ -335,6 +343,35 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 					messageSource.getMessage("NonUnique.empresa.cnpj", new String[] { empresa.getCnpj() }, LOCALE));
 			result.addError(cnpjError);
 		}
+	}
+
+	/**
+	 * 3º validação
+	 * 
+	 * Verifica se o tipo informado é valido
+	 * 
+	 * @param empresa
+	 * @param result
+	 */
+	private void setTipoNotValidError(Empresa empresa, BindingResult result) {
+		switch (empresa.getTipo()) {
+		case CLIENTE:
+			if (getService().countByEmpresaId(empresa.getId(), FUNCIONARIOS) > 0)
+				setTipoNotValidError(empresa.getTipo(), result);
+			break;
+		case ENTREGA:
+			if (getService().countByEmpresaId(empresa.getId(), PEDIDOS) > 0)
+				setTipoNotValidError(empresa.getTipo(), result);
+			break;
+		default:
+			break;
+		}
+	}
+
+	private void setTipoNotValidError(Tipo tipo, BindingResult result) {
+		FieldError tipoError = new FieldError(getModelName(), "tipo",
+				messageSource.getMessage("Invalid.empresa.tipo", new String[] { tipo.getDescricao() }, LOCALE));
+		result.addError(tipoError);
 	}
 
 	/**

@@ -1,14 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page isELIgnored="false"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="p" uri="/WEB-INF/taglibs/pagination.tld"%>
 
+<fmt:setLocale value="pt-BR" />
+
 <c:if test="${count > 0}">
 	<h3 class="page-header">Pedidos</h3>
-	
+
 	<div id="list" class="row">
 		<div class="table-responsive col-md-12">
 			<table class="table table-striped table-bordered dataTable">
@@ -32,7 +34,8 @@
 					<c:forEach items="${itens}" var="item">
 						<tr>
 							<td>${item.id.pedidoId}</td>
-							<td>${item.pedido.manutencao.formattedCadastro}</td>
+							<td><fmt:formatDate type="both" dateStyle="short"
+									timeStyle="short" value="${item.pedido.manutencao.cadastro}" /></td>
 							<td><c:choose>
 									<c:when test="${item.pedido.empresa != null}">
 										<a href="<c:url value='/empresa/${item.pedido.empresa.id}' />">${item.pedido.empresa.razaoSocialWithCnpj}</a>

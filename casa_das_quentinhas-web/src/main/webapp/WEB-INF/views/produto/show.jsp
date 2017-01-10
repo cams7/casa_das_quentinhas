@@ -1,9 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page isELIgnored="false"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
+	
+<fmt:setLocale value="pt-BR" />
 
 <h3 class="page-header">
 	Visualizar Produto <span class="label label-default">${produto.id}</span>
@@ -20,7 +22,7 @@
 		<p>
 			<strong>Custo</strong>
 		</p>
-		<p>${produto.formattedCusto}</p>
+		<p><fmt:formatNumber value="${produto.custo}" type="currency"/></p>
 	</div>
 	<div class="col-md-4">
 		<p>

@@ -1,10 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page isELIgnored="false"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="p" uri="/WEB-INF/taglibs/pagination.tld"%>
+
+<fmt:setLocale value="pt-BR" />
 
 <c:if test="${count > 0}">
 	<div id="list" class="row">
@@ -47,8 +49,9 @@
 							</c:if>
 							<td>${pedido.tipoCliente.descricao}</td>
 							<td>${pedido.quantidade}</td>
-							<td>${pedido.formattedCusto}</td>
-							<td>${pedido.manutencao.formattedCadastro}</td>
+							<td><fmt:formatNumber value="${pedido.custo}" type="currency"/></td>
+							<td><fmt:formatDate type="both" dateStyle="short"
+									timeStyle="short" value="${pedido.manutencao.cadastro}" /></td>
 
 							<td class="actions"><a class="btn btn-success btn-xs"
 								href="<c:url value='/pedido/${pedido.id}' />">Visualizar</a> <sec:authorize

@@ -522,4 +522,13 @@ public class Empresa extends AbstractEntity<Integer> {
 		}
 	}
 
+	/**
+	 * @author César Magalhães
+	 *
+	 *         Possiveis relações da empresa
+	 */
+	public enum RelacionamentoEmpresa {
+		FUNCIONARIOS, PEDIDOS
+	}
+
 }

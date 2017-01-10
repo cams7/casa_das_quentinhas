@@ -1,9 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page isELIgnored="false"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
+	
+<fmt:setLocale value="pt-BR" />
 
 <h3 class="page-header">
 	Visualizar Pedido <span class="label label-default">${pedido.id}</span>
@@ -38,7 +40,10 @@
 		<p>
 			<strong>Data do pedido</strong>
 		</p>
-		<p>${pedido.manutencao.formattedCadastro}</p>
+		<p>
+			<fmt:formatDate type="both" dateStyle="short" timeStyle="short"
+				value="${pedido.manutencao.cadastro}" />
+		</p>
 	</div>
 </div>
 
@@ -53,19 +58,19 @@
 		<p>
 			<strong>Custo</strong>
 		</p>
-		<p>${pedido.formattedCusto}</p>
+		<p><fmt:formatNumber value="${pedido.custo}" type="currency"/></p>
 	</div>
 	<div class="col-md-2">
 		<p>
 			<strong>ICMS</strong>
 		</p>
-		<p>${pedido.formattedCustoIcms}</p>
+		<p><fmt:formatNumber value="${pedido.custoIcms}" type="currency"/></p>
 	</div>
 	<div class="col-md-2">
 		<p>
 			<strong>Subs. tributária</strong>
 		</p>
-		<p>${pedido.formattedCustoSt}</p>
+		<p><fmt:formatNumber value="${pedido.custoSt}" type="currency"/></p>
 	</div>
 	<div class="col-md-4">
 		<p>

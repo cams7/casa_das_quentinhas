@@ -3,7 +3,8 @@
  */
 package br.com.cams7.casa_das_quentinhas.dao;
 
-import static br.com.cams7.casa_das_quentinhas.model.Usuario.Relacao.ACESSO;
+import static br.com.cams7.casa_das_quentinhas.model.Empresa.RelacionamentoEmpresa.FUNCIONARIOS;
+import static br.com.cams7.casa_das_quentinhas.model.Usuario.RelacionamentoUsuario.ACESSO;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,20 +21,24 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.metamodel.ListAttribute;
+import javax.persistence.metamodel.SingularAttribute;
 
 import org.springframework.stereotype.Repository;
 
 import br.com.cams7.app.dao.AbstractDAO;
+import br.com.cams7.app.model.AbstractEntity;
 import br.com.cams7.app.utils.AppNotFoundException;
 import br.com.cams7.casa_das_quentinhas.model.Cidade;
 import br.com.cams7.casa_das_quentinhas.model.Cidade_;
 import br.com.cams7.casa_das_quentinhas.model.Contato_;
 import br.com.cams7.casa_das_quentinhas.model.Empresa;
+import br.com.cams7.casa_das_quentinhas.model.Empresa.RelacionamentoEmpresa;
 import br.com.cams7.casa_das_quentinhas.model.Empresa.Tipo;
 import br.com.cams7.casa_das_quentinhas.model.Empresa_;
 import br.com.cams7.casa_das_quentinhas.model.Estado;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
-import br.com.cams7.casa_das_quentinhas.model.Usuario.Relacao;
+import br.com.cams7.casa_das_quentinhas.model.Usuario.RelacionamentoUsuario;
 import br.com.cams7.casa_das_quentinhas.model.Usuario_;
 
 /**
@@ -243,16 +248,15 @@ public class EmpresaDAOImpl extends AbstractDAO<Empresa, Integer> implements Emp
 	 * br.com.cams7.casa_das_quentinhas.model.Usuario.Relacao)
 	 */
 	@Override
-	public Integer getUsuarioIdByEmpresaId(Integer empresaId, Relacao relacao) {
+	public Integer getUsuarioIdByEmpresaId(Integer empresaId, RelacionamentoUsuario relacionamento) {
+		SingularAttribute<Empresa, Usuario> entidade = ACESSO.equals(relacionamento) ? Empresa_.usuarioAcesso
+				: Empresa_.usuarioCadastro;
+
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Integer> cq = cb.createQuery(Integer.class);
 
 		Root<Empresa> from = cq.from(ENTITY_TYPE);
-		Join<Empresa, Usuario> join = from.join(relacao == ACESSO ? Empresa_.usuarioAcesso : Empresa_.usuarioCadastro,
-				JoinType.INNER);
-
-		cq.select(join.get(Usuario_.id));
-
+		cq.select(from.join(entidade, JoinType.INNER).get(Usuario_.id));
 		cq.where(cb.equal(from.get(Empresa_.id), empresaId));
 
 		TypedQuery<Integer> tq = getEntityManager().createQuery(cq);
@@ -264,6 +268,32 @@ public class EmpresaDAOImpl extends AbstractDAO<Empresa, Integer> implements Emp
 			throw new AppNotFoundException(
 					String.format("Da empresa (id: %s), o id do usuário não foi encontrado...", empresaId));
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.casa_das_quentinhas.dao.EmpresaDAO#countByEmpresaId(java.
+	 * lang.Integer,
+	 * br.com.cams7.casa_das_quentinhas.model.Empresa.EmpresaRelacao)
+	 */
+	@Override
+	public long countByEmpresaId(Integer empresaId, RelacionamentoEmpresa relacao) {
+		ListAttribute<Empresa, ? extends AbstractEntity<?>> entidades = FUNCIONARIOS.equals(relacao)
+				? Empresa_.funcionarios : Empresa_.pedidos;
+
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+
+		Root<Empresa> from = cq.from(ENTITY_TYPE);
+		cq.select(cb.count(from.join(entidades, JoinType.INNER)));
+		cq.where(cb.equal(from.get(Empresa_.id), empresaId));
+
+		TypedQuery<Long> tq = getEntityManager().createQuery(cq);
+		long count = tq.getSingleResult();
+
+		return count;
 	}
 
 	/*

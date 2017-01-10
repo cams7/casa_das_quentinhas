@@ -364,7 +364,7 @@ public class Usuario extends AbstractEntity<Integer> {
 	 *
 	 *         Relção entre o usuário e as outras entidades
 	 */
-	public enum Relacao {
+	public enum RelacionamentoUsuario {
 		ACESSO, CADASTRO
 	}
 

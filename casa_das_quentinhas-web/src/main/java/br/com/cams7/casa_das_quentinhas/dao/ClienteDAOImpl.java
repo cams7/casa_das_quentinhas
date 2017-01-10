@@ -3,7 +3,7 @@
  */
 package br.com.cams7.casa_das_quentinhas.dao;
 
-import static br.com.cams7.casa_das_quentinhas.model.Usuario.Relacao.ACESSO;
+import static br.com.cams7.casa_das_quentinhas.model.Usuario.RelacionamentoUsuario.ACESSO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +18,7 @@ import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
+import javax.persistence.metamodel.SingularAttribute;
 
 import org.springframework.stereotype.Repository;
 
@@ -30,7 +31,7 @@ import br.com.cams7.casa_das_quentinhas.model.Cliente_;
 import br.com.cams7.casa_das_quentinhas.model.Contato_;
 import br.com.cams7.casa_das_quentinhas.model.Estado;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
-import br.com.cams7.casa_das_quentinhas.model.Usuario.Relacao;
+import br.com.cams7.casa_das_quentinhas.model.Usuario.RelacionamentoUsuario;
 import br.com.cams7.casa_das_quentinhas.model.Usuario_;
 
 /**
@@ -180,16 +181,15 @@ public class ClienteDAOImpl extends AbstractDAO<Cliente, Integer> implements Cli
 	 * java.lang.Integer,
 	 * br.com.cams7.casa_das_quentinhas.model.Usuario.Relacao)
 	 */
-	public Integer getUsuarioIdByClienteId(Integer clienteId, Relacao relacao) {
+	public Integer getUsuarioIdByClienteId(Integer clienteId, RelacionamentoUsuario relacionamento) {
+		SingularAttribute<Cliente, Usuario> entidade = ACESSO.equals(relacionamento) ? Cliente_.usuarioAcesso
+				: Cliente_.usuarioCadastro;
+
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Integer> cq = cb.createQuery(Integer.class);
 
 		Root<Cliente> from = cq.from(ENTITY_TYPE);
-		Join<Cliente, Usuario> join = from.join(relacao == ACESSO ? Cliente_.usuarioAcesso : Cliente_.usuarioCadastro,
-				JoinType.INNER);
-
-		cq.select(join.get(Usuario_.id));
-
+		cq.select(from.join(entidade, JoinType.INNER).get(Usuario_.id));
 		cq.where(cb.equal(from.get(Cliente_.id), clienteId));
 
 		TypedQuery<Integer> tq = getEntityManager().createQuery(cq);

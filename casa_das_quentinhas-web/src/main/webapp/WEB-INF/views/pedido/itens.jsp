@@ -1,10 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page isELIgnored="false"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="p" uri="/WEB-INF/taglibs/pagination.tld"%>
+
+<fmt:setLocale value="pt-BR" />
 
 <c:if test="${count > 0}">
 	<h3 class="page-header">Itens</h3>
@@ -39,8 +41,8 @@
 					<c:forEach items="${itens}" var="item">
 						<tr>
 							<td>${item.quantidade}</td>
-							<td>${item.produto.formattedCusto}</td>
-							<td>${item.formattedCusto}</td>
+							<td><fmt:formatNumber value="${item.produto.custo}" type="currency"/></td>
+							<td><fmt:formatNumber value="${item.quantidade * item.produto.custo}" type="currency"/></td>
 							<td><a
 								href="<c:url value='/produto/${item.id.produtoId}' />">${item.produto.nome}</a></td>
 							<td>${item.produto.tamanho.descricao}</td>

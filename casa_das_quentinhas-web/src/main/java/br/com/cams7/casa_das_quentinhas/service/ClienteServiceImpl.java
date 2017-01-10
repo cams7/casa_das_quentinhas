@@ -3,8 +3,8 @@
  */
 package br.com.cams7.casa_das_quentinhas.service;
 
-import static br.com.cams7.casa_das_quentinhas.model.Usuario.Relacao.ACESSO;
-import static br.com.cams7.casa_das_quentinhas.model.Usuario.Relacao.CADASTRO;
+import static br.com.cams7.casa_das_quentinhas.model.Usuario.RelacionamentoUsuario.ACESSO;
+import static br.com.cams7.casa_das_quentinhas.model.Usuario.RelacionamentoUsuario.CADASTRO;
 import static br.com.cams7.casa_das_quentinhas.model.Usuario.Tipo.CLIENTE;
 
 import java.util.Date;
@@ -20,7 +20,7 @@ import br.com.cams7.casa_das_quentinhas.dao.ClienteDAO;
 import br.com.cams7.casa_das_quentinhas.model.Cliente;
 import br.com.cams7.casa_das_quentinhas.model.Manutencao;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
-import br.com.cams7.casa_das_quentinhas.model.Usuario.Relacao;
+import br.com.cams7.casa_das_quentinhas.model.Usuario.RelacionamentoUsuario;
 
 /**
  * @author César Magalhães
@@ -152,7 +152,7 @@ public class ClienteServiceImpl extends AbstractService<ClienteDAO, Cliente, Int
 	 */
 	@Transactional(readOnly = true, noRollbackFor = AppNotFoundException.class)
 	@Override
-	public Integer getUsuarioIdByClienteId(Integer clienteId, Relacao relacao) {
+	public Integer getUsuarioIdByClienteId(Integer clienteId, RelacionamentoUsuario relacao) {
 		return getDao().getUsuarioIdByClienteId(clienteId, relacao);
 	}
 

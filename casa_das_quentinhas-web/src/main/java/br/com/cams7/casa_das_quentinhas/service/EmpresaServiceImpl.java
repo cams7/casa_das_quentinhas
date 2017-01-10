@@ -3,8 +3,8 @@
  */
 package br.com.cams7.casa_das_quentinhas.service;
 
-import static br.com.cams7.casa_das_quentinhas.model.Usuario.Relacao.ACESSO;
-import static br.com.cams7.casa_das_quentinhas.model.Usuario.Relacao.CADASTRO;
+import static br.com.cams7.casa_das_quentinhas.model.Usuario.RelacionamentoUsuario.ACESSO;
+import static br.com.cams7.casa_das_quentinhas.model.Usuario.RelacionamentoUsuario.CADASTRO;
 import static br.com.cams7.casa_das_quentinhas.model.Usuario.Tipo.EMPRESA;
 
 import java.util.Date;
@@ -19,10 +19,11 @@ import br.com.cams7.app.utils.AppInvalidDataException;
 import br.com.cams7.app.utils.AppNotFoundException;
 import br.com.cams7.casa_das_quentinhas.dao.EmpresaDAO;
 import br.com.cams7.casa_das_quentinhas.model.Empresa;
+import br.com.cams7.casa_das_quentinhas.model.Empresa.RelacionamentoEmpresa;
 import br.com.cams7.casa_das_quentinhas.model.Empresa.Tipo;
 import br.com.cams7.casa_das_quentinhas.model.Manutencao;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
-import br.com.cams7.casa_das_quentinhas.model.Usuario.Relacao;
+import br.com.cams7.casa_das_quentinhas.model.Usuario.RelacionamentoUsuario;
 
 /**
  * @author César Magalhães
@@ -186,8 +187,14 @@ public class EmpresaServiceImpl extends AbstractService<EmpresaDAO, Empresa, Int
 	 */
 	@Transactional(readOnly = true, noRollbackFor = AppNotFoundException.class)
 	@Override
-	public Integer getUsuarioIdByEmpresaId(Integer empresaId, Relacao relacao) {
+	public Integer getUsuarioIdByEmpresaId(Integer empresaId, RelacionamentoUsuario relacao) {
 		return getDao().getUsuarioIdByEmpresaId(empresaId, relacao);
+	}
+
+	@Transactional(readOnly = true)
+	@Override
+	public long countByEmpresaId(Integer empresaId, RelacionamentoEmpresa relacionamento) {
+		return getDao().countByEmpresaId(empresaId, relacionamento);
 	}
 
 	/*

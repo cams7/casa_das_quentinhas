@@ -7,7 +7,7 @@ import java.util.Map;
 
 import br.com.cams7.app.dao.BaseDAO;
 import br.com.cams7.casa_das_quentinhas.model.Cliente;
-import br.com.cams7.casa_das_quentinhas.model.Usuario.Relacao;
+import br.com.cams7.casa_das_quentinhas.model.Usuario.RelacionamentoUsuario;
 
 /**
  * @author César Magalhães
@@ -39,11 +39,11 @@ public interface ClienteDAO extends BaseDAO<Cliente, Integer> {
 	/**
 	 * @param clienteId
 	 *            ID do cliente
-	 * @param relacao
+	 * @param relacionamento
 	 *            Relação entre o cliente e o usuário
 	 * @return ID do usuário
 	 */
-	Integer getUsuarioIdByClienteId(Integer clienteId, Relacao relacao);
+	Integer getUsuarioIdByClienteId(Integer clienteId, RelacionamentoUsuario relacionamento);
 
 	/**
 	 * @param nomeOrCpfOrTelefone
