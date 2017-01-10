@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.cams7.app.service.AbstractService;
-import br.com.cams7.app.utils.AppInvalidDataException;
 import br.com.cams7.app.utils.AppNotFoundException;
 import br.com.cams7.casa_das_quentinhas.dao.ClienteDAO;
 import br.com.cams7.casa_das_quentinhas.model.Cliente;
@@ -70,11 +69,8 @@ public class ClienteServiceImpl extends AbstractService<ClienteDAO, Cliente, Int
 	 */
 	@Override
 	public void update(Cliente cliente) {
-		if (cliente.getId() == null)
-			throw new AppInvalidDataException("O cliente não foi informado...");
-
-		if (cliente.getManutencao().getCadastro() == null)
-			throw new AppInvalidDataException("A data de cadastro não foi informada...");
+		verificaIdAndCadastro(cliente.getId(),
+				cliente.getManutencao() != null ? cliente.getManutencao().getCadastro() : null);
 
 		Integer usuarioId = getUsuarioIdByClienteId(cliente.getId(), CADASTRO);
 		cliente.setUsuarioCadastro(new Usuario(usuarioId));

@@ -22,6 +22,13 @@ public interface ProdutoDAO extends BaseDAO<Produto, Integer> {
 	Produto getProdutoById(Integer id);
 
 	/**
+	 * @param produtoId
+	 *            ID do produto
+	 * @return ID do usuário
+	 */
+	Integer getUsuarioCadastroIdByProdutoId(Integer produtoId);
+
+	/**
 	 * @param nomeOrCusto
 	 *            Nome ou custo
 	 * @return Produtos

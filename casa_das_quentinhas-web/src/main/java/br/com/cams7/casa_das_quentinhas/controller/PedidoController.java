@@ -96,18 +96,20 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 	public String store(@Valid Pedido pedido, BindingResult result, ModelMap model,
 			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
 
+		setCommonAttributes(model);
+		incrementLastLoadedPage(model, lastLoadedPage);
+
+		// Carrega os intens do pedido
+		loadItens(0L, model);
+
 		Cliente cliente = pedido.getCliente();
 
+		// 1º validação
 		if (cliente.getId() == null) {
 			FieldError clienteError = new FieldError(getModelName(), "cliente.id",
 					messageSource.getMessage("NotNull.pedido.cliente.id", null, LOCALE));
 			result.addError(clienteError);
 		}
-
-		setCommonAttributes(model);
-		incrementLastLoadedPage(model, lastLoadedPage);
-
-		loadItens(0L, model);
 
 		if (result.hasErrors())
 			return getCreateTilesPage();
@@ -130,6 +132,7 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 	@Override
 	public String show(@PathVariable Long id, ModelMap model) {
 		itemFacade.initShow();
+		// Carrega os intens do pedido
 		loadItens(id, model);
 
 		return super.show(id, model);
@@ -138,6 +141,7 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 	@Override
 	public String edit(@PathVariable Long id, ModelMap model) {
 		itemFacade.initUpdate(id);
+		// Carrega os intens do pedido
 		loadItens(0L, model);
 
 		return super.edit(id, model);
@@ -148,9 +152,10 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
 
 		setCommonAttributes(model);
-		setEditPage(model);
 		incrementLastLoadedPage(model, lastLoadedPage);
+		setEditPage(model);
 
+		// Carrega os intens do pedido
 		loadItens(0L, model);
 
 		if (result.hasErrors())

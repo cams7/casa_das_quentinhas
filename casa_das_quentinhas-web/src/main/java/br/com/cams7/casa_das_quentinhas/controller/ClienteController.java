@@ -77,9 +77,13 @@ public class ClienteController extends AbstractController<ClienteService, Client
 	public String store(@Valid Cliente cliente, BindingResult result, ModelMap model,
 			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
 
+		setCommonAttributes(model);
+		incrementLastLoadedPage(model, lastLoadedPage);
+
 		Usuario usuario = cliente.getUsuarioAcesso();
 		Cidade cidade = cliente.getCidade();
 
+		// 1º validação
 		if (cidade.getId() == null) {
 			FieldError cidadeError = new FieldError(getModelName(), "cidade.id",
 					messageSource.getMessage("NotNull.cliente.cidade.id", null, LOCALE));
@@ -93,13 +97,14 @@ public class ClienteController extends AbstractController<ClienteService, Client
 		}
 
 		setNotEmptyConfirmacaoError(usuario, result, true);
+
+		if (result.hasErrors())
+			return getCreateTilesPage();
+
+		// 2º validação
 		setSenhaNotEqualsConfirmacaoError(usuario, result);
-
-		setEmailNotUniqueError(cliente, result);
 		setCPFNotUniqueError(cliente, result);
-
-		setCommonAttributes(model);
-		incrementLastLoadedPage(model, lastLoadedPage);
+		setEmailNotUniqueError(cliente, result);
 
 		if (result.hasErrors())
 			return getCreateTilesPage();
@@ -140,20 +145,26 @@ public class ClienteController extends AbstractController<ClienteService, Client
 	@Override
 	public String update(@Valid Cliente cliente, BindingResult result, ModelMap model, @PathVariable Integer id,
 			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
-		Usuario usuario = cliente.getUsuarioAcesso();
-
-		setNotEmptyConfirmacaoError(usuario, result, !usuario.getSenha().isEmpty());
-		setSenhaNotEqualsConfirmacaoError(usuario, result);
-
-		setEmailNotUniqueError(cliente, result);
-		setCPFNotUniqueError(cliente, result);
 
 		setCommonAttributes(model);
-		setEditPage(model);
 		incrementLastLoadedPage(model, lastLoadedPage);
+		setEditPage(model);
+
+		Usuario usuario = cliente.getUsuarioAcesso();
+
+		// 1º validação
+		setNotEmptyConfirmacaoError(usuario, result, !usuario.getSenha().isEmpty());
 
 		if (result.hasErrors())
 			return getEditTilesPage();
+
+		// 2º validação
+		setSenhaNotEqualsConfirmacaoError(usuario, result);
+		setCPFNotUniqueError(cliente, result);
+		setEmailNotUniqueError(cliente, result);
+
+		if (result.hasErrors())
+			return getCreateTilesPage();
 
 		cliente.setCpf(cliente.getUnformattedCpf());
 		cliente.getContato().setTelefone(cliente.getContato().getUnformattedTelefone());
@@ -208,6 +219,8 @@ public class ClienteController extends AbstractController<ClienteService, Client
 	}
 
 	/**
+	 * 1º validação
+	 * 
 	 * Verifica se o campo de confirmação de senha não esta vazio, caso o campo
 	 * senha tenha sido preenchido anteriormente
 	 * 
@@ -226,6 +239,8 @@ public class ClienteController extends AbstractController<ClienteService, Client
 	}
 
 	/**
+	 * 2º validação
+	 * 
 	 * Verifica se senha informada é mesma do campo confirmação
 	 * 
 	 * @param usuario
@@ -233,9 +248,6 @@ public class ClienteController extends AbstractController<ClienteService, Client
 	 * @param result
 	 */
 	private void setSenhaNotEqualsConfirmacaoError(Usuario usuario, BindingResult result) {
-		if (result.getFieldErrorCount("usuarioAcesso.confirmacaoSenha") > 0)
-			return;
-
 		if (!usuario.getSenha().isEmpty() && !usuario.getConfirmacaoSenha().isEmpty()
 				&& !usuario.getSenha().equals(usuario.getConfirmacaoSenha())) {
 			FieldError confirmacaoError = new FieldError(getModelName(), "usuarioAcesso.confirmacaoSenha",
@@ -245,15 +257,14 @@ public class ClienteController extends AbstractController<ClienteService, Client
 	}
 
 	/**
+	 * 2º validação
+	 * 
 	 * Verifica se o e-mail informado não foi cadastrado anteriormente
 	 * 
 	 * @param cliente
 	 * @param result
 	 */
 	private void setEmailNotUniqueError(Cliente cliente, BindingResult result) {
-		if (result.getFieldErrorCount("contato.email") > 0)
-			return;
-
 		Usuario usuario = cliente.getUsuarioAcesso();
 		Contato contato = cliente.getContato();
 
@@ -265,15 +276,14 @@ public class ClienteController extends AbstractController<ClienteService, Client
 	}
 
 	/**
+	 * 2º validação
+	 * 
 	 * Verifica se o CPF informado não foi cadastrado anteriormente
 	 * 
 	 * @param cliente
 	 * @param result
 	 */
 	private void setCPFNotUniqueError(Cliente cliente, BindingResult result) {
-		if (result.getFieldErrorCount("cpf") > 0)
-			return;
-
 		String cpf = cliente.getUnformattedCpf();
 
 		if (!getService().isCPFUnique(cliente.getId(), cpf)) {

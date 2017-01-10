@@ -22,6 +22,7 @@ import br.com.cams7.app.utils.AppNotFoundException;
 import br.com.cams7.casa_das_quentinhas.model.Produto;
 import br.com.cams7.casa_das_quentinhas.model.Produto.Tamanho;
 import br.com.cams7.casa_das_quentinhas.model.Produto_;
+import br.com.cams7.casa_das_quentinhas.model.Usuario_;
 
 /**
  * @author César Magalhães
@@ -68,8 +69,6 @@ public class ProdutoDAOImpl extends AbstractDAO<Produto, Integer> implements Pro
 
 		Root<Produto> from = cq.from(ENTITY_TYPE);
 
-		from.fetch(Produto_.usuarioCadastro, JoinType.INNER);
-
 		cq.select(from);
 
 		cq.where(cb.equal(from.get(Produto_.id), id));
@@ -81,6 +80,34 @@ public class ProdutoDAOImpl extends AbstractDAO<Produto, Integer> implements Pro
 			return produto;
 		} catch (NoResultException e) {
 			throw new AppNotFoundException(String.format("O produto (id:%s) não foi encontrado...", id));
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.casa_das_quentinhas.dao.ProdutoDAO#
+	 * getUsuarioCadastroIdByProdutoId(java.lang.Integer)
+	 */
+	@Override
+	public Integer getUsuarioCadastroIdByProdutoId(Integer produtoId) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Integer> cq = cb.createQuery(Integer.class);
+
+		Root<Produto> from = cq.from(ENTITY_TYPE);
+
+		cq.select(from.join(Produto_.usuarioCadastro, JoinType.INNER).get(Usuario_.id));
+
+		cq.where(cb.equal(from.get(Produto_.id), produtoId));
+
+		TypedQuery<Integer> tq = getEntityManager().createQuery(cq);
+
+		try {
+			Integer usuarioId = tq.getSingleResult();
+			return usuarioId;
+		} catch (NoResultException e) {
+			throw new AppNotFoundException(
+					String.format("Do produto (id: %s), o id do usuário não foi encontrado...", produtoId));
 		}
 	}
 

@@ -85,9 +85,13 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 	public String store(@Valid Empresa empresa, BindingResult result, ModelMap model,
 			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
 
+		setCommonAttributes(model);
+		incrementLastLoadedPage(model, lastLoadedPage);
+
 		Usuario usuario = empresa.getUsuarioAcesso();
 		Cidade cidade = empresa.getCidade();
 
+		// 1º validação
 		if (cidade.getId() == null) {
 			FieldError cidadeError = new FieldError(getModelName(), "cidade.id",
 					messageSource.getMessage("NotNull.empresa.cidade.id", null, LOCALE));
@@ -101,13 +105,14 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 		}
 
 		setNotEmptyConfirmacaoError(usuario, result, true);
-		setSenhaNotEqualsConfirmacaoError(usuario, result);
 
+		if (result.hasErrors())
+			return getCreateTilesPage();
+
+		// 2º validação
+		setSenhaNotEqualsConfirmacaoError(usuario, result);
 		setEmailNotUniqueError(empresa, result);
 		setCNPJNotUniqueError(empresa, result);
-
-		setCommonAttributes(model);
-		incrementLastLoadedPage(model, lastLoadedPage);
 
 		if (result.hasErrors())
 			return getCreateTilesPage();
@@ -160,20 +165,26 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 	@Override
 	public String update(@Valid Empresa empresa, BindingResult result, ModelMap model, @PathVariable Integer id,
 			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
-		Usuario usuario = empresa.getUsuarioAcesso();
-
-		setNotEmptyConfirmacaoError(usuario, result, !usuario.getSenha().isEmpty());
-		setSenhaNotEqualsConfirmacaoError(usuario, result);
-
-		setEmailNotUniqueError(empresa, result);
-		setCNPJNotUniqueError(empresa, result);
 
 		setCommonAttributes(model);
-		setEditPage(model);
 		incrementLastLoadedPage(model, lastLoadedPage);
+		setEditPage(model);
+
+		Usuario usuario = empresa.getUsuarioAcesso();
+
+		// 1º validação
+		setNotEmptyConfirmacaoError(usuario, result, !usuario.getSenha().isEmpty());
 
 		if (result.hasErrors())
 			return getEditTilesPage();
+
+		// 2º validação
+		setSenhaNotEqualsConfirmacaoError(usuario, result);
+		setEmailNotUniqueError(empresa, result);
+		setCNPJNotUniqueError(empresa, result);
+
+		if (result.hasErrors())
+			return getCreateTilesPage();
 
 		empresa.setCnpj(empresa.getUnformattedCnpj());
 		empresa.getContato().setTelefone(empresa.getContato().getUnformattedTelefone());
@@ -252,6 +263,8 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 	}
 
 	/**
+	 * 1º validação
+	 * 
 	 * Verifica se o campo de confirmação de senha não esta vazio, caso o campo
 	 * senha tenha sido preenchido anteriormente
 	 * 
@@ -270,6 +283,8 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 	}
 
 	/**
+	 * 2º validação
+	 * 
 	 * Verifica se senha informada é mesma do campo confirmação
 	 * 
 	 * @param usuario
@@ -277,9 +292,6 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 	 * @param result
 	 */
 	private void setSenhaNotEqualsConfirmacaoError(Usuario usuario, BindingResult result) {
-		if (result.getFieldErrorCount("usuarioAcesso.confirmacaoSenha") > 0)
-			return;
-
 		if (!usuario.getSenha().isEmpty() && !usuario.getConfirmacaoSenha().isEmpty()
 				&& !usuario.getSenha().equals(usuario.getConfirmacaoSenha())) {
 			FieldError confirmacaoError = new FieldError(getModelName(), "usuarioAcesso.confirmacaoSenha",
@@ -289,15 +301,14 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 	}
 
 	/**
+	 * 2º validação
+	 * 
 	 * Verifica se o e-mail informado não foi cadastrado anteriormente
 	 * 
 	 * @param empresa
 	 * @param result
 	 */
 	private void setEmailNotUniqueError(Empresa empresa, BindingResult result) {
-		if (result.getFieldErrorCount("contato.email") > 0)
-			return;
-
 		Usuario usuario = empresa.getUsuarioAcesso();
 		Contato contato = empresa.getContato();
 
@@ -309,15 +320,14 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 	}
 
 	/**
+	 * 2º validação
+	 * 
 	 * Verifica se o CPF informado não foi cadastrado anteriormente
 	 * 
 	 * @param empresa
 	 * @param result
 	 */
 	private void setCNPJNotUniqueError(Empresa empresa, BindingResult result) {
-		if (result.getFieldErrorCount("cnpj") > 0)
-			return;
-
 		String cnpj = empresa.getUnformattedCnpj();
 
 		if (!getService().isCNPJUnique(empresa.getId(), cnpj)) {

@@ -71,13 +71,13 @@ public class EmpresaServiceImpl extends AbstractService<EmpresaDAO, Empresa, Int
 	 */
 	@Override
 	public void update(Empresa empresa) {
-		if (empresa.getId() == null)
-			throw new AppInvalidDataException("A empresa não foi informado...");
+		Integer id = empresa.getId();
+		verificaIdAndCadastro(id, empresa.getManutencao() != null ? empresa.getManutencao().getCadastro() : null);
 
-		if (empresa.getManutencao().getCadastro() == null)
-			throw new AppInvalidDataException("A data de cadastro não foi informada...");
+		if (id.equals(1))
+			throw new AppInvalidDataException(String.format("A empresa (id: %s) não é válida...", id));
 
-		Integer usuarioId = getUsuarioIdByEmpresaId(empresa.getId(), CADASTRO);
+		Integer usuarioId = getUsuarioIdByEmpresaId(id, CADASTRO);
 		empresa.setUsuarioCadastro(new Usuario(usuarioId));
 
 		try {

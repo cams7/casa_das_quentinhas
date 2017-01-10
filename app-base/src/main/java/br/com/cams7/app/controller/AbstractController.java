@@ -70,6 +70,9 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 
 	@Override
 	public String index(ModelMap model) {
+
+		setCommonAttributes(model);
+
 		Integer offset = 0;
 		String sortField = "id";
 		SortOrder sortOrder = SortOrder.DESCENDING;
@@ -85,8 +88,6 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 
 		setPaginationAttribute(model, offset, sortField, sortOrder, null, count, MAX_RESULTS);
 
-		setCommonAttributes(model);
-
 		return getIndexTilesPage();
 	}
 
@@ -99,12 +100,13 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 	 */
 	@Override
 	public String create(ModelMap model) {
-		E entity = getNewEntity();
-
-		model.addAttribute(getModelName(), entity);
 
 		setCommonAttributes(model);
 		setLastLoadedPage(model, 1);
+
+		E entity = getNewEntity();
+
+		model.addAttribute(getModelName(), entity);
 
 		return getCreateTilesPage();
 	}
@@ -142,11 +144,12 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 	 */
 	@Override
 	public String show(@PathVariable PK id, ModelMap model) {
+
+		setCommonAttributes(model);
+
 		E entity = getEntity(id);
 
 		model.addAttribute(getModelName(), entity);
-
-		setCommonAttributes(model);
 
 		return getShowTilesPage();
 	}
@@ -160,13 +163,14 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 	 */
 	@Override
 	public String edit(@PathVariable PK id, ModelMap model) {
+
+		setCommonAttributes(model);
+		setLastLoadedPage(model, 1);
+		setEditPage(model);
+
 		E entity = getEntity(id);
 
 		model.addAttribute(getModelName(), entity);
-
-		setCommonAttributes(model);
-		setEditPage(model);
-		setLastLoadedPage(model, 1);
 
 		return getEditTilesPage();
 	}
@@ -184,8 +188,8 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
 
 		setCommonAttributes(model);
-		setEditPage(model);
 		incrementLastLoadedPage(model, lastLoadedPage);
+		setEditPage(model);
 
 		if (result.hasErrors())
 			return getEditTilesPage();

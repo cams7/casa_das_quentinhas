@@ -37,8 +37,8 @@ public class ProdutoServiceImpl extends AbstractService<ProdutoDAO, Produto, Int
 	 */
 	@Override
 	public void persist(Produto produto) {
-		Usuario usuario = new Usuario(usuarioService.getUsuarioIdByEmail(getUsername()));
-		produto.setUsuarioCadastro(usuario);
+		Integer usuarioId = usuarioService.getUsuarioIdByEmail(getUsername());
+		produto.setUsuarioCadastro(new Usuario(usuarioId));
 
 		Manutencao manutencao = new Manutencao();
 		manutencao.setCadastro(new Date());
@@ -58,6 +58,12 @@ public class ProdutoServiceImpl extends AbstractService<ProdutoDAO, Produto, Int
 	 */
 	@Override
 	public void update(Produto produto) {
+		verificaIdAndCadastro(produto.getId(),
+				produto.getManutencao() != null ? produto.getManutencao().getCadastro() : null);
+
+		Integer usuarioId = getUsuarioCadastroIdByProdutoId(produto.getId());
+		produto.setUsuarioCadastro(new Usuario(usuarioId));
+
 		produto.getManutencao().setAlteracao(new Date());
 
 		super.update(produto);
@@ -74,6 +80,18 @@ public class ProdutoServiceImpl extends AbstractService<ProdutoDAO, Produto, Int
 	@Override
 	public Produto getProdutoById(Integer id) {
 		return getDao().getProdutoById(id);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.casa_das_quentinhas.dao.ProdutoDAO#
+	 * getUsuarioCadastroIdByProdutoId(java.lang.Integer)
+	 */
+	@Transactional(readOnly = true, noRollbackFor = AppNotFoundException.class)
+	@Override
+	public Integer getUsuarioCadastroIdByProdutoId(Integer produtoId) {
+		return getDao().getUsuarioCadastroIdByProdutoId(produtoId);
 	}
 
 	/*

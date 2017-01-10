@@ -4,6 +4,7 @@
 package br.com.cams7.app.service;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.cams7.app.dao.BaseDAO;
 import br.com.cams7.app.model.AbstractEntity;
+import br.com.cams7.app.utils.AppInvalidDataException;
 import br.com.cams7.app.utils.SearchParams;
 
 /**
@@ -155,6 +157,22 @@ public abstract class AbstractService<DAO extends BaseDAO<E, PK>, E extends Abst
 	 */
 	protected String getUsername() {
 		return username;
+	}
+
+	/**
+	 * Varifica se o id e a data de cadastro foram informados
+	 * 
+	 * @param id
+	 *            ID da entidade
+	 * @param cadastro
+	 *            Data de cadastro da entidade
+	 */
+	protected final void verificaIdAndCadastro(Serializable id, Date cadastro) {
+		if (id == null)
+			throw new AppInvalidDataException("O id não foi informado...");
+
+		if (cadastro == null)
+			throw new AppInvalidDataException("A data de cadastro não foi informada...");
 	}
 
 }

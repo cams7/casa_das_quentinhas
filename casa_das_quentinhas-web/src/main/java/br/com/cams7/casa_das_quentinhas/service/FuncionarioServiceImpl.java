@@ -79,18 +79,11 @@ public class FuncionarioServiceImpl extends AbstractService<FuncionarioDAO, Func
 	 */
 	@Override
 	public void update(Funcionario funcionario, Funcao... possiveisFuncoes) {
-		if (funcionario.getId() == null)
-			throw new AppInvalidDataException("O funcionário não foi informado...");
-
-		if (funcionario.getManutencao().getCadastro() == null)
-			throw new AppInvalidDataException("A data de cadastro não foi informada...");
-
-		Integer empresaId = funcionario.getEmpresa().getId();
-		if (empresaId == null)
-			throw new AppInvalidDataException("A empresa não foi informado...");
+		verificaIdAndCadastro(funcionario.getId(),
+				funcionario.getManutencao() != null ? funcionario.getManutencao().getCadastro() : null);
 
 		verificaFuncoes(funcionario.getFuncao(), possiveisFuncoes);
-		verificaEmpresa(funcionario.getFuncao(), empresaId);
+		verificaEmpresa(funcionario.getFuncao(), funcionario.getEmpresa().getId());
 
 		Integer usuarioId = getUsuarioCadastroIdByFuncionarioId(funcionario.getId());
 		funcionario.setUsuarioCadastro(new Usuario(usuarioId));

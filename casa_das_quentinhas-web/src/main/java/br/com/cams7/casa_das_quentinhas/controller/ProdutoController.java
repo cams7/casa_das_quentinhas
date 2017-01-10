@@ -54,6 +54,7 @@ public class ProdutoController extends AbstractController<ProdutoService, Produt
 	@Override
 	public String show(@PathVariable Integer id, ModelMap model) {
 
+		// Carrega os pedidos
 		loadPedidos(id, model, 0, "id.pedidoId", SortOrder.DESCENDING);
 
 		return super.show(id, model);

@@ -53,6 +53,7 @@ public class EntregadorController extends AbstractFuncionarioController {
 
 		Empresa empresa = entregador.getEmpresa();
 
+		// 1º validação
 		if (empresa.getId() == null) {
 			FieldError empresaError = new FieldError(getModelName(), "empresa.id",
 					getMessageSource().getMessage("NotNull.entregador.empresa.id", null, LOCALE));
