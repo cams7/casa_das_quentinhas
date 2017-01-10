@@ -1,5 +1,8 @@
 package br.com.cams7.casa_das_quentinhas.facade;
 
+import static br.com.cams7.casa_das_quentinhas.service.PedidoServiceImpl.getCustoTotal;
+import static br.com.cams7.casa_das_quentinhas.service.PedidoServiceImpl.getQuantidadeTotal;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -172,10 +175,7 @@ public class PedidoItemFacade {
 	 * @return Pedido
 	 */
 	private Pedido getPedido() {
-		short quantidade = (short) itens.stream().mapToInt(i -> i.getQuantidade()).sum();
-		float custo = (float) itens.stream().mapToDouble(i -> i.getQuantidade() * i.getProduto().getCusto()).sum();
-
-		return new Pedido(quantidade, custo);
+		return new Pedido(getQuantidadeTotal(itens), getCustoTotal(itens));
 	}
 
 	/**

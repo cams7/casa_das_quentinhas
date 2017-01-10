@@ -18,4 +18,11 @@ public interface PedidoDAO extends BaseDAO<Pedido, Long> {
 	 * @return Pedido
 	 */
 	Pedido getPedidoById(Long id);
+
+	/**
+	 * @param pedidoId
+	 *            ID do pedido
+	 * @return ID do usuário
+	 */
+	Integer getUsuarioCadastroIdByPedidoId(Long pedidoId);
 }

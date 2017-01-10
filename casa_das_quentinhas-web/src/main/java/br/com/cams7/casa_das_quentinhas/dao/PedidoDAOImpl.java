@@ -23,6 +23,7 @@ import br.com.cams7.casa_das_quentinhas.model.Cliente;
 import br.com.cams7.casa_das_quentinhas.model.Empresa;
 import br.com.cams7.casa_das_quentinhas.model.Pedido;
 import br.com.cams7.casa_das_quentinhas.model.Pedido_;
+import br.com.cams7.casa_das_quentinhas.model.Usuario_;
 
 /**
  * @author César Magalhães
@@ -103,7 +104,6 @@ public class PedidoDAOImpl extends AbstractDAO<Pedido, Long> implements PedidoDA
 
 		Root<Pedido> from = cq.from(ENTITY_TYPE);
 
-		from.fetch(Pedido_.usuarioCadastro, JoinType.INNER);
 		from.fetch(Pedido_.cliente, JoinType.LEFT);
 		from.fetch(Pedido_.empresa, JoinType.LEFT);
 
@@ -118,6 +118,34 @@ public class PedidoDAOImpl extends AbstractDAO<Pedido, Long> implements PedidoDA
 			return pedido;
 		} catch (NoResultException e) {
 			throw new AppNotFoundException(String.format("O pedido (id:%s) não foi encontrado...", id));
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.casa_das_quentinhas.dao.PedidoDAO#
+	 * getUsuarioCadastroIdByPedidoId(java.lang.Integer)
+	 */
+	@Override
+	public Integer getUsuarioCadastroIdByPedidoId(Long pedidoId) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Integer> cq = cb.createQuery(Integer.class);
+
+		Root<Pedido> from = cq.from(ENTITY_TYPE);
+
+		cq.select(from.join(Pedido_.usuarioCadastro, JoinType.INNER).get(Usuario_.id));
+
+		cq.where(cb.equal(from.get(Pedido_.id), pedidoId));
+
+		TypedQuery<Integer> tq = getEntityManager().createQuery(cq);
+
+		try {
+			Integer usuarioId = tq.getSingleResult();
+			return usuarioId;
+		} catch (NoResultException e) {
+			throw new AppNotFoundException(
+					String.format("Do pedido (id: %s), o id do usuário não foi encontrado...", pedidoId));
 		}
 	}
 
