@@ -90,20 +90,20 @@
 	</div>
 </div>
 
+<div class="content">
+	<%@include file="itens.jsp"%>
+</div>
+
 <script type="text/javascript">
 	var MAIN_PAGE = '<c:url value='/${mainPage}' />';
 	var LIST_PAGE = MAIN_PAGE + '/${pedido.id}/itens';
 	var ITEM_PAGE = MAIN_PAGE + '/${pedido.id}/item';
 </script>
 
-<div class="content">
-	<%@include file="itens.jsp"%>
-</div>
-
 <link rel="stylesheet"
 	href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css">
-<script src="<c:url value='/static/js/casa_das_quentinhas-list.js' />"></script>
 
 <script src="<c:url value='/static/js/casa_das_quentinhas-show.js' />"></script>
+<script src="<c:url value='/static/js/casa_das_quentinhas-list.js' />"></script>
 
 <%@include file="../../layouts/delete_modal.jsp"%>

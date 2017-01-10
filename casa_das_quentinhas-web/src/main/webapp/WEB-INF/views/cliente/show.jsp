@@ -118,20 +118,21 @@
 </div>
 
 <c:if test="${count > 0}">
-	 <h3 class="page-header">Pedidos</h3>
+	<h3 class="page-header">Pedidos</h3>
 </c:if>
 <div class="content">
 	<%@include file="../pedido/list.jsp"%>
 </div>
 
-<link rel="stylesheet"
-	href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css">
-
 <script type="text/javascript">
 	var MAIN_PAGE = '<c:url value='/${mainPage}' />';
 	var LIST_PAGE = MAIN_PAGE + '/${cliente.id}/pedidos';
-	var DELETE_PAGE = 'pedido';
+	var DELETE_PAGE = '<c:url value='/pedido' />';
 </script>
+
+<link rel="stylesheet"
+	href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css">
+
 <script src="<c:url value='/static/js/casa_das_quentinhas-show.js' />"></script>
 <script src="<c:url value='/static/js/casa_das_quentinhas-list.js' />"></script>
 

@@ -15,7 +15,7 @@
 			<strong>Nome</strong>
 		</p>
 		<p>${entregador.nome}</p>
-	</div>	
+	</div>
 	<div class="col-md-2">
 		<p>
 			<strong>Celular</strong>
@@ -68,8 +68,9 @@
 <script type="text/javascript">
 	var MAIN_PAGE = '<c:url value='/${mainPage}' />';
 	var LIST_PAGE = MAIN_PAGE + '/${entregador.id}/pedidos';
-	var DELETE_PAGE = 'pedido';
+	var DELETE_PAGE = '<c:url value='/pedido' />';
 </script>
+
 <script src="<c:url value='/static/js/casa_das_quentinhas-show.js' />"></script>
 
 <%@include file="../../layouts/delete_modal.jsp"%>

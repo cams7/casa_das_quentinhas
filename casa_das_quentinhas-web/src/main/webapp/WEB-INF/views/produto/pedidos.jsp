@@ -7,6 +7,8 @@
 <%@ taglib prefix="p" uri="/WEB-INF/taglibs/pagination.tld"%>
 
 <c:if test="${count > 0}">
+	<h3 class="page-header">Pedidos</h3>
+	
 	<div id="list" class="row">
 		<div class="table-responsive col-md-12">
 			<table class="table table-striped table-bordered dataTable">

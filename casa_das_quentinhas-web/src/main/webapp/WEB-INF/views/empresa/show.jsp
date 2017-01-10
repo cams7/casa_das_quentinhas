@@ -162,14 +162,10 @@
 		<script type="text/javascript">
 			var MAIN_PAGE = '<c:url value='/${mainPage}' />';
 			var LIST_PAGE = MAIN_PAGE + '/${empresa.id}/pedidos';
-			var DELETE_PAGE = 'pedido';
+			var DELETE_PAGE = '<c:url value='/pedido' />';
 		</script>
-
-		<link rel="stylesheet"
-			href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css">
-		<script src="<c:url value='/static/js/casa_das_quentinhas-list.js' />"></script>
 	</c:when>
-	<c:when test="${empresa.tipo eq 'ENTREGA'}">
+	<c:otherwise>
 		<c:if test="${count > 0}">
 			<h3 class="page-header">Entregadores</h3>
 		</c:if>
@@ -182,18 +178,13 @@
 			var LIST_PAGE = MAIN_PAGE + '/${empresa.id}/entregadores';
 			var DELETE_PAGE = '<c:url value='/entregador' />';
 		</script>
-
-		<link rel="stylesheet"
-			href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css">
-		<script src="<c:url value='/static/js/casa_das_quentinhas-list.js' />"></script>
-	</c:when>
-	<c:otherwise>
-		<script type="text/javascript">
-			var MAIN_PAGE = '<c:url value='/${mainPage}' />';
-		</script>
 	</c:otherwise>
 </c:choose>
 
+<link rel="stylesheet"
+	href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css">
+
 <script src="<c:url value='/static/js/casa_das_quentinhas-show.js' />"></script>
+<script src="<c:url value='/static/js/casa_das_quentinhas-list.js' />"></script>
 
 <%@include file="../../layouts/delete_modal.jsp"%>
