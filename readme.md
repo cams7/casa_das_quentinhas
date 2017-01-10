@@ -4,7 +4,8 @@
 * Banco de dados: **PostgreSQL**
 * Resumo: Aplicação CRUD (create, read, update, delete)
 * Linguagem: **Java 8**
-* Fonte: <https://github.com/cams7/casa_das_quentinhas>
+* LinkedIn: <https://www.linkedin.com/in/cams7/>
+* Fonte: <https://github.com/cams7/casa_das_quentinhas/>
 * Site: <http://casa-das-quentinhas.herokuapp.com/>
 
 O que é o sistema: Casa das Quentinhas?
