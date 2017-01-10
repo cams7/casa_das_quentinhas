@@ -3,6 +3,8 @@
  */
 package br.com.cams7.casa_das_quentinhas.service;
 
+import static br.com.cams7.casa_das_quentinhas.model.Usuario.Relacao.ACESSO;
+import static br.com.cams7.casa_das_quentinhas.model.Usuario.Relacao.CADASTRO;
 import static br.com.cams7.casa_das_quentinhas.model.Usuario.Tipo.EMPRESA;
 
 import java.util.Date;
@@ -13,12 +15,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.cams7.app.service.AbstractService;
+import br.com.cams7.app.utils.AppInvalidDataException;
 import br.com.cams7.app.utils.AppNotFoundException;
 import br.com.cams7.casa_das_quentinhas.dao.EmpresaDAO;
 import br.com.cams7.casa_das_quentinhas.model.Empresa;
 import br.com.cams7.casa_das_quentinhas.model.Empresa.Tipo;
 import br.com.cams7.casa_das_quentinhas.model.Manutencao;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
+import br.com.cams7.casa_das_quentinhas.model.Usuario.Relacao;
 
 /**
  * @author César Magalhães
@@ -46,8 +50,8 @@ public class EmpresaServiceImpl extends AbstractService<EmpresaDAO, Empresa, Int
 		usuario.setTipo(EMPRESA);
 		usuarioService.persist(usuario);
 
-		usuario = new Usuario(usuarioService.getUsuarioIdByEmail(getUsername()));
-		empresa.setUsuarioCadastro(usuario);
+		Integer usuarioId = usuarioService.getUsuarioIdByEmail(getUsername());
+		empresa.setUsuarioCadastro(new Usuario(usuarioId));
 
 		Manutencao manutencao = new Manutencao();
 		manutencao.setCadastro(new Date());
@@ -67,13 +71,25 @@ public class EmpresaServiceImpl extends AbstractService<EmpresaDAO, Empresa, Int
 	 */
 	@Override
 	public void update(Empresa empresa) {
-		Usuario usuario = empresa.getUsuarioAcesso();
+		if (empresa.getId() == null)
+			throw new AppInvalidDataException("A empresa não foi informado...");
 
-		if (usuario != null && usuario.getId() != null) {
-			usuario.setEmail(empresa.getContato().getEmail());
-			usuarioService.update(usuario);
-		} else
+		if (empresa.getManutencao().getCadastro() == null)
+			throw new AppInvalidDataException("A data de cadastro não foi informada...");
+
+		Integer usuarioId = getUsuarioIdByEmpresaId(empresa.getId(), CADASTRO);
+		empresa.setUsuarioCadastro(new Usuario(usuarioId));
+
+		try {
+			usuarioId = getUsuarioIdByEmpresaId(empresa.getId(), ACESSO);
+
+			usuarioService.updateEmailAndSenha(usuarioId, empresa.getContato().getEmail(),
+					empresa.getUsuarioAcesso().getSenha());
+
+			empresa.getUsuarioAcesso().setId(usuarioId);
+		} catch (AppNotFoundException e) {
 			empresa.setUsuarioAcesso(null);
+		}
 
 		empresa.getManutencao().setAlteracao(new Date());
 
@@ -158,6 +174,20 @@ public class EmpresaServiceImpl extends AbstractService<EmpresaDAO, Empresa, Int
 	@Override
 	public Tipo getEmpresaIipoById(Integer id) {
 		return getDao().getEmpresaIipoById(id);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.casa_das_quentinhas.dao.EmpresaDAO#getUsuarioIdByEmpresaId(
+	 * java.lang.Integer,
+	 * br.com.cams7.casa_das_quentinhas.model.Usuario.Relacao)
+	 */
+	@Transactional(readOnly = true, noRollbackFor = AppNotFoundException.class)
+	@Override
+	public Integer getUsuarioIdByEmpresaId(Integer empresaId, Relacao relacao) {
+		return getDao().getUsuarioIdByEmpresaId(empresaId, relacao);
 	}
 
 	/*

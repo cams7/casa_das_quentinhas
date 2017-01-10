@@ -8,6 +8,7 @@ import java.util.Map;
 import br.com.cams7.app.dao.BaseDAO;
 import br.com.cams7.casa_das_quentinhas.model.Empresa;
 import br.com.cams7.casa_das_quentinhas.model.Empresa.Tipo;
+import br.com.cams7.casa_das_quentinhas.model.Usuario.Relacao;
 
 /**
  * @author César Magalhães
@@ -51,6 +52,15 @@ public interface EmpresaDAO extends BaseDAO<Empresa, Integer> {
 	 * @return Tipo de empresa
 	 */
 	Tipo getEmpresaIipoById(Integer id);
+
+	/**
+	 * @param empresaId
+	 *            ID da empresa
+	 * @param relacao
+	 *            Relação entre o cliente e o usuário
+	 * @return ID do usuário
+	 */
+	Integer getUsuarioIdByEmpresaId(Integer empresaId, Relacao relacao);
 
 	/**
 	 * @param nomeOrCnpj

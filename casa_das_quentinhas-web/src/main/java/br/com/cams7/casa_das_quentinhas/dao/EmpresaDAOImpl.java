@@ -3,6 +3,8 @@
  */
 package br.com.cams7.casa_das_quentinhas.dao;
 
+import static br.com.cams7.casa_das_quentinhas.model.Usuario.Relacao.ACESSO;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -31,6 +33,7 @@ import br.com.cams7.casa_das_quentinhas.model.Empresa.Tipo;
 import br.com.cams7.casa_das_quentinhas.model.Empresa_;
 import br.com.cams7.casa_das_quentinhas.model.Estado;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
+import br.com.cams7.casa_das_quentinhas.model.Usuario.Relacao;
 import br.com.cams7.casa_das_quentinhas.model.Usuario_;
 
 /**
@@ -95,8 +98,6 @@ public class EmpresaDAOImpl extends AbstractDAO<Empresa, Integer> implements Emp
 
 		Root<Empresa> from = cq.from(ENTITY_TYPE);
 
-		from.fetch(Empresa_.usuarioAcesso, JoinType.LEFT);
-		from.fetch(Empresa_.usuarioCadastro, JoinType.INNER);
 		from.fetch(Empresa_.cidade, JoinType.INNER).fetch(Cidade_.estado, JoinType.INNER);
 
 		cq.select(from);
@@ -230,6 +231,38 @@ public class EmpresaDAOImpl extends AbstractDAO<Empresa, Integer> implements Emp
 			return tipo;
 		} catch (NoResultException e) {
 			throw new AppNotFoundException(String.format("O tipo da empresa (id: %s) não foi encontrado...", id));
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.casa_das_quentinhas.dao.EmpresaDAO#getUsuarioIdByEmpresaId(
+	 * java.lang.Integer,
+	 * br.com.cams7.casa_das_quentinhas.model.Usuario.Relacao)
+	 */
+	@Override
+	public Integer getUsuarioIdByEmpresaId(Integer empresaId, Relacao relacao) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Integer> cq = cb.createQuery(Integer.class);
+
+		Root<Empresa> from = cq.from(ENTITY_TYPE);
+		Join<Empresa, Usuario> join = from.join(relacao == ACESSO ? Empresa_.usuarioAcesso : Empresa_.usuarioCadastro,
+				JoinType.INNER);
+
+		cq.select(join.get(Usuario_.id));
+
+		cq.where(cb.equal(from.get(Empresa_.id), empresaId));
+
+		TypedQuery<Integer> tq = getEntityManager().createQuery(cq);
+
+		try {
+			Integer usuarioId = tq.getSingleResult();
+			return usuarioId;
+		} catch (NoResultException e) {
+			throw new AppNotFoundException(
+					String.format("Da empresa (id: %s), o id do usuário não foi encontrado...", empresaId));
 		}
 	}
 
