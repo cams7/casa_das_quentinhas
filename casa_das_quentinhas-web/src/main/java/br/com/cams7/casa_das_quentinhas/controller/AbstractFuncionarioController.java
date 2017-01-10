@@ -10,7 +10,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
 import br.com.cams7.app.controller.AbstractController;
-import br.com.cams7.casa_das_quentinhas.model.Empresa;
 import br.com.cams7.casa_das_quentinhas.model.Funcionario;
 import br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
@@ -33,13 +32,6 @@ public abstract class AbstractFuncionarioController
 	protected String storeFuncionario(Funcionario funcionario, BindingResult result, ModelMap model,
 			Integer lastLoadedPage) {
 		Usuario usuario = funcionario.getUsuario();
-		Empresa empresa = funcionario.getEmpresa();
-
-		if (empresa.getId() == null) {
-			FieldError empresaError = new FieldError(getModelName(), "empresa.id",
-					messageSource.getMessage("NotNull." + getModelName() + ".empresa.id", null, LOCALE));
-			result.addError(empresaError);
-		}
 
 		if (usuario.getSenha().isEmpty()) {
 			FieldError senhaError = new FieldError(getModelName(), "usuario.senha",
@@ -71,6 +63,7 @@ public abstract class AbstractFuncionarioController
 	protected String updateFuncionario(Funcionario funcionario, BindingResult result, ModelMap model, Integer id,
 			Integer lastLoadedPage) {
 		Usuario usuario = funcionario.getUsuario();
+		usuario.setId(funcionario.getId());
 
 		setNotEmptyConfirmacaoError(usuario, result, !usuario.getSenha().isEmpty());
 		setSenhaNotEqualsConfirmacaoError(usuario, result);

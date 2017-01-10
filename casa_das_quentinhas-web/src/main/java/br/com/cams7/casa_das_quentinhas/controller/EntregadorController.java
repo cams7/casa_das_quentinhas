@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,6 +50,15 @@ public class EntregadorController extends AbstractFuncionarioController {
 	@Override
 	public String store(@Valid @ModelAttribute(MODEL_NAME) Funcionario entregador, BindingResult result, ModelMap model,
 			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
+
+		Empresa empresa = entregador.getEmpresa();
+
+		if (empresa.getId() == null) {
+			FieldError empresaError = new FieldError(getModelName(), "empresa.id",
+					getMessageSource().getMessage("NotNull.entregador.empresa.id", null, LOCALE));
+			result.addError(empresaError);
+		}
+
 		return storeFuncionario(entregador, result, model, lastLoadedPage);
 	}
 

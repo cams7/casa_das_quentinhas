@@ -28,4 +28,11 @@ public interface FuncionarioDAO extends BaseDAO<Funcionario, Integer> {
 	 * @return Função do funcionário
 	 */
 	Funcao getFuncionarioFuncaoById(Integer id);
+
+	/**
+	 * @param funcionarioId
+	 *            ID do usuário ou do funcionário
+	 * @return ID do usuário
+	 */
+	Integer getUsuarioCadastroIdByFuncionarioId(Integer funcionarioId);
 }

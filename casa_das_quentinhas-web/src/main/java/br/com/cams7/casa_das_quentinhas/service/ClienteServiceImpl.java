@@ -81,7 +81,9 @@ public class ClienteServiceImpl extends AbstractService<ClienteDAO, Cliente, Int
 
 		try {
 			usuarioId = getUsuarioIdByClienteId(cliente.getId(), ACESSO);
-			usuarioService.updateEmail(usuarioId, cliente.getContato().getEmail());
+
+			usuarioService.updateEmailAndSenha(usuarioId, cliente.getContato().getEmail(),
+					cliente.getUsuarioAcesso().getSenha());
 
 			cliente.getUsuarioAcesso().setId(usuarioId);
 		} catch (AppNotFoundException e) {

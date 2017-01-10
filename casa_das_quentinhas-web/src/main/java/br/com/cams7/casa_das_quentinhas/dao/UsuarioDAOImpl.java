@@ -52,7 +52,7 @@ public class UsuarioDAOImpl extends AbstractDAO<Usuario, Integer> implements Usu
 	 * Integer, java.lang.String)
 	 */
 	@Override
-	public int updateEmail(Integer id, String email) {
+	public int updateEmailAndSenha(Integer id, String email, String senha) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaUpdate<Usuario> cu = cb.createCriteriaUpdate(ENTITY_TYPE);
 
@@ -61,6 +61,8 @@ public class UsuarioDAOImpl extends AbstractDAO<Usuario, Integer> implements Usu
 		cu.where(cb.equal(from.get(Usuario_.id), id));
 
 		cu.set(Usuario_.email, email);
+		if (senha != null)
+			cu.set(Usuario_.senhaCriptografada, senha);
 
 		int updated = getEntityManager().createQuery(cu).executeUpdate();
 

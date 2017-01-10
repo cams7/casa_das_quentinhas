@@ -1,5 +1,8 @@
 package br.com.cams7.casa_das_quentinhas.service;
 
+import static br.com.cams7.casa_das_quentinhas.model.Empresa.Tipo.ENTREGA;
+import static br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao.ATENDENTE;
+import static br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao.GERENTE;
 import static br.com.cams7.casa_das_quentinhas.model.Usuario.Tipo.FUNCIONARIO;
 
 import java.util.Arrays;
@@ -13,11 +16,16 @@ import br.com.cams7.app.service.AbstractService;
 import br.com.cams7.app.utils.AppInvalidDataException;
 import br.com.cams7.app.utils.AppNotFoundException;
 import br.com.cams7.casa_das_quentinhas.dao.FuncionarioDAO;
+import br.com.cams7.casa_das_quentinhas.model.Empresa.Tipo;
 import br.com.cams7.casa_das_quentinhas.model.Funcionario;
 import br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao;
 import br.com.cams7.casa_das_quentinhas.model.Manutencao;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
 
+/**
+ * @author César Magalhães
+ *
+ */
 @Service
 @Transactional
 public class FuncionarioServiceImpl extends AbstractService<FuncionarioDAO, Funcionario, Integer>
@@ -25,6 +33,9 @@ public class FuncionarioServiceImpl extends AbstractService<FuncionarioDAO, Func
 
 	@Autowired
 	private UsuarioService usuarioService;
+
+	@Autowired
+	private EmpresaService empresaService;
 
 	/*
 	 * (non-Javadoc)
@@ -36,8 +47,8 @@ public class FuncionarioServiceImpl extends AbstractService<FuncionarioDAO, Func
 	 */
 	@Override
 	public void persist(Funcionario funcionario, Funcao... possiveisFuncoes) {
-
-		verificaFuncoes(funcionario, possiveisFuncoes);
+		verificaFuncoes(funcionario.getFuncao(), possiveisFuncoes);
+		verificaEmpresa(funcionario.getFuncao(), funcionario.getEmpresa().getId());
 
 		Usuario usuario = funcionario.getUsuario();
 
@@ -46,8 +57,8 @@ public class FuncionarioServiceImpl extends AbstractService<FuncionarioDAO, Func
 
 		funcionario.setId(usuario.getId());
 
-		usuario = new Usuario(usuarioService.getUsuarioIdByEmail(getUsername()));
-		funcionario.setUsuarioCadastro(usuario);
+		Integer usuarioId = usuarioService.getUsuarioIdByEmail(getUsername());
+		funcionario.setUsuarioCadastro(new Usuario(usuarioId));
 
 		Manutencao manutencao = new Manutencao();
 		manutencao.setCadastro(new Date());
@@ -68,25 +79,24 @@ public class FuncionarioServiceImpl extends AbstractService<FuncionarioDAO, Func
 	 */
 	@Override
 	public void update(Funcionario funcionario, Funcao... possiveisFuncoes) {
-
 		if (funcionario.getId() == null)
 			throw new AppInvalidDataException("O funcionário não foi informado...");
 
 		if (funcionario.getManutencao().getCadastro() == null)
 			throw new AppInvalidDataException("A data de cadastro não foi informada...");
 
-		verificaFuncoes(funcionario, possiveisFuncoes);
+		Integer empresaId = funcionario.getEmpresa().getId();
+		if (empresaId == null)
+			throw new AppInvalidDataException("A empresa não foi informado...");
 
-		if (funcionario.getUsuarioCadastro().getId() == null)
-			throw new AppInvalidDataException("O usuário de cadastro não foi informado...");
+		verificaFuncoes(funcionario.getFuncao(), possiveisFuncoes);
+		verificaEmpresa(funcionario.getFuncao(), empresaId);
+
+		Integer usuarioId = getUsuarioCadastroIdByFuncionarioId(funcionario.getId());
+		funcionario.setUsuarioCadastro(new Usuario(usuarioId));
 
 		Usuario usuario = funcionario.getUsuario();
-
-		if (usuario.getId() == null)
-			throw new AppInvalidDataException("O usuário de acesso não foi informado...");
-
-		if (!FUNCIONARIO.equals(usuario.getTipo()))
-			throw new AppInvalidDataException(String.format("O tipo (%s) não é válido...", usuario.getTipo()));
+		usuario.setTipo(FUNCIONARIO);
 
 		usuarioService.update(usuario);
 
@@ -150,6 +160,19 @@ public class FuncionarioServiceImpl extends AbstractService<FuncionarioDAO, Func
 	 * (non-Javadoc)
 	 * 
 	 * @see
+	 * br.com.cams7.casa_das_quentinhas.dao.FuncionarioDAO#getUsuarioIdById(java
+	 * .lang.Integer, br.com.cams7.casa_das_quentinhas.model.Usuario.Relacao)
+	 */
+	@Transactional(readOnly = true, noRollbackFor = AppNotFoundException.class)
+	@Override
+	public Integer getUsuarioCadastroIdByFuncionarioId(Integer funcionarioId) {
+		return getDao().getUsuarioCadastroIdByFuncionarioId(funcionarioId);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
 	 * br.com.cams7.casa_das_quentinhas.service.FuncionarioService#isCPFUnique(
 	 * java.lang.Integer, java.lang.String)
 	 */
@@ -173,12 +196,35 @@ public class FuncionarioServiceImpl extends AbstractService<FuncionarioDAO, Func
 	/**
 	 * Verifica se a função informada é valida
 	 * 
-	 * @param funcionario
+	 * @param funcao
+	 *            Função do funcionário
 	 * @param possiveisFuncoes
+	 *            Possíveis funções
 	 */
-	private void verificaFuncoes(Funcionario funcionario, Funcao... possiveisFuncoes) {
-		if (!Arrays.stream(possiveisFuncoes).anyMatch(funcao -> funcao.equals(funcionario.getFuncao())))
-			throw new AppInvalidDataException(String.format("A função (%s) não é válida...", funcionario.getFuncao()));
+	private void verificaFuncoes(Funcao funcao, Funcao... possiveisFuncoes) {
+		if (!Arrays.stream(possiveisFuncoes).anyMatch(f -> f.equals(funcao)))
+			throw new AppInvalidDataException(String.format("A função (%s) do funcionário não é válida...", funcao));
+	}
+
+	/**
+	 * Verifica se a empresa é valida
+	 * 
+	 * @param funcao
+	 *            Função do funcionário
+	 * @param empresaId
+	 *            ID da empresa
+	 */
+	private void verificaEmpresa(Funcao funcao, Integer empresaId) {
+		String errorMessage = String.format("A empresa (id: %s) não é válida...", empresaId);
+
+		if (empresaId.equals(1) && !Arrays.asList(GERENTE, ATENDENTE).stream().anyMatch(f -> f.equals(funcao)))
+			throw new AppInvalidDataException(errorMessage);
+
+		if (!empresaId.equals(1)) {
+			Tipo tipo = empresaService.getEmpresaIipoById(empresaId);
+			if (!ENTREGA.equals(tipo))
+				throw new AppInvalidDataException(errorMessage);
+		}
 	}
 
 }

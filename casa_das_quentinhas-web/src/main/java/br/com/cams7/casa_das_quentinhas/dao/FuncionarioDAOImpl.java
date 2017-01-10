@@ -24,6 +24,7 @@ import br.com.cams7.casa_das_quentinhas.model.Funcionario;
 import br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao;
 import br.com.cams7.casa_das_quentinhas.model.Funcionario_;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
+import br.com.cams7.casa_das_quentinhas.model.Usuario_;
 
 @Repository
 public class FuncionarioDAOImpl extends AbstractDAO<Funcionario, Integer> implements FuncionarioDAO {
@@ -96,7 +97,6 @@ public class FuncionarioDAOImpl extends AbstractDAO<Funcionario, Integer> implem
 		Root<Funcionario> from = cq.from(ENTITY_TYPE);
 
 		from.fetch(Funcionario_.usuario, JoinType.INNER);
-		from.fetch(Funcionario_.usuarioCadastro, JoinType.INNER);
 		from.fetch(Funcionario_.empresa, JoinType.INNER);
 
 		cq.select(from);
@@ -169,6 +169,34 @@ public class FuncionarioDAOImpl extends AbstractDAO<Funcionario, Integer> implem
 			return funcao;
 		} catch (NoResultException e) {
 			throw new AppNotFoundException(String.format("A função do funcionário (id: %s) não foi encontrada...", id));
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.casa_das_quentinhas.dao.FuncionarioDAO#
+	 * getUsuarioCadastroIdByFuncionarioId(java.lang.Integer)
+	 */
+	@Override
+	public Integer getUsuarioCadastroIdByFuncionarioId(Integer funcionarioId) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Integer> cq = cb.createQuery(Integer.class);
+
+		Root<Funcionario> from = cq.from(ENTITY_TYPE);
+
+		cq.select(from.join(Funcionario_.usuarioCadastro, JoinType.INNER).get(Usuario_.id));
+
+		cq.where(cb.equal(from.get(Funcionario_.id), funcionarioId));
+
+		TypedQuery<Integer> tq = getEntityManager().createQuery(cq);
+
+		try {
+			Integer usuarioId = tq.getSingleResult();
+			return usuarioId;
+		} catch (NoResultException e) {
+			throw new AppNotFoundException(
+					String.format("Do funcionário (id: %s), o id do usuário não foi encontrado...", funcionarioId));
 		}
 	}
 

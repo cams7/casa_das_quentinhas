@@ -53,12 +53,13 @@ public class UsuarioServiceImpl extends AbstractService<UsuarioDAO, Usuario, Int
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * br.com.cams7.casa_das_quentinhas.dao.UsuarioDAO#updateEmail(java.lang.
-	 * Integer, java.lang.String)
+	 * br.com.cams7.casa_das_quentinhas.dao.UsuarioDAO#updateEmailAndSenha(java.
+	 * lang.Integer, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public int updateEmail(Integer id, String email) {
-		return getDao().updateEmail(id, email);
+	public int updateEmailAndSenha(Integer id, String email, String senha) {
+		senha = senha.isEmpty() ? null : passwordEncoder.encode(senha);
+		return getDao().updateEmailAndSenha(id, email, senha);
 	}
 
 	/*

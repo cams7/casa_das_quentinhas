@@ -10,9 +10,11 @@ public interface UsuarioDAO extends BaseDAO<Usuario, Integer> {
 	 *            ID do usuário
 	 * @param email
 	 *            E-mail do usuário
+	 * @param senha
+	 *            Senha do usuário
 	 * @return Total de usuários atualizados
 	 */
-	int updateEmail(Integer id, String email);
+	int updateEmailAndSenha(Integer id, String email, String senha);
 
 	/**
 	 * @param email

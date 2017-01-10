@@ -9,9 +9,6 @@
 <form:form method="POST" modelAttribute="funcionario">
 	<form:input type="hidden" path="id" />	
 	<form:input type="hidden" path="manutencao.cadastro.time" />
-	<form:input type="hidden" path="usuario.id" />
-	<form:input type="hidden" path="usuario.tipo" />
-	<form:input type="hidden" path="usuarioCadastro.id" />
 
 	<%@include file="form.jsp"%>
 
