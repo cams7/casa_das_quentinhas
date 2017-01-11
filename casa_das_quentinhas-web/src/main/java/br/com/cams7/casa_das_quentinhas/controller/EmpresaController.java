@@ -7,6 +7,7 @@ import static br.com.cams7.casa_das_quentinhas.model.Empresa.RelacionamentoEmpre
 import static br.com.cams7.casa_das_quentinhas.model.Empresa.RelacionamentoEmpresa.PEDIDOS;
 import static br.com.cams7.casa_das_quentinhas.model.Empresa.Tipo.CLIENTE;
 import static br.com.cams7.casa_das_quentinhas.model.Empresa.Tipo.ENTREGA;
+import static org.springframework.http.HttpStatus.OK;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +17,6 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import br.com.cams7.app.controller.AbstractController;
@@ -193,6 +194,7 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 	}
 
 	@GetMapping(value = "/{empresaId}/entregadores")
+	@ResponseStatus(OK)
 	public String entregadores(@PathVariable Integer empresaId, ModelMap model,
 			@RequestParam(value = "offset", required = true) Integer offset,
 			@RequestParam(value = "f", required = true) String sortField,
@@ -205,6 +207,7 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 	}
 
 	@GetMapping(value = "/{empresaId}/pedidos")
+	@ResponseStatus(OK)
 	public String pedidos(@PathVariable Integer empresaId, ModelMap model,
 			@RequestParam(value = "offset", required = true) Integer offset,
 			@RequestParam(value = "f", required = true) String sortField,
@@ -216,47 +219,72 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 		return "pedido_list";
 	}
 
-	@SuppressWarnings("unchecked")
-	private void loadEntregadores(Integer empresaId, ModelMap model, Integer offset, String sortField,
-			SortOrder sortOrder) {
-		Map<String, Object> filters = new HashMap<>();
-		filters.put("empresa.id", empresaId);
-		filters.put("funcao", Funcao.ENTREGADOR);
-
-		SearchParams params = new SearchParams(offset, MAX_RESULTS, sortField, sortOrder, filters);
-
-		entregadorService.setIgnoredJoins(Empresa.class);
-		List<Funcionario> entregadores = entregadorService.search(params);
-		long count = entregadorService.getTotalElements(filters);
-
-		model.addAttribute("entregadores", entregadores);
-		model.addAttribute("escondeEmpresa", true);
-
-		setPaginationAttribute(model, offset, sortField, sortOrder, null, count, MAX_RESULTS);
-	}
-
-	@SuppressWarnings("unchecked")
-	private void loadPedidos(Integer empresaId, ModelMap model, Integer offset, String sortField, SortOrder sortOrder) {
-		Map<String, Object> filters = new HashMap<>();
-		filters.put("empresa.id", empresaId);
-
-		SearchParams params = new SearchParams(offset, MAX_RESULTS, sortField, sortOrder, filters);
-
-		pedidoService.setIgnoredJoins(Cliente.class, Empresa.class);
-		List<Pedido> pedidos = pedidoService.search(params);
-		long count = pedidoService.getTotalElements(filters);
-
-		model.addAttribute("pedidos", pedidos);
-		model.addAttribute("escondeCliente", true);
-
-		setPaginationAttribute(model, offset, sortField, sortOrder, null, count, MAX_RESULTS);
-	}
-
 	@GetMapping(value = "/cidades/{nomeOrIbge}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Map<Integer, String>> getCidades(@PathVariable String nomeOrIbge) {
 		Map<Integer, String> cidades = cidadeService.getCidadesByNomeOrIbge(nomeOrIbge);
 
-		return new ResponseEntity<Map<Integer, String>>(cidades, HttpStatus.OK);
+		return new ResponseEntity<Map<Integer, String>>(cidades, OK);
+	}
+
+	/**
+	 * Possiveis tipos de empresa
+	 */
+	@ModelAttribute("empresaTipos")
+	public Tipo[] initializeTipos() {
+		return Tipo.values();
+	}
+
+	/**
+	 * Possiveis regimes tributários
+	 */
+	@ModelAttribute("empresaRegimesTributarios")
+	public RegimeTributario[] initializeRegimesTributarios() {
+		return RegimeTributario.values();
+	}
+
+	@Override
+	protected String getModelName() {
+		return MODEL_NAME;
+	}
+
+	@Override
+	protected String getListName() {
+		return LIST_NAME;
+	}
+
+	@Override
+	protected String[] getGlobalFilters() {
+		return new String[] { "razaoSocial", "cnpj", "contato.email", "contato.telefone", "cidade.nome" };
+	}
+
+	@Override
+	protected Empresa getNewEntity() {
+		Empresa empresa = new Empresa();
+		empresa.setCidade(new Cidade());
+		empresa.setUsuarioAcesso(new Usuario());
+		empresa.setEndereco(new Endereco());
+		empresa.setContato(new Contato());
+
+		return empresa;
+	}
+
+	@Override
+	protected Empresa getEntity(Integer id) {
+		Empresa empresa = getService().getEmpresaByIdAndTipos(id, CLIENTE, ENTREGA);
+		empresa.setUsuarioAcesso(new Usuario());
+		return empresa;
+	}
+
+	@Override
+	protected Map<String, Object> getFilters() {
+		Map<String, Object> filters = new HashMap<>();
+		filters.put("tipo", new Tipo[] { CLIENTE, ENTREGA });
+		return filters;
+	}
+
+	@Override
+	protected String getDeleteMessage() {
+		return "A empresa foi removida com sucesso.";
 	}
 
 	/**
@@ -379,60 +407,40 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 		result.addError(tipoError);
 	}
 
-	/**
-	 * Possiveis tipos de empresa
-	 */
-	@ModelAttribute("empresaTipos")
-	public Tipo[] initializeTipos() {
-		return Tipo.values();
-	}
-
-	/**
-	 * Possiveis regimes tributários
-	 */
-	@ModelAttribute("empresaRegimesTributarios")
-	public RegimeTributario[] initializeRegimesTributarios() {
-		return RegimeTributario.values();
-	}
-
-	@Override
-	protected String getModelName() {
-		return MODEL_NAME;
-	}
-
-	@Override
-	protected String getListName() {
-		return LIST_NAME;
-	}
-
-	@Override
-	protected String[] getGlobalFilters() {
-		return new String[] { "razaoSocial", "cnpj", "contato.email", "contato.telefone", "cidade.nome" };
-	}
-
-	@Override
-	protected Empresa getNewEntity() {
-		Empresa empresa = new Empresa();
-		empresa.setCidade(new Cidade());
-		empresa.setUsuarioAcesso(new Usuario());
-		empresa.setEndereco(new Endereco());
-		empresa.setContato(new Contato());
-
-		return empresa;
-	}
-
-	@Override
-	protected Empresa getEntity(Integer id) {
-		Empresa empresa = getService().getEmpresaByIdAndTipos(id, CLIENTE, ENTREGA);
-		empresa.setUsuarioAcesso(new Usuario());
-		return empresa;
-	}
-
-	@Override
-	protected Map<String, Object> getFilters() {
+	@SuppressWarnings("unchecked")
+	private void loadEntregadores(Integer empresaId, ModelMap model, Integer offset, String sortField,
+			SortOrder sortOrder) {
 		Map<String, Object> filters = new HashMap<>();
-		filters.put("tipo", new Tipo[] { CLIENTE, ENTREGA });
-		return filters;
+		filters.put("empresa.id", empresaId);
+		filters.put("funcao", Funcao.ENTREGADOR);
+
+		SearchParams params = new SearchParams(offset, MAX_RESULTS, sortField, sortOrder, filters);
+
+		entregadorService.setIgnoredJoins(Empresa.class);
+		List<Funcionario> entregadores = entregadorService.search(params);
+		long count = entregadorService.getTotalElements(filters);
+
+		model.addAttribute("entregadores", entregadores);
+		model.addAttribute("escondeEmpresa", true);
+
+		setPaginationAttribute(model, offset, sortField, sortOrder, null, count, MAX_RESULTS);
+	}
+
+	@SuppressWarnings("unchecked")
+	private void loadPedidos(Integer empresaId, ModelMap model, Integer offset, String sortField, SortOrder sortOrder) {
+		Map<String, Object> filters = new HashMap<>();
+		filters.put("empresa.id", empresaId);
+
+		SearchParams params = new SearchParams(offset, MAX_RESULTS, sortField, sortOrder, filters);
+
+		pedidoService.setIgnoredJoins(Cliente.class, Empresa.class);
+		List<Pedido> pedidos = pedidoService.search(params);
+		long count = pedidoService.getTotalElements(filters);
+
+		model.addAttribute("pedidos", pedidos);
+		model.addAttribute("escondeCliente", true);
+
+		setPaginationAttribute(model, offset, sortField, sortOrder, null, count, MAX_RESULTS);
 	}
 
 }

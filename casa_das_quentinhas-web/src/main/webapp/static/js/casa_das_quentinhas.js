@@ -9,6 +9,31 @@ Number.prototype.formatMoney = function(c, d, t) {
 					+ Math.abs(n - i).toFixed(c).slice(2) : ''));
 };
 
+function createSuccessMessage(message) {
+	$('div.alert strong').html('Sucesso!');
+	$('div.alert span').html(message);
+	$('div.alert').removeClass('alert-danger').addClass('alert-success').show(); 
+}
+
+function createErrorMessage(status, message) {
+	var title = 'Erro interno do servidor!';
+	
+	switch (status) {
+	case 400:		
+		title = 'Requisição inválida!';
+		break;
+	case 404:	
+		title = 'Não encontrado!';
+		break;
+	default:
+		break;
+	}
+	
+	$('div.alert strong').html(title);
+	$('div.alert span').html(message);
+    $('div.alert').removeClass('alert-success').addClass('alert-danger').show();
+}
+
 var loadingShow = event => {
 	$('div#loading_modal').modal('show');
 	// console.log('loading show');

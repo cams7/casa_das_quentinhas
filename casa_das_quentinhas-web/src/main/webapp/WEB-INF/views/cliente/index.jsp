@@ -12,8 +12,8 @@
 	<div class="col-sm-6">
 		<div class="input-group h2">
 			<input name="data[search]" class="form-control" id="search_query"
-				type="text" placeholder="Nome / CPF / E-mail / Telefone / Cidade"> <span
-				class="input-group-btn">
+				type="text" placeholder="Nome / CPF / E-mail / Telefone / Cidade">
+			<span class="input-group-btn">
 				<button id="search_btn" class="btn btn-primary" type="submit">
 					<span class="glyphicon glyphicon-search"></span>
 				</button>
@@ -30,7 +30,7 @@
 </div>
 
 <hr />
-
+<%@include file="../../layouts/alert_message.jsp"%>
 <div class="content">
 	<%@include file="list.jsp"%>
 </div>

@@ -4,7 +4,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <h3 class="page-header">Adicionar Pedido</h3>
-
+<%@include file="../../layouts/alert_message.jsp"%>
 <form:form method="POST" modelAttribute="pedido" id="pedido_form">
 
 	<%@include file="form.jsp"%>

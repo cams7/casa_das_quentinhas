@@ -64,9 +64,6 @@ $(document).ready(function($) {
             url: url,
             type: 'GET',
             success: data => { 
-                // console.log('Sucess:');
-                // console.log(data);
-
                 $('div#item_modal form#item_form :input[name="produto_id"]').val(data.id.produtoId);
                 $('div#item_modal form#item_form :input[name="produto"]').val(data.produto.nomeWithTamanho);
                 $('div#item_modal form#item_form :input[name="quantidade"]').val(data.quantidade);
@@ -75,8 +72,7 @@ $(document).ready(function($) {
                 $('div#item_modal').modal('show');
             },
             error: data => {
-                console.log('Error:');
-                console.log(data);
+            	createErrorMessage(data.status, 'Ocorreu um erro ao tentar buscar o item de pedido');
             }
         });        
     });   
@@ -89,21 +85,17 @@ $(document).ready(function($) {
         var url = $('div#item_modal form#item_form').attr('action') + '/' + id + '/delete';
         var method = $('div#item_modal form#item_form').attr('method');
         
-        //console.log(method + ': ' + url);
+        // console.log(method + ': ' + url);
 
         $.ajax({
             url: url,
             type: method,         
             success: data => {
-                // console.log('Sucess:');
-                // console.log(data);
                 setPedido(data);
-
                 loadTable(true);
             },
             error: data => {
-                console.log('Error:');
-                console.log(data);
+            	createErrorMessage(data.status, 'Ocorreu um erro ao tentar remover o item de pedido');
             }
         });
     });
@@ -123,25 +115,22 @@ $(document).ready(function($) {
         var url = form.action;
         var method = form.method;
                 
-        //var state = $('input#modal_state').val();  
-        //console.log(method + ': ' + url);
+        // var state = $('input#modal_state').val();
+        // console.log(method + ': ' + url);
         
         $.ajax({
         	url: url,
         	type: method,            
             data: $(form).serialize(),            
             success: data => {
-                // console.log('Sucess:');
-                // console.log(data);
                 setPedido(data);
-
-                loadTable();
-
-                $('div#item_modal').modal('hide');
+                loadTable();                
             },
             error: data => {
-                console.log('Error:');
-                console.log(data);
+            	createErrorMessage(data.status, 'Ocorreu um erro ao tentar salvar o item de pedido');
+            },
+            complete: data => {
+            	$('div#item_modal').modal('hide');
             }
         })        
     });

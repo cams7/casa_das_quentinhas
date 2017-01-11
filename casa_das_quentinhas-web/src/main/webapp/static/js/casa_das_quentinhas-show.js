@@ -16,14 +16,13 @@ $(document).ready(function($) {
             url: form.action,
             type: form.method,
             success: data => {
-                // console.log('Sucess:');
-                // console.log(data);
-            	
             	window.history.go(-1);
             },
             error: data => {
-                console.log('Error:');
-                console.log(data);
+            	createErrorMessage(data.status, data.responseJSON);
+            },
+            complete: data => {
+            	$('div#delete_modal').modal('hide');
             }
         });
     }); 

@@ -3,6 +3,8 @@
  */
 package br.com.cams7.casa_das_quentinhas.controller;
 
+import static org.springframework.http.HttpStatus.OK;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +14,6 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import br.com.cams7.app.common.DateEditor;
@@ -170,6 +172,7 @@ public class ClienteController extends AbstractController<ClienteService, Client
 	}
 
 	@GetMapping(value = "/{clienteId}/pedidos")
+	@ResponseStatus(OK)
 	public String pedidos(@PathVariable Integer clienteId, ModelMap model,
 			@RequestParam(value = "offset", required = true) Integer offset,
 			@RequestParam(value = "f", required = true) String sortField,
@@ -181,35 +184,63 @@ public class ClienteController extends AbstractController<ClienteService, Client
 		return "pedido_list";
 	}
 
-	@SuppressWarnings("unchecked")
-	private void loadPedidos(Integer clienteId, ModelMap model, Integer offset, String sortField, SortOrder sortOrder) {
-		final short MAX_RESULTS = 5;
-
-		Map<String, Object> filters = new HashMap<>();
-		filters.put("cliente.id", clienteId);
-
-		SearchParams params = new SearchParams(offset, MAX_RESULTS, sortField, sortOrder, filters);
-
-		pedidoService.setIgnoredJoins(Cliente.class, Empresa.class);
-		List<Pedido> pedidos = pedidoService.search(params);
-		long count = pedidoService.getTotalElements(filters);
-
-		model.addAttribute("pedidos", pedidos);
-		model.addAttribute("escondeCliente", true);
-
-		setPaginationAttribute(model, offset, sortField, sortOrder, null, count, MAX_RESULTS);
-	}
-
 	@GetMapping(value = "/cidades/{nomeOrIbge}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Map<Integer, String>> getCidades(@PathVariable String nomeOrIbge) {
 		Map<Integer, String> cidades = cidadeService.getCidadesByNomeOrIbge(nomeOrIbge);
 
-		return new ResponseEntity<Map<Integer, String>>(cidades, HttpStatus.OK);
+		return new ResponseEntity<Map<Integer, String>>(cidades, OK);
+	}
+
+	/**
+	 * Possiveis tipos de contribuintes
+	 */
+	@ModelAttribute("clienteTiposContribuintes")
+	public TipoContribuinte[] initializeTipos() {
+		TipoContribuinte[] tipos = TipoContribuinte.values();
+		return tipos;
 	}
 
 	@InitBinder
 	public void binder(WebDataBinder binder) {
 		binder.registerCustomEditor(Date.class, "nascimento", new DateEditor());
+	}
+
+	@Override
+	protected String getModelName() {
+		return MODEL_NAME;
+	}
+
+	@Override
+	protected String getListName() {
+		return LIST_NAME;
+	}
+
+	@Override
+	protected String[] getGlobalFilters() {
+		return new String[] { "nome", "cpf", "contato.email", "contato.telefone", "cidade.nome" };
+	}
+
+	@Override
+	protected Cliente getNewEntity() {
+		Cliente cliente = new Cliente();
+		cliente.setCidade(new Cidade());
+		cliente.setUsuarioAcesso(new Usuario());
+		cliente.setEndereco(new Endereco());
+		cliente.setContato(new Contato());
+
+		return cliente;
+	}
+
+	@Override
+	protected Cliente getEntity(Integer id) {
+		Cliente cliente = getService().getClienteById(id);
+		cliente.setUsuarioAcesso(new Usuario());
+		return cliente;
+	}
+
+	@Override
+	protected String getDeleteMessage() {
+		return "O cliente foi removido com sucesso.";
 	}
 
 	/**
@@ -299,46 +330,23 @@ public class ClienteController extends AbstractController<ClienteService, Client
 		}
 	}
 
-	/**
-	 * Possiveis tipos de contribuintes
-	 */
-	@ModelAttribute("clienteTiposContribuintes")
-	public TipoContribuinte[] initializeTipos() {
-		TipoContribuinte[] tipos = TipoContribuinte.values();
-		return tipos;
-	}
+	@SuppressWarnings("unchecked")
+	private void loadPedidos(Integer clienteId, ModelMap model, Integer offset, String sortField, SortOrder sortOrder) {
+		final short MAX_RESULTS = 5;
 
-	@Override
-	protected String getModelName() {
-		return MODEL_NAME;
-	}
+		Map<String, Object> filters = new HashMap<>();
+		filters.put("cliente.id", clienteId);
 
-	@Override
-	protected String getListName() {
-		return LIST_NAME;
-	}
+		SearchParams params = new SearchParams(offset, MAX_RESULTS, sortField, sortOrder, filters);
 
-	@Override
-	protected String[] getGlobalFilters() {
-		return new String[] { "nome", "cpf", "contato.email", "contato.telefone", "cidade.nome" };
-	}
+		pedidoService.setIgnoredJoins(Cliente.class, Empresa.class);
+		List<Pedido> pedidos = pedidoService.search(params);
+		long count = pedidoService.getTotalElements(filters);
 
-	@Override
-	protected Cliente getNewEntity() {
-		Cliente cliente = new Cliente();
-		cliente.setCidade(new Cidade());
-		cliente.setUsuarioAcesso(new Usuario());
-		cliente.setEndereco(new Endereco());
-		cliente.setContato(new Contato());
+		model.addAttribute("pedidos", pedidos);
+		model.addAttribute("escondeCliente", true);
 
-		return cliente;
-	}
-
-	@Override
-	protected Cliente getEntity(Integer id) {
-		Cliente cliente = getService().getClienteById(id);
-		cliente.setUsuarioAcesso(new Usuario());
-		return cliente;
+		setPaginationAttribute(model, offset, sortField, sortOrder, null, count, MAX_RESULTS);
 	}
 
 }

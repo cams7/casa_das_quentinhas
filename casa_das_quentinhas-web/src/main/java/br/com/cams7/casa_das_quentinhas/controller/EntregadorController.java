@@ -4,12 +4,12 @@
 package br.com.cams7.casa_das_quentinhas.controller;
 
 import static br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao.ENTREGADOR;
+import static org.springframework.http.HttpStatus.OK;
 
 import java.util.Map;
 
 import javax.validation.Valid;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -84,7 +84,7 @@ public class EntregadorController extends AbstractFuncionarioController {
 		Map<Integer, String> empresas = getEmpresaService().getEmpresasByRazaoSocialOrCnpj(razaoSocialOrCnpj,
 				Tipo.ENTREGA);
 
-		return new ResponseEntity<Map<Integer, String>>(empresas, HttpStatus.OK);
+		return new ResponseEntity<Map<Integer, String>>(empresas, OK);
 	}
 
 	@Override
@@ -120,6 +120,11 @@ public class EntregadorController extends AbstractFuncionarioController {
 	@Override
 	protected Funcao[] getPossiveisFuncoes() {
 		return new Funcao[] { ENTREGADOR };
+	}
+
+	@Override
+	protected String getDeleteMessage() {
+		return "O entregador foi removido com sucesso.";
 	}
 
 }

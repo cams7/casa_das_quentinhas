@@ -92,6 +92,40 @@ public abstract class AbstractFuncionarioController
 		return redirectMainPage();
 	}
 
+	@Override
+	protected Funcionario getNewEntity() {
+		Funcionario funcionario = new Funcionario();
+		funcionario.setUsuario(new Usuario());
+		return funcionario;
+	}
+
+	@Override
+	protected Funcionario getEntity(Integer id) {
+		Funcionario funcionario = getService().getFuncionarioByIdAndFuncoes(id, getPossiveisFuncoes());
+		return funcionario;
+	}
+
+	@Override
+	protected Map<String, Object> getFilters() {
+		Map<String, Object> filters = new HashMap<>();
+		filters.put("funcao", getPossiveisFuncoes());
+		return filters;
+	}
+
+	protected abstract Funcao[] getPossiveisFuncoes();
+
+	protected UsuarioService getUsuarioService() {
+		return usuarioService;
+	}
+
+	protected EmpresaService getEmpresaService() {
+		return empresaService;
+	}
+
+	protected MessageSource getMessageSource() {
+		return messageSource;
+	}
+
 	/**
 	 * 1º validação
 	 * 
@@ -174,40 +208,6 @@ public abstract class AbstractFuncionarioController
 					.getMessage("NonUnique." + getModelName() + ".cpf", new String[] { funcionario.getCpf() }, LOCALE));
 			result.addError(cpfError);
 		}
-	}
-
-	@Override
-	protected Funcionario getNewEntity() {
-		Funcionario funcionario = new Funcionario();
-		funcionario.setUsuario(new Usuario());
-		return funcionario;
-	}
-
-	@Override
-	protected Funcionario getEntity(Integer id) {
-		Funcionario funcionario = getService().getFuncionarioByIdAndFuncoes(id, getPossiveisFuncoes());
-		return funcionario;
-	}
-
-	@Override
-	protected Map<String, Object> getFilters() {
-		Map<String, Object> filters = new HashMap<>();
-		filters.put("funcao", getPossiveisFuncoes());
-		return filters;
-	}
-
-	protected abstract Funcao[] getPossiveisFuncoes();
-
-	protected UsuarioService getUsuarioService() {
-		return usuarioService;
-	}
-
-	protected EmpresaService getEmpresaService() {
-		return empresaService;
-	}
-
-	protected MessageSource getMessageSource() {
-		return messageSource;
 	}
 
 }

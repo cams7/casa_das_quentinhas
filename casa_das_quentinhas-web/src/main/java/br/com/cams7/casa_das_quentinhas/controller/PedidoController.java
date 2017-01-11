@@ -3,6 +3,12 @@
  */
 package br.com.cams7.casa_das_quentinhas.controller;
 
+import static br.com.cams7.casa_das_quentinhas.model.Pedido.TipoCliente.PESSOA_JURIDICA;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.METHOD_NOT_ALLOWED;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.OK;
+
 import java.util.List;
 import java.util.Map;
 
@@ -10,7 +16,6 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,10 +30,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import br.com.cams7.app.common.MoneyEditor;
 import br.com.cams7.app.controller.AbstractController;
+import br.com.cams7.app.utils.AppInvalidDataException;
 import br.com.cams7.app.utils.AppNotFoundException;
 import br.com.cams7.app.utils.SearchParams.SortOrder;
 import br.com.cams7.casa_das_quentinhas.facade.PedidoItemFacade;
@@ -41,7 +48,6 @@ import br.com.cams7.casa_das_quentinhas.model.Pedido.FormaPagamento;
 import br.com.cams7.casa_das_quentinhas.model.Pedido.Situacao;
 import br.com.cams7.casa_das_quentinhas.model.Pedido.TipoAtendimento;
 import br.com.cams7.casa_das_quentinhas.model.Pedido.TipoCliente;
-import static br.com.cams7.casa_das_quentinhas.model.Pedido.TipoCliente.PESSOA_JURIDICA;
 import br.com.cams7.casa_das_quentinhas.model.PedidoItem;
 import br.com.cams7.casa_das_quentinhas.model.PedidoItemPK;
 import br.com.cams7.casa_das_quentinhas.model.Produto;
@@ -70,10 +76,10 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 	private EmpresaService empresaService;
 
 	@Autowired
-	private PedidoItemFacade itemFacade;
+	private ProdutoService produtoService;
 
 	@Autowired
-	private ProdutoService produtoService;
+	private PedidoItemFacade itemFacade;
 
 	@Autowired
 	private MessageSource messageSource;
@@ -167,50 +173,8 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 		return redirectMainPage();
 	}
 
-	@PostMapping(value = "/item", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Pedido> addItem(ModelMap model,
-			@RequestParam(value = "produto_id", required = true) Integer produtoId,
-			@RequestParam(value = "quantidade", required = true) Short quantidade) {
-
-		PedidoItem item = new PedidoItem(null, produtoId);
-		item.setQuantidade(quantidade);
-
-		Produto produto = produtoService.getById(produtoId);
-
-		item.setProduto(produto);
-
-		Pedido pedido = itemFacade.addItem(item);
-
-		if (pedido == null)
-			return new ResponseEntity<Pedido>(HttpStatus.METHOD_NOT_ALLOWED);
-
-		return new ResponseEntity<Pedido>(pedido, HttpStatus.OK);
-	}
-
-	@GetMapping(value = "/{pedidoId}/item/{produtoId}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<PedidoItem> showItem(@PathVariable Long pedidoId, @PathVariable Integer produtoId) {
-
-		try {
-			PedidoItem item = itemFacade.getItem(pedidoId, produtoId);
-			return new ResponseEntity<PedidoItem>(item, HttpStatus.OK);
-		} catch (AppNotFoundException e) {
-			LOGGER.warn(e.getMessage());
-		}
-
-		return new ResponseEntity<PedidoItem>(HttpStatus.NOT_FOUND);
-	}
-
-	@PostMapping(value = "/item/{produtoId}/delete", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Pedido> removeItem(@PathVariable Integer produtoId) {
-		Pedido pedido = itemFacade.removeItem(produtoId);
-
-		if (pedido == null)
-			return new ResponseEntity<Pedido>(HttpStatus.METHOD_NOT_ALLOWED);
-
-		return new ResponseEntity<Pedido>(pedido, HttpStatus.OK);
-	}
-
 	@GetMapping(value = "/{pedidoId}/itens")
+	@ResponseStatus(OK)
 	public String itens(@PathVariable Long pedidoId, ModelMap model,
 			@RequestParam(value = "offset", required = true) Integer offset,
 			@RequestParam(value = "f", required = true) String sortField,
@@ -222,74 +186,85 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 		return "pedido_itens";
 	}
 
-	/**
-	 * Verifica se foi informado o id do cliente ou da empresa
-	 * 
-	 * @param result
-	 * @param pedido
-	 */
-	private void setNotNullClienteError(BindingResult result, Pedido pedido) {
-		Cliente cliente = pedido.getCliente();
-		if (cliente.getId() == null) {
-			FieldError clienteError = new FieldError(getModelName(), "cliente.id",
-					messageSource.getMessage(PESSOA_JURIDICA.equals(pedido.getTipoCliente())
-							? "NotNull.pedido.empresa.id" : "NotNull.pedido.cliente.id", null, LOCALE));
-			result.addError(clienteError);
+	@GetMapping(value = "/{pedidoId}/item/{produtoId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<PedidoItem> showItem(@PathVariable Long pedidoId, @PathVariable Integer produtoId) {
+		try {
+			PedidoItem item = itemFacade.getItem(pedidoId, produtoId);
+			return new ResponseEntity<PedidoItem>(item, OK);
+		} catch (AppNotFoundException e) {
+			LOGGER.warn(e.getMessage());
+			return new ResponseEntity<PedidoItem>(NOT_FOUND);
+		} catch (AppInvalidDataException e) {
+			LOGGER.error(e.getMessage());
+			return new ResponseEntity<PedidoItem>(METHOD_NOT_ALLOWED);
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+			return new ResponseEntity<PedidoItem>(INTERNAL_SERVER_ERROR);
 		}
 	}
 
-	/**
-	 * @param model
-	 */
-	private void loadItens(Long pedidoId, ModelMap model) {
-		loadItens(pedidoId, model, 0, "quantidade", SortOrder.DESCENDING);
+	@PostMapping(value = "/item", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Pedido> addItem(ModelMap model,
+			@RequestParam(value = "produto_id", required = true) Integer produtoId,
+			@RequestParam(value = "quantidade", required = true) Short quantidade) {
+		try {
+			PedidoItem item = new PedidoItem(null, produtoId);
+			item.setQuantidade(quantidade);
+
+			Produto produto = produtoService.getById(produtoId);
+
+			item.setProduto(produto);
+
+			Pedido pedido = itemFacade.addItem(item);
+			return new ResponseEntity<Pedido>(pedido, OK);
+		} catch (AppNotFoundException e) {
+			LOGGER.warn(e.getMessage());
+			return new ResponseEntity<Pedido>(NOT_FOUND);
+		} catch (AppInvalidDataException e) {
+			LOGGER.error(e.getMessage());
+			return new ResponseEntity<Pedido>(METHOD_NOT_ALLOWED);
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+			return new ResponseEntity<Pedido>(INTERNAL_SERVER_ERROR);
+		}
 	}
 
-	/**
-	 * @param model
-	 * @param offset
-	 * @param sortField
-	 * @param sortOrder
-	 */
-	private void loadItens(Long pedidoId, ModelMap model, Integer offset, String sortField, SortOrder sortOrder) {
-		final short MAX_RESULTS = 5;
-
-		List<PedidoItem> itens = itemFacade.search(pedidoId, offset, MAX_RESULTS, sortField, sortOrder);
-		long count = itemFacade.getTotalElements(pedidoId);
-
-		model.addAttribute("itens", itens);
-		if (pedidoId != 0L)
-			model.addAttribute("escondeAcoes", true);
-
-		setPaginationAttribute(model, offset, sortField, sortOrder, null, count, MAX_RESULTS);
+	@PostMapping(value = "/item/{produtoId}/delete", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Pedido> removeItem(@PathVariable Integer produtoId) {
+		try {
+			Pedido pedido = itemFacade.removeItem(produtoId);
+			return new ResponseEntity<Pedido>(pedido, OK);
+		} catch (AppNotFoundException e) {
+			LOGGER.warn(e.getMessage());
+			return new ResponseEntity<Pedido>(NOT_FOUND);
+		} catch (AppInvalidDataException e) {
+			LOGGER.error(e.getMessage());
+			return new ResponseEntity<Pedido>(METHOD_NOT_ALLOWED);
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+			return new ResponseEntity<Pedido>(INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	@GetMapping(value = "/clientes/{nomeOrCpfOrTelefone}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Map<Integer, String>> getClientes(@PathVariable String nomeOrCpfOrTelefone) {
 		Map<Integer, String> clientes = clienteService.getClientesByNomeOrCpfOrTelefone(nomeOrCpfOrTelefone);
 
-		return new ResponseEntity<Map<Integer, String>>(clientes, HttpStatus.OK);
+		return new ResponseEntity<Map<Integer, String>>(clientes, OK);
 	}
 
 	@GetMapping(value = "/empresas/{nomeOrCnpj}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Map<Integer, String>> getEmpresas(@PathVariable String nomeOrCnpj) {
 		Map<Integer, String> empresas = empresaService.getEmpresasByRazaoSocialOrCnpj(nomeOrCnpj, Tipo.CLIENTE);
 
-		return new ResponseEntity<Map<Integer, String>>(empresas, HttpStatus.OK);
+		return new ResponseEntity<Map<Integer, String>>(empresas, OK);
 	}
 
 	@GetMapping(value = "/produtos/{nomeOrCusto}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Map<Integer, String>> getProdutos(@PathVariable String nomeOrCusto) {
 		Map<Integer, String> produtos = produtoService.getProdutosByNomeOrCusto(nomeOrCusto);
 
-		return new ResponseEntity<Map<Integer, String>>(produtos, HttpStatus.OK);
-	}
-
-	@InitBinder
-	public void binder(WebDataBinder binder) {
-		binder.registerCustomEditor(Float.class, "custo", new MoneyEditor());
-		binder.registerCustomEditor(Float.class, "custoIcms", new MoneyEditor());
-		binder.registerCustomEditor(Float.class, "custoSt", new MoneyEditor());
+		return new ResponseEntity<Map<Integer, String>>(produtos, OK);
 	}
 
 	/**
@@ -330,6 +305,13 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 	@ModelAttribute("pedidoSituacoes")
 	public Situacao[] initializeSituacoes() {
 		return Situacao.values();
+	}
+
+	@InitBinder
+	public void binder(WebDataBinder binder) {
+		binder.registerCustomEditor(Float.class, "custo", new MoneyEditor());
+		binder.registerCustomEditor(Float.class, "custoIcms", new MoneyEditor());
+		binder.registerCustomEditor(Float.class, "custoSt", new MoneyEditor());
 	}
 
 	@Override
@@ -382,6 +364,53 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 		}
 
 		return pedido;
+	}
+
+	@Override
+	protected String getDeleteMessage() {
+		return "O pedido foi removido com sucesso.";
+	}
+
+	/**
+	 * Verifica se foi informado o id do cliente ou da empresa
+	 * 
+	 * @param result
+	 * @param pedido
+	 */
+	private void setNotNullClienteError(BindingResult result, Pedido pedido) {
+		Cliente cliente = pedido.getCliente();
+		if (cliente.getId() == null) {
+			FieldError clienteError = new FieldError(getModelName(), "cliente.id",
+					messageSource.getMessage(PESSOA_JURIDICA.equals(pedido.getTipoCliente())
+							? "NotNull.pedido.empresa.id" : "NotNull.pedido.cliente.id", null, LOCALE));
+			result.addError(clienteError);
+		}
+	}
+
+	/**
+	 * @param model
+	 */
+	private void loadItens(Long pedidoId, ModelMap model) {
+		loadItens(pedidoId, model, 0, "quantidade", SortOrder.DESCENDING);
+	}
+
+	/**
+	 * @param model
+	 * @param offset
+	 * @param sortField
+	 * @param sortOrder
+	 */
+	private void loadItens(Long pedidoId, ModelMap model, Integer offset, String sortField, SortOrder sortOrder) {
+		final short MAX_RESULTS = 5;
+
+		List<PedidoItem> itens = itemFacade.search(pedidoId, offset, MAX_RESULTS, sortField, sortOrder);
+		long count = itemFacade.getTotalElements(pedidoId);
+
+		model.addAttribute("itens", itens);
+		if (pedidoId != 0L)
+			model.addAttribute("escondeAcoes", true);
+
+		setPaginationAttribute(model, offset, sortField, sortOrder, null, count, MAX_RESULTS);
 	}
 
 }

@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 
+import br.com.cams7.app.utils.AppInvalidDataException;
 import br.com.cams7.app.utils.AppNotFoundException;
 import br.com.cams7.app.utils.SearchParams;
 import br.com.cams7.app.utils.SearchParams.SortOrder;
@@ -75,7 +76,7 @@ public class PedidoItemFacade {
 	 */
 	public Pedido addItem(PedidoItem item) {
 		if (itens == null)
-			return null;
+			throw new AppInvalidDataException("A lista de itens de pedido não foi criada");
 
 		Predicate<PedidoItem> predicate = i -> item.getId().getProdutoId().equals(i.getId().getProdutoId());
 
@@ -115,9 +116,13 @@ public class PedidoItemFacade {
 	 */
 	public Pedido removeItem(Integer produtoId) {
 		if (itens == null)
-			return null;
+			throw new AppInvalidDataException("A lista de itens de pedido não foi criada");
 
 		Predicate<PedidoItem> predicate = item -> produtoId.equals(item.getId().getProdutoId());
+
+		if (!itens.stream().anyMatch(predicate))
+			throw new AppNotFoundException(
+					String.format("O item de pedido (produto:%s) não foi encontrado...", produtoId));
 
 		itens.stream().filter(predicate).filter(item -> item.getId().getPedidoId() != null).findFirst()
 				.ifPresent(item -> removedItens.add(item.getId()));

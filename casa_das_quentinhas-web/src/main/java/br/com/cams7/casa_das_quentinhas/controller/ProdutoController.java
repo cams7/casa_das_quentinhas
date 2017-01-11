@@ -3,6 +3,8 @@
  */
 package br.com.cams7.casa_das_quentinhas.controller;
 
+import static org.springframework.http.HttpStatus.OK;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import br.com.cams7.app.common.MoneyEditor;
@@ -61,6 +64,7 @@ public class ProdutoController extends AbstractController<ProdutoService, Produt
 	}
 
 	@GetMapping(value = "/{produtoId}/pedidos")
+	@ResponseStatus(OK)
 	public String pedidos(@PathVariable Integer produtoId, ModelMap model,
 			@RequestParam(value = "offset", required = true) Integer offset,
 			@RequestParam(value = "f", required = true) String sortField,
@@ -72,35 +76,17 @@ public class ProdutoController extends AbstractController<ProdutoService, Produt
 		return "produto_pedidos";
 	}
 
-	@SuppressWarnings("unchecked")
-	private void loadPedidos(Integer produtoId, ModelMap model, Integer offset, String sortField, SortOrder sortOrder) {
-		final short MAX_RESULTS = 5;
-
-		Map<String, Object> filters = new HashMap<>();
-		filters.put("id.produtoId", produtoId);
-
-		SearchParams params = new SearchParams(offset, MAX_RESULTS, sortField, sortOrder, filters);
-
-		itemService.setIgnoredJoins(Produto.class);
-		List<PedidoItem> itens = itemService.search(params);
-		long count = itemService.getTotalElements(filters);
-
-		model.addAttribute("itens", itens);
-
-		setPaginationAttribute(model, offset, sortField, sortOrder, null, count, MAX_RESULTS);
-	}
-
-	@InitBinder
-	public void binder(WebDataBinder binder) {
-		binder.registerCustomEditor(Float.class, "custo", new MoneyEditor());
-	}
-
 	/**
 	 * Possiveis tamanhos de produtos
 	 */
 	@ModelAttribute("produtoTamanhos")
 	public Tamanho[] initializeTamanhos() {
 		return Tamanho.values();
+	}
+
+	@InitBinder
+	public void binder(WebDataBinder binder) {
+		binder.registerCustomEditor(Float.class, "custo", new MoneyEditor());
 	}
 
 	@Override
@@ -121,6 +107,29 @@ public class ProdutoController extends AbstractController<ProdutoService, Produt
 	@Override
 	protected Produto getEntity(Integer id) {
 		return getService().getProdutoById(id);
+	}
+
+	@Override
+	protected String getDeleteMessage() {
+		return "O produto foi removido com sucesso.";
+	}
+
+	@SuppressWarnings("unchecked")
+	private void loadPedidos(Integer produtoId, ModelMap model, Integer offset, String sortField, SortOrder sortOrder) {
+		final short MAX_RESULTS = 5;
+
+		Map<String, Object> filters = new HashMap<>();
+		filters.put("id.produtoId", produtoId);
+
+		SearchParams params = new SearchParams(offset, MAX_RESULTS, sortField, sortOrder, filters);
+
+		itemService.setIgnoredJoins(Produto.class);
+		List<PedidoItem> itens = itemService.search(params);
+		long count = itemService.getTotalElements(filters);
+
+		model.addAttribute("itens", itens);
+
+		setPaginationAttribute(model, offset, sortField, sortOrder, null, count, MAX_RESULTS);
 	}
 
 }

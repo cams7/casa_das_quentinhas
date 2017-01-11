@@ -3,6 +3,8 @@
  */
 package br.com.cams7.app.controller;
 
+import static org.springframework.http.HttpStatus.OK;
+
 import java.io.Serializable;
 
 import org.springframework.http.ResponseEntity;
@@ -10,6 +12,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import br.com.cams7.app.model.AbstractEntity;
 
@@ -31,6 +34,7 @@ public interface BaseController<E extends AbstractEntity<PK>, PK extends Seriali
 	 * @return
 	 */
 	@GetMapping
+	@ResponseStatus(OK)
 	String index(ModelMap model);
 
 	/**
@@ -40,6 +44,7 @@ public interface BaseController<E extends AbstractEntity<PK>, PK extends Seriali
 	 * @return
 	 */
 	@GetMapping(value = "/create")
+	@ResponseStatus(OK)
 	String create(ModelMap model);
 
 	/**
@@ -61,6 +66,7 @@ public interface BaseController<E extends AbstractEntity<PK>, PK extends Seriali
 	 * @return
 	 */
 	@GetMapping(value = "/{id}")
+	@ResponseStatus(OK)
 	String show(PK id, ModelMap model);
 
 	/**
@@ -71,6 +77,7 @@ public interface BaseController<E extends AbstractEntity<PK>, PK extends Seriali
 	 * @return
 	 */
 	@GetMapping(value = "/{id}/edit")
+	@ResponseStatus(OK)
 	String edit(PK id, ModelMap model);
 
 	/**
@@ -83,7 +90,6 @@ public interface BaseController<E extends AbstractEntity<PK>, PK extends Seriali
 	 * @return
 	 */
 	@PostMapping(value = "/{id}/edit")
-	// @PutMapping
 	String update(E entity, BindingResult result, ModelMap model, PK id, Integer lastLoadedPage);
 
 	/**
@@ -92,10 +98,18 @@ public interface BaseController<E extends AbstractEntity<PK>, PK extends Seriali
 	 * @param id
 	 * @return
 	 */
-	// @DeleteMapping(value = "/{id}/delete")
 	@PostMapping(value = "/{id}/delete")
-	ResponseEntity<Void> destroy(PK id);
+	ResponseEntity<String> destroy(PK id);
 
+	/**
+	 * @param model
+	 * @param offset
+	 * @param sortField
+	 * @param sortOrder
+	 * @param query
+	 * @return
+	 */
 	@GetMapping(value = "/list")
+	@ResponseStatus(OK)
 	String list(ModelMap model, Integer offset, String sortField, String sortOrder, String query);
 }

@@ -10,7 +10,7 @@
 <h3 class="page-header">
 	Visualizar Cliente <span class="label label-default">${cliente.id}</span>
 </h3>
-
+<%@include file="../../layouts/alert_message.jsp"%>
 <div class="row">
 	<div class="col-md-6">
 		<p>

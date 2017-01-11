@@ -30,7 +30,7 @@
 </div>
 
 <hr />
-
+<%@include file="../../layouts/alert_message.jsp"%>
 <div class="content">
 	<%@include file="list.jsp"%>
 </div>

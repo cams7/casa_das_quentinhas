@@ -120,4 +120,9 @@ public class FuncionarioController extends AbstractFuncionarioController {
 		return new Funcao[] { GERENTE, ATENDENTE };
 	}
 
+	@Override
+	protected String getDeleteMessage() {
+		return "O funcionário foi removido com sucesso.";
+	}
+
 }

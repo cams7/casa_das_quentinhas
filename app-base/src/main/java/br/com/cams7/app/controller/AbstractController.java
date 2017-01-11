@@ -3,6 +3,11 @@
  */
 package br.com.cams7.app.controller;
 
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.OK;
+
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.HashMap;
@@ -15,18 +20,20 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import br.com.cams7.app.model.AbstractEntity;
 import br.com.cams7.app.service.BaseService;
 import br.com.cams7.app.utils.AppHelper;
+import br.com.cams7.app.utils.AppInvalidDataException;
 import br.com.cams7.app.utils.AppNotFoundException;
 import br.com.cams7.app.utils.SearchParams;
 import br.com.cams7.app.utils.SearchParams.SortOrder;
@@ -206,15 +213,18 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 	 * br.com.cams7.app.controller.BaseController#destroy(java.io.Serializable)
 	 */
 	@Override
-	public ResponseEntity<Void> destroy(@PathVariable PK id) {
+	public ResponseEntity<String> destroy(@PathVariable PK id) {
+
 		try {
 			getService().delete(id);
-			return new ResponseEntity<Void>(HttpStatus.OK);
+			return new ResponseEntity<String>(getDeleteMessage(), OK);
 		} catch (AppNotFoundException e) {
-			LOGGER.warn(e.getMessage());
+			return new ResponseEntity<String>(e.getMessage(), NOT_FOUND);
+		} catch (AppInvalidDataException e) {
+			return new ResponseEntity<String>(e.getMessage(), BAD_REQUEST);
+		} catch (Exception e) {
+			return new ResponseEntity<String>(e.getMessage(), INTERNAL_SERVER_ERROR);
 		}
-
-		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 	}
 
 	/*
@@ -253,6 +263,27 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 		setPaginationAttribute(model, offset, sortField, sorting, query, count, MAX_RESULTS);
 
 		return getListTilesPage();
+	}
+
+	@ExceptionHandler(value = AppNotFoundException.class)
+	@ResponseStatus(NOT_FOUND)
+	public String handleNotFoundException(AppNotFoundException e) {
+		LOGGER.warn(e.getMessage());
+		return "not_found";
+	}
+
+	@ExceptionHandler(value = AppInvalidDataException.class)
+	@ResponseStatus(BAD_REQUEST)
+	public String handleInvalidDataException(AppInvalidDataException e) {
+		LOGGER.warn(e.getMessage());
+		return "bad_request";
+	}
+
+	@ExceptionHandler(value = Exception.class)
+	@ResponseStatus(value = INTERNAL_SERVER_ERROR)
+	public String handleAllException(Exception e) {
+		LOGGER.error(e.getMessage());
+		return "internal_server_error";
 	}
 
 	protected String redirectMainPage() {
@@ -340,28 +371,6 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 
 	protected abstract String[] getGlobalFilters();
 
-	/**
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	private Class<E> getEntityType() {
-		try {
-			return (Class<E>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[1];
-		} catch (ClassCastException e) {
-		}
-
-		return (Class<E>) ((ParameterizedType) this.getClass().getSuperclass().getGenericSuperclass())
-				.getActualTypeArguments()[1];
-	}
-
-	@SuppressWarnings("unchecked")
-	private void setIgnoredJoins() {
-		if (getIgnoredJoins() == null)
-			getService().setIgnoredJoins();
-		else
-			getService().setIgnoredJoins(getIgnoredJoins());
-	}
-
 	public static void setMainPage(ModelMap model, String mainPage) {
 		model.addAttribute("mainPage", mainPage);
 	}
@@ -383,6 +392,30 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 			username = principal.toString();
 
 		return username;
+	}
+
+	protected abstract String getDeleteMessage();
+
+	/**
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	private Class<E> getEntityType() {
+		try {
+			return (Class<E>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[1];
+		} catch (ClassCastException e) {
+		}
+
+		return (Class<E>) ((ParameterizedType) this.getClass().getSuperclass().getGenericSuperclass())
+				.getActualTypeArguments()[1];
+	}
+
+	@SuppressWarnings("unchecked")
+	private void setIgnoredJoins() {
+		if (getIgnoredJoins() == null)
+			getService().setIgnoredJoins();
+		else
+			getService().setIgnoredJoins(getIgnoredJoins());
 	}
 
 }

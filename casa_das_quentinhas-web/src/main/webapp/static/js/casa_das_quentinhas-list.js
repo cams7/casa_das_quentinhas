@@ -88,15 +88,14 @@ $(document).ready(function($) {
             url: form.action,
             type: form.method,
             success: data => {
-                // console.log('Sucess:');
-                // console.log(data);
-            	
-            	loadTable(true);
-            	$('div#delete_modal').modal('hide');
+            	createSuccessMessage(data);            	
+            	loadTable(true);            	             	           	
             },
-            error: data => {
-                console.log('Error:');
-                console.log(data);
+            error: data => { 
+            	createErrorMessage(data.status, data.responseJSON);  
+            },
+            complete: data => {
+            	$('div#delete_modal').modal('hide');
             }
         });
     }); 
