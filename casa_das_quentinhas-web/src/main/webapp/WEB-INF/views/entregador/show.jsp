@@ -1,8 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
+
+<fmt:setLocale value="pt-BR" />
 
 <h3 class="page-header">
 	Visualizar Entregador <span class="label label-default">${entregador.id}</span>
@@ -21,11 +24,20 @@
 		</p>
 		<p>${entregador.formattedCelular}</p>
 	</div>
-	<div class="col-md-6">
+	<div class="col-md-4">
 		<p>
 			<strong>Empresa</strong>
 		</p>
 		<p>${entregador.empresa.razaoSocialWithCnpj}</p>
+	</div>
+	<div class="col-md-2">
+		<p>
+			<strong>Cadastro</strong>
+		</p>
+		<p>
+			<fmt:formatDate type="both" dateStyle="short" timeStyle="short"
+				value="${entregador.manutencao.cadastro}" />
+		</p>
 	</div>
 </div>
 <div class="row">

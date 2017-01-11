@@ -1,8 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
+	
+<fmt:setLocale value="pt-BR" />
 
 <h3 class="page-header">
 	Visualizar Funcionário <span class="label label-default">${funcionario.id}</span>
@@ -15,17 +18,26 @@
 		</p>
 		<p>${funcionario.nome}</p>
 	</div>
-	<div class="col-md-3">
+	<div class="col-md-2">
 		<p>
 			<strong>Celular</strong>
 		</p>
 		<p>${funcionario.formattedCelular}</p>
 	</div>
-	<div class="col-md-3">
+	<div class="col-md-2">
 		<p>
 			<strong>Função</strong>
 		</p>
 		<p>${funcionario.funcao.descricao}</p>
+	</div>
+	<div class="col-md-2">
+		<p>
+			<strong>Cadastro</strong>
+		</p>
+		<p>
+			<fmt:formatDate type="both" dateStyle="short" timeStyle="short"
+				value="${funcionario.manutencao.cadastro}" />
+		</p>
 	</div>
 </div>
 <div class="row">

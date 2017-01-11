@@ -1,15 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
+
+<fmt:setLocale value="pt-BR" />
 
 <h3 class="page-header">
 	Visualizar Cliente <span class="label label-default">${cliente.id}</span>
 </h3>
 
 <div class="row">
-	<div class="col-md-8">
+	<div class="col-md-6">
 		<p>
 			<strong>Nome</strong>
 		</p>
@@ -26,6 +29,15 @@
 			<strong>Data de nascimento</strong>
 		</p>
 		<p>${cliente.formattedNascimento}</p>
+	</div>
+	<div class="col-md-2">
+		<p>
+			<strong>Cadastro</strong>
+		</p>
+		<p>
+			<fmt:formatDate type="both" dateStyle="short" timeStyle="short"
+				value="${cliente.manutencao.cadastro}" />
+		</p>
 	</div>
 </div>
 

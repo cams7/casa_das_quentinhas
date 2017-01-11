@@ -1,8 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
+
+<fmt:setLocale value="pt-BR" />
 
 <h3 class="page-header">
 	Visualizar Empresa <span class="label label-default">${empresa.id}</span>
@@ -29,14 +32,17 @@
 	</div>
 	<div class="col-md-2">
 		<p>
-			<strong>Tipo de empresa</strong>
+			<strong>Cadastro</strong>
 		</p>
-		<p>${empresa.tipo.descricao}</p>
+		<p>
+			<fmt:formatDate type="both" dateStyle="short" timeStyle="short"
+				value="${empresa.manutencao.cadastro}" />
+		</p>
 	</div>
 </div>
 
 <div class="row">
-	<div class="col-md-6">
+	<div class="col-md-4">
 		<p>
 			<strong>E-mail</strong>
 		</p>
@@ -53,6 +59,12 @@
 			<strong>Regime tributário</strong>
 		</p>
 		<p>${empresa.regimeTributario.descricao}</p>
+	</div>
+	<div class="col-md-2">
+		<p>
+			<strong>Tipo de empresa</strong>
+		</p>
+		<p>${empresa.tipo.descricao}</p>
 	</div>
 </div>
 
