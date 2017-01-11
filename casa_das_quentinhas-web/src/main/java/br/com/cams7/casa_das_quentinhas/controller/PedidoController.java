@@ -41,6 +41,7 @@ import br.com.cams7.casa_das_quentinhas.model.Pedido.FormaPagamento;
 import br.com.cams7.casa_das_quentinhas.model.Pedido.Situacao;
 import br.com.cams7.casa_das_quentinhas.model.Pedido.TipoAtendimento;
 import br.com.cams7.casa_das_quentinhas.model.Pedido.TipoCliente;
+import static br.com.cams7.casa_das_quentinhas.model.Pedido.TipoCliente.PESSOA_JURIDICA;
 import br.com.cams7.casa_das_quentinhas.model.PedidoItem;
 import br.com.cams7.casa_das_quentinhas.model.PedidoItemPK;
 import br.com.cams7.casa_das_quentinhas.model.Produto;
@@ -102,14 +103,8 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 		// Carrega os intens do pedido
 		loadItens(0L, model);
 
-		Cliente cliente = pedido.getCliente();
-
 		// 1º validação
-		if (cliente.getId() == null) {
-			FieldError clienteError = new FieldError(getModelName(), "cliente.id",
-					messageSource.getMessage("NotNull.pedido.cliente.id", null, LOCALE));
-			result.addError(clienteError);
-		}
+		setNotNullClienteError(result, pedido);
 
 		if (result.hasErrors())
 			return getCreateTilesPage();
@@ -157,6 +152,9 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 
 		// Carrega os intens do pedido
 		loadItens(0L, model);
+
+		// 1º validação
+		setNotNullClienteError(result, pedido);
 
 		if (result.hasErrors())
 			return getEditTilesPage();
@@ -222,6 +220,22 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 		loadItens(pedidoId, model, offset, sortField, SortOrder.get(sortOrder));
 
 		return "pedido_itens";
+	}
+
+	/**
+	 * Verifica se foi informado o id do cliente ou da empresa
+	 * 
+	 * @param result
+	 * @param pedido
+	 */
+	private void setNotNullClienteError(BindingResult result, Pedido pedido) {
+		Cliente cliente = pedido.getCliente();
+		if (cliente.getId() == null) {
+			FieldError clienteError = new FieldError(getModelName(), "cliente.id",
+					messageSource.getMessage(PESSOA_JURIDICA.equals(pedido.getTipoCliente())
+							? "NotNull.pedido.empresa.id" : "NotNull.pedido.cliente.id", null, LOCALE));
+			result.addError(clienteError);
+		}
 	}
 
 	/**
