@@ -1,13 +1,17 @@
 package br.com.cams7.casa_das_quentinhas.controller;
 
+import static org.springframework.http.HttpStatus.OK;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import br.com.cams7.app.controller.AbstractController;
 import br.com.cams7.casa_das_quentinhas.model.Funcionario;
@@ -90,6 +94,22 @@ public abstract class AbstractFuncionarioController
 		getService().update(funcionario, getPossiveisFuncoes());
 
 		return redirectMainPage();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.app.controller.AbstractController#destroy(java.io.
+	 * Serializable)
+	 */
+	@Override
+	public ResponseEntity<String> destroy(@PathVariable Integer id) {
+		try {
+			getService().delete(id, getPossiveisFuncoes());
+			return new ResponseEntity<String>(getDeleteMessage(), OK);
+		} catch (Exception e) {
+			return getMessageResponse(e);
+		}
 	}
 
 	@Override

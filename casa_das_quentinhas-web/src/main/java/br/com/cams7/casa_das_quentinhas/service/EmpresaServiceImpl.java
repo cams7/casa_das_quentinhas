@@ -104,6 +104,9 @@ public class EmpresaServiceImpl extends AbstractService<EmpresaDAO, Empresa, Int
 	 */
 	@Override
 	public void delete(Integer id) {
+		if (id.equals(1))
+			throw new AppInvalidDataException(String.format("A empresa (id: %s) não é válida...", id));
+
 		Integer usuarioId = getUsuarioAcessoIdByEmpresaId(id);
 
 		super.delete(id);

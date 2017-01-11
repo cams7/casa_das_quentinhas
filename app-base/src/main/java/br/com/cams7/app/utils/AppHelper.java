@@ -28,7 +28,7 @@ public final class AppHelper {
 			E entity = entityType.newInstance();
 			return entity;
 		} catch (InstantiationException | IllegalAccessException e) {
-			throw new AppException(e.getMessage(), e.getCause());
+			throw new AppException(e.getMessage());
 		}
 	}
 
@@ -62,7 +62,7 @@ public final class AppHelper {
 			return new FieldTypes<E>(entityType, field.getType());
 		} catch (NoSuchFieldException | SecurityException e) {
 			throw new AppException(String.format("O atributo '%s' não foi encontrado na entidade '%s'", attributeName,
-					entityType.getName()), e.getCause());
+					entityType.getName()));
 		}
 	}
 

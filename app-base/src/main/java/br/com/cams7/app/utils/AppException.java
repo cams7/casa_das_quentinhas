@@ -3,7 +3,8 @@
  */
 package br.com.cams7.app.utils;
 
-import java.util.Map;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import org.springframework.http.HttpStatus;
 
 /**
  * Exceção padrão da aplicação
@@ -13,35 +14,25 @@ import java.util.Map;
 @SuppressWarnings("serial")
 public class AppException extends RuntimeException {
 
-	private Map<String, String> messages;
-
-	public AppException() {
-		super();
-	}
+	private HttpStatus status;
 
 	public AppException(String message) {
 		super(message);
+		status = BAD_REQUEST;
 	}
 
-	public AppException(Throwable cause) {
-		super(cause);
+	/**
+	 * @param message
+	 * @param status
+	 */
+	protected AppException(String message, HttpStatus status) {
+		this(message);
+
+		this.status = status;
 	}
 
-	public AppException(String message, Throwable cause) {
-		super(message, cause);
-	}
-
-	public AppException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-		super(message, cause, enableSuppression, writableStackTrace);
-	}
-
-	public AppException(Map<String, String> messages) {
-		super();
-		this.messages = messages;
-	}
-
-	public Map<String, String> getMessages() {
-		return messages;
+	public final HttpStatus getStatus() {
+		return status;
 	}
 
 }

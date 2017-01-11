@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import br.com.cams7.app.model.AbstractEntity;
 import br.com.cams7.app.service.BaseService;
+import br.com.cams7.app.utils.AppException;
 import br.com.cams7.app.utils.AppHelper;
 import br.com.cams7.app.utils.AppInvalidDataException;
 import br.com.cams7.app.utils.AppNotFoundException;
@@ -214,16 +215,11 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 	 */
 	@Override
 	public ResponseEntity<String> destroy(@PathVariable PK id) {
-
 		try {
 			getService().delete(id);
 			return new ResponseEntity<String>(getDeleteMessage(), OK);
-		} catch (AppNotFoundException e) {
-			return new ResponseEntity<String>(e.getMessage(), NOT_FOUND);
-		} catch (AppInvalidDataException e) {
-			return new ResponseEntity<String>(e.getMessage(), BAD_REQUEST);
 		} catch (Exception e) {
-			return new ResponseEntity<String>(e.getMessage(), INTERNAL_SERVER_ERROR);
+			return getMessageResponse(e);
 		}
 	}
 
@@ -416,6 +412,18 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 			getService().setIgnoredJoins();
 		else
 			getService().setIgnoredJoins(getIgnoredJoins());
+	}
+
+	/**
+	 * @param e
+	 *            Exception
+	 * @return
+	 */
+	protected ResponseEntity<String> getMessageResponse(Exception e) {
+		if (e instanceof AppException)
+			return new ResponseEntity<String>(e.getMessage(), ((AppException) e).getStatus());
+
+		return new ResponseEntity<String>(e.getMessage(), INTERNAL_SERVER_ERROR);
 	}
 
 }

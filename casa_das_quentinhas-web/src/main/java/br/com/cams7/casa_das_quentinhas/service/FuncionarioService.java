@@ -36,6 +36,16 @@ public interface FuncionarioService extends BaseService<Funcionario, Integer>, F
 	void update(Funcionario funcionario, Funcao... possiveisFuncoes);
 
 	/**
+	 * Remove os dados do funcionário
+	 * 
+	 * @param id
+	 *            ID do funcionário
+	 * @param possiveisFuncoes
+	 *            Posiveis funções para o funcionário
+	 */
+	void delete(Integer id, Funcao... possiveisFuncoes);
+
+	/**
 	 * @param id
 	 *            ID do funcionário
 	 * @param cpf

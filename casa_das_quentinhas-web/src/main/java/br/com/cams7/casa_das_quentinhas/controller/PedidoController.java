@@ -5,8 +5,6 @@ package br.com.cams7.casa_das_quentinhas.controller;
 
 import static br.com.cams7.casa_das_quentinhas.model.Pedido.TipoCliente.PESSOA_JURIDICA;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static org.springframework.http.HttpStatus.METHOD_NOT_ALLOWED;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
 import java.util.List;
@@ -35,8 +33,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import br.com.cams7.app.common.MoneyEditor;
 import br.com.cams7.app.controller.AbstractController;
-import br.com.cams7.app.utils.AppInvalidDataException;
-import br.com.cams7.app.utils.AppNotFoundException;
+import br.com.cams7.app.utils.AppException;
 import br.com.cams7.app.utils.SearchParams.SortOrder;
 import br.com.cams7.casa_das_quentinhas.facade.PedidoItemFacade;
 import br.com.cams7.casa_das_quentinhas.model.Cliente;
@@ -191,15 +188,9 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 		try {
 			PedidoItem item = itemFacade.getItem(pedidoId, produtoId);
 			return new ResponseEntity<PedidoItem>(item, OK);
-		} catch (AppNotFoundException e) {
-			LOGGER.warn(e.getMessage());
-			return new ResponseEntity<PedidoItem>(NOT_FOUND);
-		} catch (AppInvalidDataException e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<PedidoItem>(METHOD_NOT_ALLOWED);
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
-			return new ResponseEntity<PedidoItem>(INTERNAL_SERVER_ERROR);
+			return getItemResponse(e);
 		}
 	}
 
@@ -217,15 +208,9 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 
 			Pedido pedido = itemFacade.addItem(item);
 			return new ResponseEntity<Pedido>(pedido, OK);
-		} catch (AppNotFoundException e) {
-			LOGGER.warn(e.getMessage());
-			return new ResponseEntity<Pedido>(NOT_FOUND);
-		} catch (AppInvalidDataException e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<Pedido>(METHOD_NOT_ALLOWED);
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
-			return new ResponseEntity<Pedido>(INTERNAL_SERVER_ERROR);
+			return getPedidoResponse(e);
 		}
 	}
 
@@ -234,15 +219,9 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 		try {
 			Pedido pedido = itemFacade.removeItem(produtoId);
 			return new ResponseEntity<Pedido>(pedido, OK);
-		} catch (AppNotFoundException e) {
-			LOGGER.warn(e.getMessage());
-			return new ResponseEntity<Pedido>(NOT_FOUND);
-		} catch (AppInvalidDataException e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<Pedido>(METHOD_NOT_ALLOWED);
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
-			return new ResponseEntity<Pedido>(INTERNAL_SERVER_ERROR);
+			return getPedidoResponse(e);
 		}
 	}
 
@@ -411,6 +390,28 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 			model.addAttribute("escondeAcoes", true);
 
 		setPaginationAttribute(model, offset, sortField, sortOrder, null, count, MAX_RESULTS);
+	}
+
+	/**
+	 * @param e
+	 * @return
+	 */
+	private ResponseEntity<Pedido> getPedidoResponse(Exception e) {
+		if (e instanceof AppException)
+			return new ResponseEntity<Pedido>(((AppException) e).getStatus());
+
+		return new ResponseEntity<Pedido>(INTERNAL_SERVER_ERROR);
+	}
+
+	/**
+	 * @param e
+	 * @return
+	 */
+	private ResponseEntity<PedidoItem> getItemResponse(Exception e) {
+		if (e instanceof AppException)
+			return new ResponseEntity<PedidoItem>(((AppException) e).getStatus());
+
+		return new ResponseEntity<PedidoItem>(INTERNAL_SERVER_ERROR);
 	}
 
 }

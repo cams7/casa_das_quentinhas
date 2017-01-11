@@ -101,10 +101,16 @@ public class FuncionarioServiceImpl extends AbstractService<FuncionarioDAO, Func
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * br.com.cams7.app.service.AbstractService#delete(java.io.Serializable)
+	 * br.com.cams7.casa_das_quentinhas.service.FuncionarioService#delete(java.
+	 * lang.Integer,
+	 * br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao[])
 	 */
 	@Override
-	public void delete(Integer id) {
+	public void delete(Integer id, Funcao... possiveisFuncoes) {
+		Funcao funcao = getFuncionarioFuncaoById(id);
+
+		verificaFuncoes(funcao, possiveisFuncoes);
+
 		super.delete(id);
 
 		usuarioService.delete(id);
