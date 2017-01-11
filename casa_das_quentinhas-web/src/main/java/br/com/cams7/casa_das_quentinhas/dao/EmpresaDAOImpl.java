@@ -37,6 +37,7 @@ import br.com.cams7.casa_das_quentinhas.model.Empresa.RelacionamentoEmpresa;
 import br.com.cams7.casa_das_quentinhas.model.Empresa.Tipo;
 import br.com.cams7.casa_das_quentinhas.model.Empresa_;
 import br.com.cams7.casa_das_quentinhas.model.Estado;
+import br.com.cams7.casa_das_quentinhas.model.Manutencao_;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
 import br.com.cams7.casa_das_quentinhas.model.Usuario.RelacionamentoUsuario;
 import br.com.cams7.casa_das_quentinhas.model.Usuario_;
@@ -116,7 +117,6 @@ public class EmpresaDAOImpl extends AbstractDAO<Empresa, Integer> implements Emp
 
 		try {
 			Empresa empresa = tq.getSingleResult();
-
 			return empresa;
 		} catch (NoResultException e) {
 			throw new AppNotFoundException(String.format("A empresa (id:%s, tipo: [%s]) não foi encontrada...", id,
@@ -245,18 +245,15 @@ public class EmpresaDAOImpl extends AbstractDAO<Empresa, Integer> implements Emp
 	 * @see
 	 * br.com.cams7.casa_das_quentinhas.dao.EmpresaDAO#getUsuarioIdByEmpresaId(
 	 * java.lang.Integer,
-	 * br.com.cams7.casa_das_quentinhas.model.Usuario.Relacao)
+	 * br.com.cams7.casa_das_quentinhas.model.Usuario.RelacionamentoUsuario)
 	 */
 	@Override
 	public Integer getUsuarioIdByEmpresaId(Integer empresaId, RelacionamentoUsuario relacionamento) {
-		SingularAttribute<Empresa, Usuario> entidade = ACESSO.equals(relacionamento) ? Empresa_.usuarioAcesso
-				: Empresa_.usuarioCadastro;
-
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Integer> cq = cb.createQuery(Integer.class);
 
 		Root<Empresa> from = cq.from(ENTITY_TYPE);
-		cq.select(from.join(entidade, JoinType.INNER).get(Usuario_.id));
+		cq.select(from.join(getAtributte(relacionamento), JoinType.INNER).get(Usuario_.id));
 		cq.where(cb.equal(from.get(Empresa_.id), empresaId));
 
 		TypedQuery<Integer> tq = getEntityManager().createQuery(cq);
@@ -267,6 +264,35 @@ public class EmpresaDAOImpl extends AbstractDAO<Empresa, Integer> implements Emp
 		} catch (NoResultException e) {
 			throw new AppNotFoundException(
 					String.format("Da empresa (id: %s), o id do usuário não foi encontrado...", empresaId));
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.casa_das_quentinhas.dao.EmpresaDAO#
+	 * getUsuarioIdAndEmpresaCadastroByEmpresaId(java.lang.Integer,
+	 * br.com.cams7.casa_das_quentinhas.model.Usuario.RelacionamentoUsuario)
+	 */
+	@Override
+	public Object[] getUsuarioIdAndEmpresaCadastroByEmpresaId(Integer empresaId, RelacionamentoUsuario relacionamento) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Object[]> cq = cb.createQuery(Object[].class);
+
+		Root<Empresa> from = cq.from(ENTITY_TYPE);
+		cq.select(cb.array(from.join(getAtributte(relacionamento), JoinType.INNER).get(Usuario_.id),
+				from.get(Empresa_.manutencao).get(Manutencao_.cadastro)));
+		cq.where(cb.equal(from.get(Empresa_.id), empresaId));
+
+		TypedQuery<Object[]> tq = getEntityManager().createQuery(cq);
+
+		try {
+			Object[] empresa = tq.getSingleResult();
+			return empresa;
+		} catch (NoResultException e) {
+			throw new AppNotFoundException(String.format(
+					"Da empresa (id: %s), o id do usuário e a data de cadastro da empresa não foram encontrados...",
+					empresaId));
 		}
 	}
 
@@ -329,6 +355,15 @@ public class EmpresaDAOImpl extends AbstractDAO<Empresa, Integer> implements Emp
 						empresa -> Empresa.getRazaoSocialWithCnpj((String) empresa[1], (String) empresa[2])));
 
 		return empresas;
+	}
+
+	/**
+	 * @param relacionamento
+	 *            Relacionamento entre a empresa e o usuário
+	 * @return
+	 */
+	private SingularAttribute<Empresa, Usuario> getAtributte(RelacionamentoUsuario relacionamento) {
+		return ACESSO.equals(relacionamento) ? Empresa_.usuarioAcesso : Empresa_.usuarioCadastro;
 	}
 
 }

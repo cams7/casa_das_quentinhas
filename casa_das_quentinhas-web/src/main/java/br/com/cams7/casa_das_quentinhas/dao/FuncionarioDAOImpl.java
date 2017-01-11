@@ -23,6 +23,7 @@ import br.com.cams7.casa_das_quentinhas.model.Empresa;
 import br.com.cams7.casa_das_quentinhas.model.Funcionario;
 import br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao;
 import br.com.cams7.casa_das_quentinhas.model.Funcionario_;
+import br.com.cams7.casa_das_quentinhas.model.Manutencao_;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
 import br.com.cams7.casa_das_quentinhas.model.Usuario_;
 
@@ -108,7 +109,6 @@ public class FuncionarioDAOImpl extends AbstractDAO<Funcionario, Integer> implem
 
 		try {
 			Funcionario funcionario = tq.getSingleResult();
-
 			return funcionario;
 		} catch (NoResultException e) {
 			throw new AppNotFoundException(String.format("O funcionário (id:%s, função: [%s]) não foi encontrado...",
@@ -176,10 +176,10 @@ public class FuncionarioDAOImpl extends AbstractDAO<Funcionario, Integer> implem
 	 * (non-Javadoc)
 	 * 
 	 * @see br.com.cams7.casa_das_quentinhas.dao.FuncionarioDAO#
-	 * getUsuarioCadastroIdByFuncionarioId(java.lang.Integer)
+	 * getUsuarioIdByFuncionarioId(java.lang.Integer)
 	 */
 	@Override
-	public Integer getUsuarioCadastroIdByFuncionarioId(Integer funcionarioId) {
+	public Integer getUsuarioIdByFuncionarioId(Integer funcionarioId) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Integer> cq = cb.createQuery(Integer.class);
 
@@ -197,6 +197,28 @@ public class FuncionarioDAOImpl extends AbstractDAO<Funcionario, Integer> implem
 		} catch (NoResultException e) {
 			throw new AppNotFoundException(
 					String.format("Do funcionário (id: %s), o id do usuário não foi encontrado...", funcionarioId));
+		}
+	}
+
+	@Override
+	public Object[] getUsuarioIdAndFuncionarioCadastroByFuncionarioId(Integer funcionarioId) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Object[]> cq = cb.createQuery(Object[].class);
+
+		Root<Funcionario> from = cq.from(ENTITY_TYPE);
+		cq.select(cb.array(from.join(Funcionario_.usuarioCadastro, JoinType.INNER).get(Usuario_.id),
+				from.get(Funcionario_.manutencao).get(Manutencao_.cadastro)));
+		cq.where(cb.equal(from.get(Funcionario_.id), funcionarioId));
+
+		TypedQuery<Object[]> tq = getEntityManager().createQuery(cq);
+
+		try {
+			Object[] funcionario = tq.getSingleResult();
+			return funcionario;
+		} catch (NoResultException e) {
+			throw new AppNotFoundException(String.format(
+					"Do funcionário (id: %s), o id do usuário de cadastro e a data de cadastro do funcionário não foram encontrados...",
+					funcionarioId));
 		}
 	}
 

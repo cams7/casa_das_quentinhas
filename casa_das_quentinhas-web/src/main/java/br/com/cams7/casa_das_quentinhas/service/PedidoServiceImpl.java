@@ -58,11 +58,7 @@ public class PedidoServiceImpl extends AbstractService<PedidoDAO, Pedido, Long> 
 		Integer usuarioId = usuarioService.getUsuarioIdByEmail(getUsername());
 		pedido.setUsuarioCadastro(new Usuario(usuarioId));
 
-		Manutencao manutencao = new Manutencao();
-		manutencao.setCadastro(new Date());
-		manutencao.setAlteracao(new Date());
-
-		pedido.setManutencao(manutencao);
+		pedido.setManutencao(new Manutencao(new Date(), new Date()));
 
 		super.persist(pedido);
 
@@ -82,22 +78,25 @@ public class PedidoServiceImpl extends AbstractService<PedidoDAO, Pedido, Long> 
 	 */
 	@Override
 	public void update(Pedido pedido, List<PedidoItem> itens, List<PedidoItemPK> removedItens) {
-		verificaIdAndCadastro(pedido.getId(),
-				pedido.getManutencao() != null ? pedido.getManutencao().getCadastro() : null);
+		Long id = pedido.getId();
+		verificaId(id);
 
 		verificaQuantidadeAndCusto(pedido.getQuantidade(), pedido.getCusto(), itens);
 
 		setEmpresa(pedido);
 
-		Integer usuarioId = getUsuarioCadastroIdByPedidoId(pedido.getId());
-		pedido.setUsuarioCadastro(new Usuario(usuarioId));
+		Object[] array = getUsuarioIdAndPedidoCadastroByPedidoId(id);
 
-		pedido.getManutencao().setAlteracao(new Date());
+		Integer usuarioId = (Integer) array[0];
+		Date cadastro = (Date) array[1];
+
+		pedido.setUsuarioCadastro(new Usuario(usuarioId));
+		pedido.setManutencao(new Manutencao(cadastro, new Date()));
 
 		super.update(pedido);
 
-		removedItens.forEach(id -> {
-			itemService.delete(id);
+		removedItens.forEach(itemId -> {
+			itemService.delete(itemId);
 		});
 
 		itens.stream().filter(item -> item.getId().getPedidoId() != null).forEach(item -> {
@@ -141,13 +140,26 @@ public class PedidoServiceImpl extends AbstractService<PedidoDAO, Pedido, Long> 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see br.com.cams7.casa_das_quentinhas.dao.PedidoDAO#
-	 * getUsuarioCadastroIdByPedidoId(java.lang.Integer)
+	 * @see
+	 * br.com.cams7.casa_das_quentinhas.dao.PedidoDAO#getUsuarioIdByPedidoId(
+	 * java.lang.Long)
 	 */
 	@Transactional(readOnly = true, noRollbackFor = AppNotFoundException.class)
 	@Override
-	public Integer getUsuarioCadastroIdByPedidoId(Long pedidoId) {
-		return getDao().getUsuarioCadastroIdByPedidoId(pedidoId);
+	public Integer getUsuarioIdByPedidoId(Long pedidoId) {
+		return getDao().getUsuarioIdByPedidoId(pedidoId);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.casa_das_quentinhas.dao.PedidoDAO#
+	 * getUsuarioIdAndPedidoCadastroByPedidoId(java.lang.Long)
+	 */
+	@Transactional(readOnly = true, noRollbackFor = AppNotFoundException.class)
+	@Override
+	public Object[] getUsuarioIdAndPedidoCadastroByPedidoId(Long pedidoId) {
+		return getDao().getUsuarioIdAndPedidoCadastroByPedidoId(pedidoId);
 	}
 
 	/**

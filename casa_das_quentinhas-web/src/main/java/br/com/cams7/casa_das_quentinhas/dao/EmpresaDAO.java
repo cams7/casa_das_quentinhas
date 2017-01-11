@@ -64,6 +64,15 @@ public interface EmpresaDAO extends BaseDAO<Empresa, Integer> {
 	Integer getUsuarioIdByEmpresaId(Integer empresaId, RelacionamentoUsuario relacionamento);
 
 	/**
+	 * @param empresaId
+	 *            ID da empresa
+	 * @param relacionamento
+	 *            Relação entre a empresa e o usuário
+	 * @return Array contendo o id do usuário e data de cadastro da empresa
+	 */
+	Object[] getUsuarioIdAndEmpresaCadastroByEmpresaId(Integer empresaId, RelacionamentoUsuario relacionamento);
+
+	/**
 	 * Retorna o número total
 	 * 
 	 * @param empresaId

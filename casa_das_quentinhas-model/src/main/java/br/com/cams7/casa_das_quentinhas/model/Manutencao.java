@@ -33,6 +33,26 @@ public class Manutencao {
 	private Date alteracao;
 
 	/**
+	 * 
+	 */
+	public Manutencao() {
+		super();
+	}
+
+	/**
+	 * @param cadastro
+	 *            Data de cadastro
+	 * @param alteracao
+	 *            Data de alteração
+	 */
+	public Manutencao(Date cadastro, Date alteracao) {
+		this();
+
+		this.cadastro = cadastro;
+		this.alteracao = alteracao;
+	}
+
+	/**
 	 * @return Data do cadastro
 	 */
 	public Date getCadastro() {

@@ -24,5 +24,12 @@ public interface PedidoDAO extends BaseDAO<Pedido, Long> {
 	 *            ID do pedido
 	 * @return ID do usuário
 	 */
-	Integer getUsuarioCadastroIdByPedidoId(Long pedidoId);
+	Integer getUsuarioIdByPedidoId(Long pedidoId);
+
+	/**
+	 * @param pedidoId
+	 *            ID do pedido
+	 * @return Array contendo o id do usuário e data de cadastro do pedido
+	 */
+	Object[] getUsuarioIdAndPedidoCadastroByPedidoId(Long pedidoId);
 }

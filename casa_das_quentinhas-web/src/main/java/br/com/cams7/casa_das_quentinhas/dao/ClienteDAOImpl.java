@@ -30,6 +30,7 @@ import br.com.cams7.casa_das_quentinhas.model.Cliente;
 import br.com.cams7.casa_das_quentinhas.model.Cliente_;
 import br.com.cams7.casa_das_quentinhas.model.Contato_;
 import br.com.cams7.casa_das_quentinhas.model.Estado;
+import br.com.cams7.casa_das_quentinhas.model.Manutencao_;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
 import br.com.cams7.casa_das_quentinhas.model.Usuario.RelacionamentoUsuario;
 import br.com.cams7.casa_das_quentinhas.model.Usuario_;
@@ -179,17 +180,14 @@ public class ClienteDAOImpl extends AbstractDAO<Cliente, Integer> implements Cli
 	 * @see
 	 * br.com.cams7.casa_das_quentinhas.dao.ClienteDAO#getUsuarioIdByClienteId(
 	 * java.lang.Integer,
-	 * br.com.cams7.casa_das_quentinhas.model.Usuario.Relacao)
+	 * br.com.cams7.casa_das_quentinhas.model.Usuario.RelacionamentoUsuario)
 	 */
 	public Integer getUsuarioIdByClienteId(Integer clienteId, RelacionamentoUsuario relacionamento) {
-		SingularAttribute<Cliente, Usuario> entidade = ACESSO.equals(relacionamento) ? Cliente_.usuarioAcesso
-				: Cliente_.usuarioCadastro;
-
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Integer> cq = cb.createQuery(Integer.class);
 
 		Root<Cliente> from = cq.from(ENTITY_TYPE);
-		cq.select(from.join(entidade, JoinType.INNER).get(Usuario_.id));
+		cq.select(from.join(getAtributte(relacionamento), JoinType.INNER).get(Usuario_.id));
 		cq.where(cb.equal(from.get(Cliente_.id), clienteId));
 
 		TypedQuery<Integer> tq = getEntityManager().createQuery(cq);
@@ -200,6 +198,35 @@ public class ClienteDAOImpl extends AbstractDAO<Cliente, Integer> implements Cli
 		} catch (NoResultException e) {
 			throw new AppNotFoundException(
 					String.format("Do cliente (id: %s), o id do usuário não foi encontrado...", clienteId));
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.casa_das_quentinhas.dao.ClienteDAO#
+	 * getUsuarioIdAndClienteCadastroByClienteId(java.lang.Integer,
+	 * br.com.cams7.casa_das_quentinhas.model.Usuario.RelacionamentoUsuario)
+	 */
+	@Override
+	public Object[] getUsuarioIdAndClienteCadastroByClienteId(Integer clienteId, RelacionamentoUsuario relacionamento) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Object[]> cq = cb.createQuery(Object[].class);
+
+		Root<Cliente> from = cq.from(ENTITY_TYPE);
+		cq.select(cb.array(from.join(getAtributte(relacionamento), JoinType.INNER).get(Usuario_.id),
+				from.get(Cliente_.manutencao).get(Manutencao_.cadastro)));
+		cq.where(cb.equal(from.get(Cliente_.id), clienteId));
+
+		TypedQuery<Object[]> tq = getEntityManager().createQuery(cq);
+
+		try {
+			Object[] cliente = tq.getSingleResult();
+			return cliente;
+		} catch (NoResultException e) {
+			throw new AppNotFoundException(String.format(
+					"Do cliente (id: %s), o id do usuário e a data de cadastro do cliente não foram encontrados...",
+					clienteId));
 		}
 	}
 
@@ -234,6 +261,15 @@ public class ClienteDAOImpl extends AbstractDAO<Cliente, Integer> implements Cli
 						cliente -> Cliente.getNomeWithCpf((String) cliente[1], (String) cliente[2])));
 
 		return clientes;
+	}
+
+	/**
+	 * @param relacionamento
+	 *            Relacionamento entre o cliente e o usuário
+	 * @return
+	 */
+	private SingularAttribute<Cliente, Usuario> getAtributte(RelacionamentoUsuario relacionamento) {
+		return ACESSO.equals(relacionamento) ? Cliente_.usuarioAcesso : Cliente_.usuarioCadastro;
 	}
 
 }

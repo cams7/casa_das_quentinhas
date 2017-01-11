@@ -54,11 +54,7 @@ public class EmpresaServiceImpl extends AbstractService<EmpresaDAO, Empresa, Int
 		Integer usuarioId = usuarioService.getUsuarioIdByEmail(getUsername());
 		empresa.setUsuarioCadastro(new Usuario(usuarioId));
 
-		Manutencao manutencao = new Manutencao();
-		manutencao.setCadastro(new Date());
-		manutencao.setAlteracao(new Date());
-
-		empresa.setManutencao(manutencao);
+		empresa.setManutencao(new Manutencao(new Date(), new Date()));
 
 		super.persist(empresa);
 	}
@@ -73,13 +69,18 @@ public class EmpresaServiceImpl extends AbstractService<EmpresaDAO, Empresa, Int
 	@Override
 	public void update(Empresa empresa) {
 		Integer id = empresa.getId();
-		verificaIdAndCadastro(id, empresa.getManutencao() != null ? empresa.getManutencao().getCadastro() : null);
+		verificaId(id);
 
 		if (id.equals(1))
 			throw new AppInvalidDataException(String.format("A empresa (id: %s) não é válida...", id));
 
-		Integer usuarioId = getUsuarioIdByEmpresaId(id, CADASTRO);
+		Object[] array = getUsuarioIdAndEmpresaCadastroByEmpresaId(id, CADASTRO);
+
+		Integer usuarioId = (Integer) array[0];
+		Date cadastro = (Date) array[1];
+
 		empresa.setUsuarioCadastro(new Usuario(usuarioId));
+		empresa.setManutencao(new Manutencao(cadastro, new Date()));
 
 		try {
 			usuarioId = getUsuarioIdByEmpresaId(empresa.getId(), ACESSO);
@@ -91,8 +92,6 @@ public class EmpresaServiceImpl extends AbstractService<EmpresaDAO, Empresa, Int
 		} catch (AppNotFoundException e) {
 			empresa.setUsuarioAcesso(null);
 		}
-
-		empresa.getManutencao().setAlteracao(new Date());
 
 		super.update(empresa);
 	}
@@ -191,6 +190,27 @@ public class EmpresaServiceImpl extends AbstractService<EmpresaDAO, Empresa, Int
 		return getDao().getUsuarioIdByEmpresaId(empresaId, relacao);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.casa_das_quentinhas.dao.EmpresaDAO#
+	 * getUsuarioIdAndEmpresaCadastroByEmpresaId(java.lang.Integer,
+	 * br.com.cams7.casa_das_quentinhas.model.Usuario.RelacionamentoUsuario)
+	 */
+	@Transactional(readOnly = true, noRollbackFor = AppNotFoundException.class)
+	@Override
+	public Object[] getUsuarioIdAndEmpresaCadastroByEmpresaId(Integer empresaId, RelacionamentoUsuario relacionamento) {
+		return getDao().getUsuarioIdAndEmpresaCadastroByEmpresaId(empresaId, relacionamento);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.casa_das_quentinhas.dao.EmpresaDAO#countByEmpresaId(java.
+	 * lang.Integer,
+	 * br.com.cams7.casa_das_quentinhas.model.Empresa.RelacionamentoEmpresa)
+	 */
 	@Transactional(readOnly = true)
 	@Override
 	public long countByEmpresaId(Integer empresaId, RelacionamentoEmpresa relacionamento) {

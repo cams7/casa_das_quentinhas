@@ -4,7 +4,6 @@
 package br.com.cams7.app.service;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -160,19 +159,14 @@ public abstract class AbstractService<DAO extends BaseDAO<E, PK>, E extends Abst
 	}
 
 	/**
-	 * Varifica se o id e a data de cadastro foram informados
+	 * Varifica se o id foi informado
 	 * 
 	 * @param id
 	 *            ID da entidade
-	 * @param cadastro
-	 *            Data de cadastro da entidade
 	 */
-	protected final void verificaIdAndCadastro(Serializable id, Date cadastro) {
+	protected final void verificaId(Serializable id) {
 		if (id == null)
 			throw new AppInvalidDataException("O id não foi informado...");
-
-		if (cadastro == null)
-			throw new AppInvalidDataException("A data de cadastro não foi informada...");
 	}
 
 }

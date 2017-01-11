@@ -4,7 +4,7 @@ function setPedido (pedido) {
     $('form#pedido_form :input[name="quantidade"]').val(pedido.quantidade > 0 ? pedido.quantidade : '');
 
     if(pedido.custo > 0)
-        $('form#pedido_form :input[name="custo"]').val(Number(pedido.custo).formatMoney());
+        $('form#pedido_form :input[name="custo"]').val(pedido.formattedCusto);
     else
         $('form#pedido_form :input[name="custo"]').val('');
 }

@@ -51,11 +51,7 @@ public class ClienteServiceImpl extends AbstractService<ClienteDAO, Cliente, Int
 		Integer usuarioId = usuarioService.getUsuarioIdByEmail(getUsername());
 		cliente.setUsuarioCadastro(new Usuario(usuarioId));
 
-		Manutencao manutencao = new Manutencao();
-		manutencao.setCadastro(new Date());
-		manutencao.setAlteracao(new Date());
-
-		cliente.setManutencao(manutencao);
+		cliente.setManutencao(new Manutencao(new Date(), new Date()));
 
 		super.persist(cliente);
 
@@ -69,11 +65,16 @@ public class ClienteServiceImpl extends AbstractService<ClienteDAO, Cliente, Int
 	 */
 	@Override
 	public void update(Cliente cliente) {
-		verificaIdAndCadastro(cliente.getId(),
-				cliente.getManutencao() != null ? cliente.getManutencao().getCadastro() : null);
+		Integer id = cliente.getId();
+		verificaId(id);
 
-		Integer usuarioId = getUsuarioIdByClienteId(cliente.getId(), CADASTRO);
+		Object[] array = getUsuarioIdAndClienteCadastroByClienteId(id, CADASTRO);
+
+		Integer usuarioId = (Integer) array[0];
+		Date cadastro = (Date) array[1];
+
 		cliente.setUsuarioCadastro(new Usuario(usuarioId));
+		cliente.setManutencao(new Manutencao(cadastro, new Date()));
 
 		try {
 			usuarioId = getUsuarioIdByClienteId(cliente.getId(), ACESSO);
@@ -85,8 +86,6 @@ public class ClienteServiceImpl extends AbstractService<ClienteDAO, Cliente, Int
 		} catch (AppNotFoundException e) {
 			cliente.setUsuarioAcesso(null);
 		}
-
-		cliente.getManutencao().setAlteracao(new Date());
 
 		super.update(cliente);
 	}
@@ -147,13 +146,28 @@ public class ClienteServiceImpl extends AbstractService<ClienteDAO, Cliente, Int
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see br.com.cams7.casa_das_quentinhas.dao.ClienteDAO#
-	 * getUsuarioAcessoIdByClienteId(java.lang.Integer)
+	 * @see
+	 * br.com.cams7.casa_das_quentinhas.dao.ClienteDAO#getUsuarioIdByClienteId(
+	 * java.lang.Integer,
+	 * br.com.cams7.casa_das_quentinhas.model.Usuario.RelacionamentoUsuario)
 	 */
 	@Transactional(readOnly = true, noRollbackFor = AppNotFoundException.class)
 	@Override
 	public Integer getUsuarioIdByClienteId(Integer clienteId, RelacionamentoUsuario relacao) {
 		return getDao().getUsuarioIdByClienteId(clienteId, relacao);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.casa_das_quentinhas.dao.ClienteDAO#
+	 * getUsuarioIdAndClienteCadastroByClienteId(java.lang.Integer,
+	 * br.com.cams7.casa_das_quentinhas.model.Usuario.RelacionamentoUsuario)
+	 */
+	@Transactional(readOnly = true, noRollbackFor = AppNotFoundException.class)
+	@Override
+	public Object[] getUsuarioIdAndClienteCadastroByClienteId(Integer clienteId, RelacionamentoUsuario relacionamento) {
+		return getDao().getUsuarioIdAndClienteCadastroByClienteId(clienteId, relacionamento);
 	}
 
 	/*

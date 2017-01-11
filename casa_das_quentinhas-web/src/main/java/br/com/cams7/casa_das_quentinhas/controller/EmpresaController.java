@@ -108,9 +108,6 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 
 		setNotEmptyConfirmacaoError(usuario, result, true);
 
-		if (result.hasErrors())
-			return getCreateTilesPage();
-
 		// 2º validação
 		setSenhaNotEqualsConfirmacaoError(usuario, result);
 		setEmailNotUniqueError(empresa, result);
@@ -177,18 +174,10 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 		// 1º validação
 		setNotEmptyConfirmacaoError(usuario, result, !usuario.getSenha().isEmpty());
 
-		if (result.hasErrors())
-			return getEditTilesPage();
-
 		// 2º validação
 		setSenhaNotEqualsConfirmacaoError(usuario, result);
 		setEmailNotUniqueError(empresa, result);
 		setCNPJNotUniqueError(empresa, result);
-
-		if (result.hasErrors())
-			return getCreateTilesPage();
-
-		// 3º validação
 		setTipoNotValidError(empresa, result);
 
 		if (result.hasErrors())
@@ -300,9 +289,13 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 	 * @param result
 	 */
 	private void setSenhaNotEqualsConfirmacaoError(Usuario usuario, BindingResult result) {
+		final String FIELD_NAME = "usuarioAcesso.confirmacaoSenha";
+		if (result.getFieldErrorCount(FIELD_NAME) > 0)
+			return;
+
 		if (!usuario.getSenha().isEmpty() && !usuario.getConfirmacaoSenha().isEmpty()
 				&& !usuario.getSenha().equals(usuario.getConfirmacaoSenha())) {
-			FieldError confirmacaoError = new FieldError(getModelName(), "usuarioAcesso.confirmacaoSenha",
+			FieldError confirmacaoError = new FieldError(getModelName(), FIELD_NAME,
 					messageSource.getMessage("NotEquals.usuario.confirmacaoSenha", null, LOCALE));
 			result.addError(confirmacaoError);
 		}
@@ -317,11 +310,15 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 	 * @param result
 	 */
 	private void setEmailNotUniqueError(Empresa empresa, BindingResult result) {
+		final String FIELD_NAME = "contato.email";
+		if (result.getFieldErrorCount(FIELD_NAME) > 0)
+			return;
+
 		Usuario usuario = empresa.getUsuarioAcesso();
 		Contato contato = empresa.getContato();
 
 		if (!getService().isEmailUnique(empresa.getId(), usuario.getId(), contato.getEmail())) {
-			FieldError emailError = new FieldError(getModelName(), "contato.email", messageSource
+			FieldError emailError = new FieldError(getModelName(), FIELD_NAME, messageSource
 					.getMessage("NonUnique.empresa.contato.email", new String[] { contato.getEmail() }, LOCALE));
 			result.addError(emailError);
 		}
@@ -336,17 +333,21 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 	 * @param result
 	 */
 	private void setCNPJNotUniqueError(Empresa empresa, BindingResult result) {
+		final String FIELD_NAME = "cnpj";
+		if (result.getFieldErrorCount(FIELD_NAME) > 0)
+			return;
+
 		String cnpj = empresa.getUnformattedCnpj();
 
 		if (!getService().isCNPJUnique(empresa.getId(), cnpj)) {
-			FieldError cnpjError = new FieldError(getModelName(), "cnpj",
+			FieldError cnpjError = new FieldError(getModelName(), FIELD_NAME,
 					messageSource.getMessage("NonUnique.empresa.cnpj", new String[] { empresa.getCnpj() }, LOCALE));
 			result.addError(cnpjError);
 		}
 	}
 
 	/**
-	 * 3º validação
+	 * 2º validação
 	 * 
 	 * Verifica se o tipo informado é valido
 	 * 
@@ -354,22 +355,26 @@ public class EmpresaController extends AbstractController<EmpresaService, Empres
 	 * @param result
 	 */
 	private void setTipoNotValidError(Empresa empresa, BindingResult result) {
+		final String FIELD_NAME = "tipo";
+		if (result.getFieldErrorCount(FIELD_NAME) > 0)
+			return;
+
 		switch (empresa.getTipo()) {
 		case CLIENTE:
 			if (getService().countByEmpresaId(empresa.getId(), FUNCIONARIOS) > 0)
-				setTipoNotValidError(empresa.getTipo(), result);
+				setTipoNotValidError(empresa.getTipo(), result, FIELD_NAME);
 			break;
 		case ENTREGA:
 			if (getService().countByEmpresaId(empresa.getId(), PEDIDOS) > 0)
-				setTipoNotValidError(empresa.getTipo(), result);
+				setTipoNotValidError(empresa.getTipo(), result, FIELD_NAME);
 			break;
 		default:
 			break;
 		}
 	}
 
-	private void setTipoNotValidError(Tipo tipo, BindingResult result) {
-		FieldError tipoError = new FieldError(getModelName(), "tipo",
+	private void setTipoNotValidError(Tipo tipo, BindingResult result, String fieldName) {
+		FieldError tipoError = new FieldError(getModelName(), fieldName,
 				messageSource.getMessage("Invalid.empresa.tipo", new String[] { tipo.getDescricao() }, LOCALE));
 		result.addError(tipoError);
 	}

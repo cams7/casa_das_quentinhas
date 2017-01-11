@@ -60,11 +60,7 @@ public class FuncionarioServiceImpl extends AbstractService<FuncionarioDAO, Func
 		Integer usuarioId = usuarioService.getUsuarioIdByEmail(getUsername());
 		funcionario.setUsuarioCadastro(new Usuario(usuarioId));
 
-		Manutencao manutencao = new Manutencao();
-		manutencao.setCadastro(new Date());
-		manutencao.setAlteracao(new Date());
-
-		funcionario.setManutencao(manutencao);
+		funcionario.setManutencao(new Manutencao(new Date(), new Date()));
 
 		super.persist(funcionario);
 	}
@@ -79,21 +75,24 @@ public class FuncionarioServiceImpl extends AbstractService<FuncionarioDAO, Func
 	 */
 	@Override
 	public void update(Funcionario funcionario, Funcao... possiveisFuncoes) {
-		verificaIdAndCadastro(funcionario.getId(),
-				funcionario.getManutencao() != null ? funcionario.getManutencao().getCadastro() : null);
+		Integer id = funcionario.getId();
+		verificaId(id);
 
 		verificaFuncoes(funcionario.getFuncao(), possiveisFuncoes);
 		verificaEmpresa(funcionario.getFuncao(), funcionario.getEmpresa().getId());
 
-		Integer usuarioId = getUsuarioCadastroIdByFuncionarioId(funcionario.getId());
+		Object[] array = getUsuarioIdAndFuncionarioCadastroByFuncionarioId(id);
+
+		Integer usuarioId = (Integer) array[0];
+		Date cadastro = (Date) array[1];
+
 		funcionario.setUsuarioCadastro(new Usuario(usuarioId));
+		funcionario.setManutencao(new Manutencao(cadastro, new Date()));
 
 		Usuario usuario = funcionario.getUsuario();
 		usuario.setTipo(FUNCIONARIO);
 
 		usuarioService.update(usuario);
-
-		funcionario.getManutencao().setAlteracao(new Date());
 
 		super.update(funcionario);
 	}
@@ -152,14 +151,25 @@ public class FuncionarioServiceImpl extends AbstractService<FuncionarioDAO, Func
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * br.com.cams7.casa_das_quentinhas.dao.FuncionarioDAO#getUsuarioIdById(java
-	 * .lang.Integer, br.com.cams7.casa_das_quentinhas.model.Usuario.Relacao)
+	 * @see br.com.cams7.casa_das_quentinhas.dao.FuncionarioDAO#
+	 * getUsuarioIdByFuncionarioId(java.lang.Integer)
 	 */
 	@Transactional(readOnly = true, noRollbackFor = AppNotFoundException.class)
 	@Override
-	public Integer getUsuarioCadastroIdByFuncionarioId(Integer funcionarioId) {
-		return getDao().getUsuarioCadastroIdByFuncionarioId(funcionarioId);
+	public Integer getUsuarioIdByFuncionarioId(Integer funcionarioId) {
+		return getDao().getUsuarioIdByFuncionarioId(funcionarioId);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.casa_das_quentinhas.dao.FuncionarioDAO#
+	 * getUsuarioIdAndFuncionarioCadastroByFuncionarioId(java.lang.Integer)
+	 */
+	@Transactional(readOnly = true, noRollbackFor = AppNotFoundException.class)
+	@Override
+	public Object[] getUsuarioIdAndFuncionarioCadastroByFuncionarioId(Integer funcionarioId) {
+		return getDao().getUsuarioIdAndFuncionarioCadastroByFuncionarioId(funcionarioId);
 	}
 
 	/*

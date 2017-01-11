@@ -21,6 +21,7 @@ import br.com.cams7.app.dao.AbstractDAO;
 import br.com.cams7.app.utils.AppNotFoundException;
 import br.com.cams7.casa_das_quentinhas.model.Cliente;
 import br.com.cams7.casa_das_quentinhas.model.Empresa;
+import br.com.cams7.casa_das_quentinhas.model.Manutencao_;
 import br.com.cams7.casa_das_quentinhas.model.Pedido;
 import br.com.cams7.casa_das_quentinhas.model.Pedido_;
 import br.com.cams7.casa_das_quentinhas.model.Usuario_;
@@ -124,11 +125,12 @@ public class PedidoDAOImpl extends AbstractDAO<Pedido, Long> implements PedidoDA
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see br.com.cams7.casa_das_quentinhas.dao.PedidoDAO#
-	 * getUsuarioCadastroIdByPedidoId(java.lang.Integer)
+	 * @see
+	 * br.com.cams7.casa_das_quentinhas.dao.PedidoDAO#getUsuarioIdByPedidoId(
+	 * java.lang.Long)
 	 */
 	@Override
-	public Integer getUsuarioCadastroIdByPedidoId(Long pedidoId) {
+	public Integer getUsuarioIdByPedidoId(Long pedidoId) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Integer> cq = cb.createQuery(Integer.class);
 
@@ -146,6 +148,34 @@ public class PedidoDAOImpl extends AbstractDAO<Pedido, Long> implements PedidoDA
 		} catch (NoResultException e) {
 			throw new AppNotFoundException(
 					String.format("Do pedido (id: %s), o id do usuário não foi encontrado...", pedidoId));
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.casa_das_quentinhas.dao.PedidoDAO#
+	 * getUsuarioIdAndPedidoCadastroByPedidoId(java.lang.Long)
+	 */
+	@Override
+	public Object[] getUsuarioIdAndPedidoCadastroByPedidoId(Long pedidoId) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Object[]> cq = cb.createQuery(Object[].class);
+
+		Root<Pedido> from = cq.from(ENTITY_TYPE);
+		cq.select(cb.array(from.join(Pedido_.usuarioCadastro, JoinType.INNER).get(Usuario_.id),
+				from.get(Pedido_.manutencao).get(Manutencao_.cadastro)));
+		cq.where(cb.equal(from.get(Pedido_.id), pedidoId));
+
+		TypedQuery<Object[]> tq = getEntityManager().createQuery(cq);
+
+		try {
+			Object[] pedido = tq.getSingleResult();
+			return pedido;
+		} catch (NoResultException e) {
+			throw new AppNotFoundException(String.format(
+					"Do pedido (id: %s), o id do usuário e a data de cadastro do pedido não foram encontrados...",
+					pedidoId));
 		}
 	}
 

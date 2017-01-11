@@ -40,11 +40,7 @@ public class ProdutoServiceImpl extends AbstractService<ProdutoDAO, Produto, Int
 		Integer usuarioId = usuarioService.getUsuarioIdByEmail(getUsername());
 		produto.setUsuarioCadastro(new Usuario(usuarioId));
 
-		Manutencao manutencao = new Manutencao();
-		manutencao.setCadastro(new Date());
-		manutencao.setAlteracao(new Date());
-
-		produto.setManutencao(manutencao);
+		produto.setManutencao(new Manutencao(new Date(), new Date()));
 
 		super.persist(produto);
 	}
@@ -58,13 +54,16 @@ public class ProdutoServiceImpl extends AbstractService<ProdutoDAO, Produto, Int
 	 */
 	@Override
 	public void update(Produto produto) {
-		verificaIdAndCadastro(produto.getId(),
-				produto.getManutencao() != null ? produto.getManutencao().getCadastro() : null);
+		Integer id = produto.getId();
+		verificaId(id);
 
-		Integer usuarioId = getUsuarioCadastroIdByProdutoId(produto.getId());
+		Object[] array = getUsuarioIdAndProdutoCadastroByProdutoId(id);
+
+		Integer usuarioId = (Integer) array[0];
+		Date cadastro = (Date) array[1];
+
 		produto.setUsuarioCadastro(new Usuario(usuarioId));
-
-		produto.getManutencao().setAlteracao(new Date());
+		produto.setManutencao(new Manutencao(cadastro, new Date()));
 
 		super.update(produto);
 	}
@@ -85,13 +84,26 @@ public class ProdutoServiceImpl extends AbstractService<ProdutoDAO, Produto, Int
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see br.com.cams7.casa_das_quentinhas.dao.ProdutoDAO#
-	 * getUsuarioCadastroIdByProdutoId(java.lang.Integer)
+	 * @see
+	 * br.com.cams7.casa_das_quentinhas.dao.ProdutoDAO#getUsuarioIdByProdutoId(
+	 * java.lang.Integer)
 	 */
 	@Transactional(readOnly = true, noRollbackFor = AppNotFoundException.class)
 	@Override
-	public Integer getUsuarioCadastroIdByProdutoId(Integer produtoId) {
-		return getDao().getUsuarioCadastroIdByProdutoId(produtoId);
+	public Integer getUsuarioIdByProdutoId(Integer produtoId) {
+		return getDao().getUsuarioIdByProdutoId(produtoId);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.casa_das_quentinhas.dao.ProdutoDAO#
+	 * getUsuarioIdAndProdutoCadastroByProdutoId(java.lang.Integer)
+	 */
+	@Transactional(readOnly = true, noRollbackFor = AppNotFoundException.class)
+	@Override
+	public Object[] getUsuarioIdAndProdutoCadastroByProdutoId(Integer produtoId) {
+		return getDao().getUsuarioIdAndProdutoCadastroByProdutoId(produtoId);
 	}
 
 	/*

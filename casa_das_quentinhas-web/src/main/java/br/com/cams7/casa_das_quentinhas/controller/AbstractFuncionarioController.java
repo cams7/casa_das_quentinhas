@@ -46,9 +46,6 @@ public abstract class AbstractFuncionarioController
 
 		setNotEmptyConfirmacaoError(usuario, result, true);
 
-		if (result.hasErrors())
-			return getCreateTilesPage();
-
 		// 2º validação
 		setSenhaNotEqualsConfirmacaoError(usuario, result);
 		setEmailNotUniqueError(usuario, result);
@@ -78,9 +75,6 @@ public abstract class AbstractFuncionarioController
 
 		// 1º validação
 		setNotEmptyConfirmacaoError(usuario, result, !usuario.getSenha().isEmpty());
-
-		if (result.hasErrors())
-			return getEditTilesPage();
 
 		// 2º validação
 		setSenhaNotEqualsConfirmacaoError(usuario, result);
@@ -128,9 +122,13 @@ public abstract class AbstractFuncionarioController
 	 * @param result
 	 */
 	private void setSenhaNotEqualsConfirmacaoError(Usuario usuario, BindingResult result) {
+		final String FIELD_NAME = "usuario.confirmacaoSenha";
+		if (result.getFieldErrorCount(FIELD_NAME) > 0)
+			return;
+
 		if (!usuario.getSenha().isEmpty() && !usuario.getConfirmacaoSenha().isEmpty()
 				&& !usuario.getSenha().equals(usuario.getConfirmacaoSenha())) {
-			FieldError confirmacaoError = new FieldError(getModelName(), "usuario.confirmacaoSenha",
+			FieldError confirmacaoError = new FieldError(getModelName(), FIELD_NAME,
 					messageSource.getMessage("NotEquals.usuario.confirmacaoSenha", null, LOCALE));
 			result.addError(confirmacaoError);
 		}
@@ -145,8 +143,12 @@ public abstract class AbstractFuncionarioController
 	 * @param result
 	 */
 	private void setEmailNotUniqueError(Usuario usuario, BindingResult result) {
+		final String FIELD_NAME = "usuario.email";
+		if (result.getFieldErrorCount(FIELD_NAME) > 0)
+			return;
+
 		if (!usuarioService.isEmailUnique(usuario.getId(), usuario.getEmail())) {
-			FieldError emailError = new FieldError(getModelName(), "usuario.email",
+			FieldError emailError = new FieldError(getModelName(), FIELD_NAME,
 					messageSource.getMessage("NonUnique.usuario.email", new String[] { usuario.getEmail() }, LOCALE));
 			result.addError(emailError);
 		}
@@ -161,10 +163,14 @@ public abstract class AbstractFuncionarioController
 	 * @param result
 	 */
 	private void setCPFNotUniqueError(Funcionario funcionario, BindingResult result) {
+		final String FIELD_NAME = "cpf";
+		if (result.getFieldErrorCount(FIELD_NAME) > 0)
+			return;
+
 		String cpf = funcionario.getUnformattedCpf();
 
 		if (!getService().isCPFUnique(funcionario.getId(), cpf)) {
-			FieldError cpfError = new FieldError(getModelName(), "cpf", messageSource
+			FieldError cpfError = new FieldError(getModelName(), FIELD_NAME, messageSource
 					.getMessage("NonUnique." + getModelName() + ".cpf", new String[] { funcionario.getCpf() }, LOCALE));
 			result.addError(cpfError);
 		}

@@ -98,9 +98,6 @@ public class ClienteController extends AbstractController<ClienteService, Client
 
 		setNotEmptyConfirmacaoError(usuario, result, true);
 
-		if (result.hasErrors())
-			return getCreateTilesPage();
-
 		// 2º validação
 		setSenhaNotEqualsConfirmacaoError(usuario, result);
 		setCPFNotUniqueError(cliente, result);
@@ -154,9 +151,6 @@ public class ClienteController extends AbstractController<ClienteService, Client
 
 		// 1º validação
 		setNotEmptyConfirmacaoError(usuario, result, !usuario.getSenha().isEmpty());
-
-		if (result.hasErrors())
-			return getEditTilesPage();
 
 		// 2º validação
 		setSenhaNotEqualsConfirmacaoError(usuario, result);
@@ -248,9 +242,13 @@ public class ClienteController extends AbstractController<ClienteService, Client
 	 * @param result
 	 */
 	private void setSenhaNotEqualsConfirmacaoError(Usuario usuario, BindingResult result) {
+		final String FIELD_NAME = "usuarioAcesso.confirmacaoSenha";
+		if (result.getFieldErrorCount(FIELD_NAME) > 0)
+			return;
+
 		if (!usuario.getSenha().isEmpty() && !usuario.getConfirmacaoSenha().isEmpty()
 				&& !usuario.getSenha().equals(usuario.getConfirmacaoSenha())) {
-			FieldError confirmacaoError = new FieldError(getModelName(), "usuarioAcesso.confirmacaoSenha",
+			FieldError confirmacaoError = new FieldError(getModelName(), FIELD_NAME,
 					messageSource.getMessage("NotEquals.usuario.confirmacaoSenha", null, LOCALE));
 			result.addError(confirmacaoError);
 		}
@@ -265,11 +263,15 @@ public class ClienteController extends AbstractController<ClienteService, Client
 	 * @param result
 	 */
 	private void setEmailNotUniqueError(Cliente cliente, BindingResult result) {
+		final String FIELD_NAME = "contato.email";
+		if (result.getFieldErrorCount(FIELD_NAME) > 0)
+			return;
+
 		Usuario usuario = cliente.getUsuarioAcesso();
 		Contato contato = cliente.getContato();
 
 		if (!getService().isEmailUnique(cliente.getId(), usuario.getId(), contato.getEmail())) {
-			FieldError emailError = new FieldError(getModelName(), "contato.email", messageSource
+			FieldError emailError = new FieldError(getModelName(), FIELD_NAME, messageSource
 					.getMessage("NonUnique.cliente.contato.email", new String[] { contato.getEmail() }, LOCALE));
 			result.addError(emailError);
 		}
@@ -284,10 +286,14 @@ public class ClienteController extends AbstractController<ClienteService, Client
 	 * @param result
 	 */
 	private void setCPFNotUniqueError(Cliente cliente, BindingResult result) {
+		final String FIELD_NAME = "cpf";
+		if (result.getFieldErrorCount(FIELD_NAME) > 0)
+			return;
+
 		String cpf = cliente.getUnformattedCpf();
 
 		if (!getService().isCPFUnique(cliente.getId(), cpf)) {
-			FieldError cpfError = new FieldError(getModelName(), "cpf",
+			FieldError cpfError = new FieldError(getModelName(), FIELD_NAME,
 					messageSource.getMessage("NonUnique.cliente.cpf", new String[] { cliente.getCpf() }, LOCALE));
 			result.addError(cpfError);
 		}

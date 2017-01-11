@@ -31,8 +31,16 @@ public interface FuncionarioDAO extends BaseDAO<Funcionario, Integer> {
 
 	/**
 	 * @param funcionarioId
-	 *            ID do usuário ou do funcionário
-	 * @return ID do usuário
+	 *            ID do funcionário (id do usuário de acesso)
+	 * @return ID do usuário de cadastro
 	 */
-	Integer getUsuarioCadastroIdByFuncionarioId(Integer funcionarioId);
+	Integer getUsuarioIdByFuncionarioId(Integer funcionarioId);
+
+	/**
+	 * @param funcionarioId
+	 *            ID do funcionário (id do usuário de acesso)
+	 * @return Array contendo o id do usuário de cadastro e data de cadastro do
+	 *         funcionário
+	 */
+	Object[] getUsuarioIdAndFuncionarioCadastroByFuncionarioId(Integer funcionarioId);
 }

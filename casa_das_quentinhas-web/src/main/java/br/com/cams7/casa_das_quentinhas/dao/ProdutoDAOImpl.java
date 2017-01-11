@@ -19,6 +19,7 @@ import org.springframework.stereotype.Repository;
 
 import br.com.cams7.app.dao.AbstractDAO;
 import br.com.cams7.app.utils.AppNotFoundException;
+import br.com.cams7.casa_das_quentinhas.model.Manutencao_;
 import br.com.cams7.casa_das_quentinhas.model.Produto;
 import br.com.cams7.casa_das_quentinhas.model.Produto.Tamanho;
 import br.com.cams7.casa_das_quentinhas.model.Produto_;
@@ -90,7 +91,7 @@ public class ProdutoDAOImpl extends AbstractDAO<Produto, Integer> implements Pro
 	 * getUsuarioCadastroIdByProdutoId(java.lang.Integer)
 	 */
 	@Override
-	public Integer getUsuarioCadastroIdByProdutoId(Integer produtoId) {
+	public Integer getUsuarioIdByProdutoId(Integer produtoId) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Integer> cq = cb.createQuery(Integer.class);
 
@@ -108,6 +109,34 @@ public class ProdutoDAOImpl extends AbstractDAO<Produto, Integer> implements Pro
 		} catch (NoResultException e) {
 			throw new AppNotFoundException(
 					String.format("Do produto (id: %s), o id do usuário não foi encontrado...", produtoId));
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.casa_das_quentinhas.dao.ProdutoDAO#
+	 * getUsuarioIdAndProdutoCadastroByProdutoId(java.lang.Integer)
+	 */
+	@Override
+	public Object[] getUsuarioIdAndProdutoCadastroByProdutoId(Integer produtoId) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Object[]> cq = cb.createQuery(Object[].class);
+
+		Root<Produto> from = cq.from(ENTITY_TYPE);
+		cq.select(cb.array(from.join(Produto_.usuarioCadastro, JoinType.INNER).get(Usuario_.id),
+				from.get(Produto_.manutencao).get(Manutencao_.cadastro)));
+		cq.where(cb.equal(from.get(Produto_.id), produtoId));
+
+		TypedQuery<Object[]> tq = getEntityManager().createQuery(cq);
+
+		try {
+			Object[] produto = tq.getSingleResult();
+			return produto;
+		} catch (NoResultException e) {
+			throw new AppNotFoundException(String.format(
+					"Do produto (id: %s), o id do usuário e a data de cadastro do produto não foram encontrados...",
+					produtoId));
 		}
 	}
 

@@ -46,6 +46,15 @@ public interface ClienteDAO extends BaseDAO<Cliente, Integer> {
 	Integer getUsuarioIdByClienteId(Integer clienteId, RelacionamentoUsuario relacionamento);
 
 	/**
+	 * @param clienteId
+	 *            ID do cliente
+	 * @param relacionamento
+	 *            Relação entre o cliente e o usuário
+	 * @return Array contendo o id do usuário e data de cadastro do cliente
+	 */
+	Object[] getUsuarioIdAndClienteCadastroByClienteId(Integer clienteId, RelacionamentoUsuario relacionamento);
+
+	/**
 	 * @param nomeOrCpfOrTelefone
 	 *            Nome,CPF ou telefone
 	 * @return Clientes
