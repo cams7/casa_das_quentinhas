@@ -11,8 +11,12 @@ import br.com.cams7.app.model.AbstractEntity;
 /**
  * @author César Magalhães
  *
+ * @param <PK>
+ *            ID da entidade
+ * @param <E>
+ *            Entidade
  */
-public interface BaseService<E extends AbstractEntity<PK>, PK extends Serializable> extends BaseDAO<E, PK> {
+public interface BaseService<PK extends Serializable, E extends AbstractEntity<PK>> extends BaseDAO<PK, E> {
 
 	/**
 	 * @param username

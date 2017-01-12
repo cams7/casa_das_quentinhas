@@ -21,14 +21,12 @@ import br.com.cams7.app.model.AbstractEntity;
 /**
  * @author César Magalhães
  *
- */
-/**
- * @author César Magalhães
- *
- * @param <E>
  * @param <PK>
+ *            ID da entidade
+ * @param <E>
+ *            Entidade
  */
-public interface BaseController<E extends AbstractEntity<PK>, PK extends Serializable> {
+public interface BaseController<PK extends Serializable, E extends AbstractEntity<PK>> {
 	/**
 	 * Display a listing of the resource.
 	 *

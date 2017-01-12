@@ -31,7 +31,7 @@ import br.com.cams7.casa_das_quentinhas.model.Usuario;
  */
 @Service
 @Transactional
-public class PedidoServiceImpl extends AbstractService<PedidoDAO, Pedido, Long> implements PedidoService {
+public class PedidoServiceImpl extends AbstractService<Long, Pedido, PedidoDAO> implements PedidoService {
 
 	@Autowired
 	private UsuarioService usuarioService;

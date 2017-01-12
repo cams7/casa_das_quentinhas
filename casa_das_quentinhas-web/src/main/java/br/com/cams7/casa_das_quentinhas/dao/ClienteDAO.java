@@ -13,7 +13,7 @@ import br.com.cams7.casa_das_quentinhas.model.Usuario.RelacionamentoUsuario;
  * @author César Magalhães
  *
  */
-public interface ClienteDAO extends BaseDAO<Cliente, Integer> {
+public interface ClienteDAO extends BaseDAO<Integer, Cliente> {
 
 	/**
 	 * @param id

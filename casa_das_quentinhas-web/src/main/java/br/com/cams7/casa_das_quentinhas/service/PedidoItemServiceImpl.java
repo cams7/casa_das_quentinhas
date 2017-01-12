@@ -18,7 +18,7 @@ import br.com.cams7.casa_das_quentinhas.model.PedidoItemPK;
  */
 @Service
 @Transactional
-public class PedidoItemServiceImpl extends AbstractService<PedidoItemDAO, PedidoItem, PedidoItemPK>
+public class PedidoItemServiceImpl extends AbstractService<PedidoItemPK, PedidoItem, PedidoItemDAO>
 		implements PedidoItemService {
 
 	/*

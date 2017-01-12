@@ -23,7 +23,7 @@ import br.com.cams7.casa_das_quentinhas.model.Usuario;
  */
 @Service
 @Transactional
-public class ProdutoServiceImpl extends AbstractService<ProdutoDAO, Produto, Integer> implements ProdutoService {
+public class ProdutoServiceImpl extends AbstractService<Integer, Produto, ProdutoDAO> implements ProdutoService {
 
 	@Autowired
 	private UsuarioService usuarioService;

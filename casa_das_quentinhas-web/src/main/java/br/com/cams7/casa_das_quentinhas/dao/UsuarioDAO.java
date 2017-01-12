@@ -3,7 +3,11 @@ package br.com.cams7.casa_das_quentinhas.dao;
 import br.com.cams7.app.dao.BaseDAO;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
 
-public interface UsuarioDAO extends BaseDAO<Usuario, Integer> {
+/**
+ * @author César Magalhães
+ *
+ */
+public interface UsuarioDAO extends BaseDAO<Integer, Usuario> {
 
 	/**
 	 * @param id

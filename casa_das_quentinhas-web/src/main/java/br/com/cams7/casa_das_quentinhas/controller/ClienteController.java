@@ -54,7 +54,7 @@ import br.com.cams7.casa_das_quentinhas.service.PedidoService;
 @Controller
 @RequestMapping("/" + ClienteController.MODEL_NAME)
 @SessionAttributes("clienteTiposContribuintes")
-public class ClienteController extends AbstractController<ClienteService, Cliente, Integer> {
+public class ClienteController extends AbstractController<Integer, Cliente, ClienteService> {
 
 	public static final String MODEL_NAME = "cliente";
 	public static final String LIST_NAME = "clientes";

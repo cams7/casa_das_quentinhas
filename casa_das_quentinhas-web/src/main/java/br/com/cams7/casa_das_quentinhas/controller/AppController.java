@@ -20,6 +20,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import br.com.cams7.app.controller.AbstractController;
 import br.com.cams7.casa_das_quentinhas.service.EmpresaService;
 
+/**
+ * @author César Magalhães
+ *
+ */
 @Controller
 @RequestMapping("/")
 public class AppController {

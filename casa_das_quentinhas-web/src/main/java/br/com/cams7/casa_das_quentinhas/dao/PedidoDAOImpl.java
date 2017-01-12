@@ -31,7 +31,7 @@ import br.com.cams7.casa_das_quentinhas.model.Usuario_;
  *
  */
 @Repository
-public class PedidoDAOImpl extends AbstractDAO<Pedido, Long> implements PedidoDAO {
+public class PedidoDAOImpl extends AbstractDAO<Long, Pedido> implements PedidoDAO {
 
 	/*
 	 * (non-Javadoc)

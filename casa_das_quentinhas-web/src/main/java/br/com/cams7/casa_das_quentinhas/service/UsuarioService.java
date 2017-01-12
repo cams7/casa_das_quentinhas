@@ -4,7 +4,11 @@ import br.com.cams7.app.service.BaseService;
 import br.com.cams7.casa_das_quentinhas.dao.UsuarioDAO;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
 
-public interface UsuarioService extends BaseService<Usuario, Integer>, UsuarioDAO {
+/**
+ * @author César Magalhães
+ *
+ */
+public interface UsuarioService extends BaseService<Integer, Usuario>, UsuarioDAO {
 
 	/**
 	 * @param id

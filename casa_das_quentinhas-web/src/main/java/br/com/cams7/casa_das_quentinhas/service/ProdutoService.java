@@ -11,6 +11,6 @@ import br.com.cams7.casa_das_quentinhas.model.Produto;
  * @author César Magalhães
  *
  */
-public interface ProdutoService extends BaseService<Produto, Integer>, ProdutoDAO {
+public interface ProdutoService extends BaseService<Integer, Produto>, ProdutoDAO {
 
 }

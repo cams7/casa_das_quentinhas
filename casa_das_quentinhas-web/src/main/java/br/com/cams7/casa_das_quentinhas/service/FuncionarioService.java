@@ -5,7 +5,11 @@ import br.com.cams7.casa_das_quentinhas.dao.FuncionarioDAO;
 import br.com.cams7.casa_das_quentinhas.model.Funcionario;
 import br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao;
 
-public interface FuncionarioService extends BaseService<Funcionario, Integer>, FuncionarioDAO {
+/**
+ * @author César Magalhães
+ *
+ */
+public interface FuncionarioService extends BaseService<Integer, Funcionario>, FuncionarioDAO {
 
 	/**
 	 * Salva os dados do funcionário

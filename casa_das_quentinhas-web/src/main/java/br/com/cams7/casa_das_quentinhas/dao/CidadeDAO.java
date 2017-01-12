@@ -12,7 +12,7 @@ import br.com.cams7.casa_das_quentinhas.model.Cidade;
  * @author César Magalhães
  *
  */
-public interface CidadeDAO extends BaseDAO<Cidade, Integer> {
+public interface CidadeDAO extends BaseDAO<Integer, Cidade> {
 
 	/**
 	 * @param nomeOrIbge

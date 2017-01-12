@@ -11,7 +11,7 @@ import br.com.cams7.casa_das_quentinhas.model.Cliente;
  * @author César Magalhães
  *
  */
-public interface ClienteService extends BaseService<Cliente, Integer>, ClienteDAO {
+public interface ClienteService extends BaseService<Integer, Cliente>, ClienteDAO {
 	/**
 	 * @param id
 	 *            ID do cliente

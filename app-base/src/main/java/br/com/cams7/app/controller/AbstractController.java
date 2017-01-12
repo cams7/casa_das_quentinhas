@@ -43,9 +43,15 @@ import br.com.cams7.app.utils.SearchParams.SortOrder;
 /**
  * @author César Magalhães
  *
+ * @param <PK>
+ *            ID da entidade
+ * @param <E>
+ *            Entidade
+ * @param <S>
+ *            Service
  */
-public abstract class AbstractController<S extends BaseService<E, PK>, E extends AbstractEntity<PK>, PK extends Serializable>
-		implements BaseController<E, PK> {
+public abstract class AbstractController<PK extends Serializable, E extends AbstractEntity<PK>, S extends BaseService<PK, E>>
+		implements BaseController<PK, E> {
 
 	protected final Class<E> ENTITY_TYPE;
 	protected final Logger LOGGER;

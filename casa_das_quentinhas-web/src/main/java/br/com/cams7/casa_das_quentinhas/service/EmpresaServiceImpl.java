@@ -31,7 +31,7 @@ import br.com.cams7.casa_das_quentinhas.model.Usuario.RelacionamentoUsuario;
  */
 @Service
 @Transactional
-public class EmpresaServiceImpl extends AbstractService<EmpresaDAO, Empresa, Integer> implements EmpresaService {
+public class EmpresaServiceImpl extends AbstractService<Integer, Empresa, EmpresaDAO> implements EmpresaService {
 
 	@Autowired
 	private UsuarioService usuarioService;

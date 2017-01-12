@@ -11,7 +11,7 @@ import br.com.cams7.casa_das_quentinhas.model.PedidoItemPK;
  * @author César Magalhães
  *
  */
-public interface PedidoItemDAO extends BaseDAO<PedidoItem, PedidoItemPK> {
+public interface PedidoItemDAO extends BaseDAO<PedidoItemPK, PedidoItem> {
 
 	/**
 	 * @param pedidoId

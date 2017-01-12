@@ -40,7 +40,7 @@ import br.com.cams7.casa_das_quentinhas.model.Usuario_;
  *
  */
 @Repository
-public class ClienteDAOImpl extends AbstractDAO<Cliente, Integer> implements ClienteDAO {
+public class ClienteDAOImpl extends AbstractDAO<Integer, Cliente> implements ClienteDAO {
 
 	/*
 	 * (non-Javadoc)

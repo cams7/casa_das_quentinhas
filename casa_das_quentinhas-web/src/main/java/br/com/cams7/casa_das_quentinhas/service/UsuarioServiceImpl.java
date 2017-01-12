@@ -10,9 +10,13 @@ import br.com.cams7.app.utils.AppNotFoundException;
 import br.com.cams7.casa_das_quentinhas.dao.UsuarioDAO;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
 
+/**
+ * @author César Magalhães
+ *
+ */
 @Service
 @Transactional
-public class UsuarioServiceImpl extends AbstractService<UsuarioDAO, Usuario, Integer> implements UsuarioService {
+public class UsuarioServiceImpl extends AbstractService<Integer, Usuario, UsuarioDAO> implements UsuarioService {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;

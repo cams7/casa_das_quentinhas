@@ -7,7 +7,15 @@ import java.util.Map;
 import br.com.cams7.app.model.AbstractEntity;
 import br.com.cams7.app.utils.SearchParams;
 
-public interface BaseDAO<E extends AbstractEntity<PK>, PK extends Serializable> {
+/**
+ * @author César Magalhães
+ *
+ * @param <PK>
+ *            ID da entidade
+ * @param <E>
+ *            Entidade
+ */
+public interface BaseDAO<PK extends Serializable, E extends AbstractEntity<PK>> {
 
 	/**
 	 * Retorna um objeto que é instância de "AbstractEntity", filtrando-o pelo

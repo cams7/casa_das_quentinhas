@@ -20,9 +20,13 @@ import br.com.cams7.app.utils.AppNotFoundException;
 import br.com.cams7.casa_das_quentinhas.model.Acesso;
 import br.com.cams7.casa_das_quentinhas.model.Acesso_;
 
+/**
+ * @author César Magalhães
+ *
+ */
 @Repository
 @Transactional
-public class AcessoDAOImpl extends AbstractDAO<Acesso, String> implements PersistentTokenRepository {
+public class AcessoDAOImpl extends AbstractDAO<String, Acesso> implements PersistentTokenRepository {
 
 	/*
 	 * (non-Javadoc)

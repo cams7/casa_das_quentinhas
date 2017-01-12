@@ -19,8 +19,12 @@ import br.com.cams7.casa_das_quentinhas.service.EmpresaService;
 import br.com.cams7.casa_das_quentinhas.service.FuncionarioService;
 import br.com.cams7.casa_das_quentinhas.service.UsuarioService;
 
+/**
+ * @author César Magalhães
+ *
+ */
 public abstract class AbstractFuncionarioController
-		extends AbstractController<FuncionarioService, Funcionario, Integer> {
+		extends AbstractController<Integer, Funcionario, FuncionarioService> {
 
 	@Autowired
 	private UsuarioService usuarioService;

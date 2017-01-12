@@ -47,7 +47,7 @@ import br.com.cams7.casa_das_quentinhas.model.Usuario_;
  *
  */
 @Repository
-public class EmpresaDAOImpl extends AbstractDAO<Empresa, Integer> implements EmpresaDAO {
+public class EmpresaDAOImpl extends AbstractDAO<Integer, Empresa> implements EmpresaDAO {
 
 	/*
 	 * (non-Javadoc)

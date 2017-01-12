@@ -11,6 +11,6 @@ import br.com.cams7.casa_das_quentinhas.model.Cidade;
  * @author César Magalhães
  *
  */
-public interface CidadeService extends BaseService<Cidade, Integer>, CidadeDAO {
+public interface CidadeService extends BaseService<Integer, Cidade>, CidadeDAO {
 
 }

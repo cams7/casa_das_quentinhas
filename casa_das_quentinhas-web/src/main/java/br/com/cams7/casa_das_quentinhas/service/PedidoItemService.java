@@ -12,6 +12,6 @@ import br.com.cams7.casa_das_quentinhas.model.PedidoItemPK;
  * @author César Magalhães
  *
  */
-public interface PedidoItemService extends BaseService<PedidoItem, PedidoItemPK>, PedidoItemDAO {
+public interface PedidoItemService extends BaseService<PedidoItemPK, PedidoItem>, PedidoItemDAO {
 
 }

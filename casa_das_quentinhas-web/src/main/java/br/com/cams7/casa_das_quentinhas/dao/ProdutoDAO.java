@@ -12,7 +12,7 @@ import br.com.cams7.casa_das_quentinhas.model.Produto;
  * @author César Magalhães
  *
  */
-public interface ProdutoDAO extends BaseDAO<Produto, Integer> {
+public interface ProdutoDAO extends BaseDAO<Integer, Produto> {
 
 	/**
 	 * @param id

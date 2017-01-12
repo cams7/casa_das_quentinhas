@@ -58,7 +58,7 @@ import br.com.cams7.casa_das_quentinhas.service.PedidoService;
 @Controller
 @RequestMapping("/" + EmpresaController.MODEL_NAME)
 @SessionAttributes({ "empresaTipos", "empresaRegimesTributarios" })
-public class EmpresaController extends AbstractController<EmpresaService, Empresa, Integer> {
+public class EmpresaController extends AbstractController<Integer, Empresa, EmpresaService> {
 
 	public static final String MODEL_NAME = "empresa";
 	public static final String LIST_NAME = "empresas";

@@ -28,7 +28,7 @@ import br.com.cams7.casa_das_quentinhas.model.Usuario;
  */
 @Service
 @Transactional
-public class FuncionarioServiceImpl extends AbstractService<FuncionarioDAO, Funcionario, Integer>
+public class FuncionarioServiceImpl extends AbstractService<Integer, Funcionario, FuncionarioDAO>
 		implements FuncionarioService {
 
 	@Autowired

@@ -28,7 +28,7 @@ import br.com.cams7.casa_das_quentinhas.model.Estado_;
  *
  */
 @Repository
-public class CidadeDAOImpl extends AbstractDAO<Cidade, Integer> implements CidadeDAO {
+public class CidadeDAOImpl extends AbstractDAO<Integer, Cidade> implements CidadeDAO {
 
 	/*
 	 * (non-Javadoc)

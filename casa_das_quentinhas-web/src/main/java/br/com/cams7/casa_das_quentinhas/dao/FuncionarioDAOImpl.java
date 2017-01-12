@@ -27,8 +27,12 @@ import br.com.cams7.casa_das_quentinhas.model.Manutencao_;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
 import br.com.cams7.casa_das_quentinhas.model.Usuario_;
 
+/**
+ * @author César Magalhães
+ *
+ */
 @Repository
-public class FuncionarioDAOImpl extends AbstractDAO<Funcionario, Integer> implements FuncionarioDAO {
+public class FuncionarioDAOImpl extends AbstractDAO<Integer, Funcionario> implements FuncionarioDAO {
 
 	/*
 	 * (non-Javadoc)

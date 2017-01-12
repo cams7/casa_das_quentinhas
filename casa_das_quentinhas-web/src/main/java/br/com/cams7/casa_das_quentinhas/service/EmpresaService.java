@@ -11,7 +11,7 @@ import br.com.cams7.casa_das_quentinhas.model.Empresa;
  * @author César Magalhães
  *
  */
-public interface EmpresaService extends BaseService<Empresa, Integer>, EmpresaDAO {
+public interface EmpresaService extends BaseService<Integer, Empresa>, EmpresaDAO {
 	/**
 	 * @param id
 	 *            ID da empresa

@@ -10,7 +10,7 @@ import br.com.cams7.casa_das_quentinhas.model.Pedido;
  * @author César Magalhães
  *
  */
-public interface PedidoDAO extends BaseDAO<Pedido, Long> {
+public interface PedidoDAO extends BaseDAO<Long, Pedido> {
 
 	/**
 	 * @param id

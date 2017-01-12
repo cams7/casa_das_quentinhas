@@ -18,7 +18,7 @@ import br.com.cams7.casa_das_quentinhas.model.Cidade;
  */
 @Service
 @Transactional
-public class CidadeServiceImpl extends AbstractService<CidadeDAO, Cidade, Integer> implements CidadeService {
+public class CidadeServiceImpl extends AbstractService<Integer, Cidade, CidadeDAO> implements CidadeService {
 
 	/*
 	 * (non-Javadoc)

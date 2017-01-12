@@ -17,8 +17,12 @@ import br.com.cams7.app.utils.AppNotFoundException;
 import br.com.cams7.casa_das_quentinhas.model.Usuario;
 import br.com.cams7.casa_das_quentinhas.model.Usuario_;
 
+/**
+ * @author César Magalhães
+ *
+ */
 @Repository
-public class UsuarioDAOImpl extends AbstractDAO<Usuario, Integer> implements UsuarioDAO {
+public class UsuarioDAOImpl extends AbstractDAO<Integer, Usuario> implements UsuarioDAO {
 
 	/*
 	 * (non-Javadoc)

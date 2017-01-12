@@ -33,7 +33,15 @@ import br.com.cams7.app.utils.AppHelper;
 import br.com.cams7.app.utils.AppNotFoundException;
 import br.com.cams7.app.utils.SearchParams;
 
-public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Serializable> implements BaseDAO<E, PK> {
+/**
+ * @author César Magalhães
+ *
+ * @param <PK>
+ *            ID da entidade
+ * @param <E>
+ *            Entidade
+ */
+public abstract class AbstractDAO<PK extends Serializable, E extends AbstractEntity<PK>> implements BaseDAO<PK, E> {
 
 	protected final Class<E> ENTITY_TYPE;
 	protected final Logger LOGGER;
@@ -45,7 +53,7 @@ public abstract class AbstractDAO<E extends AbstractEntity<PK>, PK extends Seria
 		super();
 
 		ENTITY_TYPE = (Class<E>) ((ParameterizedType) this.getClass().getGenericSuperclass())
-				.getActualTypeArguments()[0];
+				.getActualTypeArguments()[1];
 
 		LOGGER = LoggerFactory.getLogger(this.getClass());
 	}

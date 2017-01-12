@@ -39,7 +39,7 @@ import br.com.cams7.casa_das_quentinhas.service.ProdutoService;
 @Controller
 @RequestMapping("/" + ProdutoController.MODEL_NAME)
 @SessionAttributes("produtoTamanhos")
-public class ProdutoController extends AbstractController<ProdutoService, Produto, Integer> {
+public class ProdutoController extends AbstractController<Integer, Produto, ProdutoService> {
 
 	public static final String MODEL_NAME = "produto";
 	public static final String LIST_NAME = "produtos";

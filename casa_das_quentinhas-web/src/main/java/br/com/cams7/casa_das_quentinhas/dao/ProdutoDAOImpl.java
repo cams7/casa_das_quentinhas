@@ -30,7 +30,7 @@ import br.com.cams7.casa_das_quentinhas.model.Usuario_;
  *
  */
 @Repository
-public class ProdutoDAOImpl extends AbstractDAO<Produto, Integer> implements ProdutoDAO {
+public class ProdutoDAOImpl extends AbstractDAO<Integer, Produto> implements ProdutoDAO {
 
 	/*
 	 * (non-Javadoc)

@@ -60,7 +60,7 @@ import br.com.cams7.casa_das_quentinhas.service.ProdutoService;
 @RequestMapping("/" + PedidoController.MODEL_NAME)
 @SessionAttributes({ "pedidoTiposCliente", "pedidoFormasPagamento", "pedidoDestinosOperacao", "pedidoTiposAtendimento",
 		"pedidoSituacoes" })
-public class PedidoController extends AbstractController<PedidoService, Pedido, Long> {
+public class PedidoController extends AbstractController<Long, Pedido, PedidoService> {
 
 	public static final String MODEL_NAME = "pedido";
 	public static final String LIST_NAME = "pedidos";

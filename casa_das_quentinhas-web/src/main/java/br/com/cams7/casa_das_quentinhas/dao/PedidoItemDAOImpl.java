@@ -35,7 +35,7 @@ import br.com.cams7.casa_das_quentinhas.model.Produto;
  *
  */
 @Repository
-public class PedidoItemDAOImpl extends AbstractDAO<PedidoItem, PedidoItemPK> implements PedidoItemDAO {
+public class PedidoItemDAOImpl extends AbstractDAO<PedidoItemPK, PedidoItem> implements PedidoItemDAO {
 
 	/*
 	 * (non-Javadoc)

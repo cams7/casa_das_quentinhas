@@ -20,10 +20,16 @@ import br.com.cams7.app.utils.SearchParams;
 /**
  * @author César Magalhães
  *
+ * @param <PK>
+ *            ID da entidade
+ * @param <E>
+ *            Entidade
+ * @param <DAO>
+ *            Data Access Object
  */
 @Transactional
-public abstract class AbstractService<DAO extends BaseDAO<E, PK>, E extends AbstractEntity<PK>, PK extends Serializable>
-		implements BaseService<E, PK> {
+public abstract class AbstractService<PK extends Serializable, E extends AbstractEntity<PK>, DAO extends BaseDAO<PK, E>>
+		implements BaseService<PK, E> {
 
 	protected final Logger LOGGER;
 
