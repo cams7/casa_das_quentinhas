@@ -10,12 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.cams7.app.AppNotFoundException;
 import br.com.cams7.app.service.AbstractService;
-import br.com.cams7.app.utils.AppNotFoundException;
 import br.com.cams7.casa_das_quentinhas.dao.ProdutoDAO;
-import br.com.cams7.casa_das_quentinhas.model.Manutencao;
-import br.com.cams7.casa_das_quentinhas.model.Produto;
-import br.com.cams7.casa_das_quentinhas.model.Usuario;
+import br.com.cams7.casa_das_quentinhas.entity.Manutencao;
+import br.com.cams7.casa_das_quentinhas.entity.Produto;
+import br.com.cams7.casa_das_quentinhas.entity.Usuario;
 
 /**
  * @author César Magalhães

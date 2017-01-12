@@ -25,10 +25,10 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import br.com.cams7.app.AbstractBase;
-import br.com.cams7.app.model.AbstractEntity;
+import br.com.cams7.app.AppNotFoundException;
+import br.com.cams7.app.SearchParams;
+import br.com.cams7.app.entity.AbstractEntity;
 import br.com.cams7.app.utils.AppHelper;
-import br.com.cams7.app.utils.AppNotFoundException;
-import br.com.cams7.app.utils.SearchParams;
 
 /**
  * @author César Magalhães
@@ -50,7 +50,7 @@ public abstract class AbstractDAO<PK extends Serializable, E extends AbstractEnt
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	protected EntityManager getEntityManager() {
+	protected final EntityManager getEntityManager() {
 		return entityManager;
 	}
 
@@ -61,7 +61,7 @@ public abstract class AbstractDAO<PK extends Serializable, E extends AbstractEnt
 	 * Serializable)
 	 */
 	@Override
-	public E getById(PK id) {
+	public final E getById(PK id) {
 		try {
 			E entity = getEntityManager().find(ENTITY_TYPE, id);
 			return entity;
@@ -111,7 +111,7 @@ public abstract class AbstractDAO<PK extends Serializable, E extends AbstractEnt
 	 * @see br.com.cams7.casa_das_quentinhas.dao.BaseDAO#getAll()
 	 */
 	@Override
-	public List<E> getAll() {
+	public final List<E> getAll() {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<E> cq = cb.createQuery(ENTITY_TYPE);
 
@@ -215,7 +215,7 @@ public abstract class AbstractDAO<PK extends Serializable, E extends AbstractEnt
 	 * @param globalFilters
 	 * @return
 	 */
-	protected CriteriaQuery<?> getFilter(CriteriaBuilder cb, CriteriaQuery<?> cq, List<From<?, ?>> fromWithJoins,
+	private CriteriaQuery<?> getFilter(CriteriaBuilder cb, CriteriaQuery<?> cq, List<From<?, ?>> fromWithJoins,
 			Map<String, Object> filters, String... globalFilters) {
 		if (filters != null && !filters.isEmpty()) {
 			Set<Predicate> predicates = new HashSet<>();
@@ -284,7 +284,7 @@ public abstract class AbstractDAO<PK extends Serializable, E extends AbstractEnt
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	protected TypedQuery<E> getFilterAndPaginationAndSorting(CriteriaBuilder cb, CriteriaQuery<E> cq,
+	private TypedQuery<E> getFilterAndPaginationAndSorting(CriteriaBuilder cb, CriteriaQuery<E> cq,
 			List<From<?, ?>> fromWithJoins, SearchParams params) {
 		cq = (CriteriaQuery<E>) getFilter(cb, cq, fromWithJoins, params.getFilters(), params.getGlobalFilters());
 
@@ -328,7 +328,7 @@ public abstract class AbstractDAO<PK extends Serializable, E extends AbstractEnt
 	 * casa_das_quentinhas.utils.SearchParams)
 	 */
 	@Override
-	public List<E> search(SearchParams params) {
+	public final List<E> search(SearchParams params) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<E> cq = cb.createQuery(ENTITY_TYPE);
 
@@ -349,7 +349,7 @@ public abstract class AbstractDAO<PK extends Serializable, E extends AbstractEnt
 	 * @param fromWithJoins
 	 * @return
 	 */
-	protected long getCount(CriteriaBuilder cb, CriteriaQuery<Long> cq, List<From<?, ?>> fromWithJoins) {
+	private long getCount(CriteriaBuilder cb, CriteriaQuery<Long> cq, List<From<?, ?>> fromWithJoins) {
 		@SuppressWarnings("unchecked")
 		Root<E> root = (Root<E>) fromWithJoins.get(0);
 		Expression<Long> count = cb.count(root);
@@ -368,7 +368,7 @@ public abstract class AbstractDAO<PK extends Serializable, E extends AbstractEnt
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public long getTotalElements(Map<String, Object> filters, String... globalFilters) {
+	public final long getTotalElements(Map<String, Object> filters, String... globalFilters) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Long> cq = cb.createQuery(Long.class);
 
@@ -387,7 +387,7 @@ public abstract class AbstractDAO<PK extends Serializable, E extends AbstractEnt
 	 * @see br.com.cams7.casa_das_quentinhas.dao.BaseDAO#count()
 	 */
 	@Override
-	public long count() {
+	public final long count() {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Long> cq = cb.createQuery(Long.class);
 
@@ -404,14 +404,15 @@ public abstract class AbstractDAO<PK extends Serializable, E extends AbstractEnt
 	 * @see br.com.cams7.app.dao.BaseDAO#setIgnoredJoins(java.lang.Class[])
 	 */
 	@Override
-	public void setIgnoredJoins(@SuppressWarnings("unchecked") Class<? extends AbstractEntity<?>>... ignoredJoins) {
+	public final void setIgnoredJoins(
+			@SuppressWarnings("unchecked") Class<? extends AbstractEntity<?>>... ignoredJoins) {
 		this.ignoredJoins = Arrays.asList(ignoredJoins);
 	}
 
 	/**
 	 * @return the ignoredJoins
 	 */
-	protected List<Class<? extends AbstractEntity<?>>> getIgnoredJoins() {
+	protected final List<Class<? extends AbstractEntity<?>>> getIgnoredJoins() {
 		return ignoredJoins;
 	}
 

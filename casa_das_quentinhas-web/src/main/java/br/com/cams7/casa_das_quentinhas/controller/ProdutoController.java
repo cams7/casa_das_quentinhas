@@ -22,13 +22,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import br.com.cams7.app.SearchParams;
+import br.com.cams7.app.SearchParams.SortOrder;
 import br.com.cams7.app.common.MoneyEditor;
 import br.com.cams7.app.controller.AbstractController;
-import br.com.cams7.app.utils.SearchParams;
-import br.com.cams7.app.utils.SearchParams.SortOrder;
-import br.com.cams7.casa_das_quentinhas.model.PedidoItem;
-import br.com.cams7.casa_das_quentinhas.model.Produto;
-import br.com.cams7.casa_das_quentinhas.model.Produto.Tamanho;
+import br.com.cams7.casa_das_quentinhas.entity.PedidoItem;
+import br.com.cams7.casa_das_quentinhas.entity.Produto;
+import br.com.cams7.casa_das_quentinhas.entity.Produto.Tamanho;
 import br.com.cams7.casa_das_quentinhas.service.PedidoItemService;
 import br.com.cams7.casa_das_quentinhas.service.ProdutoService;
 

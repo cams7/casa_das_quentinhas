@@ -10,7 +10,7 @@ import java.util.Locale;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import br.com.cams7.app.model.AbstractEntity;
+import br.com.cams7.app.entity.AbstractEntity;
 
 /**
  * @author César Magalhães

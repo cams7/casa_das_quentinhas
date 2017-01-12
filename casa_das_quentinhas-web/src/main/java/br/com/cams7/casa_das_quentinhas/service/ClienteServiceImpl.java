@@ -3,9 +3,9 @@
  */
 package br.com.cams7.casa_das_quentinhas.service;
 
-import static br.com.cams7.casa_das_quentinhas.model.Usuario.RelacionamentoUsuario.ACESSO;
-import static br.com.cams7.casa_das_quentinhas.model.Usuario.RelacionamentoUsuario.CADASTRO;
-import static br.com.cams7.casa_das_quentinhas.model.Usuario.Tipo.CLIENTE;
+import static br.com.cams7.casa_das_quentinhas.entity.Usuario.RelacionamentoUsuario.ACESSO;
+import static br.com.cams7.casa_das_quentinhas.entity.Usuario.RelacionamentoUsuario.CADASTRO;
+import static br.com.cams7.casa_das_quentinhas.entity.Usuario.Tipo.CLIENTE;
 
 import java.util.Date;
 import java.util.Map;
@@ -14,13 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.cams7.app.AppNotFoundException;
 import br.com.cams7.app.service.AbstractService;
-import br.com.cams7.app.utils.AppNotFoundException;
 import br.com.cams7.casa_das_quentinhas.dao.ClienteDAO;
-import br.com.cams7.casa_das_quentinhas.model.Cliente;
-import br.com.cams7.casa_das_quentinhas.model.Manutencao;
-import br.com.cams7.casa_das_quentinhas.model.Usuario;
-import br.com.cams7.casa_das_quentinhas.model.Usuario.RelacionamentoUsuario;
+import br.com.cams7.casa_das_quentinhas.entity.Cliente;
+import br.com.cams7.casa_das_quentinhas.entity.Manutencao;
+import br.com.cams7.casa_das_quentinhas.entity.Usuario;
+import br.com.cams7.casa_das_quentinhas.entity.Usuario.RelacionamentoUsuario;
 
 /**
  * @author César Magalhães

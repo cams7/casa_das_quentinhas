@@ -16,13 +16,13 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 
-import br.com.cams7.app.utils.AppInvalidDataException;
-import br.com.cams7.app.utils.AppNotFoundException;
-import br.com.cams7.app.utils.SearchParams;
-import br.com.cams7.app.utils.SearchParams.SortOrder;
-import br.com.cams7.casa_das_quentinhas.model.Pedido;
-import br.com.cams7.casa_das_quentinhas.model.PedidoItem;
-import br.com.cams7.casa_das_quentinhas.model.PedidoItemPK;
+import br.com.cams7.app.AppInvalidDataException;
+import br.com.cams7.app.AppNotFoundException;
+import br.com.cams7.app.SearchParams;
+import br.com.cams7.app.SearchParams.SortOrder;
+import br.com.cams7.casa_das_quentinhas.entity.Pedido;
+import br.com.cams7.casa_das_quentinhas.entity.PedidoItem;
+import br.com.cams7.casa_das_quentinhas.entity.PedidoItemPK;
 import br.com.cams7.casa_das_quentinhas.service.PedidoItemService;
 
 @Service

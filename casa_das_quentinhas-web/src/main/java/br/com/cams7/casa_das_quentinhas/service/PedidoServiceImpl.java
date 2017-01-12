@@ -3,8 +3,8 @@
  */
 package br.com.cams7.casa_das_quentinhas.service;
 
-import static br.com.cams7.casa_das_quentinhas.model.Empresa.Tipo.CLIENTE;
-import static br.com.cams7.casa_das_quentinhas.model.Pedido.TipoCliente.PESSOA_JURIDICA;
+import static br.com.cams7.casa_das_quentinhas.entity.Empresa.Tipo.CLIENTE;
+import static br.com.cams7.casa_das_quentinhas.entity.Pedido.TipoCliente.PESSOA_JURIDICA;
 
 import java.util.Date;
 import java.util.List;
@@ -13,17 +13,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.cams7.app.AppInvalidDataException;
+import br.com.cams7.app.AppNotFoundException;
 import br.com.cams7.app.service.AbstractService;
-import br.com.cams7.app.utils.AppInvalidDataException;
-import br.com.cams7.app.utils.AppNotFoundException;
 import br.com.cams7.casa_das_quentinhas.dao.PedidoDAO;
-import br.com.cams7.casa_das_quentinhas.model.Empresa;
-import br.com.cams7.casa_das_quentinhas.model.Empresa.Tipo;
-import br.com.cams7.casa_das_quentinhas.model.Manutencao;
-import br.com.cams7.casa_das_quentinhas.model.Pedido;
-import br.com.cams7.casa_das_quentinhas.model.PedidoItem;
-import br.com.cams7.casa_das_quentinhas.model.PedidoItemPK;
-import br.com.cams7.casa_das_quentinhas.model.Usuario;
+import br.com.cams7.casa_das_quentinhas.entity.Empresa;
+import br.com.cams7.casa_das_quentinhas.entity.Manutencao;
+import br.com.cams7.casa_das_quentinhas.entity.Pedido;
+import br.com.cams7.casa_das_quentinhas.entity.PedidoItem;
+import br.com.cams7.casa_das_quentinhas.entity.PedidoItemPK;
+import br.com.cams7.casa_das_quentinhas.entity.Usuario;
+import br.com.cams7.casa_das_quentinhas.entity.Empresa.Tipo;
 
 /**
  * @author César Magalhães

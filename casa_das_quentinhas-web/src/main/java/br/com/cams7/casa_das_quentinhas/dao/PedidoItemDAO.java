@@ -4,8 +4,8 @@
 package br.com.cams7.casa_das_quentinhas.dao;
 
 import br.com.cams7.app.dao.BaseDAO;
-import br.com.cams7.casa_das_quentinhas.model.PedidoItem;
-import br.com.cams7.casa_das_quentinhas.model.PedidoItemPK;
+import br.com.cams7.casa_das_quentinhas.entity.PedidoItem;
+import br.com.cams7.casa_das_quentinhas.entity.PedidoItemPK;
 
 /**
  * @author César Magalhães

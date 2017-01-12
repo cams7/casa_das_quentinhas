@@ -3,7 +3,7 @@
  */
 package br.com.cams7.casa_das_quentinhas.controller;
 
-import static br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao.ENTREGADOR;
+import static br.com.cams7.casa_das_quentinhas.entity.Funcionario.Funcao.ENTREGADOR;
 import static org.springframework.http.HttpStatus.OK;
 
 import java.util.Map;
@@ -23,10 +23,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import br.com.cams7.casa_das_quentinhas.model.Empresa;
-import br.com.cams7.casa_das_quentinhas.model.Empresa.Tipo;
-import br.com.cams7.casa_das_quentinhas.model.Funcionario;
-import br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao;
+import br.com.cams7.casa_das_quentinhas.entity.Empresa;
+import br.com.cams7.casa_das_quentinhas.entity.Funcionario;
+import br.com.cams7.casa_das_quentinhas.entity.Empresa.Tipo;
+import br.com.cams7.casa_das_quentinhas.entity.Funcionario.Funcao;
 
 /**
  * @author César Magalhães

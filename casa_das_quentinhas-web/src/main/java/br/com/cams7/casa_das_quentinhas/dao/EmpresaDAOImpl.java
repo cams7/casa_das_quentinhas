@@ -3,8 +3,8 @@
  */
 package br.com.cams7.casa_das_quentinhas.dao;
 
-import static br.com.cams7.casa_das_quentinhas.model.Empresa.RelacionamentoEmpresa.FUNCIONARIOS;
-import static br.com.cams7.casa_das_quentinhas.model.Usuario.RelacionamentoUsuario.ACESSO;
+import static br.com.cams7.casa_das_quentinhas.entity.Empresa.RelacionamentoEmpresa.FUNCIONARIOS;
+import static br.com.cams7.casa_das_quentinhas.entity.Usuario.RelacionamentoUsuario.ACESSO;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,21 +26,21 @@ import javax.persistence.metamodel.SingularAttribute;
 
 import org.springframework.stereotype.Repository;
 
+import br.com.cams7.app.AppNotFoundException;
 import br.com.cams7.app.dao.AbstractDAO;
-import br.com.cams7.app.model.AbstractEntity;
-import br.com.cams7.app.utils.AppNotFoundException;
-import br.com.cams7.casa_das_quentinhas.model.Cidade;
-import br.com.cams7.casa_das_quentinhas.model.Cidade_;
-import br.com.cams7.casa_das_quentinhas.model.Contato_;
-import br.com.cams7.casa_das_quentinhas.model.Empresa;
-import br.com.cams7.casa_das_quentinhas.model.Empresa.RelacionamentoEmpresa;
-import br.com.cams7.casa_das_quentinhas.model.Empresa.Tipo;
-import br.com.cams7.casa_das_quentinhas.model.Empresa_;
-import br.com.cams7.casa_das_quentinhas.model.Estado;
-import br.com.cams7.casa_das_quentinhas.model.Manutencao_;
-import br.com.cams7.casa_das_quentinhas.model.Usuario;
-import br.com.cams7.casa_das_quentinhas.model.Usuario.RelacionamentoUsuario;
-import br.com.cams7.casa_das_quentinhas.model.Usuario_;
+import br.com.cams7.app.entity.AbstractEntity;
+import br.com.cams7.casa_das_quentinhas.entity.Cidade;
+import br.com.cams7.casa_das_quentinhas.entity.Cidade_;
+import br.com.cams7.casa_das_quentinhas.entity.Contato_;
+import br.com.cams7.casa_das_quentinhas.entity.Empresa;
+import br.com.cams7.casa_das_quentinhas.entity.Empresa_;
+import br.com.cams7.casa_das_quentinhas.entity.Estado;
+import br.com.cams7.casa_das_quentinhas.entity.Manutencao_;
+import br.com.cams7.casa_das_quentinhas.entity.Usuario;
+import br.com.cams7.casa_das_quentinhas.entity.Usuario_;
+import br.com.cams7.casa_das_quentinhas.entity.Empresa.RelacionamentoEmpresa;
+import br.com.cams7.casa_das_quentinhas.entity.Empresa.Tipo;
+import br.com.cams7.casa_das_quentinhas.entity.Usuario.RelacionamentoUsuario;
 
 /**
  * @author César Magalhães

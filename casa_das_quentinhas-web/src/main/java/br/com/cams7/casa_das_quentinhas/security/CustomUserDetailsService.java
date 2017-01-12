@@ -14,9 +14,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.cams7.app.utils.AppNotFoundException;
-import br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao;
-import br.com.cams7.casa_das_quentinhas.model.Usuario;
+import br.com.cams7.app.AppNotFoundException;
+import br.com.cams7.casa_das_quentinhas.entity.Usuario;
+import br.com.cams7.casa_das_quentinhas.entity.Funcionario.Funcao;
 import br.com.cams7.casa_das_quentinhas.service.FuncionarioService;
 import br.com.cams7.casa_das_quentinhas.service.UsuarioService;
 

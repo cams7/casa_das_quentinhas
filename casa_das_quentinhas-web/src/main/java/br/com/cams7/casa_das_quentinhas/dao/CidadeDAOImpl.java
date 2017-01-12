@@ -18,10 +18,10 @@ import javax.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
 
 import br.com.cams7.app.dao.AbstractDAO;
-import br.com.cams7.casa_das_quentinhas.model.Cidade;
-import br.com.cams7.casa_das_quentinhas.model.Cidade_;
-import br.com.cams7.casa_das_quentinhas.model.Estado;
-import br.com.cams7.casa_das_quentinhas.model.Estado_;
+import br.com.cams7.casa_das_quentinhas.entity.Cidade;
+import br.com.cams7.casa_das_quentinhas.entity.Cidade_;
+import br.com.cams7.casa_das_quentinhas.entity.Estado;
+import br.com.cams7.casa_das_quentinhas.entity.Estado_;
 
 /**
  * @author César Magalhães

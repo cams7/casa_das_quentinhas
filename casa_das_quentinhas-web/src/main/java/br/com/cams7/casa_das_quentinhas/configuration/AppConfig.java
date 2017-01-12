@@ -8,14 +8,17 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.view.XmlViewResolver;
 import org.springframework.web.servlet.view.tiles3.TilesConfigurer;
 import org.springframework.web.servlet.view.tiles3.TilesViewResolver;
 
@@ -40,6 +43,13 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 				"/WEB-INF/views/cliente/tiles.xml", "/WEB-INF/views/pedido/tiles.xml" });
 		tilesConfigurer.setCheckRefresh(true);
 		return tilesConfigurer;
+	}
+
+	@Bean
+	public ViewResolver xmlViewResolver() {
+		XmlViewResolver bean = new XmlViewResolver();
+		bean.setLocation(new ClassPathResource("META-INF/report/jasper-views.xml"));
+		return bean;
 	}
 
 	/**

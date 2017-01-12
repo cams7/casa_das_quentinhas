@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import br.com.cams7.app.model.AbstractEntity;
+import br.com.cams7.app.entity.AbstractEntity;
 
 /**
  * @author César Magalhães

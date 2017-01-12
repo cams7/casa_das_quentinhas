@@ -15,10 +15,10 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.cams7.app.AppNotFoundException;
 import br.com.cams7.app.dao.AbstractDAO;
-import br.com.cams7.app.utils.AppNotFoundException;
-import br.com.cams7.casa_das_quentinhas.model.Acesso;
-import br.com.cams7.casa_das_quentinhas.model.Acesso_;
+import br.com.cams7.casa_das_quentinhas.entity.Acesso;
+import br.com.cams7.casa_das_quentinhas.entity.Acesso_;
 
 /**
  * @author César Magalhães

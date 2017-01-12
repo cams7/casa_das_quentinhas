@@ -11,10 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.cams7.app.AbstractBase;
+import br.com.cams7.app.AppInvalidDataException;
+import br.com.cams7.app.SearchParams;
 import br.com.cams7.app.dao.BaseDAO;
-import br.com.cams7.app.model.AbstractEntity;
-import br.com.cams7.app.utils.AppInvalidDataException;
-import br.com.cams7.app.utils.SearchParams;
+import br.com.cams7.app.entity.AbstractEntity;
 
 /**
  * @author César Magalhães
@@ -39,7 +39,7 @@ public abstract class AbstractService<PK extends Serializable, E extends Abstrac
 		super();
 	}
 
-	protected DAO getDao() {
+	protected final DAO getDao() {
 		return dao;
 	}
 
@@ -50,7 +50,7 @@ public abstract class AbstractService<PK extends Serializable, E extends Abstrac
 	 */
 	@Transactional(readOnly = true)
 	@Override
-	public E getById(PK id) {
+	public final E getById(PK id) {
 		E entity = getDao().getById(id);
 		return entity;
 	}
@@ -94,7 +94,7 @@ public abstract class AbstractService<PK extends Serializable, E extends Abstrac
 	 */
 	@Transactional(readOnly = true)
 	@Override
-	public List<E> getAll() {
+	public final List<E> getAll() {
 		List<E> entities = getDao().getAll();
 		return entities;
 	}
@@ -107,7 +107,7 @@ public abstract class AbstractService<PK extends Serializable, E extends Abstrac
 	 */
 	@Transactional(readOnly = true)
 	@Override
-	public List<E> search(SearchParams params) {
+	public final List<E> search(SearchParams params) {
 		List<E> entities = getDao().search(params);
 		return entities;
 	}
@@ -120,7 +120,7 @@ public abstract class AbstractService<PK extends Serializable, E extends Abstrac
 	 */
 	@Transactional(readOnly = true)
 	@Override
-	public long getTotalElements(Map<String, Object> filters, String... globalFilters) {
+	public final long getTotalElements(Map<String, Object> filters, String... globalFilters) {
 		long total = getDao().getTotalElements(filters, globalFilters);
 		return total;
 	}
@@ -132,7 +132,7 @@ public abstract class AbstractService<PK extends Serializable, E extends Abstrac
 	 */
 	@Transactional(readOnly = true)
 	@Override
-	public long count() {
+	public final long count() {
 		long count = getDao().count();
 		return count;
 	}
@@ -143,19 +143,19 @@ public abstract class AbstractService<PK extends Serializable, E extends Abstrac
 	 * @see br.com.cams7.app.dao.BaseDAO#setIgnoredJoins(java.lang.Class[])
 	 */
 	@Override
-	public void setIgnoredJoins(@SuppressWarnings("unchecked") Class<? extends AbstractEntity<?>>... ignoredJoins) {
+	public final void setIgnoredJoins(@SuppressWarnings("unchecked") Class<? extends AbstractEntity<?>>... ignoredJoins) {
 		getDao().setIgnoredJoins(ignoredJoins);
 	}
 
 	@Override
-	public void setUsername(String username) {
+	public final void setUsername(String username) {
 		this.username = username;
 	}
 
 	/**
 	 * @return the username
 	 */
-	protected String getUsername() {
+	protected final String getUsername() {
 		return username;
 	}
 

@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-import br.com.cams7.app.model.AbstractEntity;
-import br.com.cams7.app.utils.SearchParams;
+import br.com.cams7.app.SearchParams;
+import br.com.cams7.app.entity.AbstractEntity;
 
 /**
  * @author César Magalhães

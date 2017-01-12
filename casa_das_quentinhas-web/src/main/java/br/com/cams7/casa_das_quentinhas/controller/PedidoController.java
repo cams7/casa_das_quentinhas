@@ -3,7 +3,7 @@
  */
 package br.com.cams7.casa_das_quentinhas.controller;
 
-import static br.com.cams7.casa_das_quentinhas.model.Pedido.TipoCliente.PESSOA_JURIDICA;
+import static br.com.cams7.casa_das_quentinhas.entity.Pedido.TipoCliente.PESSOA_JURIDICA;
 import static org.springframework.http.HttpStatus.OK;
 
 import java.util.List;
@@ -31,22 +31,22 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import br.com.cams7.app.SearchParams.SortOrder;
 import br.com.cams7.app.common.MoneyEditor;
 import br.com.cams7.app.controller.AbstractController;
-import br.com.cams7.app.utils.SearchParams.SortOrder;
+import br.com.cams7.casa_das_quentinhas.entity.Cliente;
+import br.com.cams7.casa_das_quentinhas.entity.Empresa;
+import br.com.cams7.casa_das_quentinhas.entity.Pedido;
+import br.com.cams7.casa_das_quentinhas.entity.PedidoItem;
+import br.com.cams7.casa_das_quentinhas.entity.PedidoItemPK;
+import br.com.cams7.casa_das_quentinhas.entity.Produto;
+import br.com.cams7.casa_das_quentinhas.entity.Empresa.Tipo;
+import br.com.cams7.casa_das_quentinhas.entity.Pedido.DestinoOperacao;
+import br.com.cams7.casa_das_quentinhas.entity.Pedido.FormaPagamento;
+import br.com.cams7.casa_das_quentinhas.entity.Pedido.Situacao;
+import br.com.cams7.casa_das_quentinhas.entity.Pedido.TipoAtendimento;
+import br.com.cams7.casa_das_quentinhas.entity.Pedido.TipoCliente;
 import br.com.cams7.casa_das_quentinhas.facade.PedidoItemFacade;
-import br.com.cams7.casa_das_quentinhas.model.Cliente;
-import br.com.cams7.casa_das_quentinhas.model.Empresa;
-import br.com.cams7.casa_das_quentinhas.model.Empresa.Tipo;
-import br.com.cams7.casa_das_quentinhas.model.Pedido;
-import br.com.cams7.casa_das_quentinhas.model.Pedido.DestinoOperacao;
-import br.com.cams7.casa_das_quentinhas.model.Pedido.FormaPagamento;
-import br.com.cams7.casa_das_quentinhas.model.Pedido.Situacao;
-import br.com.cams7.casa_das_quentinhas.model.Pedido.TipoAtendimento;
-import br.com.cams7.casa_das_quentinhas.model.Pedido.TipoCliente;
-import br.com.cams7.casa_das_quentinhas.model.PedidoItem;
-import br.com.cams7.casa_das_quentinhas.model.PedidoItemPK;
-import br.com.cams7.casa_das_quentinhas.model.Produto;
 import br.com.cams7.casa_das_quentinhas.service.ClienteService;
 import br.com.cams7.casa_das_quentinhas.service.EmpresaService;
 import br.com.cams7.casa_das_quentinhas.service.PedidoService;

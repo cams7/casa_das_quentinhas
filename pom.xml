@@ -116,6 +116,27 @@
 				<artifactId>jackson-datatype-hibernate5</artifactId>
 				<version>${jackson.version}</version>
 			</dependency>
+
+			<!-- Report -->
+			<dependency>
+				<groupId>net.sf.jasperreports</groupId>
+				<artifactId>jasperreports</artifactId>
+				<version>6.4.0</version>
+				<exclusions>
+					<exclusion>
+						<groupId>org.codehaus.castor</groupId>
+						<artifactId>castor-xml</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.bouncycastle</groupId>
+						<artifactId>bcmail-jdk14</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.bouncycastle</groupId>
+						<artifactId>bcprov-jdk14</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 

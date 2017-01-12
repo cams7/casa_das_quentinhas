@@ -12,9 +12,9 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import br.com.cams7.app.controller.AbstractController;
-import br.com.cams7.casa_das_quentinhas.model.Funcionario;
-import br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao;
-import br.com.cams7.casa_das_quentinhas.model.Usuario;
+import br.com.cams7.casa_das_quentinhas.entity.Funcionario;
+import br.com.cams7.casa_das_quentinhas.entity.Usuario;
+import br.com.cams7.casa_das_quentinhas.entity.Funcionario.Funcao;
 import br.com.cams7.casa_das_quentinhas.service.EmpresaService;
 import br.com.cams7.casa_das_quentinhas.service.FuncionarioService;
 import br.com.cams7.casa_das_quentinhas.service.UsuarioService;

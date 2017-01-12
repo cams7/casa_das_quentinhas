@@ -1,8 +1,8 @@
 package br.com.cams7.casa_das_quentinhas.dao;
 
 import br.com.cams7.app.dao.BaseDAO;
-import br.com.cams7.casa_das_quentinhas.model.Funcionario;
-import br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao;
+import br.com.cams7.casa_das_quentinhas.entity.Funcionario;
+import br.com.cams7.casa_das_quentinhas.entity.Funcionario.Funcao;
 
 /**
  * @author César Magalhães

@@ -6,7 +6,7 @@ package br.com.cams7.casa_das_quentinhas.dao;
 import java.util.Map;
 
 import br.com.cams7.app.dao.BaseDAO;
-import br.com.cams7.casa_das_quentinhas.model.Produto;
+import br.com.cams7.casa_das_quentinhas.entity.Produto;
 
 /**
  * @author César Magalhães

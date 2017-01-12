@@ -17,13 +17,13 @@ import javax.persistence.criteria.Root;
 
 import org.springframework.stereotype.Repository;
 
+import br.com.cams7.app.AppNotFoundException;
 import br.com.cams7.app.dao.AbstractDAO;
-import br.com.cams7.app.utils.AppNotFoundException;
-import br.com.cams7.casa_das_quentinhas.model.Manutencao_;
-import br.com.cams7.casa_das_quentinhas.model.Produto;
-import br.com.cams7.casa_das_quentinhas.model.Produto.Tamanho;
-import br.com.cams7.casa_das_quentinhas.model.Produto_;
-import br.com.cams7.casa_das_quentinhas.model.Usuario_;
+import br.com.cams7.casa_das_quentinhas.entity.Manutencao_;
+import br.com.cams7.casa_das_quentinhas.entity.Produto;
+import br.com.cams7.casa_das_quentinhas.entity.Produto_;
+import br.com.cams7.casa_das_quentinhas.entity.Usuario_;
+import br.com.cams7.casa_das_quentinhas.entity.Produto.Tamanho;
 
 /**
  * @author César Magalhães

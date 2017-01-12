@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.cams7.app.service.AbstractService;
 import br.com.cams7.casa_das_quentinhas.dao.CidadeDAO;
-import br.com.cams7.casa_das_quentinhas.model.Cidade;
+import br.com.cams7.casa_das_quentinhas.entity.Cidade;
 
 /**
  * @author César Magalhães

@@ -28,14 +28,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import br.com.cams7.app.AbstractBase;
-import br.com.cams7.app.model.AbstractEntity;
+import br.com.cams7.app.AppException;
+import br.com.cams7.app.AppInvalidDataException;
+import br.com.cams7.app.AppNotFoundException;
+import br.com.cams7.app.SearchParams;
+import br.com.cams7.app.SearchParams.SortOrder;
+import br.com.cams7.app.entity.AbstractEntity;
 import br.com.cams7.app.service.BaseService;
-import br.com.cams7.app.utils.AppException;
 import br.com.cams7.app.utils.AppHelper;
-import br.com.cams7.app.utils.AppInvalidDataException;
-import br.com.cams7.app.utils.AppNotFoundException;
-import br.com.cams7.app.utils.SearchParams;
-import br.com.cams7.app.utils.SearchParams.SortOrder;
 
 /**
  * @author César Magalhães
@@ -56,7 +56,7 @@ public abstract class AbstractController<PK extends Serializable, E extends Abst
 	@Autowired
 	private S service;
 
-	protected S getService() {
+	protected final S getService() {
 		return service;
 	}
 
@@ -73,7 +73,7 @@ public abstract class AbstractController<PK extends Serializable, E extends Abst
 	 */
 
 	@Override
-	public String index(ModelMap model) {
+	public final String index(ModelMap model) {
 		setCommonAttributes(model);
 
 		Integer offset = 0;
@@ -226,7 +226,7 @@ public abstract class AbstractController<PK extends Serializable, E extends Abst
 	 * java.lang.String)
 	 */
 	@Override
-	public String list(ModelMap model, @RequestParam(value = "offset", required = true) Integer offset,
+	public final String list(ModelMap model, @RequestParam(value = "offset", required = true) Integer offset,
 			@RequestParam(value = "f", required = true) String sortField,
 			@RequestParam(value = "s", required = true) String sortOrder,
 			@RequestParam(value = "q", required = true) String query) {
@@ -256,30 +256,30 @@ public abstract class AbstractController<PK extends Serializable, E extends Abst
 
 	@ExceptionHandler(value = AppNotFoundException.class)
 	@ResponseStatus(NOT_FOUND)
-	public String handleNotFoundException(AppNotFoundException e) {
+	public final String handleNotFoundException(AppNotFoundException e) {
 		LOGGER.warn(e.getMessage());
 		return "not_found";
 	}
 
 	@ExceptionHandler(value = AppInvalidDataException.class)
 	@ResponseStatus(BAD_REQUEST)
-	public String handleInvalidDataException(AppInvalidDataException e) {
+	public final String handleInvalidDataException(AppInvalidDataException e) {
 		LOGGER.warn(e.getMessage());
 		return "bad_request";
 	}
 
 	@ExceptionHandler(value = Exception.class)
 	@ResponseStatus(value = INTERNAL_SERVER_ERROR)
-	public String handleAllException(Exception e) {
+	public final String handleAllException(Exception e) {
 		LOGGER.error(e.getMessage());
 		return "internal_server_error";
 	}
 
-	protected String redirectMainPage() {
+	protected final String redirectMainPage() {
 		return "redirect:/" + getMainPage();
 	}
 
-	protected void setPaginationAttribute(ModelMap model, Integer offset, String sortField, SortOrder sortOrder,
+	protected final void setPaginationAttribute(ModelMap model, Integer offset, String sortField, SortOrder sortOrder,
 			String query, Long count, short maxResults) {
 		model.addAttribute("offset", offset);
 		model.addAttribute("sortField", sortField);
@@ -290,7 +290,7 @@ public abstract class AbstractController<PK extends Serializable, E extends Abst
 		model.addAttribute("count", count);
 	}
 
-	protected void setCommonAttributes(ModelMap model) {
+	protected final void setCommonAttributes(ModelMap model) {
 		setUsuarioLogado(model);
 		setMainPage(model);
 	}
@@ -299,7 +299,7 @@ public abstract class AbstractController<PK extends Serializable, E extends Abst
 		setMainPage(model, getMainPage());
 	}
 
-	protected void setEditPage(ModelMap model) {
+	protected final void setEditPage(ModelMap model) {
 		model.addAttribute("edit", true);
 	}
 
@@ -307,7 +307,7 @@ public abstract class AbstractController<PK extends Serializable, E extends Abst
 		model.addAttribute(LAST_LOADED_PAGE, lastLoadedPage);
 	}
 
-	protected void incrementLastLoadedPage(ModelMap model, Integer lastLoadedPage) {
+	protected final void incrementLastLoadedPage(ModelMap model, Integer lastLoadedPage) {
 		setLastLoadedPage(model, lastLoadedPage + 1);
 	}
 
@@ -330,27 +330,27 @@ public abstract class AbstractController<PK extends Serializable, E extends Abst
 		return null;
 	}
 
-	protected String getMainPage() {
+	protected final String getMainPage() {
 		return getModelName();
 	}
 
-	protected String getIndexTilesPage() {
+	protected final String getIndexTilesPage() {
 		return getModelName() + "_index";
 	}
 
-	protected String getCreateTilesPage() {
+	protected final String getCreateTilesPage() {
 		return getModelName() + "_create";
 	}
 
-	protected String getShowTilesPage() {
+	protected final String getShowTilesPage() {
 		return getModelName() + "_show";
 	}
 
-	protected String getEditTilesPage() {
+	protected final String getEditTilesPage() {
 		return getModelName() + "_edit";
 	}
 
-	protected String getListTilesPage() {
+	protected final String getListTilesPage() {
 		return getModelName() + "_list";
 	}
 
@@ -399,21 +399,21 @@ public abstract class AbstractController<PK extends Serializable, E extends Abst
 	 * @return
 	 */
 
-	protected Map<String, String> getOnlyMessage(Response response) {
+	protected final Map<String, String> getOnlyMessage(Response response) {
 		@SuppressWarnings("unchecked")
 		Map<String, String> body = (Map<String, String>) (Map<String, ?>) response.getBody();
 		return body;
 	}
 
-	protected Response getDeleteResponse() {
+	protected final Response getDeleteResponse() {
 		return getSucessResponse(null, getDeleteMessage());
 	}
 
-	protected Response getSucessResponse(AbstractEntity<?> entity) {
+	protected final Response getSucessResponse(AbstractEntity<?> entity) {
 		return getSucessResponse(entity, null);
 	}
 
-	protected Response getErrorResponse(Exception e) {
+	protected final Response getErrorResponse(Exception e) {
 		LOGGER.error(e.getMessage());
 
 		Map<String, Serializable> response = getResponseBody(null, e.getMessage());
@@ -442,7 +442,7 @@ public abstract class AbstractController<PK extends Serializable, E extends Abst
 
 	}
 
-	protected class Response {
+	protected final class Response {
 		private Map<String, Serializable> body;
 		private HttpStatus status;
 

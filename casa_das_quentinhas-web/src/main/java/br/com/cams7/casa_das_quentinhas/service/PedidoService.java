@@ -7,9 +7,9 @@ import java.util.List;
 
 import br.com.cams7.app.service.BaseService;
 import br.com.cams7.casa_das_quentinhas.dao.PedidoDAO;
-import br.com.cams7.casa_das_quentinhas.model.Pedido;
-import br.com.cams7.casa_das_quentinhas.model.PedidoItem;
-import br.com.cams7.casa_das_quentinhas.model.PedidoItemPK;
+import br.com.cams7.casa_das_quentinhas.entity.Pedido;
+import br.com.cams7.casa_das_quentinhas.entity.PedidoItem;
+import br.com.cams7.casa_das_quentinhas.entity.PedidoItemPK;
 
 /**
  * @author César Magalhães

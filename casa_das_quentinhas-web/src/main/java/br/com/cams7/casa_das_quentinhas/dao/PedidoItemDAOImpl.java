@@ -18,17 +18,17 @@ import javax.persistence.criteria.Root;
 
 import org.springframework.stereotype.Repository;
 
+import br.com.cams7.app.AppNotFoundException;
 import br.com.cams7.app.dao.AbstractDAO;
-import br.com.cams7.app.utils.AppNotFoundException;
-import br.com.cams7.casa_das_quentinhas.model.Cliente;
-import br.com.cams7.casa_das_quentinhas.model.Empresa;
-import br.com.cams7.casa_das_quentinhas.model.Pedido;
-import br.com.cams7.casa_das_quentinhas.model.PedidoItem;
-import br.com.cams7.casa_das_quentinhas.model.PedidoItemPK;
-import br.com.cams7.casa_das_quentinhas.model.PedidoItemPK_;
-import br.com.cams7.casa_das_quentinhas.model.PedidoItem_;
-import br.com.cams7.casa_das_quentinhas.model.Pedido_;
-import br.com.cams7.casa_das_quentinhas.model.Produto;
+import br.com.cams7.casa_das_quentinhas.entity.Cliente;
+import br.com.cams7.casa_das_quentinhas.entity.Empresa;
+import br.com.cams7.casa_das_quentinhas.entity.Pedido;
+import br.com.cams7.casa_das_quentinhas.entity.PedidoItem;
+import br.com.cams7.casa_das_quentinhas.entity.PedidoItemPK;
+import br.com.cams7.casa_das_quentinhas.entity.PedidoItemPK_;
+import br.com.cams7.casa_das_quentinhas.entity.PedidoItem_;
+import br.com.cams7.casa_das_quentinhas.entity.Pedido_;
+import br.com.cams7.casa_das_quentinhas.entity.Produto;
 
 /**
  * @author César Magalhães

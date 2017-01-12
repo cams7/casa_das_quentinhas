@@ -3,10 +3,10 @@
  */
 package br.com.cams7.casa_das_quentinhas.controller;
 
-import static br.com.cams7.casa_das_quentinhas.model.Empresa.RelacionamentoEmpresa.FUNCIONARIOS;
-import static br.com.cams7.casa_das_quentinhas.model.Empresa.RelacionamentoEmpresa.PEDIDOS;
-import static br.com.cams7.casa_das_quentinhas.model.Empresa.Tipo.CLIENTE;
-import static br.com.cams7.casa_das_quentinhas.model.Empresa.Tipo.ENTREGA;
+import static br.com.cams7.casa_das_quentinhas.entity.Empresa.RelacionamentoEmpresa.FUNCIONARIOS;
+import static br.com.cams7.casa_das_quentinhas.entity.Empresa.RelacionamentoEmpresa.PEDIDOS;
+import static br.com.cams7.casa_das_quentinhas.entity.Empresa.Tipo.CLIENTE;
+import static br.com.cams7.casa_das_quentinhas.entity.Empresa.Tipo.ENTREGA;
 import static org.springframework.http.HttpStatus.OK;
 
 import java.util.HashMap;
@@ -32,20 +32,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import br.com.cams7.app.SearchParams;
+import br.com.cams7.app.SearchParams.SortOrder;
 import br.com.cams7.app.controller.AbstractController;
-import br.com.cams7.app.utils.SearchParams;
-import br.com.cams7.app.utils.SearchParams.SortOrder;
-import br.com.cams7.casa_das_quentinhas.model.Cidade;
-import br.com.cams7.casa_das_quentinhas.model.Cliente;
-import br.com.cams7.casa_das_quentinhas.model.Contato;
-import br.com.cams7.casa_das_quentinhas.model.Empresa;
-import br.com.cams7.casa_das_quentinhas.model.Empresa.RegimeTributario;
-import br.com.cams7.casa_das_quentinhas.model.Empresa.Tipo;
-import br.com.cams7.casa_das_quentinhas.model.Endereco;
-import br.com.cams7.casa_das_quentinhas.model.Funcionario;
-import br.com.cams7.casa_das_quentinhas.model.Funcionario.Funcao;
-import br.com.cams7.casa_das_quentinhas.model.Pedido;
-import br.com.cams7.casa_das_quentinhas.model.Usuario;
+import br.com.cams7.casa_das_quentinhas.entity.Cidade;
+import br.com.cams7.casa_das_quentinhas.entity.Cliente;
+import br.com.cams7.casa_das_quentinhas.entity.Contato;
+import br.com.cams7.casa_das_quentinhas.entity.Empresa;
+import br.com.cams7.casa_das_quentinhas.entity.Endereco;
+import br.com.cams7.casa_das_quentinhas.entity.Funcionario;
+import br.com.cams7.casa_das_quentinhas.entity.Pedido;
+import br.com.cams7.casa_das_quentinhas.entity.Usuario;
+import br.com.cams7.casa_das_quentinhas.entity.Empresa.RegimeTributario;
+import br.com.cams7.casa_das_quentinhas.entity.Empresa.Tipo;
+import br.com.cams7.casa_das_quentinhas.entity.Funcionario.Funcao;
 import br.com.cams7.casa_das_quentinhas.service.CidadeService;
 import br.com.cams7.casa_das_quentinhas.service.EmpresaService;
 import br.com.cams7.casa_das_quentinhas.service.FuncionarioService;
