@@ -1,5 +1,5 @@
 function setPedido (pedido) {
-    // console.log(pedido);
+    //console.log(pedido);
 
     $('form#pedido_form :input[name="quantidade"]').val(pedido.quantidade > 0 ? pedido.quantidade : '');
 
@@ -42,7 +42,6 @@ $(document).ready(function($) {
         $('div#item_modal form#item_form').trigger('reset');
         $('div#item_modal form#item_form :input[name="produto_id"]').val('');
         $('div#item_modal form#item_form :input[name="produto"]').prop('readonly', false);
-        $('input#modal_state').val('add');        
         $('div#item_modal').modal('show');
     });
  
@@ -55,24 +54,23 @@ $(document).ready(function($) {
 
         var id = event.target.value;
 
-        var url = ITEM_PAGE + '/' + id;// $('div#item_modal
-										// form#item_form').attr('action');
-        // url = url + '/' + id;
-        // console.log('GET ' + url);
+        var url = ITEM_PAGE + '/' + id;
 
         $.ajax({
             url: url,
             type: 'GET',
-            success: data => { 
-                $('div#item_modal form#item_form :input[name="produto_id"]').val(data.id.produtoId);
-                $('div#item_modal form#item_form :input[name="produto"]').val(data.produto.nomeWithTamanho);
-                $('div#item_modal form#item_form :input[name="quantidade"]').val(data.quantidade);
+            success: data => {
+            	var item = data.entity;
+            	//console.log(item);
+            	
+                $('div#item_modal form#item_form :input[name="produto_id"]').val(item.id.produtoId);
+                $('div#item_modal form#item_form :input[name="produto"]').val(item.produto.nomeWithTamanho);
+                $('div#item_modal form#item_form :input[name="quantidade"]').val(item.quantidade);
 
-                $('input#modal_state').val('update');
                 $('div#item_modal').modal('show');
             },
             error: data => {
-            	createErrorMessage(data.status, 'Ocorreu um erro ao tentar buscar o item de pedido');
+            	createErrorMessage(data.status, data.responseJSON.message);
             }
         });        
     });   
@@ -85,17 +83,15 @@ $(document).ready(function($) {
         var url = $('div#item_modal form#item_form').attr('action') + '/' + id + '/delete';
         var method = $('div#item_modal form#item_form').attr('method');
         
-        // console.log(method + ': ' + url);
-
         $.ajax({
             url: url,
             type: method,         
-            success: data => {
-                setPedido(data);
+            success: data => {            	
+                setPedido(data.entity);
                 loadTable(true);
             },
             error: data => {
-            	createErrorMessage(data.status, 'Ocorreu um erro ao tentar remover o item de pedido');
+            	createErrorMessage(data.status, data.responseJSON.message);
             }
         });
     });
@@ -114,20 +110,17 @@ $(document).ready(function($) {
         
         var url = form.action;
         var method = form.method;
-                
-        // var state = $('input#modal_state').val();
-        // console.log(method + ': ' + url);
         
         $.ajax({
         	url: url,
         	type: method,            
             data: $(form).serialize(),            
             success: data => {
-                setPedido(data);
+            	setPedido(data.entity);
                 loadTable();                
             },
             error: data => {
-            	createErrorMessage(data.status, 'Ocorreu um erro ao tentar salvar o item de pedido');
+            	createErrorMessage(data.status, data.responseJSON.message);
             },
             complete: data => {
             	$('div#item_modal').modal('hide');

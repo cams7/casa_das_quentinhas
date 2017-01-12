@@ -42,4 +42,3 @@
 		</div>
 	</div>
 </div>
-<input type="hidden" id="modal_state" value="add">

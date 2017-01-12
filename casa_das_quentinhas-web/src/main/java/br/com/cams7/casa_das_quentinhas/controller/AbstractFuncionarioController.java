@@ -1,7 +1,5 @@
 package br.com.cams7.casa_das_quentinhas.controller;
 
-import static org.springframework.http.HttpStatus.OK;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -103,13 +101,17 @@ public abstract class AbstractFuncionarioController
 	 * Serializable)
 	 */
 	@Override
-	public ResponseEntity<String> destroy(@PathVariable Integer id) {
+	public ResponseEntity<Map<String, String>> destroy(@PathVariable Integer id) {
+		Response response;
+
 		try {
 			getService().delete(id, getPossiveisFuncoes());
-			return new ResponseEntity<String>(getDeleteMessage(), OK);
+			response = getDeleteResponse();
 		} catch (Exception e) {
-			return getMessageResponse(e);
+			response = getErrorResponse(e);
 		}
+
+		return new ResponseEntity<Map<String, String>>(getOnlyMessage(response), response.getStatus());
 	}
 
 	@Override

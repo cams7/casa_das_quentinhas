@@ -20,6 +20,7 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -214,13 +215,17 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 	 * br.com.cams7.app.controller.BaseController#destroy(java.io.Serializable)
 	 */
 	@Override
-	public ResponseEntity<String> destroy(@PathVariable PK id) {
+	public ResponseEntity<Map<String, String>> destroy(@PathVariable PK id) {
+		Response response;
+
 		try {
 			getService().delete(id);
-			return new ResponseEntity<String>(getDeleteMessage(), OK);
+			response = getDeleteResponse();
 		} catch (Exception e) {
-			return getMessageResponse(e);
+			response = getErrorResponse(e);
 		}
+
+		return new ResponseEntity<Map<String, String>>(getOnlyMessage(response), response.getStatus());
 	}
 
 	/*
@@ -419,11 +424,69 @@ public abstract class AbstractController<S extends BaseService<E, PK>, E extends
 	 *            Exception
 	 * @return
 	 */
-	protected ResponseEntity<String> getMessageResponse(Exception e) {
-		if (e instanceof AppException)
-			return new ResponseEntity<String>(e.getMessage(), ((AppException) e).getStatus());
 
-		return new ResponseEntity<String>(e.getMessage(), INTERNAL_SERVER_ERROR);
+	protected Map<String, String> getOnlyMessage(Response response) {
+		@SuppressWarnings("unchecked")
+		Map<String, String> body = (Map<String, String>) (Map<String, ?>) response.getBody();
+		return body;
+	}
+
+	protected Response getDeleteResponse() {
+		return getSucessResponse(null, getDeleteMessage());
+	}
+
+	protected Response getSucessResponse(AbstractEntity<?> entity) {
+		return getSucessResponse(entity, null);
+	}
+
+	protected Response getErrorResponse(Exception e) {
+		LOGGER.error(e.getMessage());
+
+		Map<String, Serializable> response = getResponseBody(null, e.getMessage());
+		HttpStatus status = INTERNAL_SERVER_ERROR;
+
+		if (e instanceof AppException)
+			status = ((AppException) e).getStatus();
+
+		return new Response(response, status);
+	}
+
+	private Response getSucessResponse(AbstractEntity<?> entity, String message) {
+		Map<String, Serializable> response = getResponseBody(entity, message);
+		return new Response(response, OK);
+	}
+
+	private Map<String, Serializable> getResponseBody(AbstractEntity<?> entity, String message) {
+		Map<String, Serializable> objectMessage = new HashMap<>();
+
+		if (entity != null)
+			objectMessage.put("entity", entity);
+		if (message != null)
+			objectMessage.put("message", message);
+
+		return objectMessage;
+
+	}
+
+	protected class Response {
+		private Map<String, Serializable> body;
+		private HttpStatus status;
+
+		private Response(Map<String, Serializable> body, HttpStatus status) {
+			super();
+
+			this.body = body;
+			this.status = status;
+		}
+
+		public final Map<String, Serializable> getBody() {
+			return body;
+		}
+
+		public final HttpStatus getStatus() {
+			return status;
+		}
+
 	}
 
 }

@@ -4,7 +4,6 @@
 package br.com.cams7.casa_das_quentinhas.controller;
 
 import static br.com.cams7.casa_das_quentinhas.model.Pedido.TipoCliente.PESSOA_JURIDICA;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.OK;
 
 import java.util.List;
@@ -28,12 +27,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import br.com.cams7.app.common.MoneyEditor;
 import br.com.cams7.app.controller.AbstractController;
-import br.com.cams7.app.utils.AppException;
 import br.com.cams7.app.utils.SearchParams.SortOrder;
 import br.com.cams7.casa_das_quentinhas.facade.PedidoItemFacade;
 import br.com.cams7.casa_das_quentinhas.model.Cliente;
@@ -184,20 +183,27 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 	}
 
 	@GetMapping(value = "/{pedidoId}/item/{produtoId}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<PedidoItem> showItem(@PathVariable Long pedidoId, @PathVariable Integer produtoId) {
+	@ResponseBody
+	public ResponseEntity<Map<String, ?>> showItem(@PathVariable Long pedidoId, @PathVariable Integer produtoId) {
+		Response response;
+
 		try {
 			PedidoItem item = itemFacade.getItem(pedidoId, produtoId);
-			return new ResponseEntity<PedidoItem>(item, OK);
+			response = getSucessResponse(item);
 		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return getItemResponse(e);
+			response = getErrorResponse(e);
 		}
+
+		return new ResponseEntity<Map<String, ?>>(response.getBody(), response.getStatus());
 	}
 
 	@PostMapping(value = "/item", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Pedido> addItem(ModelMap model,
+	@ResponseBody
+	public ResponseEntity<Map<String, ?>> addItem(ModelMap model,
 			@RequestParam(value = "produto_id", required = true) Integer produtoId,
 			@RequestParam(value = "quantidade", required = true) Short quantidade) {
+		Response response;
+
 		try {
 			PedidoItem item = new PedidoItem(null, produtoId);
 			item.setQuantidade(quantidade);
@@ -207,25 +213,31 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 			item.setProduto(produto);
 
 			Pedido pedido = itemFacade.addItem(item);
-			return new ResponseEntity<Pedido>(pedido, OK);
+			response = getSucessResponse(pedido);
 		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return getPedidoResponse(e);
+			response = getErrorResponse(e);
 		}
+
+		return new ResponseEntity<Map<String, ?>>(response.getBody(), response.getStatus());
 	}
 
 	@PostMapping(value = "/item/{produtoId}/delete", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Pedido> removeItem(@PathVariable Integer produtoId) {
+	@ResponseBody
+	public ResponseEntity<Map<String, ?>> removeItem(@PathVariable Integer produtoId) {
+		Response response;
+
 		try {
 			Pedido pedido = itemFacade.removeItem(produtoId);
-			return new ResponseEntity<Pedido>(pedido, OK);
+			response = getSucessResponse(pedido);
 		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return getPedidoResponse(e);
+			response = getErrorResponse(e);
 		}
+
+		return new ResponseEntity<Map<String, ?>>(response.getBody(), response.getStatus());
 	}
 
 	@GetMapping(value = "/clientes/{nomeOrCpfOrTelefone}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
 	public ResponseEntity<Map<Integer, String>> getClientes(@PathVariable String nomeOrCpfOrTelefone) {
 		Map<Integer, String> clientes = clienteService.getClientesByNomeOrCpfOrTelefone(nomeOrCpfOrTelefone);
 
@@ -233,6 +245,7 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 	}
 
 	@GetMapping(value = "/empresas/{nomeOrCnpj}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
 	public ResponseEntity<Map<Integer, String>> getEmpresas(@PathVariable String nomeOrCnpj) {
 		Map<Integer, String> empresas = empresaService.getEmpresasByRazaoSocialOrCnpj(nomeOrCnpj, Tipo.CLIENTE);
 
@@ -240,6 +253,7 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 	}
 
 	@GetMapping(value = "/produtos/{nomeOrCusto}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
 	public ResponseEntity<Map<Integer, String>> getProdutos(@PathVariable String nomeOrCusto) {
 		Map<Integer, String> produtos = produtoService.getProdutosByNomeOrCusto(nomeOrCusto);
 
@@ -390,28 +404,6 @@ public class PedidoController extends AbstractController<PedidoService, Pedido, 
 			model.addAttribute("escondeAcoes", true);
 
 		setPaginationAttribute(model, offset, sortField, sortOrder, null, count, MAX_RESULTS);
-	}
-
-	/**
-	 * @param e
-	 * @return
-	 */
-	private ResponseEntity<Pedido> getPedidoResponse(Exception e) {
-		if (e instanceof AppException)
-			return new ResponseEntity<Pedido>(((AppException) e).getStatus());
-
-		return new ResponseEntity<Pedido>(INTERNAL_SERVER_ERROR);
-	}
-
-	/**
-	 * @param e
-	 * @return
-	 */
-	private ResponseEntity<PedidoItem> getItemResponse(Exception e) {
-		if (e instanceof AppException)
-			return new ResponseEntity<PedidoItem>(((AppException) e).getStatus());
-
-		return new ResponseEntity<PedidoItem>(INTERNAL_SERVER_ERROR);
 	}
 
 }

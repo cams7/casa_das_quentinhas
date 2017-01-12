@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import br.com.cams7.casa_das_quentinhas.model.Empresa;
 import br.com.cams7.casa_das_quentinhas.model.Empresa.Tipo;
@@ -80,6 +81,7 @@ public class EntregadorController extends AbstractFuncionarioController {
 	}
 
 	@GetMapping(value = "/empresas/{razaoSocialOrCnpj}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
 	public ResponseEntity<Map<Integer, String>> getEmpresas(@PathVariable String razaoSocialOrCnpj) {
 		Map<Integer, String> empresas = getEmpresaService().getEmpresasByRazaoSocialOrCnpj(razaoSocialOrCnpj,
 				Tipo.ENTREGA);

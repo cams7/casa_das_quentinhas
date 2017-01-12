@@ -88,11 +88,11 @@ $(document).ready(function($) {
             url: form.action,
             type: form.method,
             success: data => {
-            	createSuccessMessage(data);            	
+            	createSuccessMessage(data.message);            	
             	loadTable(true);            	             	           	
             },
             error: data => { 
-            	createErrorMessage(data.status, data.responseJSON);  
+            	createErrorMessage(data.status, data.responseJSON.message);  
             },
             complete: data => {
             	$('div#delete_modal').modal('hide');

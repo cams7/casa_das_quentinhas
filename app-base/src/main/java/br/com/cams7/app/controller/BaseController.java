@@ -6,12 +6,14 @@ package br.com.cams7.app.controller;
 import static org.springframework.http.HttpStatus.OK;
 
 import java.io.Serializable;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import br.com.cams7.app.model.AbstractEntity;
@@ -99,7 +101,8 @@ public interface BaseController<E extends AbstractEntity<PK>, PK extends Seriali
 	 * @return
 	 */
 	@PostMapping(value = "/{id}/delete")
-	ResponseEntity<String> destroy(PK id);
+	@ResponseBody
+	ResponseEntity<Map<String, String>> destroy(PK id);
 
 	/**
 	 * @param model

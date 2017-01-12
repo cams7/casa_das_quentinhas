@@ -19,7 +19,7 @@ $(document).ready(function($) {
             	window.history.go(-1);
             },
             error: data => {
-            	createErrorMessage(data.status, data.responseJSON);
+            	createErrorMessage(data.status, data.responseJSON.message);
             },
             complete: data => {
             	$('div#delete_modal').modal('hide');

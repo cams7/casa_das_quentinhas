@@ -12,7 +12,7 @@ Number.prototype.formatMoney = function(c, d, t) {
 function createSuccessMessage(message) {
 	$('div.alert strong').html('Sucesso!');
 	$('div.alert span').html(message);
-	$('div.alert').removeClass('alert-danger').addClass('alert-success').show(); 
+	$('div.alert').removeClass('alert-danger alert-warning').addClass('alert-success').show(); 
 }
 
 function createErrorMessage(status, message) {
@@ -21,17 +21,20 @@ function createErrorMessage(status, message) {
 	switch (status) {
 	case 400:		
 		title = 'Requisição inválida!';
+		$('div.alert').removeClass('alert-success alert-danger').addClass('alert-warning');
 		break;
 	case 404:	
 		title = 'Não encontrado!';
+		$('div.alert').removeClass('alert-success alert-danger').addClass('alert-warning');
 		break;
 	default:
+		$('div.alert').removeClass('alert-success alert-warning').addClass('alert-danger');
 		break;
 	}
 	
 	$('div.alert strong').html(title);
 	$('div.alert span').html(message);
-    $('div.alert').removeClass('alert-success').addClass('alert-danger').show();
+    $('div.alert').show();
 }
 
 var loadingShow = event => {

@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
@@ -185,6 +186,7 @@ public class ClienteController extends AbstractController<ClienteService, Client
 	}
 
 	@GetMapping(value = "/cidades/{nomeOrIbge}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
 	public ResponseEntity<Map<Integer, String>> getCidades(@PathVariable String nomeOrIbge) {
 		Map<Integer, String> cidades = cidadeService.getCidadesByNomeOrIbge(nomeOrIbge);
 
