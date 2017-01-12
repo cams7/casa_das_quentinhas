@@ -1,7 +1,6 @@
 package br.com.cams7.app.dao;
 
 import java.io.Serializable;
-import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -25,9 +24,7 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import br.com.cams7.app.AbstractBase;
 import br.com.cams7.app.model.AbstractEntity;
 import br.com.cams7.app.utils.AppHelper;
 import br.com.cams7.app.utils.AppNotFoundException;
@@ -41,21 +38,13 @@ import br.com.cams7.app.utils.SearchParams;
  * @param <E>
  *            Entidade
  */
-public abstract class AbstractDAO<PK extends Serializable, E extends AbstractEntity<PK>> implements BaseDAO<PK, E> {
-
-	protected final Class<E> ENTITY_TYPE;
-	protected final Logger LOGGER;
+public abstract class AbstractDAO<PK extends Serializable, E extends AbstractEntity<PK>> extends AbstractBase<PK, E>
+		implements BaseDAO<PK, E> {
 
 	private List<Class<? extends AbstractEntity<?>>> ignoredJoins;
 
-	@SuppressWarnings("unchecked")
 	public AbstractDAO() {
 		super();
-
-		ENTITY_TYPE = (Class<E>) ((ParameterizedType) this.getClass().getGenericSuperclass())
-				.getActualTypeArguments()[1];
-
-		LOGGER = LoggerFactory.getLogger(this.getClass());
 	}
 
 	@PersistenceContext

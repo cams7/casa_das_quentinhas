@@ -7,11 +7,10 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.cams7.app.AbstractBase;
 import br.com.cams7.app.dao.BaseDAO;
 import br.com.cams7.app.model.AbstractEntity;
 import br.com.cams7.app.utils.AppInvalidDataException;
@@ -29,9 +28,7 @@ import br.com.cams7.app.utils.SearchParams;
  */
 @Transactional
 public abstract class AbstractService<PK extends Serializable, E extends AbstractEntity<PK>, DAO extends BaseDAO<PK, E>>
-		implements BaseService<PK, E> {
-
-	protected final Logger LOGGER;
+		extends AbstractBase<PK, E> implements BaseService<PK, E> {
 
 	@Autowired
 	private DAO dao;
@@ -40,8 +37,6 @@ public abstract class AbstractService<PK extends Serializable, E extends Abstrac
 
 	public AbstractService() {
 		super();
-
-		LOGGER = LoggerFactory.getLogger(this.getClass());
 	}
 
 	protected DAO getDao() {

@@ -9,16 +9,12 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
 import java.io.Serializable;
-import java.lang.reflect.ParameterizedType;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.validation.Valid;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +27,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import br.com.cams7.app.AbstractBase;
 import br.com.cams7.app.model.AbstractEntity;
 import br.com.cams7.app.service.BaseService;
 import br.com.cams7.app.utils.AppException;
@@ -51,12 +48,7 @@ import br.com.cams7.app.utils.SearchParams.SortOrder;
  *            Service
  */
 public abstract class AbstractController<PK extends Serializable, E extends AbstractEntity<PK>, S extends BaseService<PK, E>>
-		implements BaseController<PK, E> {
-
-	protected final Class<E> ENTITY_TYPE;
-	protected final Logger LOGGER;
-
-	public static final Locale LOCALE = new Locale("pt", "BR");
+		extends AbstractBase<PK, E> implements BaseController<PK, E> {
 
 	protected final String LAST_LOADED_PAGE = "lastLoadedPage";
 	private final short MAX_RESULTS = 10;
@@ -70,9 +62,6 @@ public abstract class AbstractController<PK extends Serializable, E extends Abst
 
 	public AbstractController() {
 		super();
-
-		ENTITY_TYPE = getEntityType();
-		LOGGER = LoggerFactory.getLogger(this.getClass());
 	}
 
 	/*
@@ -85,7 +74,6 @@ public abstract class AbstractController<PK extends Serializable, E extends Abst
 
 	@Override
 	public String index(ModelMap model) {
-
 		setCommonAttributes(model);
 
 		Integer offset = 0;
@@ -115,7 +103,6 @@ public abstract class AbstractController<PK extends Serializable, E extends Abst
 	 */
 	@Override
 	public String create(ModelMap model) {
-
 		setCommonAttributes(model);
 		setLastLoadedPage(model, 1);
 
@@ -137,7 +124,6 @@ public abstract class AbstractController<PK extends Serializable, E extends Abst
 	@Override
 	public String store(@Valid E entity, BindingResult result, ModelMap model,
 			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
-
 		setCommonAttributes(model);
 		incrementLastLoadedPage(model, lastLoadedPage);
 
@@ -159,7 +145,6 @@ public abstract class AbstractController<PK extends Serializable, E extends Abst
 	 */
 	@Override
 	public String show(@PathVariable PK id, ModelMap model) {
-
 		setCommonAttributes(model);
 
 		E entity = getEntity(id);
@@ -178,7 +163,6 @@ public abstract class AbstractController<PK extends Serializable, E extends Abst
 	 */
 	@Override
 	public String edit(@PathVariable PK id, ModelMap model) {
-
 		setCommonAttributes(model);
 		setLastLoadedPage(model, 1);
 		setEditPage(model);
@@ -201,7 +185,6 @@ public abstract class AbstractController<PK extends Serializable, E extends Abst
 	@Override
 	public String update(@Valid E entity, BindingResult result, ModelMap model, @PathVariable PK id,
 			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
-
 		setCommonAttributes(model);
 		incrementLastLoadedPage(model, lastLoadedPage);
 		setEditPage(model);
@@ -247,7 +230,6 @@ public abstract class AbstractController<PK extends Serializable, E extends Abst
 			@RequestParam(value = "f", required = true) String sortField,
 			@RequestParam(value = "s", required = true) String sortOrder,
 			@RequestParam(value = "q", required = true) String query) {
-
 		SortOrder sorting = SortOrder.get(sortOrder);
 
 		Map<String, Object> filters = new HashMap<>();
@@ -402,20 +384,6 @@ public abstract class AbstractController<PK extends Serializable, E extends Abst
 	}
 
 	protected abstract String getDeleteMessage();
-
-	/**
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	private Class<E> getEntityType() {
-		try {
-			return (Class<E>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[1];
-		} catch (ClassCastException e) {
-		}
-
-		return (Class<E>) ((ParameterizedType) this.getClass().getSuperclass().getGenericSuperclass())
-				.getActualTypeArguments()[1];
-	}
 
 	@SuppressWarnings("unchecked")
 	private void setIgnoredJoins() {
