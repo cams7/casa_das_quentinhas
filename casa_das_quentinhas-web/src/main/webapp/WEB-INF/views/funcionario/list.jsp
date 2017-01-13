@@ -60,10 +60,11 @@
 	<input type="hidden" id="dataTable_offset" value="${offset}">
 	<input type="hidden" id="dataTable_sortField" value="${sortField}">
 	<input type="hidden" id="dataTable_sortOrder" value="${sortOrder}">
+	<input type="hidden" id="dataTable_globalFilters" value="${globalFilters}">
 	<input type="hidden" id="dataTable_query" value="${query}">
 
 	<input type="hidden" id="dataTable_maxResults" value="${maxResults}">
-	<input type="hidden" id="dataTable_count" value="${count}">
+	<input type="hidden" id="dataTable_count" value="${count}">	
 
 	<c:set var="paginateUri">
 		<c:url value='/funcionario/list' />

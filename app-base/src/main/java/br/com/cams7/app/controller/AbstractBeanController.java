@@ -7,9 +7,11 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.OK;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -252,6 +254,8 @@ public abstract class AbstractBeanController<PK extends Serializable, E extends 
 
 		model.addAttribute("maxResults", maxResults);
 		model.addAttribute("count", count);
+		model.addAttribute("globalFilters",
+				Arrays.asList(getGlobalFilters()).stream().collect(Collectors.joining(",")));
 	}
 
 	protected final void setCommonAttributes(ModelMap model) {

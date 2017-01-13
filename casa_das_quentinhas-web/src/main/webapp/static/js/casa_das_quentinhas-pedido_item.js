@@ -12,14 +12,14 @@ function setPedido (pedido) {
 $('button#item_add').click(event => {
 	event.preventDefault();
 	
-    $('div#item_modal form#item_form').trigger('reset');
-    $('div#item_modal form#item_form :input[name="produto_id"]').val('');
-    $('div#item_modal form#item_form :input[name="produto"]').prop('readonly', false);
+    $('div#item_modal form').trigger('reset');
+    $('div#item_modal form :input[name="produto_id"]').val('');
+    $('div#item_modal form :input[name="produto"]').prop('readonly', false);
     $('div#item_modal').modal('show');
 });
 
 $(document).ready(function($) {
-    $('div#item_modal form#item_form :input[name="produto"]').autocomplete({
+    $('div#item_modal form :input[name="produto"]').autocomplete({
         source : function(request, response) {
            $.getJSON(MAIN_PAGE + '/produtos/' + request.term, data => {                                      
                 response(
@@ -34,7 +34,7 @@ $(document).ready(function($) {
             });
         }, 
         select: function (event, ui) {
-            $('div#item_modal form#item_form :input[name="produto_id"]').val(ui.item.id);
+            $('div#item_modal form :input[name="produto_id"]').val(ui.item.id);
         },
         open: function(event, ui) {
             $('.ui-autocomplete').css('z-index', '1050');
@@ -48,9 +48,9 @@ $(document).ready(function($) {
     $(document).on('click', 'button.item-updade', event => {
         event.preventDefault();
 
-        $('div#item_modal form#item_form').trigger('reset');
-        $('div#item_modal form#item_form :input[name="produto_id"]').val('');
-        $('div#item_modal form#item_form :input[name="produto"]').prop('readonly', true);
+        $('div#item_modal form').trigger('reset');
+        $('div#item_modal form :input[name="produto_id"]').val('');
+        $('div#item_modal form :input[name="produto"]').prop('readonly', true);
 
         var id = event.target.value;
 
@@ -63,9 +63,9 @@ $(document).ready(function($) {
             	var item = data.entity;
             	// console.log(item);
             	
-                $('div#item_modal form#item_form :input[name="produto_id"]').val(item.id.produtoId);
-                $('div#item_modal form#item_form :input[name="produto"]').val(item.produto.nomeWithTamanho);
-                $('div#item_modal form#item_form :input[name="quantidade"]').val(item.quantidade);
+                $('div#item_modal form :input[name="produto_id"]').val(item.id.produtoId);
+                $('div#item_modal form :input[name="produto"]').val(item.produto.nomeWithTamanho);
+                $('div#item_modal form :input[name="quantidade"]').val(item.quantidade);
 
                 $('div#item_modal').modal('show');
             },
@@ -80,8 +80,8 @@ $(document).ready(function($) {
         
         var id = event.target.value;
         
-        var url = $('div#item_modal form#item_form').attr('action') + '/' + id + '/delete';
-        var method = $('div#item_modal form#item_form').attr('method');
+        var url = $('div#item_modal form').attr('action') + '/' + id + '/delete';
+        var method = $('div#item_modal form').attr('method');
         
         $.ajax({
             url: url,
@@ -96,7 +96,7 @@ $(document).ready(function($) {
         });
     });
 
-    $('div#item_modal form#item_form').validator().on('submit', event => {      
+    $('div#item_modal form').validator().on('submit', event => {      
         if (event.isDefaultPrevented()) 
             return; 
         

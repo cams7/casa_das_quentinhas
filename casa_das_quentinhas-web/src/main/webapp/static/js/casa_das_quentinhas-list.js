@@ -1,3 +1,46 @@
+function getTotalPages(){
+	var count = $('input#dataTable_count').val();
+	var maxResults = $('input#dataTable_maxResults').val();
+		
+	var page = Math.trunc(count / maxResults);
+	if(count % maxResults > 0)
+		page++;
+	
+	return page;	
+}
+
+function getPageFirst(){
+	return ($('div#report_modal div#intervalo').slider('values', 0) - 1) * $('input#dataTable_maxResults').val();	
+}
+
+function getPageSize(){
+	return ($('div#report_modal div#intervalo').slider('values', 1) - $('div#report_modal div#intervalo').slider('values', 0) + 1) * $('input#dataTable_maxResults').val();
+}
+
+function getSortOrder(sortOrder){
+	switch (sortOrder) {
+	case 'sorting_asc':
+		return 'ASCENDING';
+	case 'sorting_desc':
+		return 'DESCENDING';
+	default:
+		break;
+	}	
+	return 'UNSORTED';
+}
+
+function atualizaIntervalos(min, max) {
+	$('div#report_modal form input#intervalo_informado').val(min + ' - ' + max);
+	$('div#report_modal form input[name=pagina][value="selecionada"]').prop('checked', true);
+}
+
+function setIntervalos() {
+	$('div#report_modal div#intervalo').slider('values', 0, 1);
+	$('div#report_modal div#intervalo').slider('values', 1, 1);
+	$('div#report_modal div#intervalo').slider('option',{min: 1, max: getTotalPages()});
+	atualizaIntervalos(1, 1);
+}
+
 function loadTable(removedRow = false, offset = null, sortField = null, sortOrder = null, query = null) {		
 	if(offset == null){
     	offset = $('input#dataTable_offset').val();
@@ -34,7 +77,7 @@ function loadTable(removedRow = false, offset = null, sortField = null, sortOrde
         // console.log(data);
 		$('.content').html(data);
 		// location.hash = offset;
-   	});
+   	});	
 }
 
 $('button#search_btn').click(event => {
@@ -47,7 +90,10 @@ $('button#search_btn').click(event => {
 $('button#report').click(event => {
 	event.preventDefault();
 	
-	console.log("Gerar relatório");
+	$('div#report_modal form').trigger('reset');
+	setIntervalos();
+	
+    $('div#report_modal').modal('show');
 });
 
 $(document).ready(function($) {
@@ -80,12 +126,12 @@ $(document).ready(function($) {
     $(document).on('click', 'table.dataTable button.delete', event => {
         event.preventDefault();
                 
-        $('div#delete_modal #delete_form').attr('action', DELETE_PAGE + '/' + event.target.value + '/delete');
+        $('div#delete_modal form').attr('action', DELETE_PAGE + '/' + event.target.value + '/delete');
         $('div#delete_modal div.modal-body').html(event.target.title);
         $('div#delete_modal').removeClass('delete_from_show_page').addClass('delete_from_list_page').modal('show');
     });
     
-    $(document).on('submit', 'div.delete_from_list_page #delete_form', event => {
+    $(document).on('submit', 'div.delete_from_list_page form', event => {
         event.preventDefault();
                 
         var form = event.target;        
@@ -105,4 +151,56 @@ $(document).ready(function($) {
             }
         });
     });  
+    
+    $('div#report_modal div#intervalo').slider({
+        range: true,
+        slide: function( event, ui ) {
+        	atualizaIntervalos(ui.values[0], ui.values[1]);        	
+        }
+    });
+    
+    $('div#report_modal form').on('submit', event => {      
+        event.preventDefault();
+        
+        var form = $(event.target);
+              
+        var params = '?';
+        
+        switch (form.find('input[name=pagina]:checked').val()) {
+		case 'todas':
+			break;
+		case 'selecionada':
+			params += 'page_first=' + getPageFirst() + '&page_size=' + getPageSize();
+			break;
+		case 'atual':
+			params += 'page_first=' + $('input#dataTable_offset').val() + '&page_size=' + $('input#dataTable_maxResults').val();
+			break;
+		default:
+			break;
+		}
+                
+        var sortField = $('input#dataTable_sortField').val();
+        if(sortField != undefined){
+        	params += (params != '?' ? '&': '') + 'sort_field=' + sortField;
+        
+        	var sortOrder = $('input#dataTable_sortOrder').val();
+        	if(sortOrder != undefined)
+        		params += '&sort_order=' + getSortOrder(sortOrder);
+        }
+        
+        var query = $('input#dataTable_query').val();
+        if(query != undefined && query != ''){
+        	params += (params != '?' ? '&': '') + 'globalFilter=' + query;
+        	$.each($('input#dataTable_globalFilters').val().split(','), function(index, value) {
+        		  params += '&filter_field=' + value;
+        	});
+        }
+        
+        var url = MAIN_PAGE + '/report/pdf' + params;
+        // console.log(url);
+        
+       window.open(url,'_blank');
+                       
+        $('div#report_modal').modal('hide');
+    });
 });
