@@ -12,19 +12,22 @@
 	<div class="col-sm-6">
 		<div class="input-group h2">
 			<input name="data[search]" class="form-control" id="search_query"
-				type="text" placeholder="Cliente / Empresa / Quantidade / Custo"> <span
-				class="input-group-btn">
-				<button id="search_btn" class="btn btn-primary" type="submit">
+				type="text" placeholder="Cliente / Empresa / Quantidade / Custo">
+			<span class="input-group-btn">
+				<button id="search_btn" class="btn btn-success" type="submit">
 					<span class="glyphicon glyphicon-search"></span>
 				</button>
 			</span>
 		</div>
 	</div>
 
-	<div class="col-sm-3">
+	<div class="col-sm-3 h2">
+		<button id="report" class="btn btn-default">
+			<span class="glyphicon glyphicon-file"></span>Relatório
+		</button>
 		<sec:authorize access="hasRole('GERENTE')">
-			<a href="<c:url value='/pedido/create' />"
-				class="btn btn-primary pull-right h2">Novo Pedido</a>
+			<a href="<c:url value='/pedido/create' />" class="btn btn-primary">Novo
+				Pedido</a>
 		</sec:authorize>
 	</div>
 </div>
@@ -46,3 +49,4 @@
 <script src="<c:url value='/static/js/casa_das_quentinhas-list.js' />"></script>
 
 <%@include file="../../layouts/delete_modal.jsp"%>
+<%@include file="../../layouts/report_modal.jsp"%>

@@ -50,5 +50,3 @@
 
 <%@include file="../../layouts/delete_modal.jsp"%>
 <%@include file="../../layouts/report_modal.jsp"%>
-
-
