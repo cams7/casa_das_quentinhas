@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import br.com.cams7.app.SearchParams;
 import br.com.cams7.app.SearchParams.SortOrder;
 import br.com.cams7.app.common.MoneyEditor;
-import br.com.cams7.app.controller.AbstractController;
+import br.com.cams7.app.controller.AbstractBeanController;
 import br.com.cams7.casa_das_quentinhas.entity.PedidoItem;
 import br.com.cams7.casa_das_quentinhas.entity.Produto;
 import br.com.cams7.casa_das_quentinhas.entity.Produto.Tamanho;
@@ -39,7 +39,7 @@ import br.com.cams7.casa_das_quentinhas.service.ProdutoService;
 @Controller
 @RequestMapping("/" + ProdutoController.MODEL_NAME)
 @SessionAttributes("produtoTamanhos")
-public class ProdutoController extends AbstractController<Integer, Produto, ProdutoService> {
+public class ProdutoController extends AbstractBeanController<Integer, Produto, ProdutoService> {
 
 	public static final String MODEL_NAME = "produto";
 	public static final String LIST_NAME = "produtos";

@@ -45,7 +45,6 @@ public class FuncionarioController extends AbstractFuncionarioController {
 	@Override
 	public String store(@Valid Funcionario funcionario, BindingResult result, ModelMap model,
 			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
-
 		return storeFuncionario(funcionario, result, model, lastLoadedPage);
 	}
 
@@ -61,7 +60,6 @@ public class FuncionarioController extends AbstractFuncionarioController {
 	@Override
 	public String update(@Valid Funcionario funcionario, BindingResult result, ModelMap model, @PathVariable Integer id,
 			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
-
 		return updateFuncionario(funcionario, result, model, id, lastLoadedPage);
 	}
 

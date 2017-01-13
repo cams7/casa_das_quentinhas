@@ -7,7 +7,7 @@ import java.beans.PropertyEditorSupport;
 import java.text.NumberFormat;
 import java.text.ParseException;
 
-import br.com.cams7.app.controller.AbstractController;
+import br.com.cams7.app.controller.AbstractBeanController;
 
 /**
  * @author César Magalhães
@@ -15,7 +15,7 @@ import br.com.cams7.app.controller.AbstractController;
  */
 public class MoneyEditor extends PropertyEditorSupport {
 
-	public static final NumberFormat NUMBER_FORMAT = NumberFormat.getCurrencyInstance(AbstractController.LOCALE);
+	public static final NumberFormat NUMBER_FORMAT = NumberFormat.getCurrencyInstance(AbstractBeanController.LOCALE);
 
 	@Override
 	public void setAsText(String value) throws IllegalArgumentException {

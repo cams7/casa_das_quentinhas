@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import br.com.cams7.app.controller.AbstractController;
+import br.com.cams7.app.controller.AbstractBeanController;
 import br.com.cams7.casa_das_quentinhas.service.EmpresaService;
 
 /**
@@ -40,8 +40,8 @@ public class AppController {
 	@GetMapping
 	@ResponseStatus(OK)
 	public String home(ModelMap model) {
-		AbstractController.setUsuarioLogado(model);
-		AbstractController.setMainPage(model, "home");
+		AbstractBeanController.setUsuarioLogado(model);
+		AbstractBeanController.setMainPage(model, "home");
 
 		return "home";
 	}
@@ -49,7 +49,7 @@ public class AppController {
 	@GetMapping(value = "info")
 	@ResponseStatus(OK)
 	public String info(ModelMap model) {
-		AbstractController.setUsuarioLogado(model);
+		AbstractBeanController.setUsuarioLogado(model);
 		model.addAttribute("empresa", empresaService.getEmpresaByIdAndTipos(1));
 
 		return "info";

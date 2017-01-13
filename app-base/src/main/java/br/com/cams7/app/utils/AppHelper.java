@@ -8,7 +8,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 
-import br.com.cams7.app.AppException;
+import br.com.cams7.app.AppInvalidDataException;
+import br.com.cams7.app.AppNotFoundException;
 import br.com.cams7.app.entity.AbstractEntity;
 
 /**
@@ -29,7 +30,7 @@ public final class AppHelper {
 			E entity = entityType.newInstance();
 			return entity;
 		} catch (InstantiationException | IllegalAccessException e) {
-			throw new AppException(e.getMessage());
+			throw new AppInvalidDataException(e.getMessage());
 		}
 	}
 
@@ -62,8 +63,8 @@ public final class AppHelper {
 			Field field = entityType.getDeclaredField(attributeName);
 			return new FieldTypes<E>(entityType, field.getType());
 		} catch (NoSuchFieldException | SecurityException e) {
-			throw new AppException(String.format("O atributo '%s' não foi encontrado na entidade '%s'", attributeName,
-					entityType.getName()));
+			throw new AppNotFoundException(String.format("O atributo '%s' não foi encontrado na entidade '%s'",
+					attributeName, entityType.getName()));
 		}
 	}
 

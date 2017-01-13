@@ -25,10 +25,13 @@ import org.springframework.web.servlet.view.tiles3.TilesViewResolver;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 
+import br.com.cams7.app.controller.GlobalExceptionHandlerController;
+
 @Configuration
 @Import(JpaConfiguration.class)
 @EnableWebMvc
-@ComponentScan(basePackages = "br.com.cams7.casa_das_quentinhas")
+@ComponentScan(basePackages = "br.com.cams7.casa_das_quentinhas", basePackageClasses = {
+		GlobalExceptionHandlerController.class })
 public class AppConfig extends WebMvcConfigurerAdapter {
 
 	/**

@@ -11,7 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import br.com.cams7.app.controller.AbstractController;
+import br.com.cams7.app.controller.AbstractBeanController;
 import br.com.cams7.casa_das_quentinhas.entity.Funcionario;
 import br.com.cams7.casa_das_quentinhas.entity.Usuario;
 import br.com.cams7.casa_das_quentinhas.entity.Funcionario.Funcao;
@@ -24,7 +24,7 @@ import br.com.cams7.casa_das_quentinhas.service.UsuarioService;
  *
  */
 public abstract class AbstractFuncionarioController
-		extends AbstractController<Integer, Funcionario, FuncionarioService> {
+		extends AbstractBeanController<Integer, Funcionario, FuncionarioService> {
 
 	@Autowired
 	private UsuarioService usuarioService;
@@ -37,7 +37,6 @@ public abstract class AbstractFuncionarioController
 
 	protected String storeFuncionario(Funcionario funcionario, BindingResult result, ModelMap model,
 			Integer lastLoadedPage) {
-
 		setCommonAttributes(model);
 		incrementLastLoadedPage(model, lastLoadedPage);
 
@@ -71,7 +70,6 @@ public abstract class AbstractFuncionarioController
 
 	protected String updateFuncionario(Funcionario funcionario, BindingResult result, ModelMap model, Integer id,
 			Integer lastLoadedPage) {
-
 		setCommonAttributes(model);
 		incrementLastLoadedPage(model, lastLoadedPage);
 		setEditPage(model);

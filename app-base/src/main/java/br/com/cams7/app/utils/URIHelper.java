@@ -7,10 +7,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import br.com.cams7.app.AppException;
+import br.com.cams7.app.AppInvalidDataException;
 import br.com.cams7.app.ReportView;
-import br.com.cams7.app.SearchParams;
 import br.com.cams7.app.ReportView.Pagination;
+import br.com.cams7.app.SearchParams;
 import br.com.cams7.app.SearchParams.SortOrder;
 import br.com.cams7.app.entity.AbstractEntity;
 
@@ -58,10 +58,7 @@ public final class URIHelper {
 
 		Map<String, String> messages = new HashMap<>();
 
-		for (Entry<String, String[]> param : allParams.entrySet()) {
-			String paramName = param.getKey();
-			String[] paramValues = param.getValue();
-
+		allParams.forEach((paramName, paramValues) -> {
 			switch (paramName) {
 			case PAGE_FIRST:
 				if (onlyOneParameter(messages, paramName, paramValues))
@@ -97,21 +94,24 @@ public final class URIHelper {
 			default:
 				if (onlyOneParameter(messages, paramName, paramValues)) {
 					Object value = paramValues[0];
-					if (!GLOBAL_FILTER.equals(paramName))
-						try {
-							value = AppHelper.getFieldValue(entityType, paramName, paramValues[0]);
-						} catch (AppException e) {
+					if (!GLOBAL_FILTER.equals(paramName)) {
+						// try {
+						value = AppHelper.getFieldValue(entityType, paramName, paramValues[0]);
+						// } catch (AppException e) {
+						if (value == null) {
 							validParameter(messages, paramName);
 							break;
 						}
+						// }
+					}
 					params.getFilters().put(paramName, value);
 				}
 				break;
 			}
-		}
+		});
 
 		if (!messages.isEmpty())
-			throw new AppException(messages);
+			throw new AppInvalidDataException(messages);
 
 		return params;
 	}

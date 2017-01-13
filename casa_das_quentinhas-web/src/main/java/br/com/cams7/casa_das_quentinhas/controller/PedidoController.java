@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import br.com.cams7.app.SearchParams.SortOrder;
 import br.com.cams7.app.common.MoneyEditor;
-import br.com.cams7.app.controller.AbstractController;
+import br.com.cams7.app.controller.AbstractBeanController;
 import br.com.cams7.casa_das_quentinhas.entity.Cliente;
 import br.com.cams7.casa_das_quentinhas.entity.Empresa;
 import br.com.cams7.casa_das_quentinhas.entity.Pedido;
@@ -60,7 +60,7 @@ import br.com.cams7.casa_das_quentinhas.service.ProdutoService;
 @RequestMapping("/" + PedidoController.MODEL_NAME)
 @SessionAttributes({ "pedidoTiposCliente", "pedidoFormasPagamento", "pedidoDestinosOperacao", "pedidoTiposAtendimento",
 		"pedidoSituacoes" })
-public class PedidoController extends AbstractController<Long, Pedido, PedidoService> {
+public class PedidoController extends AbstractBeanController<Long, Pedido, PedidoService> {
 
 	public static final String MODEL_NAME = "pedido";
 	public static final String LIST_NAME = "pedidos";

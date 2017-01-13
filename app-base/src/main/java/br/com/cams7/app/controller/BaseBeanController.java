@@ -26,7 +26,7 @@ import br.com.cams7.app.entity.AbstractEntity;
  * @param <E>
  *            Entidade
  */
-public interface BaseController<PK extends Serializable, E extends AbstractEntity<PK>> {
+public interface BaseBeanController<PK extends Serializable, E extends AbstractEntity<PK>> {
 	/**
 	 * Display a listing of the resource.
 	 *

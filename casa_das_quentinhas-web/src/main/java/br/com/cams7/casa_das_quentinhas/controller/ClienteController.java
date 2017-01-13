@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import br.com.cams7.app.SearchParams;
 import br.com.cams7.app.SearchParams.SortOrder;
 import br.com.cams7.app.common.DateEditor;
-import br.com.cams7.app.controller.AbstractController;
+import br.com.cams7.app.controller.AbstractBeanController;
 import br.com.cams7.casa_das_quentinhas.entity.Cidade;
 import br.com.cams7.casa_das_quentinhas.entity.Cliente;
 import br.com.cams7.casa_das_quentinhas.entity.Contato;
@@ -54,7 +54,7 @@ import br.com.cams7.casa_das_quentinhas.service.PedidoService;
 @Controller
 @RequestMapping("/" + ClienteController.MODEL_NAME)
 @SessionAttributes("clienteTiposContribuintes")
-public class ClienteController extends AbstractController<Integer, Cliente, ClienteService> {
+public class ClienteController extends AbstractBeanController<Integer, Cliente, ClienteService> {
 
 	public static final String MODEL_NAME = "cliente";
 	public static final String LIST_NAME = "clientes";
