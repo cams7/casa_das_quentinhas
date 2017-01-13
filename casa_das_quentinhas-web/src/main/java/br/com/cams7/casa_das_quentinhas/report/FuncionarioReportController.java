@@ -35,5 +35,6 @@ public class FuncionarioReportController extends AbstractReportController<Intege
 	protected String getPdfView() {
 		return PDF_VIEW;
 	}
+	
 
 }

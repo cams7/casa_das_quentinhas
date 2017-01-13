@@ -30,7 +30,7 @@
 
 	<modules>
 		<module>app-base</module>
-		<module>casa_das_quentinhas-model</module>
+		<module>casa_das_quentinhas-entity</module>
 		<module>casa_das_quentinhas-web</module>
 	</modules>
 
@@ -47,7 +47,7 @@
 			</dependency>
 			<dependency>
 				<groupId>br.com.cams7</groupId>
-				<artifactId>casa_das_quentinhas-model</artifactId>
+				<artifactId>casa_das_quentinhas-entity</artifactId>
 				<version>${project.version}</version>
 				<type>jar</type>
 			</dependency>
@@ -117,7 +117,7 @@
 				<version>${jackson.version}</version>
 			</dependency>
 
-			<!-- Report -->
+			<!-- Relatório -->
 			<dependency>
 				<groupId>net.sf.jasperreports</groupId>
 				<artifactId>jasperreports</artifactId>

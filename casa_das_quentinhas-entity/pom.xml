@@ -10,10 +10,10 @@
 		<version>1.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>casa_das_quentinhas-model</artifactId>
+	<artifactId>casa_das_quentinhas-entity</artifactId>
 	<packaging>jar</packaging>
 
-	<name>Casa das Quentinhas - Módulo model</name>
+	<name>Casa das Quentinhas - Módulo das entidades</name>
 	<description></description>
 
 	<dependencies>

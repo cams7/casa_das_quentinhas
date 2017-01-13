@@ -55,7 +55,7 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- Servlet+JSP-->
+		<!-- Servlet+JSP -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
@@ -80,6 +80,7 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<!-- Relatório -->
 		<dependency>
 			<groupId>net.sf.jasperreports</groupId>
 			<artifactId>jasperreports</artifactId>

@@ -26,7 +26,7 @@
 		</dependency>
 		<dependency>
 			<groupId>br.com.cams7</groupId>
-			<artifactId>casa_das_quentinhas-model</artifactId>
+			<artifactId>casa_das_quentinhas-entity</artifactId>
 		</dependency>
 
 		<!-- Spring -->
@@ -132,7 +132,7 @@
 			<version>9.1-901-1.jdbc4</version>
 		</dependency>
 
-		<!-- Report -->
+		<!-- Relatório -->
 		<dependency>
 			<groupId>net.sf.jasperreports</groupId>
 			<artifactId>jasperreports</artifactId>

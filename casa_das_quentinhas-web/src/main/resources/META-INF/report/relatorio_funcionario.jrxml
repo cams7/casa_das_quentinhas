@@ -47,14 +47,14 @@ from funcionario f inner join usuario u on f.id_funcionario=u.id_usuario]]>
 				<text><![CDATA[Nome]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Transparent" x="350" y="1" width="350" height="30" forecolor="#666666" backcolor="#E6E6E6" uuid="5e2ad20c-84b1-4bbd-808b-e23e2ed6d772"/>
+				<reportElement mode="Transparent" x="350" y="1" width="340" height="30" forecolor="#666666" backcolor="#E6E6E6" uuid="5e2ad20c-84b1-4bbd-808b-e23e2ed6d772"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12"/>
 				</textElement>
 				<text><![CDATA[E-mail]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Transparent" x="700" y="1" width="102" height="30" forecolor="#666666" backcolor="#E6E6E6" uuid="161bc275-ac8e-41c9-bda0-c7abd855c040"/>
+				<reportElement mode="Transparent" x="690" y="1" width="112" height="30" forecolor="#666666" backcolor="#E6E6E6" uuid="161bc275-ac8e-41c9-bda0-c7abd855c040"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12"/>
 				</textElement>
@@ -73,7 +73,7 @@ from funcionario f inner join usuario u on f.id_funcionario=u.id_usuario]]>
 				<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="350" y="5" width="350" height="30" uuid="02844170-d1a1-4788-83d9-9a731f9560d8"/>
+				<reportElement mode="Opaque" x="350" y="5" width="340" height="30" uuid="02844170-d1a1-4788-83d9-9a731f9560d8"/>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
 					<font fontName="SansSerif" size="14" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -81,7 +81,7 @@ from funcionario f inner join usuario u on f.id_funcionario=u.id_usuario]]>
 				<textFieldExpression><![CDATA[$F{usuario.email}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="700" y="5" width="102" height="30" uuid="48ae849e-4874-4caa-963c-7434ac1731fe"/>
+				<reportElement mode="Opaque" x="690" y="5" width="112" height="30" uuid="48ae849e-4874-4caa-963c-7434ac1731fe"/>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
 					<font fontName="SansSerif" size="14" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
