@@ -1,8 +1,6 @@
-$(document).ready(function($) {
-	$('input#custo').maskMoney({
-		showSymbol : true,
-		symbol : 'R$ ',
-		decimal : ',',
-		thousands : '.'
-	});
+$('input#custo').maskMoney({
+	showSymbol : true,
+	symbol : 'R$ ',
+	decimal : ',',
+	thousands : '.'
 });

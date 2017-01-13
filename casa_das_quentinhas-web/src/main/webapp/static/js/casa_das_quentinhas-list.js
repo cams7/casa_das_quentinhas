@@ -37,14 +37,20 @@ function loadTable(removedRow = false, offset = null, sortField = null, sortOrde
    	});
 }
 
-$(document).ready(function($) {
-	$('button#search_btn').click(event => {
-		event.preventDefault();
-		
-		query = $('#search_query').val();
-		loadTable(false, 0, null, null, query);
-	});
+$('button#search_btn').click(event => {
+	event.preventDefault();
 	
+	query = $('#search_query').val();
+	loadTable(false, 0, null, null, query);
+});
+
+$('button#report').click(event => {
+	event.preventDefault();
+	
+	console.log("Gerar relatório");
+});
+
+$(document).ready(function($) {
 	$(document).on('click', '.pagination a', event => {
 	    event.preventDefault();
 	    
@@ -98,5 +104,5 @@ $(document).ready(function($) {
             	$('div#delete_modal').modal('hide');
             }
         });
-    }); 
+    });  
 });

@@ -21,11 +21,14 @@
 		</div>
 	</div>
 
-	<div class="col-sm-3">
+	<div class="col-sm-3 h2">
 		<sec:authorize access="hasRole('GERENTE')">
 			<a href="<c:url value='/funcionario/create' />"
-				class="btn btn-primary pull-right h2">Novo Funcionário</a>
+				class="btn btn-primary">Novo Funcionário</a>
 		</sec:authorize>
+		<button id="report" class="btn btn-default">
+			<span class="glyphicon glyphicon-file"></span>Relatório
+		</button>
 	</div>
 </div>
 

@@ -1,5 +1,5 @@
 function setPedido (pedido) {
-    //console.log(pedido);
+    // console.log(pedido);
 
     $('form#pedido_form :input[name="quantidade"]').val(pedido.quantidade > 0 ? pedido.quantidade : '');
 
@@ -8,6 +8,15 @@ function setPedido (pedido) {
     else
         $('form#pedido_form :input[name="custo"]').val('');
 }
+
+$('button#item_add').click(event => {
+	event.preventDefault();
+	
+    $('div#item_modal form#item_form').trigger('reset');
+    $('div#item_modal form#item_form :input[name="produto_id"]').val('');
+    $('div#item_modal form#item_form :input[name="produto"]').prop('readonly', false);
+    $('div#item_modal').modal('show');
+});
 
 $(document).ready(function($) {
     $('div#item_modal form#item_form :input[name="produto"]').autocomplete({
@@ -34,17 +43,8 @@ $(document).ready(function($) {
             $('.ui-autocomplete').css('z-index', '0');
         },
         minLength : 1
-    });     
-
-    $('button#item_add').click(event => {
-    	event.preventDefault();
-    	
-        $('div#item_modal form#item_form').trigger('reset');
-        $('div#item_modal form#item_form :input[name="produto_id"]').val('');
-        $('div#item_modal form#item_form :input[name="produto"]').prop('readonly', false);
-        $('div#item_modal').modal('show');
-    });
- 
+    }); 
+    
     $(document).on('click', 'button.item-updade', event => {
         event.preventDefault();
 
@@ -61,7 +61,7 @@ $(document).ready(function($) {
             type: 'GET',
             success: data => {
             	var item = data.entity;
-            	//console.log(item);
+            	// console.log(item);
             	
                 $('div#item_modal form#item_form :input[name="produto_id"]').val(item.id.produtoId);
                 $('div#item_modal form#item_form :input[name="produto"]').val(item.produto.nomeWithTamanho);
