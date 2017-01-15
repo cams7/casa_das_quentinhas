@@ -13,4 +13,9 @@
 		class="org.springframework.web.servlet.view.jasperreports.JasperReportsPdfView"
 		p:url="classpath:META-INF/report/pedidos_por_cidade.jrxml"
 		p:reportDataKey="datasource" />
+		
+	<bean id="produtoPdfView"
+		class="org.springframework.web.servlet.view.jasperreports.JasperReportsPdfView"
+		p:url="classpath:META-INF/report/pedidos_produto.jrxml"
+		p:reportDataKey="datasource" />
 </beans>

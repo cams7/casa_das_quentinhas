@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-01-15T19:11:26 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ShipmentsReport" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="812" leftMargin="15" rightMargin="15" topMargin="10" bottomMargin="10" uuid="ca58b80a-78a6-4c6f-a122-7c5150f24c74">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Casas das Quentinhas"/>
+	<style name="SansSerif_Normal" isDefault="true" fontName="SansSerif" fontSize="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+	<style name="SansSerif_Bold" fontName="SansSerif" fontSize="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+	<subDataset name="Produto_Pedidos" uuid="b29745ca-bdfe-42b5-8b1a-fa9c9e28cbd1">
+		<parameter name="produtoId" class="java.lang.Integer"/>
+		<queryString>
+			<![CDATA[select * from (
+select
+pdt.id_produto as "produto.id", pdt.custo as "produto.custo", pdd.data_cadastro as "pedido.manutencao.cadastro", c.nome as "pedido.cliente.nome", cc.nome as "pedido.cliente.cidade.nome"
+from pedido_item i
+inner join produto pdt on pdt.id_produto=i.id_produto
+inner join pedido pdd on pdd.id_pedido=i.id_pedido
+inner join cliente_pedido cp on pdd.id_pedido=cp.id_pedido
+inner join cliente c on c.id_cliente=cp.id_cliente
+inner join cidade cc on cc.Id_cidade=c.id_cidade
+union
+select
+pdt.id_produto as "produto.id", pdt.custo as "produto.custo", pdd.data_cadastro as "pedido.manutencao.cadastro", e.razao_social as "pedido.cliente.nome", ec.nome as "pedido.cliente.cidade.nome"
+from pedido_item i
+inner join produto pdt on pdt.id_produto=i.id_produto
+inner join pedido pdd on pdd.id_pedido=i.id_pedido
+inner join empresa_pedido ep on pdd.id_pedido=ep.id_pedido
+inner join empresa e on e.id_empresa=ep.id_empresa
+inner join cidade ec on ec.Id_cidade=e.id_cidade) p where "produto.id" = $P{produtoId}]]>
+		</queryString>
+		<field name="pedido.manutencao.cadastro" class="java.sql.Timestamp"/>
+		<field name="pedido.cliente.cidade.nome" class="java.lang.String"/>
+		<field name="pedido.cliente.nome" class="java.lang.String"/>
+		<field name="produto.custo" class="java.lang.Float"/>
+		<field name="produto.id" class="java.lang.Integer"/>
+	</subDataset>
+	<queryString>
+		<![CDATA[select id_produto as "id", nome, CASE WHEN tamanho=0 THEN 'GRANDE' WHEN tamanho=1 THEN 'MEDIO' ELSE 'PEQUENO' END as "tamanho" from produto]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer"/>
+	<field name="nome" class="java.lang.String"/>
+	<field name="tamanho" class="java.lang.Object"/>
+	<detail>
+		<band height="100" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="500" height="15" uuid="9bd999de-99b4-4318-a5e9-d617244fe5be"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nome} + " (" + $F{tamanho} + ")"]]></textFieldExpression>
+			</textField>
+			<crosstab isRepeatColumnHeaders="false">
+				<reportElement mode="Opaque" x="0" y="20" width="812" height="60" uuid="9a81c7ce-84a2-4f4d-b092-a8d46280b7bb"/>
+				<crosstabParameter name="produtoId">
+					<parameterValueExpression><![CDATA[$F{id}]]></parameterValueExpression>
+				</crosstabParameter>
+				<crosstabDataset>
+					<dataset>
+						<datasetRun subDataset="Produto_Pedidos" uuid="af0c2f04-5522-4e5f-917c-7e159eae972e">
+							<datasetParameter name="produtoId">
+								<datasetParameterExpression><![CDATA[$F{id}]]></datasetParameterExpression>
+							</datasetParameter>
+						</datasetRun>
+					</dataset>
+				</crosstabDataset>
+				<rowGroup name="cidadeNome" width="50" totalPosition="End">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{pedido.cliente.cidade.nome}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents>
+							<box>
+								<leftPen lineWidth="2.0" lineStyle="Solid"/>
+								<bottomPen lineWidth="2.0" lineStyle="Solid"/>
+								<rightPen lineWidth="2.0" lineStyle="Solid"/>
+							</box>
+							<textField isBlankWhenNull="true">
+								<reportElement x="5" y="5" width="40" height="40" uuid="a00cd071-7aac-4f75-84fd-f8cb20093feb"/>
+								<textFieldExpression><![CDATA[$V{cidadeNome}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents backcolor="#60FFFF">
+							<box>
+								<leftPen lineWidth="2.0" lineStyle="Solid"/>
+								<bottomPen lineWidth="2.0" lineStyle="Solid"/>
+								<rightPen lineWidth="2.0" lineStyle="Solid"/>
+							</box>
+							<textField>
+								<reportElement x="5" y="5" width="110" height="20" uuid="06e5bc59-417f-4e6a-8992-aae2a7457f97"/>
+								<textFieldExpression><![CDATA["Total"]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="clienteNome" width="70" totalPosition="End">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{pedido.cliente.nome}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents>
+							<box>
+								<bottomPen lineWidth="2.0" lineStyle="Solid"/>
+								<rightPen lineWidth="2.0" lineStyle="Solid"/>
+							</box>
+							<textField>
+								<reportElement x="5" y="5" width="60" height="15" uuid="1e587ca1-dd74-4d18-9dc6-9482b3f3f121"/>
+								<textFieldExpression><![CDATA[$V{clienteNome}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents backcolor="#E0FFFF">
+							<box>
+								<bottomPen lineWidth="2.0" lineStyle="Solid"/>
+								<rightPen lineWidth="2.0" lineStyle="Solid"/>
+							</box>
+							<staticText>
+								<reportElement x="5" y="5" width="60" height="15" uuid="0836bae1-129f-4c3a-9ed9-a39bed3ec25c"/>
+								<text><![CDATA[Total]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<columnGroup name="pedidoAno" height="30" totalPosition="End" headerPosition="Stretch">
+					<bucket class="java.util.Date">
+						<bucketExpression><![CDATA[new Date($F{pedido.manutencao.cadastro}.getYear()+1, 0, 0, 0, 0, 0)]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents>
+							<box>
+								<topPen lineWidth="2.0" lineStyle="Solid"/>
+								<bottomPen lineWidth="2.0" lineStyle="Solid"/>
+								<rightPen lineWidth="2.0" lineStyle="Solid"/>
+							</box>
+							<rectangle radius="10">
+								<reportElement x="4" y="4" width="52" height="22" uuid="e8617747-2d66-4c81-a85b-7ff656529a33"/>
+								<graphicElement>
+									<pen lineWidth="1.0" lineStyle="Solid"/>
+								</graphicElement>
+							</rectangle>
+							<textField pattern="yyyy">
+								<reportElement x="5" y="5" width="50" height="20" uuid="7be07197-d984-4b8e-98ea-5c79b349f0c9"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$V{pedidoAno}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents backcolor="#FFFF60">
+							<box>
+								<topPen lineWidth="2.0" lineStyle="Solid"/>
+								<bottomPen lineWidth="2.0" lineStyle="Solid"/>
+								<rightPen lineWidth="2.0" lineStyle="Solid"/>
+							</box>
+							<staticText>
+								<reportElement x="5" y="5" width="20" height="15" uuid="d4a20748-d7a9-4849-99f5-191f92bc67b7"/>
+								<text><![CDATA[Total]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<columnGroup name="pedidoMes" height="40" totalPosition="End">
+					<bucket class="java.util.Date">
+						<bucketExpression><![CDATA[new Date($F{pedido.manutencao.cadastro}.getYear()+1, $F{pedido.manutencao.cadastro}.getMonth()+1, 0, 0, 0, 0)]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents>
+							<box>
+								<bottomPen lineWidth="2.0" lineStyle="Solid"/>
+								<rightPen lineWidth="2.0" lineStyle="Solid"/>
+							</box>
+							<textField pattern="MMM">
+								<reportElement x="5" y="5" width="20" height="30" uuid="f0f9b651-8dd6-41ca-8673-7d97ebe2eade"/>
+								<textFieldExpression><![CDATA[$V{pedidoMes}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents backcolor="#FFFFC0">
+							<box>
+								<bottomPen lineWidth="2.0" lineStyle="Solid"/>
+								<rightPen lineWidth="2.0" lineStyle="Solid"/>
+							</box>
+							<textField>
+								<reportElement x="5" y="5" width="20" height="30" uuid="7d10e84a-baac-4ffc-93fc-f15dba6cb81c"/>
+								<textFieldExpression><![CDATA[msg("{0,date,yyyy} Total", $V{pedidoAno})]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<measure name="produtoCusto" class="java.lang.Float" calculation="Sum">
+					<measureExpression><![CDATA[$F{produto.custo}]]></measureExpression>
+				</measure>
+				<crosstabCell width="30" height="25">
+					<cellContents backcolor="#FFFFFF">
+						<box>
+							<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid"/>
+						</box>
+						<textField pattern="¤ #,##0.0">
+							<reportElement x="0" y="0" width="25" height="25" uuid="a08df5b0-2dd7-4451-930b-c363657a33cc"/>
+							<textElement textAlignment="Right" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[$V{produtoCusto}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="30" height="25" columnTotalGroup="pedidoMes">
+					<cellContents backcolor="#FFFFC0">
+						<box>
+							<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid"/>
+						</box>
+						<textField pattern="¤ #,##0.0">
+							<reportElement style="SansSerif_Bold" x="0" y="0" width="25" height="25" uuid="8caff3ba-0d23-464d-b08b-11ff90793891"/>
+							<textElement textAlignment="Right" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[$V{produtoCusto}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="35" height="25" columnTotalGroup="pedidoAno">
+					<cellContents backcolor="#FFFF60">
+						<box>
+							<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid"/>
+						</box>
+						<textField pattern="¤ #,##0.0">
+							<reportElement style="SansSerif_Bold" x="0" y="0" width="30" height="25" uuid="779d9d34-bc05-405a-8145-b52a0c01fdb4"/>
+							<textElement textAlignment="Right" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[$V{produtoCusto}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell height="25" rowTotalGroup="clienteNome">
+					<cellContents backcolor="#E0FFFF">
+						<box>
+							<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid"/>
+						</box>
+						<textField pattern="¤ #,##0.0">
+							<reportElement x="0" y="0" width="25" height="25" uuid="c380704e-80c7-4a85-990a-e3b44f85fe73"/>
+							<textElement textAlignment="Right" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[$V{produtoCusto}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="clienteNome" columnTotalGroup="pedidoMes">
+					<cellContents backcolor="#E0FFC0">
+						<box>
+							<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid"/>
+						</box>
+						<textField pattern="¤ #,##0.0">
+							<reportElement style="SansSerif_Bold" x="0" y="0" width="25" height="25" uuid="20effb2c-bf19-4b26-9e1b-e365b6ac2953"/>
+							<textElement textAlignment="Right" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[$V{produtoCusto}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="clienteNome" columnTotalGroup="pedidoAno">
+					<cellContents backcolor="#E0FF60">
+						<box>
+							<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid"/>
+						</box>
+						<textField pattern="¤ #,##0.0">
+							<reportElement style="SansSerif_Bold" x="0" y="0" width="30" height="25" uuid="4dbede32-70f3-46c1-934a-11e26904ac8e"/>
+							<textElement textAlignment="Right" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[$V{produtoCusto}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell height="30" rowTotalGroup="cidadeNome">
+					<cellContents backcolor="#60FFFF">
+						<box>
+							<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid"/>
+						</box>
+						<textField pattern="¤ #,##0.0">
+							<reportElement style="SansSerif_Bold" x="0" y="0" width="25" height="30" uuid="0a0838bf-951a-4537-8cdb-63a80d29e48c"/>
+							<textElement textAlignment="Right" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[$V{produtoCusto}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="cidadeNome" columnTotalGroup="pedidoMes">
+					<cellContents backcolor="#60FFC0">
+						<box>
+							<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid"/>
+						</box>
+						<textField pattern="¤ #,##0.0">
+							<reportElement style="SansSerif_Bold" x="0" y="0" width="25" height="30" uuid="232ea8dd-06b2-4d93-af59-f882c3cbc1de"/>
+							<textElement textAlignment="Right" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[$V{produtoCusto}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="cidadeNome" columnTotalGroup="pedidoAno">
+					<cellContents backcolor="#60FF60">
+						<box>
+							<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid"/>
+						</box>
+						<textField pattern="¤ #,##0.0">
+							<reportElement style="SansSerif_Bold" x="0" y="0" width="30" height="30" uuid="fcfbfcfe-8b8f-4de7-a110-3b0c0d8436dc"/>
+							<textElement textAlignment="Right" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[$V{produtoCusto}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+			</crosstab>
+		</band>
+	</detail>
+</jasperReport>

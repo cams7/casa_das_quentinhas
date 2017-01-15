@@ -32,7 +32,7 @@ public class PedidoReportController extends AbstractReportController<Long, Pedid
 
 	@Override
 	protected List<Pedido> getEntities(List<Pedido> pedidos) {
-		pedidos = pedidos.stream().map(pedido -> {
+		return pedidos.stream().map(pedido -> {
 			if (pedido.getCliente() == null) {
 				Empresa empresa = pedido.getEmpresa();
 
@@ -49,8 +49,6 @@ public class PedidoReportController extends AbstractReportController<Long, Pedid
 		}).sorted((p1, p2) -> {
 			return p1.getCliente().getCidade().getNome().compareTo(p2.getCliente().getCidade().getNome());
 		}).collect(Collectors.toList());
-
-		return super.getEntities(pedidos);
 	}
 
 }
