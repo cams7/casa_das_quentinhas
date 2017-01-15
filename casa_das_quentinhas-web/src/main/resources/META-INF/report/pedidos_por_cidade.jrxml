@@ -5,7 +5,6 @@
 	<property name="ireport.y" value="0"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Casas das Quentinhas"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<style name="Comic_Bold" fontName="SansSerif" fontSize="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false"/>
 	<style name="Arial_Normal" isDefault="true" fontName="Arial" fontSize="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false"/>
 	<style name="Arial_Bold" fontName="Arial" fontSize="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false"/>
 	<style name="Arial_Italic" fontName="Arial" fontSize="8" isBold="false" isItalic="true" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false"/>
@@ -190,14 +189,14 @@ inner join cidade ec on e.id_cidade=ec.id_cidade) p order by "cliente.cidade.nom
 				<textFieldExpression><![CDATA["Existem " + String.valueOf($V{REPORT_COUNT}) + " pedidos neste relatório, com um custo total de " + NumberFormat.getCurrencyInstance().format($V{SomaCustoReport}.doubleValue())]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement style="Comic_Bold" mode="Transparent" x="180" y="5" width="375" height="35" uuid="24a91563-d7be-4191-bdfd-85e7dbd20177">
+				<reportElement style="Arial_Bold" mode="Transparent" x="180" y="5" width="375" height="35" uuid="24a91563-d7be-4191-bdfd-85e7dbd20177">
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Right">
-					<font fontName="Comic Sans MS" size="22" isBold="true" isItalic="false"/>
+					<font size="22" isBold="true" isItalic="false"/>
 				</textElement>
 				<text><![CDATA[Relatório de pedidos]]></text>
 			</staticText>
