@@ -196,7 +196,7 @@ su - dono_da_cozinha
 psql -d casa_das_quentinhas -U dono_da_cozinha
 ```
 
-* No banco de dados *casa_das_quentinhas*, execute os comandos SQL dos arquivos **casa_das_quentinhas-ddl.sql**, **uf-dml.sql**, **cidade-ddd31-dml.sql**, **usuario-dml.sql**, **empresa-dml.sql**, **funcionario-dml.sql**, **cliente-dml.sql**, **produto-dml.sql** e **pedido-dml.sql** na ordem que foram informados. Esses arquivos estão localizados no diretório *database*.
+* No banco de dados *casa_das_quentinhas*, execute os comandos SQL dos arquivos **ddl-casa_das_quentinhas-required.sql**, **dml-uf-required.sql**, **dml-cidade-ddd31-required.sql**, **dml-usuario.sql**, **dml-empresa.sql**, **dml-funcionario.sql**, **dml-cliente.sql**, **dml-produto.sql** e **dml-pedido.sql** na ordem que foram informados. Esses arquivos estão localizados no diretório *database*.
 * Em seguida, execute as linhas abaixo:
 ```sh
 \q
@@ -222,7 +222,7 @@ heroku addons:add heroku-postgresql:hobby-dev
 heroku pg:psql DATABASE_URL --app <Nome da aplicação>
 ```
 
-* No seu *banco de dados* do *Heroku*, execute os comandos SQL dos arquivos **casa_das_quentinhas-ddl.sql**, **uf-dml.sql**, **cidade-ddd31-dml.sql**, **usuario-dml.sql**, **empresa-dml.sql**, **funcionario-dml.sql**, **cliente-dml.sql**, **produto-dml.sql** e **pedido-dml.sql** na ordem que foram informados. Esses arquivos estão localizados no diretório *database*.
+* No seu *banco de dados* do *Heroku*, execute os comandos SQL dos arquivos **ddl-casa_das_quentinhas-required.sql**, **dml-uf-required.sql**, **dml-cidade-ddd31-required.sql**, **dml-usuario.sql**, **dml-empresa.sql**, **dml-funcionario.sql**, **dml-cliente.sql**, **dml-produto.sql** e **dml-pedido.sql** na ordem que foram informados. Esses arquivos estão localizados no diretório *database*.
 * Em seguida, feche o *banco de dados* e execute a linha abaixo:	 
 ```sh
 git push heroku -u master

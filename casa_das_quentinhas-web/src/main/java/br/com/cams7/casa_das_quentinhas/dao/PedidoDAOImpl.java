@@ -19,8 +19,11 @@ import org.springframework.stereotype.Repository;
 
 import br.com.cams7.app.AppNotFoundException;
 import br.com.cams7.app.dao.AbstractDAO;
+import br.com.cams7.casa_das_quentinhas.entity.Cidade;
 import br.com.cams7.casa_das_quentinhas.entity.Cliente;
+import br.com.cams7.casa_das_quentinhas.entity.Cliente_;
 import br.com.cams7.casa_das_quentinhas.entity.Empresa;
+import br.com.cams7.casa_das_quentinhas.entity.Empresa_;
 import br.com.cams7.casa_das_quentinhas.entity.Manutencao_;
 import br.com.cams7.casa_das_quentinhas.entity.Pedido;
 import br.com.cams7.casa_das_quentinhas.entity.Pedido_;
@@ -45,19 +48,31 @@ public class PedidoDAOImpl extends AbstractDAO<Long, Pedido> implements PedidoDA
 	protected List<From<?, ?>> getFetchJoins(Root<Pedido> from) {
 		List<From<?, ?>> fetchJoins = new ArrayList<>();
 
-		boolean noneMatch = getIgnoredJoins() == null
-				|| getIgnoredJoins().stream().noneMatch(type -> type.equals(Cliente.class));
+		final boolean IS_NULL = getIgnoredJoins() == null;
+		boolean cidadeNoneMatch = IS_NULL || getIgnoredJoins().stream().noneMatch(type -> type.equals(Cidade.class));
+
+		boolean noneMatch = IS_NULL || getIgnoredJoins().stream().noneMatch(type -> type.equals(Cliente.class));
 		if (noneMatch) {
 			Join<Pedido, Cliente> joinCliente = (Join<Pedido, Cliente>) from.fetch(Pedido_.cliente, JoinType.LEFT);
 			fetchJoins.add(joinCliente);
+
+			if (cidadeNoneMatch) {
+				Join<Cliente, Cidade> joinCidade = (Join<Cliente, Cidade>) joinCliente.fetch(Cliente_.cidade,
+						JoinType.LEFT);
+				fetchJoins.add(joinCidade);
+			}
 		}
 
-		noneMatch = getIgnoredJoins() == null
-				|| getIgnoredJoins().stream().noneMatch(type -> type.equals(Empresa.class));
+		noneMatch = IS_NULL || getIgnoredJoins().stream().noneMatch(type -> type.equals(Empresa.class));
 		if (noneMatch) {
 			Join<Pedido, Empresa> joinEmpresa = (Join<Pedido, Empresa>) from.fetch(Pedido_.empresa, JoinType.LEFT);
-
 			fetchJoins.add(joinEmpresa);
+
+			if (cidadeNoneMatch) {
+				Join<Empresa, Cidade> joinCidade = (Join<Empresa, Cidade>) joinEmpresa.fetch(Empresa_.cidade,
+						JoinType.LEFT);
+				fetchJoins.add(joinCidade);
+			}
 		}
 
 		return fetchJoins;

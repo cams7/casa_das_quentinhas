@@ -81,6 +81,12 @@ public class FuncionarioController extends AbstractFuncionarioController {
 		return LIST_NAME;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	protected Class<?>[] getIgnoredJoins() {
+		return new Class<?>[] { Empresa.class };
+	}
+
 	@Override
 	protected String[] getGlobalFilters() {
 		return new String[] { "nome", "cpf", "celular", "usuario.email" };
@@ -98,12 +104,6 @@ public class FuncionarioController extends AbstractFuncionarioController {
 		Funcionario funcionario = super.getEntity(id);
 		funcionario.setEmpresa(new Empresa(1));
 		return funcionario;
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	protected Class<?>[] getIgnoredJoins() {
-		return new Class<?>[] { Empresa.class };
 	}
 
 	/*

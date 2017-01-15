@@ -7,7 +7,10 @@
 
 	<bean id="funcionarioPdfView"
 		class="org.springframework.web.servlet.view.jasperreports.JasperReportsPdfView"
-		p:url="classpath:META-INF/report/relatorio_funcionario.jasper"
-		p:reportDataKey="datasource" />
+		p:url="classpath:META-INF/report/funcionarios.jrxml" p:reportDataKey="datasource" />
 
+	<bean id="pedidoPdfView"
+		class="org.springframework.web.servlet.view.jasperreports.JasperReportsPdfView"
+		p:url="classpath:META-INF/report/pedidos_por_cidade.jrxml"
+		p:reportDataKey="datasource" />
 </beans>

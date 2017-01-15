@@ -9,11 +9,8 @@ import static br.com.cams7.casa_das_quentinhas.entity.Funcionario.Funcao.GERENTE
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
 
 import br.com.cams7.app.controller.AbstractReportController;
 import br.com.cams7.casa_das_quentinhas.entity.Empresa;
@@ -30,11 +27,6 @@ import br.com.cams7.casa_das_quentinhas.service.FuncionarioService;
 public class FuncionarioReportController extends AbstractReportController<Integer, Funcionario, FuncionarioService> {
 
 	private final String PDF_VIEW = "funcionarioPdfView";
-
-	@Override
-	public ModelAndView generatePdfReport(HttpServletRequest request) {
-		return super.generatePdfReport(request);
-	}
 
 	/*
 	 * Gera relatório PDF

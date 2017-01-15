@@ -1,3 +1,9 @@
+--DDL - Data Definition Language (Linguagem de Definição de Dados)
+--DML - Data Manipulation Language (Linguagem de Manipulação de Dados)
+--DCL - Data Control Language (Linguagem de Controle de Dados)
+--DTL - Data Transaction Language (Linguagem de Transação de Dados)
+--DQL - Data Query Language (Linguagem de Consulta de Dados)
+
 DROP TABLE IF EXISTS public.cliente_pedido;
 DROP TABLE IF EXISTS public.cliente;
 DROP TABLE IF EXISTS public.empresa_pedido;

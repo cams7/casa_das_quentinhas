@@ -38,6 +38,7 @@ public abstract class AbstractReportController<PK extends Serializable, E extend
 		setIgnoredJoins();
 
 		List<E> entities = getService().search(params);
+		entities = getEntities(entities);
 
 		if (entities.isEmpty())
 			throw new AppNotFoundException("Não foi encontrada nenhuma entidade");
@@ -64,4 +65,12 @@ public abstract class AbstractReportController<PK extends Serializable, E extend
 	}
 
 	protected abstract String getPdfView();
+
+	/**
+	 * @param entities
+	 * @return
+	 */
+	protected List<E> getEntities(List<E> entities) {
+		return entities;
+	}
 }

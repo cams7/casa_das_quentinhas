@@ -34,18 +34,19 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import br.com.cams7.app.SearchParams.SortOrder;
 import br.com.cams7.app.common.MoneyEditor;
 import br.com.cams7.app.controller.AbstractBeanController;
+import br.com.cams7.casa_das_quentinhas.entity.Cidade;
 import br.com.cams7.casa_das_quentinhas.entity.Cliente;
 import br.com.cams7.casa_das_quentinhas.entity.Empresa;
-import br.com.cams7.casa_das_quentinhas.entity.Pedido;
-import br.com.cams7.casa_das_quentinhas.entity.PedidoItem;
-import br.com.cams7.casa_das_quentinhas.entity.PedidoItemPK;
-import br.com.cams7.casa_das_quentinhas.entity.Produto;
 import br.com.cams7.casa_das_quentinhas.entity.Empresa.Tipo;
+import br.com.cams7.casa_das_quentinhas.entity.Pedido;
 import br.com.cams7.casa_das_quentinhas.entity.Pedido.DestinoOperacao;
 import br.com.cams7.casa_das_quentinhas.entity.Pedido.FormaPagamento;
 import br.com.cams7.casa_das_quentinhas.entity.Pedido.Situacao;
 import br.com.cams7.casa_das_quentinhas.entity.Pedido.TipoAtendimento;
 import br.com.cams7.casa_das_quentinhas.entity.Pedido.TipoCliente;
+import br.com.cams7.casa_das_quentinhas.entity.PedidoItem;
+import br.com.cams7.casa_das_quentinhas.entity.PedidoItemPK;
+import br.com.cams7.casa_das_quentinhas.entity.Produto;
 import br.com.cams7.casa_das_quentinhas.facade.PedidoItemFacade;
 import br.com.cams7.casa_das_quentinhas.service.ClienteService;
 import br.com.cams7.casa_das_quentinhas.service.EmpresaService;
@@ -315,6 +316,12 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 	@Override
 	protected String getListName() {
 		return LIST_NAME;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	protected Class<?>[] getIgnoredJoins() {
+		return new Class<?>[] { Cidade.class };
 	}
 
 	@Override

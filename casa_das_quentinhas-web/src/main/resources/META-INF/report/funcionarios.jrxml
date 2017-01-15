@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-01-15T10:56:15 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report1" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="578e3df8-8b61-4d81-93ff-b73fb85150e7">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Casas das Quentinhas"/>
+	<queryString language="SQL">
+		<![CDATA[select
+f.nome,
+u.email as "usuario.email",
+f.funcao
+from funcionario f inner join usuario u on f.id_funcionario=u.id_usuario]]>
+	</queryString>
+	<field name="nome" class="java.lang.String"/>
+	<field name="usuario.email" class="java.lang.String"/>
+	<field name="funcao" class="java.lang.String"/>
+	<title>
+		<band height="25">
+			<frame>
+				<reportElement mode="Opaque" x="-20" y="-20" width="840" height="45" backcolor="#006699" uuid="f2e65abc-08e1-44f6-96ff-a4136b777b9a"/>
+				<staticText>
+					<reportElement x="20" y="0" width="181" height="43" forecolor="#FFFFFF" uuid="10020ce4-3cbd-430f-b83a-9fe6428fdbab"/>
+					<textElement>
+						<font size="34" isBold="true" pdfEncoding=""/>
+					</textElement>
+					<text><![CDATA[Relatório]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="370" y="23" width="340" height="20" forecolor="#FFFFFF" uuid="a4507f35-1c01-45d2-9b38-9e8aaa23ed23"/>
+					<textElement textAlignment="Left">
+						<font size="14" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Funcionários]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35">
+			<line>
+				<reportElement x="-20" y="30" width="840" height="1" forecolor="#666666" uuid="7f932dd5-8254-4194-8c2b-b2e70ec85d77"/>
+			</line>
+			<staticText>
+				<reportElement mode="Transparent" x="0" y="1" width="350" height="30" forecolor="#666666" backcolor="#E6E6E6" uuid="e18111a8-308b-4838-9c6c-930c3e2ff75a"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Nome]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="350" y="1" width="340" height="30" forecolor="#666666" backcolor="#E6E6E6" uuid="5e2ad20c-84b1-4bbd-808b-e23e2ed6d772"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[E-mail]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="690" y="1" width="112" height="30" forecolor="#666666" backcolor="#E6E6E6" uuid="161bc275-ac8e-41c9-bda0-c7abd855c040"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Função]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="35">
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement mode="Opaque" x="0" y="5" width="350" height="30" uuid="aca93e81-6c8e-4874-8aec-8f0ab4630ff8"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="14" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement mode="Opaque" x="350" y="5" width="340" height="30" uuid="02844170-d1a1-4788-83d9-9a731f9560d8"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="14" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{usuario.email}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement mode="Opaque" x="690" y="5" width="112" height="30" uuid="48ae849e-4874-4caa-963c-7434ac1731fe"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="14" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{funcao}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="15">
+			<textField>
+				<reportElement mode="Transparent" x="0" y="0" width="780" height="13" backcolor="#E6E6E6" uuid="e12d5464-42b1-4857-a111-2d57f11edc99"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Pagina "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement mode="Transparent" x="780" y="0" width="40" height="13" backcolor="#E6E6E6" uuid="57b9b2b4-1703-4f19-8cb0-dff4c7d3cc9e"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="0" y="0" width="100" height="13" uuid="d1c72b9b-767b-4cc7-aee8-29964248a2ad"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>
