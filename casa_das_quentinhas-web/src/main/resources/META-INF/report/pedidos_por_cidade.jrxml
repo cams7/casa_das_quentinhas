@@ -5,9 +5,9 @@
 	<property name="ireport.y" value="0"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Casas das Quentinhas"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<style name="Arial_Normal" isDefault="true" fontName="Arial" fontSize="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false"/>
-	<style name="Arial_Bold" fontName="Arial" fontSize="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false"/>
-	<style name="Arial_Italic" fontName="Arial" fontSize="8" isBold="false" isItalic="true" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false"/>
+	<style name="SansSerif_Normal" isDefault="true" fontName="SansSerif" fontSize="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false"/>
+	<style name="SansSerif_Bold" fontName="SansSerif" fontSize="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false"/>
+	<style name="SansSerif_Italic" fontName="SansSerif" fontSize="8" isBold="false" isItalic="true" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false"/>
 	<queryString language="plsql">
 		<![CDATA[select * from (select
 p.id_pedido as "id",
@@ -74,14 +74,14 @@ inner join cidade ec on e.id_cidade=ec.id_cidade) p order by "cliente.cidade.nom
 					<reportElement x="0" y="14" width="270" height="11" forecolor="#FFDDDD" backcolor="#FFDDDD" uuid="0edadbcc-4e25-4cd4-b266-10101092560d"/>
 				</rectangle>
 				<staticText>
-					<reportElement style="Arial_Italic" mode="Opaque" x="0" y="14" width="120" height="11" forecolor="#FF0000" backcolor="#FFDDDD" uuid="91b332ee-53a0-47b3-a3d3-615040bd6e57"/>
+					<reportElement style="SansSerif_Italic" mode="Opaque" x="0" y="14" width="120" height="11" forecolor="#FF0000" backcolor="#FFDDDD" uuid="91b332ee-53a0-47b3-a3d3-615040bd6e57"/>
 					<textElement>
 						<font isUnderline="true"/>
 					</textElement>
 					<text><![CDATA[Cidades começando com a letra :]]></text>
 				</staticText>
 				<textField>
-					<reportElement style="Arial_Bold" mode="Opaque" x="120" y="14" width="150" height="11" forecolor="#FF0000" backcolor="#FFDDDD" uuid="1edab49e-e4ce-4ae6-b4b3-29b639da3102"/>
+					<reportElement style="SansSerif_Bold" mode="Opaque" x="120" y="14" width="150" height="11" forecolor="#FF0000" backcolor="#FFDDDD" uuid="1edab49e-e4ce-4ae6-b4b3-29b639da3102"/>
 					<textFieldExpression><![CDATA[$V{PrimeiraLetraPrimeiraLetraGroup}]]></textFieldExpression>
 				</textField>
 			</band>
@@ -92,22 +92,22 @@ inner join cidade ec on e.id_cidade=ec.id_cidade) p order by "cliente.cidade.nom
 					<reportElement x="0" y="0" width="270" height="1" forecolor="#FF0000" uuid="60dcf7f9-6a3a-4867-b6fb-bfa6b25ca348"/>
 				</line>
 				<staticText>
-					<reportElement style="Arial_Bold" x="0" y="1" width="45" height="11" forecolor="#FF0000" uuid="b87291f3-b12d-483c-88f9-f573cdd0df74"/>
+					<reportElement style="SansSerif_Bold" x="0" y="1" width="45" height="11" forecolor="#FF0000" uuid="b87291f3-b12d-483c-88f9-f573cdd0df74"/>
 					<textElement textAlignment="Right"/>
 					<text><![CDATA[Qtd :]]></text>
 				</staticText>
 				<textField>
-					<reportElement style="Arial_Bold" x="45" y="1" width="25" height="11" forecolor="#FF0000" uuid="e20a34d0-64c3-4ee3-98b9-852d874f1110"/>
+					<reportElement style="SansSerif_Bold" x="45" y="1" width="25" height="11" forecolor="#FF0000" uuid="e20a34d0-64c3-4ee3-98b9-852d874f1110"/>
 					<textElement textAlignment="Right"/>
 					<textFieldExpression><![CDATA[$V{PrimeiraLetraGroup_COUNT}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement style="Arial_Bold" x="70" y="1" width="110" height="11" forecolor="#FF0000" uuid="31e1a256-d374-4e1f-841f-434802a3ee25"/>
+					<reportElement style="SansSerif_Bold" x="70" y="1" width="110" height="11" forecolor="#FF0000" uuid="31e1a256-d374-4e1f-841f-434802a3ee25"/>
 					<textElement textAlignment="Right"/>
 					<text><![CDATA[Total :]]></text>
 				</staticText>
 				<textField pattern="¤ #,##0.00">
-					<reportElement style="Arial_Bold" x="180" y="1" width="90" height="11" forecolor="#FF0000" uuid="7b0ce8d0-fb06-41a5-93d8-8b870db87e2b"/>
+					<reportElement style="SansSerif_Bold" x="180" y="1" width="90" height="11" forecolor="#FF0000" uuid="7b0ce8d0-fb06-41a5-93d8-8b870db87e2b"/>
 					<textElement textAlignment="Right"/>
 					<textFieldExpression><![CDATA[$V{SomaCustoPrimeiraLetraGroup}]]></textFieldExpression>
 				</textField>
@@ -122,11 +122,11 @@ inner join cidade ec on e.id_cidade=ec.id_cidade) p order by "cliente.cidade.nom
 					<reportElement x="0" y="14" width="270" height="1" uuid="2c7dba80-c7a6-48d2-b8be-8c8fe09fa7ac"/>
 				</line>
 				<textField>
-					<reportElement style="Arial_Bold" x="10" y="2" width="100" height="11" uuid="51922434-4bef-485e-a913-6d308d82b89f"/>
+					<reportElement style="SansSerif_Bold" x="10" y="2" width="100" height="11" uuid="51922434-4bef-485e-a913-6d308d82b89f"/>
 					<textFieldExpression><![CDATA[$F{cliente.cidade.nome}]]></textFieldExpression>
 				</textField>
 				<textField evaluationTime="Group" evaluationGroup="CidadeGroup" pattern="EEE, MMM d, yyyy">
-					<reportElement style="Arial_Bold" x="170" y="2" width="100" height="11" uuid="3953c3dd-e4ae-4496-843d-7736ed268c11"/>
+					<reportElement style="SansSerif_Bold" x="170" y="2" width="100" height="11" uuid="3953c3dd-e4ae-4496-843d-7736ed268c11"/>
 					<textElement textAlignment="Right"/>
 					<textFieldExpression><![CDATA[$V{DataPedidoCidadeGroup}]]></textFieldExpression>
 				</textField>
@@ -138,22 +138,22 @@ inner join cidade ec on e.id_cidade=ec.id_cidade) p order by "cliente.cidade.nom
 					<reportElement x="0" y="0" width="270" height="11" forecolor="#C0C0C0" backcolor="#C0C0C0" uuid="3831f7ac-e7aa-436c-8875-bb3a51bede59"/>
 				</rectangle>
 				<staticText>
-					<reportElement style="Arial_Bold" mode="Opaque" x="0" y="0" width="45" height="11" backcolor="#C0C0C0" uuid="fd4bf8d2-739f-4e95-8bc0-65eec776b0e5"/>
+					<reportElement style="SansSerif_Bold" mode="Opaque" x="0" y="0" width="45" height="11" backcolor="#C0C0C0" uuid="fd4bf8d2-739f-4e95-8bc0-65eec776b0e5"/>
 					<textElement textAlignment="Right"/>
 					<text><![CDATA[Qtd :]]></text>
 				</staticText>
 				<textField>
-					<reportElement style="Arial_Bold" mode="Opaque" x="45" y="0" width="25" height="11" backcolor="#C0C0C0" uuid="f7f7ec7f-a5a6-4457-9124-05b1185f5a02"/>
+					<reportElement style="SansSerif_Bold" mode="Opaque" x="45" y="0" width="25" height="11" backcolor="#C0C0C0" uuid="f7f7ec7f-a5a6-4457-9124-05b1185f5a02"/>
 					<textElement textAlignment="Right"/>
 					<textFieldExpression><![CDATA[$V{CidadeGroup_COUNT}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement style="Arial_Bold" mode="Opaque" x="70" y="0" width="110" height="11" backcolor="#C0C0C0" uuid="30e09ef4-3b24-4082-8c07-251839ddf8b0"/>
+					<reportElement style="SansSerif_Bold" mode="Opaque" x="70" y="0" width="110" height="11" backcolor="#C0C0C0" uuid="30e09ef4-3b24-4082-8c07-251839ddf8b0"/>
 					<textElement textAlignment="Right"/>
 					<text><![CDATA[Total :]]></text>
 				</staticText>
 				<textField pattern="¤ #,##0.00">
-					<reportElement style="Arial_Bold" mode="Opaque" x="180" y="0" width="90" height="11" backcolor="#C0C0C0" uuid="803862de-5288-4eae-a31e-1d6b9f772cf9"/>
+					<reportElement style="SansSerif_Bold" mode="Opaque" x="180" y="0" width="90" height="11" backcolor="#C0C0C0" uuid="803862de-5288-4eae-a31e-1d6b9f772cf9"/>
 					<textElement textAlignment="Right"/>
 					<textFieldExpression><![CDATA[$V{SomaCustoCidadeGroup}]]></textFieldExpression>
 				</textField>
@@ -177,7 +177,7 @@ inner join cidade ec on e.id_cidade=ec.id_cidade) p order by "cliente.cidade.nom
 				</line>
 			</elementGroup>
 			<staticText>
-				<reportElement style="Arial_Italic" x="180" y="40" width="375" height="15" uuid="97a77fdb-559f-4bcd-822d-c0eac83c2c9b"/>
+				<reportElement style="SansSerif_Italic" x="180" y="40" width="375" height="15" uuid="97a77fdb-559f-4bcd-822d-c0eac83c2c9b"/>
 				<textElement textAlignment="Right">
 					<font size="12"/>
 				</textElement>
@@ -189,7 +189,7 @@ inner join cidade ec on e.id_cidade=ec.id_cidade) p order by "cliente.cidade.nom
 				<textFieldExpression><![CDATA["Existem " + String.valueOf($V{REPORT_COUNT}) + " pedidos neste relatório, com um custo total de " + NumberFormat.getCurrencyInstance().format($V{SomaCustoReport}.doubleValue())]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement style="Arial_Bold" mode="Transparent" x="180" y="5" width="375" height="35" uuid="24a91563-d7be-4191-bdfd-85e7dbd20177">
+				<reportElement style="SansSerif_Bold" mode="Transparent" x="180" y="5" width="375" height="35" uuid="24a91563-d7be-4191-bdfd-85e7dbd20177">
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
@@ -222,29 +222,29 @@ inner join cidade ec on e.id_cidade=ec.id_cidade) p order by "cliente.cidade.nom
 				<reportElement x="0" y="0" width="270" height="11" backcolor="#333333" uuid="9a22e8d8-afd6-4e05-9cea-9012d42e3c70"/>
 			</rectangle>
 			<staticText>
-				<reportElement style="Arial_Bold" mode="Opaque" x="0" y="0" width="35" height="11" forecolor="#FFFFFF" backcolor="#333333" uuid="a1e8e170-05d6-4c4b-a452-8178491ff19e"/>
+				<reportElement style="SansSerif_Bold" mode="Opaque" x="0" y="0" width="35" height="11" forecolor="#FFFFFF" backcolor="#333333" uuid="a1e8e170-05d6-4c4b-a452-8178491ff19e"/>
 				<textElement textAlignment="Left"/>
 				<text><![CDATA[Pedido]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Arial_Bold" mode="Opaque" x="40" y="0" width="110" height="11" forecolor="#FFFFFF" backcolor="#333333" uuid="97ca247e-8a99-4924-b7c3-6aa55ed66ebd">
+				<reportElement style="SansSerif_Bold" mode="Opaque" x="40" y="0" width="110" height="11" forecolor="#FFFFFF" backcolor="#333333" uuid="97ca247e-8a99-4924-b7c3-6aa55ed66ebd">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Left"/>
 				<text><![CDATA[Cliente, Bairro]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Arial_Bold" mode="Opaque" x="175" y="0" width="45" height="11" forecolor="#FFFFFF" backcolor="#333333" uuid="2200957e-91cd-4e4b-8059-c87626a14fd7"/>
+				<reportElement style="SansSerif_Bold" mode="Opaque" x="175" y="0" width="45" height="11" forecolor="#FFFFFF" backcolor="#333333" uuid="2200957e-91cd-4e4b-8059-c87626a14fd7"/>
 				<textElement textAlignment="Left"/>
 				<text><![CDATA[Data]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Arial_Bold" mode="Opaque" x="220" y="0" width="50" height="11" forecolor="#FFFFFF" backcolor="#333333" uuid="04312d6b-3aa6-4037-96b2-4cc9b0a94236"/>
+				<reportElement style="SansSerif_Bold" mode="Opaque" x="220" y="0" width="50" height="11" forecolor="#FFFFFF" backcolor="#333333" uuid="04312d6b-3aa6-4037-96b2-4cc9b0a94236"/>
 				<textElement textAlignment="Right"/>
 				<text><![CDATA[Custo]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Arial_Bold" mode="Opaque" x="155" y="0" width="20" height="11" forecolor="#FFFFFF" backcolor="#333333" uuid="da118995-fef3-46bf-a606-e047f993a250">
+				<reportElement style="SansSerif_Bold" mode="Opaque" x="155" y="0" width="20" height="11" forecolor="#FFFFFF" backcolor="#333333" uuid="da118995-fef3-46bf-a606-e047f993a250">
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
@@ -261,7 +261,7 @@ inner join cidade ec on e.id_cidade=ec.id_cidade) p order by "cliente.cidade.nom
 				</reportElement>
 			</rectangle>
 			<textField>
-				<reportElement style="Arial_Bold" x="0" y="0" width="35" height="11" uuid="27d42fda-2486-4fe0-8b65-3c28bf07c9d4">
+				<reportElement style="SansSerif_Bold" x="0" y="0" width="35" height="11" uuid="27d42fda-2486-4fe0-8b65-3c28bf07c9d4">
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<printWhenExpression><![CDATA[new Boolean($F{tipoCliente}.toString().equals( "PESSOA_FISICA" ))]]></printWhenExpression>
 				</reportElement>
@@ -269,14 +269,14 @@ inner join cidade ec on e.id_cidade=ec.id_cidade) p order by "cliente.cidade.nom
 				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="Arial_Bold" x="0" y="0" width="35" height="11" forecolor="#FF0000" uuid="96292bec-3e5a-4c14-8b97-c6b489479a55">
+				<reportElement style="SansSerif_Bold" x="0" y="0" width="35" height="11" forecolor="#FF0000" uuid="96292bec-3e5a-4c14-8b97-c6b489479a55">
 					<printWhenExpression><![CDATA[new Boolean($F{tipoCliente}.toString().equals( "PESSOA_JURIDICA" ))]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement style="Arial_Italic" positionType="Float" x="40" y="0" width="110" height="11" uuid="b9132b5a-b8c3-4cd2-943e-6735d4f04228">
+				<reportElement style="SansSerif_Italic" positionType="Float" x="40" y="0" width="110" height="11" uuid="b9132b5a-b8c3-4cd2-943e-6735d4f04228">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<textFieldExpression><![CDATA[$F{cliente.nome} + ", " + $F{cliente.endereco.bairro}]]></textFieldExpression>
@@ -311,22 +311,22 @@ inner join cidade ec on e.id_cidade=ec.id_cidade) p order by "cliente.cidade.nom
 				<reportElement x="0" y="0" width="270" height="11" backcolor="#333333" uuid="e5d060d4-8fe8-478c-83fe-f324acf0f8c5"/>
 			</rectangle>
 			<staticText>
-				<reportElement style="Arial_Bold" mode="Opaque" x="0" y="0" width="45" height="11" forecolor="#FFFFFF" backcolor="#333333" uuid="74614eb3-7812-4042-9cd5-baccf72223fb"/>
+				<reportElement style="SansSerif_Bold" mode="Opaque" x="0" y="0" width="45" height="11" forecolor="#FFFFFF" backcolor="#333333" uuid="74614eb3-7812-4042-9cd5-baccf72223fb"/>
 				<textElement textAlignment="Right"/>
 				<text><![CDATA[Qtd :]]></text>
 			</staticText>
 			<textField>
-				<reportElement style="Arial_Bold" mode="Opaque" x="45" y="0" width="25" height="11" forecolor="#FFFFFF" backcolor="#333333" uuid="1b6b7d39-b692-424f-bd3c-0b40e0e27af7"/>
+				<reportElement style="SansSerif_Bold" mode="Opaque" x="45" y="0" width="25" height="11" forecolor="#FFFFFF" backcolor="#333333" uuid="1b6b7d39-b692-424f-bd3c-0b40e0e27af7"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$V{COLUMN_COUNT}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement style="Arial_Bold" mode="Opaque" x="70" y="0" width="110" height="11" forecolor="#FFFFFF" backcolor="#333333" uuid="afd0d2f7-5483-41a0-9cd2-c8274956e1f7"/>
+				<reportElement style="SansSerif_Bold" mode="Opaque" x="70" y="0" width="110" height="11" forecolor="#FFFFFF" backcolor="#333333" uuid="afd0d2f7-5483-41a0-9cd2-c8274956e1f7"/>
 				<textElement textAlignment="Right"/>
 				<text><![CDATA[Total :]]></text>
 			</staticText>
 			<textField pattern="¤ #,##0.00">
-				<reportElement style="Arial_Bold" mode="Opaque" x="180" y="0" width="90" height="11" forecolor="#FFFFFF" backcolor="#333333" uuid="055f60c3-9e09-4a1b-a644-1edaa327caa0"/>
+				<reportElement style="SansSerif_Bold" mode="Opaque" x="180" y="0" width="90" height="11" forecolor="#FFFFFF" backcolor="#333333" uuid="055f60c3-9e09-4a1b-a644-1edaa327caa0"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$V{SomaCustoColumn}]]></textFieldExpression>
 			</textField>
