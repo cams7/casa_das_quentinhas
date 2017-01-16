@@ -23,3 +23,6 @@ bin/
 *.jar
 *.war
 *.ear
+
+#JasperReports
+*.jasper

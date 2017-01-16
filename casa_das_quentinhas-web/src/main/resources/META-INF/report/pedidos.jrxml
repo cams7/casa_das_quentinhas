@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2017-01-16T08:10:27 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="FirstJasper" columnCount="2" pageWidth="595" pageHeight="842" columnWidth="270" columnSpacing="15" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="c4169fa6-48c0-4d45-b692-00e578e71756">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
@@ -106,9 +104,9 @@ inner join cidade ec on e.id_cidade=ec.id_cidade) p order by "cliente.cidade.nom
 				<staticText>
 					<reportElement style="SansSerif_Bold" x="70" y="1" width="110" height="11" forecolor="#FF0000" uuid="31e1a256-d374-4e1f-841f-434802a3ee25"/>
 					<textElement textAlignment="Right"/>
-					<text><![CDATA[Total :]]></text>
+					<text><![CDATA[Total (R$) :]]></text>
 				</staticText>
-				<textField pattern="¤ #,##0.00">
+				<textField pattern="#0.00">
 					<reportElement style="SansSerif_Bold" x="180" y="1" width="90" height="11" forecolor="#FF0000" uuid="7b0ce8d0-fb06-41a5-93d8-8b870db87e2b"/>
 					<textElement textAlignment="Right"/>
 					<textFieldExpression><![CDATA[$V{SomaCustoPrimeiraLetraGroup}]]></textFieldExpression>
@@ -152,9 +150,9 @@ inner join cidade ec on e.id_cidade=ec.id_cidade) p order by "cliente.cidade.nom
 				<staticText>
 					<reportElement style="SansSerif_Bold" mode="Opaque" x="70" y="0" width="110" height="11" backcolor="#C0C0C0" uuid="30e09ef4-3b24-4082-8c07-251839ddf8b0"/>
 					<textElement textAlignment="Right"/>
-					<text><![CDATA[Total :]]></text>
+					<text><![CDATA[Total (R$) :]]></text>
 				</staticText>
-				<textField pattern="¤ #,##0.00">
+				<textField pattern="#0.00">
 					<reportElement style="SansSerif_Bold" mode="Opaque" x="180" y="0" width="90" height="11" backcolor="#C0C0C0" uuid="803862de-5288-4eae-a31e-1d6b9f772cf9"/>
 					<textElement textAlignment="Right"/>
 					<textFieldExpression><![CDATA[$V{SomaCustoCidadeGroup}]]></textFieldExpression>
@@ -188,9 +186,9 @@ inner join cidade ec on e.id_cidade=ec.id_cidade) p order by "cliente.cidade.nom
 				<text><![CDATA[Casa das Quentinhas]]></text>
 			</staticText>
 			<textField evaluationTime="Report">
-				<reportElement x="290" y="59" width="265" height="15" uuid="76006a09-0115-4829-a9cd-99a30f0038d5"/>
-				<textElement textAlignment="Justified"/>
-				<textFieldExpression><![CDATA["Existem " + String.valueOf($V{REPORT_COUNT}) + " pedidos neste relatório, com um custo total de " + NumberFormat.getCurrencyInstance().format($V{SomaCustoReport}.doubleValue())]]></textFieldExpression>
+				<reportElement mode="Opaque" x="1" y="60" width="300" height="16" uuid="76006a09-0115-4829-a9cd-99a30f0038d5"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA["Existem " + $V{REPORT_COUNT} + " pedidos neste relatório, com um custo total de " + NumberFormat.getCurrencyInstance($P{REPORT_LOCALE}).format($V{SomaCustoReport})]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement style="SansSerif_Bold" mode="Transparent" x="180" y="5" width="375" height="35" uuid="24a91563-d7be-4191-bdfd-85e7dbd20177">
@@ -245,7 +243,7 @@ inner join cidade ec on e.id_cidade=ec.id_cidade) p order by "cliente.cidade.nom
 			<staticText>
 				<reportElement style="SansSerif_Bold" mode="Opaque" x="220" y="0" width="50" height="11" forecolor="#FFFFFF" backcolor="#333333" uuid="04312d6b-3aa6-4037-96b2-4cc9b0a94236"/>
 				<textElement textAlignment="Right"/>
-				<text><![CDATA[Custo]]></text>
+				<text><![CDATA[Custo (R$)]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="SansSerif_Bold" mode="Opaque" x="155" y="0" width="20" height="11" forecolor="#FFFFFF" backcolor="#333333" uuid="da118995-fef3-46bf-a606-e047f993a250">
@@ -296,7 +294,7 @@ inner join cidade ec on e.id_cidade=ec.id_cidade) p order by "cliente.cidade.nom
 				<reportElement x="175" y="0" width="45" height="11" uuid="c48fa9dd-b165-4f5a-a44e-f4177a3f75c5"/>
 				<textFieldExpression><![CDATA[$F{manutencao.cadastro}]]></textFieldExpression>
 			</textField>
-			<textField pattern="¤ #,##0.00">
+			<textField pattern="#0.00">
 				<reportElement x="220" y="0" width="50" height="11" uuid="43d9bf15-569d-4346-afb7-7e731037190e"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{custo}]]></textFieldExpression>
@@ -327,9 +325,9 @@ inner join cidade ec on e.id_cidade=ec.id_cidade) p order by "cliente.cidade.nom
 			<staticText>
 				<reportElement style="SansSerif_Bold" mode="Opaque" x="70" y="0" width="110" height="11" forecolor="#FFFFFF" backcolor="#333333" uuid="afd0d2f7-5483-41a0-9cd2-c8274956e1f7"/>
 				<textElement textAlignment="Right"/>
-				<text><![CDATA[Total :]]></text>
+				<text><![CDATA[Total (R$) :]]></text>
 			</staticText>
-			<textField pattern="¤ #,##0.00">
+			<textField pattern="#0.00">
 				<reportElement style="SansSerif_Bold" mode="Opaque" x="180" y="0" width="90" height="11" forecolor="#FFFFFF" backcolor="#333333" uuid="055f60c3-9e09-4a1b-a644-1edaa327caa0"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$V{SomaCustoColumn}]]></textFieldExpression>
@@ -356,14 +354,14 @@ inner join cidade ec on e.id_cidade=ec.id_cidade) p order by "cliente.cidade.nom
 				<textFieldExpression><![CDATA[$V{PAGE_COUNT}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="430" y="10" width="50" height="20" uuid="a7777efc-8f8d-4eb7-8b07-c300bcd632d3"/>
+				<reportElement x="390" y="10" width="50" height="20" uuid="a7777efc-8f8d-4eb7-8b07-c300bcd632d3"/>
 				<textElement textAlignment="Right">
 					<font size="14"/>
 				</textElement>
 				<text><![CDATA[Total :]]></text>
 			</staticText>
-			<textField pattern="0.00">
-				<reportElement x="480" y="10" width="70" height="20" uuid="6f97b74d-a469-4a87-9542-f155ed39d16f"/>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="440" y="10" width="110" height="20" uuid="6f97b74d-a469-4a87-9542-f155ed39d16f"/>
 				<textElement textAlignment="Right">
 					<font size="14"/>
 				</textElement>
