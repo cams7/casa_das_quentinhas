@@ -74,14 +74,14 @@ inner join cidade ec on e.id_cidade=ec.id_cidade) p order by "cliente.cidade.nom
 					<reportElement x="0" y="14" width="270" height="11" forecolor="#FFDDDD" backcolor="#FFDDDD" uuid="0edadbcc-4e25-4cd4-b266-10101092560d"/>
 				</rectangle>
 				<staticText>
-					<reportElement style="SansSerif_Italic" mode="Opaque" x="0" y="14" width="120" height="11" forecolor="#FF0000" backcolor="#FFDDDD" uuid="91b332ee-53a0-47b3-a3d3-615040bd6e57"/>
+					<reportElement style="SansSerif_Italic" mode="Opaque" x="0" y="14" width="150" height="11" forecolor="#FF0000" backcolor="#FFDDDD" uuid="91b332ee-53a0-47b3-a3d3-615040bd6e57"/>
 					<textElement>
 						<font isUnderline="true"/>
 					</textElement>
 					<text><![CDATA[Cidades começando com a letra :]]></text>
 				</staticText>
 				<textField>
-					<reportElement style="SansSerif_Bold" mode="Opaque" x="120" y="14" width="150" height="11" forecolor="#FF0000" backcolor="#FFDDDD" uuid="1edab49e-e4ce-4ae6-b4b3-29b639da3102"/>
+					<reportElement style="SansSerif_Bold" mode="Opaque" x="150" y="14" width="120" height="11" forecolor="#FF0000" backcolor="#FFDDDD" uuid="1edab49e-e4ce-4ae6-b4b3-29b639da3102"/>
 					<textFieldExpression><![CDATA[$V{PrimeiraLetraPrimeiraLetraGroup}]]></textFieldExpression>
 				</textField>
 			</band>
@@ -236,12 +236,12 @@ inner join cidade ec on e.id_cidade=ec.id_cidade) p order by "cliente.cidade.nom
 				<text><![CDATA[Cliente, Bairro]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="SansSerif_Bold" mode="Opaque" x="175" y="0" width="45" height="11" forecolor="#FFFFFF" backcolor="#333333" uuid="2200957e-91cd-4e4b-8059-c87626a14fd7"/>
+				<reportElement style="SansSerif_Bold" mode="Opaque" x="175" y="0" width="47" height="11" forecolor="#FFFFFF" backcolor="#333333" uuid="2200957e-91cd-4e4b-8059-c87626a14fd7"/>
 				<textElement textAlignment="Left"/>
 				<text><![CDATA[Data]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="SansSerif_Bold" mode="Opaque" x="220" y="0" width="50" height="11" forecolor="#FFFFFF" backcolor="#333333" uuid="04312d6b-3aa6-4037-96b2-4cc9b0a94236"/>
+				<reportElement style="SansSerif_Bold" mode="Opaque" x="222" y="0" width="48" height="11" forecolor="#FFFFFF" backcolor="#333333" uuid="04312d6b-3aa6-4037-96b2-4cc9b0a94236"/>
 				<textElement textAlignment="Right"/>
 				<text><![CDATA[Custo (R$)]]></text>
 			</staticText>
@@ -291,11 +291,11 @@ inner join cidade ec on e.id_cidade=ec.id_cidade) p order by "cliente.cidade.nom
 				<textFieldExpression><![CDATA[$F{quantidade}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy">
-				<reportElement x="175" y="0" width="45" height="11" uuid="c48fa9dd-b165-4f5a-a44e-f4177a3f75c5"/>
+				<reportElement x="175" y="0" width="47" height="11" uuid="c48fa9dd-b165-4f5a-a44e-f4177a3f75c5"/>
 				<textFieldExpression><![CDATA[$F{manutencao.cadastro}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#0.00">
-				<reportElement x="220" y="0" width="50" height="11" uuid="43d9bf15-569d-4346-afb7-7e731037190e"/>
+				<reportElement x="222" y="0" width="48" height="11" uuid="43d9bf15-569d-4346-afb7-7e731037190e"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{custo}]]></textFieldExpression>
 			</textField>
