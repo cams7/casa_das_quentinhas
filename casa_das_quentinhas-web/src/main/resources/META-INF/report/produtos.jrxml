@@ -79,27 +79,12 @@ inner join cidade ec on ec.Id_cidade=e.id_cidade) p where "produto.id" = $P{prod
 			</staticText>
 		</band>
 	</title>
-	<pageHeader>
-		<band height="29" splitType="Stretch">
-			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-			<rectangle>
-				<reportElement mode="Transparent" x="0" y="0" width="812" height="27" uuid="15f253db-a757-4f99-98ac-0151730fe429"/>
-			</rectangle>
-			<staticText>
-				<reportElement x="0" y="0" width="812" height="27" uuid="5889cbb2-f31b-4dae-96c5-d232f6e4067f"/>
-				<textElement textAlignment="Center">
-					<font size="18"/>
-				</textElement>
-				<text><![CDATA[Pedidos por produto]]></text>
-			</staticText>
-		</band>
-	</pageHeader>
 	<detail>
 		<band height="100" splitType="Stretch">
 			<textField>
 				<reportElement x="0" y="0" width="500" height="15" uuid="9bd999de-99b4-4318-a5e9-d617244fe5be"/>
 				<textElement>
-					<font fontName="Arial" size="10"/>
+					<font fontName="SansSerif" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nome} + " (" + $F{tamanho} + ")"]]></textFieldExpression>
 			</textField>
@@ -129,7 +114,7 @@ inner join cidade ec on ec.Id_cidade=e.id_cidade) p where "produto.id" = $P{prod
 								<rightPen lineWidth="2.0" lineStyle="Solid"/>
 							</box>
 							<textField isBlankWhenNull="true">
-								<reportElement x="5" y="5" width="40" height="40" uuid="a00cd071-7aac-4f75-84fd-f8cb20093feb"/>
+								<reportElement x="3" y="5" width="45" height="40" uuid="a00cd071-7aac-4f75-84fd-f8cb20093feb"/>
 								<textFieldExpression><![CDATA[$V{cidadeNome}]]></textFieldExpression>
 							</textField>
 						</cellContents>
@@ -142,13 +127,13 @@ inner join cidade ec on ec.Id_cidade=e.id_cidade) p where "produto.id" = $P{prod
 								<rightPen lineWidth="2.0" lineStyle="Solid"/>
 							</box>
 							<staticText>
-								<reportElement style="SansSerif_Bold" x="5" y="5" width="125" height="20" uuid="43a818f8-a303-4744-b19b-5dcc12dc102a"/>
+								<reportElement style="SansSerif_Bold" x="3" y="5" width="132" height="20" uuid="43a818f8-a303-4744-b19b-5dcc12dc102a"/>
 								<text><![CDATA[Total (R$)]]></text>
 							</staticText>
 						</cellContents>
 					</crosstabTotalRowHeader>
 				</rowGroup>
-				<rowGroup name="clienteCpfOrCnpj" width="82" totalPosition="End">
+				<rowGroup name="clienteCpfOrCnpj" width="87" totalPosition="End">
 					<bucket class="java.lang.String">
 						<bucketExpression><![CDATA[$F{pedido.cliente.cpfOrCnpj}.length()==14?$F{pedido.cliente.cpfOrCnpj}.replaceAll("^(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})$", "$1.$2.$3/$4-$5"):$F{pedido.cliente.cpfOrCnpj}.replaceAll("^(\\d{3})(\\d{3})(\\d{3})(\\d{2})$", "$1.$2.$3-$4")]]></bucketExpression>
 					</bucket>
@@ -159,7 +144,7 @@ inner join cidade ec on ec.Id_cidade=e.id_cidade) p where "produto.id" = $P{prod
 								<rightPen lineWidth="2.0" lineStyle="Solid"/>
 							</box>
 							<textField isBlankWhenNull="true">
-								<reportElement x="5" y="5" width="75" height="15" uuid="1e587ca1-dd74-4d18-9dc6-9482b3f3f121"/>
+								<reportElement x="3" y="5" width="82" height="15" uuid="1e587ca1-dd74-4d18-9dc6-9482b3f3f121"/>
 								<textFieldExpression><![CDATA[$V{clienteCpfOrCnpj}]]></textFieldExpression>
 							</textField>
 						</cellContents>
@@ -171,7 +156,7 @@ inner join cidade ec on ec.Id_cidade=e.id_cidade) p where "produto.id" = $P{prod
 								<rightPen lineWidth="2.0" lineStyle="Solid"/>
 							</box>
 							<staticText>
-								<reportElement x="5" y="5" width="75" height="15" uuid="0836bae1-129f-4c3a-9ed9-a39bed3ec25c"/>
+								<reportElement style="SansSerif_Bold" x="3" y="5" width="82" height="15" uuid="0836bae1-129f-4c3a-9ed9-a39bed3ec25c"/>
 								<text><![CDATA[Total (R$)]]></text>
 							</staticText>
 						</cellContents>
@@ -189,25 +174,16 @@ inner join cidade ec on ec.Id_cidade=e.id_cidade) p where "produto.id" = $P{prod
 								<rightPen lineWidth="2.0" lineStyle="Solid"/>
 							</box>
 							<rectangle radius="10">
-								<reportElement x="5" y="5" width="74" height="20" uuid="e8617747-2d66-4c81-a85b-7ff656529a33"/>
+								<reportElement x="3" y="3" width="84" height="24" uuid="e8617747-2d66-4c81-a85b-7ff656529a33"/>
 								<graphicElement>
 									<pen lineWidth="1.0" lineStyle="Solid"/>
 								</graphicElement>
 							</rectangle>
 							<textField pattern="yyyy" isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="40" height="30" uuid="7be07197-d984-4b8e-98ea-5c79b349f0c9"/>
-								<textElement textAlignment="Right" verticalAlignment="Middle">
-									<font size="8"/>
-								</textElement>
+								<reportElement x="3" y="3" width="84" height="24" uuid="7be07197-d984-4b8e-98ea-5c79b349f0c9"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
 								<textFieldExpression><![CDATA[$V{PedidoAno}]]></textFieldExpression>
 							</textField>
-							<staticText>
-								<reportElement x="44" y="0" width="38" height="30" uuid="a796b22c-59bb-4762-9e0a-0790b159f978"/>
-								<textElement textAlignment="Left" verticalAlignment="Middle">
-									<font size="8"/>
-								</textElement>
-								<text><![CDATA[(R$)]]></text>
-							</staticText>
 						</cellContents>
 					</crosstabColumnHeader>
 					<crosstabTotalColumnHeader>
@@ -218,7 +194,8 @@ inner join cidade ec on ec.Id_cidade=e.id_cidade) p where "produto.id" = $P{prod
 								<rightPen lineWidth="2.0" lineStyle="Solid"/>
 							</box>
 							<staticText>
-								<reportElement style="SansSerif_Bold" x="5" y="5" width="40" height="15" uuid="d4a20748-d7a9-4849-99f5-191f92bc67b7"/>
+								<reportElement style="SansSerif_Bold" x="3" y="3" width="42" height="15" uuid="d4a20748-d7a9-4849-99f5-191f92bc67b7"/>
+								<textElement textAlignment="Center"/>
 								<text><![CDATA[Total (R$)]]></text>
 							</staticText>
 						</cellContents>
@@ -235,7 +212,8 @@ inner join cidade ec on ec.Id_cidade=e.id_cidade) p where "produto.id" = $P{prod
 								<rightPen lineWidth="2.0" lineStyle="Solid"/>
 							</box>
 							<textField pattern="MMM" isBlankWhenNull="true">
-								<reportElement x="5" y="5" width="35" height="30" uuid="f0f9b651-8dd6-41ca-8673-7d97ebe2eade"/>
+								<reportElement x="3" y="5" width="40" height="30" uuid="f0f9b651-8dd6-41ca-8673-7d97ebe2eade"/>
+								<textElement textAlignment="Center"/>
 								<textFieldExpression><![CDATA[$V{PedidoMes}]]></textFieldExpression>
 							</textField>
 						</cellContents>
@@ -246,37 +224,38 @@ inner join cidade ec on ec.Id_cidade=e.id_cidade) p where "produto.id" = $P{prod
 								<bottomPen lineWidth="2.0" lineStyle="Solid"/>
 								<rightPen lineWidth="2.0" lineStyle="Solid"/>
 							</box>
-							<textField>
-								<reportElement x="5" y="5" width="34" height="30" uuid="7d10e84a-baac-4ffc-93fc-f15dba6cb81c"/>
-								<textFieldExpression><![CDATA[msg("{0,date,yyyy} Total", $V{PedidoAno})]]></textFieldExpression>
-							</textField>
+							<staticText>
+								<reportElement style="SansSerif_Bold" x="3" y="5" width="40" height="30" uuid="a07e4fea-9df8-41fe-842b-b4d38214449d"/>
+								<textElement textAlignment="Center"/>
+								<text><![CDATA[Total (R$)]]></text>
+							</staticText>
 						</cellContents>
 					</crosstabTotalColumnHeader>
 				</columnGroup>
 				<measure name="PedidoCusto" class="java.lang.Float" calculation="Sum">
 					<measureExpression><![CDATA[$F{produto.custo} * $F{quantidade}]]></measureExpression>
 				</measure>
-				<crosstabCell width="42" height="25">
+				<crosstabCell width="45" height="25">
 					<cellContents backcolor="#FFFFFF">
 						<box>
 							<bottomPen lineWidth="1.0" lineStyle="Solid"/>
 							<rightPen lineWidth="1.0" lineStyle="Solid"/>
 						</box>
-						<textField pattern="#,##0.###" isBlankWhenNull="true">
-							<reportElement x="5" y="0" width="35" height="25" uuid="a08df5b0-2dd7-4451-930b-c363657a33cc"/>
+						<textField pattern="0.##" isBlankWhenNull="true">
+							<reportElement x="3" y="0" width="40" height="25" uuid="a08df5b0-2dd7-4451-930b-c363657a33cc"/>
 							<textElement textAlignment="Right" verticalAlignment="Middle"/>
 							<textFieldExpression><![CDATA[$V{PedidoCusto}]]></textFieldExpression>
 						</textField>
 					</cellContents>
 				</crosstabCell>
-				<crosstabCell width="42" height="25" columnTotalGroup="PedidoMes">
+				<crosstabCell width="45" height="25" columnTotalGroup="PedidoMes">
 					<cellContents backcolor="#FFFFC0">
 						<box>
 							<bottomPen lineWidth="1.0" lineStyle="Solid"/>
 							<rightPen lineWidth="1.0" lineStyle="Solid"/>
 						</box>
-						<textField pattern="#,##0.###" isBlankWhenNull="true">
-							<reportElement x="5" y="0" width="32" height="25" uuid="8caff3ba-0d23-464d-b08b-11ff90793891"/>
+						<textField pattern="0.##" isBlankWhenNull="true">
+							<reportElement x="3" y="0" width="40" height="25" uuid="8caff3ba-0d23-464d-b08b-11ff90793891"/>
 							<textElement textAlignment="Right" verticalAlignment="Middle"/>
 							<textFieldExpression><![CDATA[$V{PedidoCusto}]]></textFieldExpression>
 						</textField>
@@ -288,86 +267,86 @@ inner join cidade ec on ec.Id_cidade=e.id_cidade) p where "produto.id" = $P{prod
 							<bottomPen lineWidth="1.0" lineStyle="Solid"/>
 							<rightPen lineWidth="1.0" lineStyle="Solid"/>
 						</box>
-						<textField pattern="#,##0.###" isBlankWhenNull="true">
-							<reportElement x="5" y="0" width="40" height="25" uuid="779d9d34-bc05-405a-8145-b52a0c01fdb4"/>
+						<textField pattern="0.##" isBlankWhenNull="true">
+							<reportElement x="3" y="0" width="42" height="25" uuid="779d9d34-bc05-405a-8145-b52a0c01fdb4"/>
 							<textElement textAlignment="Right" verticalAlignment="Middle"/>
 							<textFieldExpression><![CDATA[$V{PedidoCusto}]]></textFieldExpression>
 						</textField>
 					</cellContents>
 				</crosstabCell>
-				<crosstabCell width="42" height="25" rowTotalGroup="clienteCpfOrCnpj">
+				<crosstabCell width="45" height="25" rowTotalGroup="clienteCpfOrCnpj">
 					<cellContents backcolor="#E0FFFF">
 						<box>
 							<bottomPen lineWidth="1.0" lineStyle="Solid"/>
 							<rightPen lineWidth="1.0" lineStyle="Solid"/>
 						</box>
-						<textField pattern="#,##0.###" isBlankWhenNull="true">
-							<reportElement x="5" y="0" width="35" height="25" uuid="c380704e-80c7-4a85-990a-e3b44f85fe73"/>
+						<textField pattern="0.##" isBlankWhenNull="true">
+							<reportElement x="3" y="0" width="40" height="25" uuid="c380704e-80c7-4a85-990a-e3b44f85fe73"/>
 							<textElement textAlignment="Right" verticalAlignment="Middle"/>
 							<textFieldExpression><![CDATA[$V{PedidoCusto}]]></textFieldExpression>
 						</textField>
 					</cellContents>
 				</crosstabCell>
-				<crosstabCell width="42" rowTotalGroup="clienteCpfOrCnpj" columnTotalGroup="PedidoMes">
+				<crosstabCell width="45" height="25" rowTotalGroup="clienteCpfOrCnpj" columnTotalGroup="PedidoMes">
 					<cellContents backcolor="#E0FFC0">
 						<box>
 							<bottomPen lineWidth="1.0" lineStyle="Solid"/>
 							<rightPen lineWidth="1.0" lineStyle="Solid"/>
 						</box>
-						<textField pattern="#,##0.###" isBlankWhenNull="true">
-							<reportElement x="5" y="0" width="32" height="25" uuid="20effb2c-bf19-4b26-9e1b-e365b6ac2953"/>
+						<textField pattern="0.##" isBlankWhenNull="true">
+							<reportElement x="3" y="0" width="40" height="25" uuid="20effb2c-bf19-4b26-9e1b-e365b6ac2953"/>
 							<textElement textAlignment="Right" verticalAlignment="Middle"/>
 							<textFieldExpression><![CDATA[$V{PedidoCusto}]]></textFieldExpression>
 						</textField>
 					</cellContents>
 				</crosstabCell>
-				<crosstabCell width="47" rowTotalGroup="clienteCpfOrCnpj" columnTotalGroup="PedidoAno">
+				<crosstabCell width="47" height="25" rowTotalGroup="clienteCpfOrCnpj" columnTotalGroup="PedidoAno">
 					<cellContents backcolor="#E0FF60">
 						<box>
 							<bottomPen lineWidth="1.0" lineStyle="Solid"/>
 							<rightPen lineWidth="1.0" lineStyle="Solid"/>
 						</box>
-						<textField pattern="#,##0.###" isBlankWhenNull="true">
-							<reportElement x="5" y="0" width="40" height="25" uuid="4dbede32-70f3-46c1-934a-11e26904ac8e"/>
+						<textField pattern="0.##" isBlankWhenNull="true">
+							<reportElement x="3" y="0" width="42" height="25" uuid="4dbede32-70f3-46c1-934a-11e26904ac8e"/>
 							<textElement textAlignment="Right" verticalAlignment="Middle"/>
 							<textFieldExpression><![CDATA[$V{PedidoCusto}]]></textFieldExpression>
 						</textField>
 					</cellContents>
 				</crosstabCell>
-				<crosstabCell width="42" height="30" rowTotalGroup="cidadeNome">
+				<crosstabCell width="45" height="27" rowTotalGroup="cidadeNome">
 					<cellContents backcolor="#60FFFF">
 						<box>
 							<bottomPen lineWidth="1.0" lineStyle="Solid"/>
 							<rightPen lineWidth="1.0" lineStyle="Solid"/>
 						</box>
-						<textField pattern="#,##0.###" isBlankWhenNull="true">
-							<reportElement x="5" y="0" width="35" height="30" uuid="0a0838bf-951a-4537-8cdb-63a80d29e48c"/>
+						<textField pattern="0.##" isBlankWhenNull="true">
+							<reportElement x="3" y="0" width="40" height="25" uuid="0a0838bf-951a-4537-8cdb-63a80d29e48c"/>
 							<textElement textAlignment="Right" verticalAlignment="Middle"/>
 							<textFieldExpression><![CDATA[$V{PedidoCusto}]]></textFieldExpression>
 						</textField>
 					</cellContents>
 				</crosstabCell>
-				<crosstabCell width="42" rowTotalGroup="cidadeNome" columnTotalGroup="PedidoMes">
+				<crosstabCell width="45" height="27" rowTotalGroup="cidadeNome" columnTotalGroup="PedidoMes">
 					<cellContents backcolor="#60FFC0">
 						<box>
 							<bottomPen lineWidth="1.0" lineStyle="Solid"/>
 							<rightPen lineWidth="1.0" lineStyle="Solid"/>
 						</box>
-						<textField pattern="#,##0.###" isBlankWhenNull="true">
-							<reportElement x="5" y="0" width="32" height="30" uuid="232ea8dd-06b2-4d93-af59-f882c3cbc1de"/>
+						<textField pattern="0.##" isBlankWhenNull="true">
+							<reportElement x="3" y="0" width="40" height="25" uuid="232ea8dd-06b2-4d93-af59-f882c3cbc1de"/>
 							<textElement textAlignment="Right" verticalAlignment="Middle"/>
 							<textFieldExpression><![CDATA[$V{PedidoCusto}]]></textFieldExpression>
 						</textField>
 					</cellContents>
 				</crosstabCell>
-				<crosstabCell width="47" rowTotalGroup="cidadeNome" columnTotalGroup="PedidoAno">
+				<crosstabCell width="47" height="27" rowTotalGroup="cidadeNome" columnTotalGroup="PedidoAno">
 					<cellContents backcolor="#60FF60">
 						<box>
 							<bottomPen lineWidth="1.0" lineStyle="Solid"/>
 							<rightPen lineWidth="1.0" lineStyle="Solid"/>
 						</box>
-						<textField pattern="#,##0.###" isBlankWhenNull="true">
-							<reportElement x="5" y="0" width="40" height="30" uuid="fcfbfcfe-8b8f-4de7-a110-3b0c0d8436dc"/>
+						<textField pattern="0.##" isBlankWhenNull="true">
+							<reportElement x="3" y="0" width="42" height="25" uuid="fcfbfcfe-8b8f-4de7-a110-3b0c0d8436dc"/>
 							<textElement textAlignment="Right" verticalAlignment="Middle"/>
 							<textFieldExpression><![CDATA[$V{PedidoCusto}]]></textFieldExpression>
 						</textField>
@@ -376,37 +355,4 @@ inner join cidade ec on ec.Id_cidade=e.id_cidade) p where "produto.id" = $P{prod
 			</crosstab>
 		</band>
 	</detail>
-	<pageFooter>
-		<band height="30" splitType="Stretch">
-			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-			<rectangle>
-				<reportElement mode="Transparent" x="0" y="5" width="812" height="25" uuid="d53789ce-884f-47d8-a1bc-abdeec453f7a"/>
-			</rectangle>
-			<textField>
-				<reportElement x="657" y="10" width="75" height="20" uuid="16216c94-affc-4a1d-93cf-231a1ecc1df4">
-					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
-				</reportElement>
-				<textElement textAlignment="Right">
-					<font size="14"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="732" y="10" width="5" height="20" uuid="406d56b9-1f85-4e0d-886e-6b1d0fd7cf38">
-					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
-				</reportElement>
-				<textElement textAlignment="Center">
-					<font size="14"/>
-				</textElement>
-				<text><![CDATA[/]]></text>
-			</staticText>
-			<textField evaluationTime="Report">
-				<reportElement x="737" y="10" width="75" height="20" uuid="38a75f5a-002a-4840-9b10-16dde2ddad9b"/>
-				<textElement>
-					<font size="14"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
-			</textField>
-		</band>
-	</pageFooter>
 </jasperReport>
