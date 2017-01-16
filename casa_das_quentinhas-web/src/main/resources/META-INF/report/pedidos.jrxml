@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-01-16T08:10:27 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="FirstJasper" columnCount="2" pageWidth="595" pageHeight="842" columnWidth="270" columnSpacing="15" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="c4169fa6-48c0-4d45-b692-00e578e71756">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
@@ -177,7 +179,9 @@ inner join cidade ec on e.id_cidade=ec.id_cidade) p order by "cliente.cidade.nom
 				</line>
 			</elementGroup>
 			<staticText>
-				<reportElement style="SansSerif_Italic" x="180" y="40" width="375" height="15" uuid="97a77fdb-559f-4bcd-822d-c0eac83c2c9b"/>
+				<reportElement style="SansSerif_Italic" x="180" y="40" width="375" height="16" uuid="97a77fdb-559f-4bcd-822d-c0eac83c2c9b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
 				<textElement textAlignment="Right">
 					<font size="12"/>
 				</textElement>

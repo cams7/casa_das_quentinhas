@@ -4,12 +4,15 @@
 package br.com.cams7.app.controller;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 
 import br.com.cams7.app.AppNotFoundException;
@@ -26,6 +29,9 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
  */
 public abstract class AbstractReportController<PK extends Serializable, E extends AbstractEntity<PK>, S extends BaseService<PK, E>>
 		extends AbstractController<PK, E, S> implements BaseReportController {
+
+	@Autowired
+	private DataSource datasource;
 
 	public AbstractReportController() {
 		super();
@@ -45,6 +51,11 @@ public abstract class AbstractReportController<PK extends Serializable, E extend
 
 		Map<String, Object> reportParams = new HashMap<String, Object>();
 		reportParams.put(JRParameter.REPORT_LOCALE, LOCALE);
+		try {
+			reportParams.put(JRParameter.REPORT_CONNECTION, datasource.getConnection());
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
 		reportParams.put("datasource", new JRBeanCollectionDataSource(entities));
 		return reportParams;
 	}
