@@ -18,4 +18,9 @@
 		class="org.springframework.web.servlet.view.jasperreports.JasperReportsPdfView"
 		p:url="classpath:META-INF/report/produtos.jrxml"
 		p:reportDataKey="datasource" />
+		
+	<bean id="clientePdfView"
+		class="org.springframework.web.servlet.view.jasperreports.JasperReportsPdfView"
+		p:url="classpath:META-INF/report/clientes.jrxml"
+		p:reportDataKey="datasource" />
 </beans>

@@ -3,10 +3,12 @@
  */
 package br.com.cams7.casa_das_quentinhas.dao;
 
+import java.util.List;
 import java.util.Map;
 
 import br.com.cams7.app.dao.BaseDAO;
 import br.com.cams7.casa_das_quentinhas.entity.Cliente;
+import br.com.cams7.casa_das_quentinhas.entity.Pedido;
 import br.com.cams7.casa_das_quentinhas.entity.Usuario.RelacionamentoUsuario;
 
 /**
@@ -60,4 +62,11 @@ public interface ClienteDAO extends BaseDAO<Integer, Cliente> {
 	 * @return Clientes
 	 */
 	Map<Integer, String> getClientesByNomeOrCpfOrTelefone(String nomeOrCpfOrTelefone);
+
+	/**
+	 * @param clienteId
+	 *            ID do cliente
+	 * @return Pedidos
+	 */
+	List<Pedido> getPedidosIdByClienteId(Integer clienteId);
 }

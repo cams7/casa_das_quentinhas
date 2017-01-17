@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-01-17T19:07:08 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="clientes" language="groovy" pageWidth="595" pageHeight="842" columnWidth="515" leftMargin="40" rightMargin="40" topMargin="50" bottomMargin="50" uuid="db7d3266-f459-4479-b2a0-ecc23d8d8817">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Casas das Quentinhas"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<style name="SansSerif_Normal" isDefault="true" fill="Solid" fontSize="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false"/>
+	<style name="SansSerif_Bold" style="SansSerif_Normal" fill="Solid" fontSize="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Bold" isPdfEmbedded="false"/>
+	<style name="SansSerif_Italic" style="SansSerif_Normal" fill="Solid" fontSize="12" isBold="false" isItalic="true" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Oblique" isPdfEmbedded="false"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Desenv\\Github\\casa_das_quentinhas\\casa_das_quentinhas-web\\src\\main\\resources\\META-INF\\report\\"]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+     c.id_cliente AS id,
+     c.nome
+FROM
+     cliente c
+ORDER BY nome asc]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer"/>
+	<field name="nome" class="java.lang.String"/>
+	<variable name="ProductTotalPrice" class="java.lang.Float" calculation="System"/>
+	<variable name="CityAddressCount" class="java.lang.Integer" calculation="System"/>
+	<title>
+		<band height="65" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="0" width="515" height="1" uuid="e7427404-b924-4562-a1bc-1cc27c1aa0ff"/>
+			</line>
+			<staticText>
+				<reportElement x="140" y="40" width="375" height="16" uuid="ba237a3f-013f-47d1-9cd9-6ba43c817be2">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Casa das Quentinhas]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="SansSerif_Bold" mode="Transparent" x="140" y="5" width="375" height="35" uuid="68872bb5-aefc-4bcb-b0a3-0dc7f8bdea9a">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="22" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Relatório de clientes]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="21" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="4" width="515" height="16" backcolor="#333333" uuid="55f74325-1e44-44cc-a94a-e1544842d437"/>
+				<graphicElement>
+					<pen lineWidth="0.0" lineStyle="Solid"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement style="SansSerif_Bold" mode="Opaque" x="0" y="4" width="515" height="16" forecolor="#FFFFFF" backcolor="#333333" uuid="b63e1820-7092-4f7d-b2dc-efd5d7b67e22"/>
+				<text><![CDATA[Clientes]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="20" width="515" height="1" uuid="2e8bc444-41a6-4d7f-8390-de471d9cef99"/>
+			</line>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="50" splitType="Stretch">
+			<textField>
+				<reportElement style="SansSerif_Bold" x="5" y="5" width="100" height="16" uuid="82fb2ce8-f401-4971-b857-2be041f26454"/>
+				<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="20" width="515" height="1" isPrintWhenDetailOverflows="true" uuid="2f6f7517-3b2b-45d6-a163-7b840d92bc96"/>
+			</line>
+			<subreport isUsingCache="false">
+				<reportElement isPrintRepeatedValues="false" x="285" y="25" width="230" height="20" isRemoveLineWhenBlank="true" backcolor="#FFCC99" uuid="7da91ac8-3e4b-46b8-b990-81052ffa705c"/>
+				<subreportParameter name="clienteId">
+					<subreportParameterExpression><![CDATA[$F{id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "cliente_pedidos.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="false">
+				<reportElement x="5" y="25" width="270" height="20" backcolor="#FFCC99" uuid="b3f635e5-7777-4a1c-8bd1-bdbf1c5bfc34"/>
+				<subreportParameter name="clienteId">
+					<subreportParameterExpression><![CDATA[$F{id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "cliente_produtos.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="40" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="10" width="515" height="1" uuid="f12c0899-812c-482d-acc0-93af3051eee9"/>
+			</line>
+			<textField>
+				<reportElement x="200" y="15" width="75" height="20" uuid="afdeed1a-c96c-4f14-8970-f82ab597b582"/>
+				<textElement textAlignment="Right">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="285" y="15" width="75" height="20" uuid="4df46471-ebd2-4330-a8c2-6ea87140f75b"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="275" y="15" width="10" height="20" uuid="8dc52b02-39a8-4a73-8893-ac7cba317b2f"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[/]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>

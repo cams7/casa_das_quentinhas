@@ -31,6 +31,7 @@ import br.com.cams7.casa_das_quentinhas.entity.Cliente_;
 import br.com.cams7.casa_das_quentinhas.entity.Contato_;
 import br.com.cams7.casa_das_quentinhas.entity.Estado;
 import br.com.cams7.casa_das_quentinhas.entity.Manutencao_;
+import br.com.cams7.casa_das_quentinhas.entity.Pedido;
 import br.com.cams7.casa_das_quentinhas.entity.Usuario;
 import br.com.cams7.casa_das_quentinhas.entity.Usuario_;
 import br.com.cams7.casa_das_quentinhas.entity.Usuario.RelacionamentoUsuario;
@@ -54,11 +55,20 @@ public class ClienteDAOImpl extends AbstractDAO<Integer, Cliente> implements Cli
 	protected List<From<?, ?>> getFetchJoins(Root<Cliente> from) {
 		List<From<?, ?>> fetchJoins = new ArrayList<>();
 
-		Join<Cliente, Cidade> joinCidade = (Join<Cliente, Cidade>) from.fetch(Cliente_.cidade, JoinType.INNER);
-		Join<Cidade, Estado> joinEstado = (Join<Cidade, Estado>) joinCidade.fetch(Cidade_.estado, JoinType.INNER);
+		final boolean IS_NULL = getIgnoredJoins() == null;
 
-		fetchJoins.add(joinCidade);
-		fetchJoins.add(joinEstado);
+		boolean noneMatch = IS_NULL || getIgnoredJoins().stream().noneMatch(type -> type.equals(Cidade.class));
+		if (noneMatch) {
+			Join<Cliente, Cidade> joinCidade = (Join<Cliente, Cidade>) from.fetch(Cliente_.cidade, JoinType.INNER);
+			fetchJoins.add(joinCidade);
+
+			noneMatch = IS_NULL || getIgnoredJoins().stream().noneMatch(type -> type.equals(Estado.class));
+			if (noneMatch) {
+				Join<Cidade, Estado> joinEstado = (Join<Cidade, Estado>) joinCidade.fetch(Cidade_.estado,
+						JoinType.INNER);
+				fetchJoins.add(joinEstado);
+			}
+		}
 
 		return fetchJoins;
 	}
@@ -74,11 +84,20 @@ public class ClienteDAOImpl extends AbstractDAO<Integer, Cliente> implements Cli
 	protected List<From<?, ?>> getJoins(Root<Cliente> from) {
 		List<From<?, ?>> fetchJoins = new ArrayList<>();
 
-		Join<Cliente, Cidade> joinCidade = (Join<Cliente, Cidade>) from.join(Cliente_.cidade, JoinType.INNER);
-		Join<Cidade, Estado> joinEstado = (Join<Cidade, Estado>) joinCidade.join(Cidade_.estado, JoinType.INNER);
+		final boolean IS_NULL = getIgnoredJoins() == null;
 
-		fetchJoins.add(joinCidade);
-		fetchJoins.add(joinEstado);
+		boolean noneMatch = IS_NULL || getIgnoredJoins().stream().noneMatch(type -> type.equals(Cidade.class));
+		if (noneMatch) {
+			Join<Cliente, Cidade> joinCidade = (Join<Cliente, Cidade>) from.join(Cliente_.cidade, JoinType.INNER);
+			fetchJoins.add(joinCidade);
+
+			noneMatch = IS_NULL || getIgnoredJoins().stream().noneMatch(type -> type.equals(Estado.class));
+			if (noneMatch) {
+				Join<Cidade, Estado> joinEstado = (Join<Cidade, Estado>) joinCidade.join(Cidade_.estado,
+						JoinType.INNER);
+				fetchJoins.add(joinEstado);
+			}
+		}
 
 		return fetchJoins;
 	}
@@ -270,6 +289,28 @@ public class ClienteDAOImpl extends AbstractDAO<Integer, Cliente> implements Cli
 	 */
 	private SingularAttribute<Cliente, Usuario> getAtributte(RelacionamentoUsuario relacionamento) {
 		return ACESSO.equals(relacionamento) ? Cliente_.usuarioAcesso : Cliente_.usuarioCadastro;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.casa_das_quentinhas.dao.ClienteDAO#getPedidosIdByClienteId(
+	 * java.lang.Integer)
+	 */
+	@Override
+	public List<Pedido> getPedidosIdByClienteId(Integer clienteId) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Pedido> cq = cb.createQuery(Pedido.class);
+
+		Root<Cliente> from = cq.from(ENTITY_TYPE);
+		cq.select(from.join(Cliente_.pedidos, JoinType.INNER));
+		cq.where(cb.equal(from.get(Cliente_.id), clienteId));
+
+		TypedQuery<Pedido> tq = getEntityManager().createQuery(cq);
+
+		List<Pedido> pedidos = tq.getResultList();
+		return pedidos;
 	}
 
 }

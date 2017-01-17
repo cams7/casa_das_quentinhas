@@ -51,8 +51,12 @@ public abstract class AbstractReportController<PK extends Serializable, E extend
 
 		Map<String, Object> reportParams = new HashMap<String, Object>();
 		reportParams.put(JRParameter.REPORT_LOCALE, LOCALE);
+
 		try {
 			reportParams.put(JRParameter.REPORT_CONNECTION, datasource.getConnection());
+
+			String reportPath = getClass().getClassLoader().getResource("/META-INF/report/").getPath();
+			reportParams.put("SUBREPORT_DIR", reportPath);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}

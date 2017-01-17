@@ -46,9 +46,8 @@ public class PedidoReportController extends AbstractReportController<Long, Pedid
 			}
 
 			return pedido;
-		}).sorted((p1, p2) -> {
-			return p1.getCliente().getCidade().getNome().compareTo(p2.getCliente().getCidade().getNome());
-		}).collect(Collectors.toList());
+		}).sorted((p1, p2) -> p1.getCliente().getCidade().getNome().compareTo(p2.getCliente().getCidade().getNome()))
+				.collect(Collectors.toList());
 	}
 
 }

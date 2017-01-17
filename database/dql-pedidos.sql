@@ -84,3 +84,17 @@ from pedido p
 inner join empresa_pedido ep on p.id_pedido=ep.id_pedido
 inner join empresa e on e.id_empresa=ep.id_empresa) p 
 GROUP BY "cliente.id" ORDER BY "custo_total" desc;
+
+select
+p.id_pedido as "pedidos.id",
+p.data_cadastro as "pedidos.manutencao.cadastro",
+p.total_nota as "pedidos.custo",
+p.quantidade_total as "pedidos.quantidade",
+CASE WHEN p.situacao_pedido=0 THEN 'PENDENTE' WHEN p.situacao_pedido=1 THEN 'EM_TRANSITO' WHEN p.situacao_pedido=2 THEN 'CANCELADO' ELSE 'ENTREGUE' END as "pedidos.situacao",
+CASE WHEN p.forma_pagamento=0 THEN 'PAGAMENTO_A_VISTA' WHEN p.forma_pagamento=1 THEN 'PAGAMENTO_A_PRAZO' ELSE 'OUTROS' END as "pedidos.formaPagamento",
+c.nome
+from cliente c
+inner join cliente_pedido cp on c.id_cliente=cp.id_cliente
+inner join pedido p on p.id_pedido=cp.id_pedido 
+order by c.nome asc;
+

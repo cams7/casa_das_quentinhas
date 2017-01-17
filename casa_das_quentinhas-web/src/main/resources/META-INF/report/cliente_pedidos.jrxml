@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="clientes_pedidos" language="groovy" pageWidth="230" pageHeight="752" columnWidth="230" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="404ef37d-9c79-4c0d-925e-aead8224a710">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="SansSerif_Normal" isDefault="true" fill="Solid" fontSize="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false"/>
+	<style name="SansSerif_Bold" style="SansSerif_Normal" fill="Solid" fontSize="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Bold" isPdfEmbedded="false"/>
+	<style name="SansSerif_Italic" style="SansSerif_Normal" fill="Solid" fontSize="12" isBold="false" isItalic="true" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Oblique" isPdfEmbedded="false"/>
+	<parameter name="clienteId" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+     p.id_pedido AS id,
+     p.quantidade_total AS quantidade,
+     p.total_nota AS custo,
+     CASE WHEN p.situacao_pedido=0 THEN 'PENDENTE' WHEN p.situacao_pedido=1 THEN 'EM_TRANSITO' WHEN p.situacao_pedido=2 THEN 'CANCELADO' ELSE 'ENTREGUE' END AS situacao,
+     p.data_cadastro AS "manutencao.cadastro",
+      CASE WHEN p.forma_pagamento=0 THEN 'PAGAMENTO_A_VISTA' WHEN p.forma_pagamento=1 THEN 'PAGAMENTO_A_PRAZO' ELSE 'OUTROS' END AS formaPagamento
+FROM
+     pedido p
+INNER JOIN cliente_pedido cp ON p.id_pedido=cp.id_pedido
+WHERE cp.id_cliente = $P{clienteId}
+ORDER BY "manutencao.cadastro" DESC]]>
+	</queryString>
+	<field name="id" class="java.lang.Long"/>
+	<field name="quantidade" class="java.lang.Short"/>
+	<field name="custo" class="java.lang.Float"/>
+	<field name="situacao" class="java.lang.Object"/>
+	<field name="manutencao.cadastro" class="java.sql.Timestamp"/>
+	<field name="formapagamento" class="java.lang.Object"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="16" splitType="Stretch">
+			<frame>
+				<reportElement mode="Opaque" x="0" y="0" width="230" height="16" backcolor="#33FFCC" uuid="48878e8e-6993-4c92-8b22-d8b2562816ca"/>
+				<staticText>
+					<reportElement style="SansSerif_Bold" x="5" y="0" width="105" height="15" uuid="2bf7d6a1-4fc3-4406-a4f5-1d3e0ac013cf"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Pedido]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="SansSerif_Bold" x="110" y="0" width="50" height="15" uuid="a301dd3c-3120-4160-aae5-a2956f1cfbc4"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Qtd]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="SansSerif_Bold" x="160" y="0" width="65" height="15" uuid="25bcc09e-ca01-49e5-a0e6-19dd333154ed"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Custo (R$)]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="16" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy HH:mm">
+				<reportElement x="5" y="0" width="105" height="15" uuid="2d774bde-4343-4bdb-a60a-91d51aa9aa32"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{manutencao.cadastro}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="110" y="0" width="50" height="15" uuid="791b714d-371b-4b78-9b35-9045ab80a8cf"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{quantidade}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#0.00">
+				<reportElement x="160" y="0" width="65" height="15" uuid="ab2a135d-9943-4d2e-91f0-c8a017040651"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{custo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

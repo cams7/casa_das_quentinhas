@@ -1,0 +1,40 @@
+/**
+ * 
+ */
+package br.com.cams7.casa_das_quentinhas.report;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import br.com.cams7.app.controller.AbstractReportController;
+import br.com.cams7.casa_das_quentinhas.entity.Cidade;
+import br.com.cams7.casa_das_quentinhas.entity.Cliente;
+import br.com.cams7.casa_das_quentinhas.service.ClienteService;
+
+/**
+ * @author César Magalhães
+ *
+ */
+@Controller
+@RequestMapping("/cliente/report")
+public class ClienteReportController extends AbstractReportController<Integer, Cliente, ClienteService> {
+
+	private final String PDF_VIEW = "clientePdfView";
+
+	@Override
+	protected String getPdfView() {
+		return PDF_VIEW;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.app.controller.AbstractController#getIgnoredJoins()
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	protected Class<?>[] getIgnoredJoins() {
+		return new Class<?>[] { Cidade.class };
+	}
+
+}
