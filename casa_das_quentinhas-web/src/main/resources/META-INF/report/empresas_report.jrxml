@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="empresas" language="groovy" pageWidth="595" pageHeight="842" columnWidth="515" leftMargin="40" rightMargin="40" topMargin="50" bottomMargin="50" uuid="db7d3266-f459-4479-b2a0-ecc23d8d8817">
 	<property name="ireport.zoom" value="2.0"/>
-	<property name="ireport.x" value="102"/>
+	<property name="ireport.x" value="89"/>
 	<property name="ireport.y" value="0"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Casas das Quentinhas"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
@@ -60,13 +60,13 @@ ORDER BY razaoSocial asc]]>
 	<pageHeader>
 		<band height="21" splitType="Stretch">
 			<rectangle>
-				<reportElement x="0" y="4" width="302" height="16" backcolor="#333333" uuid="ea08eb66-a372-48eb-8220-6303d746f90a"/>
+				<reportElement x="0" y="4" width="515" height="16" backcolor="#333333" uuid="ea08eb66-a372-48eb-8220-6303d746f90a"/>
 				<graphicElement>
 					<pen lineWidth="0.0" lineStyle="Solid"/>
 				</graphicElement>
 			</rectangle>
 			<staticText>
-				<reportElement style="SansSerif_Bold" mode="Opaque" x="0" y="4" width="515" height="16" forecolor="#FFFFFF" backcolor="#333333" uuid="f5cb0102-0f37-4c66-a947-f1a99c7caa53"/>
+				<reportElement style="SansSerif_Bold" mode="Transparent" x="5" y="4" width="350" height="16" forecolor="#FFFFFF" backcolor="#333333" uuid="f5cb0102-0f37-4c66-a947-f1a99c7caa53"/>
 				<text><![CDATA[Empresa]]></text>
 			</staticText>
 			<line>

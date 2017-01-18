@@ -46,12 +46,15 @@ public class FuncionarioDAOImpl extends AbstractDAO<Integer, Funcionario> implem
 	protected List<From<?, ?>> getFetchJoins(Root<Funcionario> from) {
 		List<From<?, ?>> fetchJoins = new ArrayList<>();
 
-		Join<Funcionario, Usuario> joinUsuario = (Join<Funcionario, Usuario>) from.fetch(Funcionario_.usuario,
-				JoinType.INNER);
-		fetchJoins.add(joinUsuario);
+		final boolean IS_NULL = getIgnoredJoins() == null;
 
-		boolean noneMatch = getIgnoredJoins() == null
-				|| getIgnoredJoins().stream().noneMatch(type -> type.equals(Empresa.class));
+		boolean noneMatch = IS_NULL || getIgnoredJoins().stream().noneMatch(type -> type.equals(Usuario.class));
+		if (noneMatch) {
+			Join<Funcionario, Usuario> joinUsuario = (Join<Funcionario, Usuario>) from.fetch(Funcionario_.usuario,
+					JoinType.INNER);
+			fetchJoins.add(joinUsuario);
+		}
+		noneMatch = IS_NULL || getIgnoredJoins().stream().noneMatch(type -> type.equals(Empresa.class));
 		if (noneMatch) {
 			Join<Funcionario, Empresa> joinEmpresa = (Join<Funcionario, Empresa>) from.fetch(Funcionario_.empresa,
 					JoinType.INNER);
@@ -72,12 +75,16 @@ public class FuncionarioDAOImpl extends AbstractDAO<Integer, Funcionario> implem
 	protected List<From<?, ?>> getJoins(Root<Funcionario> from) {
 		List<From<?, ?>> fetchJoins = new ArrayList<>();
 
-		Join<Funcionario, Usuario> joinUsuario = (Join<Funcionario, Usuario>) from.join(Funcionario_.usuario,
-				JoinType.INNER);
-		fetchJoins.add(joinUsuario);
+		final boolean IS_NULL = getIgnoredJoins() == null;
 
-		boolean noneMatch = getIgnoredJoins() == null
-				|| getIgnoredJoins().stream().noneMatch(type -> type.equals(Empresa.class));
+		boolean noneMatch = IS_NULL || getIgnoredJoins().stream().noneMatch(type -> type.equals(Usuario.class));
+		if (noneMatch) {
+			Join<Funcionario, Usuario> joinUsuario = (Join<Funcionario, Usuario>) from.join(Funcionario_.usuario,
+					JoinType.INNER);
+			fetchJoins.add(joinUsuario);
+		}
+
+		noneMatch = IS_NULL || getIgnoredJoins().stream().noneMatch(type -> type.equals(Empresa.class));
 		if (noneMatch) {
 			Join<Funcionario, Empresa> joinEmpresa = (Join<Funcionario, Empresa>) from.join(Funcionario_.empresa,
 					JoinType.INNER);
