@@ -45,29 +45,29 @@ inner join cidade ec on e.id_cidade=ec.id_cidade) p order by "cliente.cidade.nom
 	<field name="cliente.nome" class="java.lang.String"/>
 	<field name="cliente.endereco.bairro" class="java.lang.String"/>
 	<field name="cliente.cidade.nome" class="java.lang.String"/>
-	<variable name="PrimeiraLetraPrimeiraLetraGroup" class="java.lang.String" resetType="None">
+	<variable name="primeiraLetraPrimeiraLetraGroup" class="java.lang.String" resetType="None">
 		<variableExpression><![CDATA[$F{cliente.cidade.nome}.substring(0, 1).toUpperCase()]]></variableExpression>
 	</variable>
-	<variable name="SomaCustoPrimeiraLetraGroup" class="java.lang.Double" resetType="Group" resetGroup="PrimeiraLetraGroup" calculation="Sum">
+	<variable name="somaCustoPrimeiraLetraGroup" class="java.lang.Double" resetType="Group" resetGroup="PrimeiraLetraGroup" calculation="Sum">
 		<variableExpression><![CDATA[$F{custo}]]></variableExpression>
 	</variable>
-	<variable name="SomaCustoCidadeGroup" class="java.lang.Double" resetType="Group" resetGroup="CidadeGroup" calculation="Sum">
+	<variable name="somaCustoCidadeGroup" class="java.lang.Double" resetType="Group" resetGroup="CidadeGroup" calculation="Sum">
 		<variableExpression><![CDATA[$F{custo}]]></variableExpression>
 	</variable>
-	<variable name="SomaCustoColumn" class="java.lang.Double" resetType="Column" calculation="Sum">
+	<variable name="somaCustoColumn" class="java.lang.Double" resetType="Column" calculation="Sum">
 		<variableExpression><![CDATA[$F{custo}]]></variableExpression>
 	</variable>
-	<variable name="SomaCustoPage" class="java.lang.Double" resetType="Page" calculation="Sum">
+	<variable name="somaCustoPage" class="java.lang.Double" resetType="Page" calculation="Sum">
 		<variableExpression><![CDATA[$F{custo}]]></variableExpression>
 	</variable>
-	<variable name="SomaCustoReport" class="java.lang.Double" calculation="Sum">
+	<variable name="somaCustoReport" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[$F{custo}]]></variableExpression>
 	</variable>
-	<variable name="DataPedidoCidadeGroup" class="java.sql.Timestamp" resetType="Group" resetGroup="CidadeGroup" calculation="Highest">
+	<variable name="dataPedidoCidadeGroup" class="java.sql.Timestamp" resetType="Group" resetGroup="CidadeGroup" calculation="Highest">
 		<variableExpression><![CDATA[$F{manutencao.cadastro}]]></variableExpression>
 	</variable>
 	<group name="PrimeiraLetraGroup" isStartNewColumn="true" isReprintHeaderOnEachPage="true" minHeightToStartNewPage="200">
-		<groupExpression><![CDATA[$V{PrimeiraLetraPrimeiraLetraGroup}]]></groupExpression>
+		<groupExpression><![CDATA[$V{primeiraLetraPrimeiraLetraGroup}]]></groupExpression>
 		<groupHeader>
 			<band height="25" splitType="Stretch">
 				<rectangle>
@@ -82,7 +82,7 @@ inner join cidade ec on e.id_cidade=ec.id_cidade) p order by "cliente.cidade.nom
 				</staticText>
 				<textField>
 					<reportElement style="SansSerif_Bold" mode="Opaque" x="150" y="14" width="120" height="11" forecolor="#FF0000" backcolor="#FFDDDD" uuid="1edab49e-e4ce-4ae6-b4b3-29b639da3102"/>
-					<textFieldExpression><![CDATA[$V{PrimeiraLetraPrimeiraLetraGroup}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{primeiraLetraPrimeiraLetraGroup}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -109,7 +109,7 @@ inner join cidade ec on e.id_cidade=ec.id_cidade) p order by "cliente.cidade.nom
 				<textField pattern="#0.00">
 					<reportElement style="SansSerif_Bold" x="180" y="1" width="90" height="11" forecolor="#FF0000" uuid="7b0ce8d0-fb06-41a5-93d8-8b870db87e2b"/>
 					<textElement textAlignment="Right"/>
-					<textFieldExpression><![CDATA[$V{SomaCustoPrimeiraLetraGroup}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{somaCustoPrimeiraLetraGroup}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
@@ -128,7 +128,7 @@ inner join cidade ec on e.id_cidade=ec.id_cidade) p order by "cliente.cidade.nom
 				<textField evaluationTime="Group" evaluationGroup="CidadeGroup" pattern="EEE, MMM d, yyyy">
 					<reportElement style="SansSerif_Bold" x="170" y="2" width="100" height="11" uuid="3953c3dd-e4ae-4496-843d-7736ed268c11"/>
 					<textElement textAlignment="Right"/>
-					<textFieldExpression><![CDATA[$V{DataPedidoCidadeGroup}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{dataPedidoCidadeGroup}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -155,7 +155,7 @@ inner join cidade ec on e.id_cidade=ec.id_cidade) p order by "cliente.cidade.nom
 				<textField pattern="#0.00">
 					<reportElement style="SansSerif_Bold" mode="Opaque" x="180" y="0" width="90" height="11" backcolor="#C0C0C0" uuid="803862de-5288-4eae-a31e-1d6b9f772cf9"/>
 					<textElement textAlignment="Right"/>
-					<textFieldExpression><![CDATA[$V{SomaCustoCidadeGroup}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{somaCustoCidadeGroup}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
@@ -188,7 +188,7 @@ inner join cidade ec on e.id_cidade=ec.id_cidade) p order by "cliente.cidade.nom
 			<textField evaluationTime="Report">
 				<reportElement mode="Opaque" x="1" y="60" width="300" height="16" uuid="76006a09-0115-4829-a9cd-99a30f0038d5"/>
 				<textElement textAlignment="Left"/>
-				<textFieldExpression><![CDATA["Existem " + $V{REPORT_COUNT} + " pedidos neste relatório, com um custo total de " + NumberFormat.getCurrencyInstance($P{REPORT_LOCALE}).format($V{SomaCustoReport})]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Existem " + $V{REPORT_COUNT} + " pedidos neste relatório, com um custo total de " + NumberFormat.getCurrencyInstance($P{REPORT_LOCALE}).format($V{somaCustoReport})]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement style="SansSerif_Bold" mode="Transparent" x="180" y="5" width="375" height="35" uuid="24a91563-d7be-4191-bdfd-85e7dbd20177">
@@ -330,7 +330,7 @@ inner join cidade ec on e.id_cidade=ec.id_cidade) p order by "cliente.cidade.nom
 			<textField pattern="#0.00">
 				<reportElement style="SansSerif_Bold" mode="Opaque" x="180" y="0" width="90" height="11" forecolor="#FFFFFF" backcolor="#333333" uuid="055f60c3-9e09-4a1b-a644-1edaa327caa0"/>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$V{SomaCustoColumn}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{somaCustoColumn}]]></textFieldExpression>
 			</textField>
 		</band>
 	</columnFooter>
@@ -365,7 +365,7 @@ inner join cidade ec on e.id_cidade=ec.id_cidade) p order by "cliente.cidade.nom
 				<textElement textAlignment="Right">
 					<font size="14"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{SomaCustoPage}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{somaCustoPage}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="200" y="10" width="75" height="20" uuid="fcecd3cb-9cd0-44f2-b8a6-8bb2c5eb9c04"/>

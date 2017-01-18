@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="clientes_pedidos" language="groovy" pageWidth="230" pageHeight="752" columnWidth="230" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="404ef37d-9c79-4c0d-925e-aead8224a710">
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-01-18T10:02:20 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="clientes_pedidos" language="groovy" pageWidth="510" pageHeight="752" columnWidth="510" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="404ef37d-9c79-4c0d-925e-aead8224a710">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Casas das Quentinhas"/>
 	<style name="SansSerif_Normal" isDefault="true" fill="Solid" fontSize="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false"/>
 	<style name="SansSerif_Bold" style="SansSerif_Normal" fill="Solid" fontSize="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Bold" isPdfEmbedded="false"/>
 	<style name="SansSerif_Italic" style="SansSerif_Normal" fill="Solid" fontSize="12" isBold="false" isItalic="true" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Oblique" isPdfEmbedded="false"/>
@@ -28,61 +31,168 @@ ORDER BY "manutencao.cadastro" DESC]]>
 	<field name="custo" class="java.lang.Float"/>
 	<field name="situacao" class="java.lang.Object"/>
 	<field name="manutencao.cadastro" class="java.sql.Timestamp"/>
-	<field name="formapagamento" class="java.lang.Object"/>
+	<field name="formaPagamento" class="java.lang.Object"/>
+	<variable name="somaCustoColumn" class="java.lang.Double" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{custo}]]></variableExpression>
+	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<columnHeader>
-		<band height="16" splitType="Stretch">
+		<band height="11" splitType="Stretch">
 			<frame>
-				<reportElement mode="Opaque" x="0" y="0" width="230" height="16" backcolor="#33FFCC" uuid="48878e8e-6993-4c92-8b22-d8b2562816ca"/>
+				<reportElement mode="Opaque" x="0" y="0" width="510" height="11" backcolor="#FFFFCC" uuid="48878e8e-6993-4c92-8b22-d8b2562816ca"/>
 				<staticText>
-					<reportElement style="SansSerif_Bold" x="5" y="0" width="105" height="15" uuid="2bf7d6a1-4fc3-4406-a4f5-1d3e0ac013cf"/>
+					<reportElement style="SansSerif_Bold" mode="Transparent" x="10" y="0" width="50" height="11" forecolor="#000000" backcolor="#FFFFCC" uuid="4622e2c0-c44e-4bd2-a6fb-4402ab8c9b83"/>
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+						<font fontName="SansSerif" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<text><![CDATA[ID]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="SansSerif_Bold" x="60" y="0" width="110" height="11" forecolor="#000000" backcolor="#FFFFCC" uuid="2bf7d6a1-4fc3-4406-a4f5-1d3e0ac013cf"/>
 					<textElement>
 						<font size="8"/>
 					</textElement>
 					<text><![CDATA[Pedido]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="SansSerif_Bold" x="110" y="0" width="50" height="15" uuid="a301dd3c-3120-4160-aae5-a2956f1cfbc4"/>
+					<reportElement style="SansSerif_Bold" x="370" y="0" width="50" height="11" forecolor="#000000" backcolor="#FFFFCC" uuid="a301dd3c-3120-4160-aae5-a2956f1cfbc4"/>
 					<textElement textAlignment="Right">
 						<font size="8"/>
 					</textElement>
 					<text><![CDATA[Qtd]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="SansSerif_Bold" x="160" y="0" width="65" height="15" uuid="25bcc09e-ca01-49e5-a0e6-19dd333154ed"/>
+					<reportElement style="SansSerif_Bold" x="420" y="0" width="80" height="11" forecolor="#000000" backcolor="#FFFFCC" uuid="25bcc09e-ca01-49e5-a0e6-19dd333154ed"/>
 					<textElement textAlignment="Right">
 						<font size="8"/>
 					</textElement>
 					<text><![CDATA[Custo (R$)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="SansSerif_Bold" mode="Transparent" x="250" y="0" width="120" height="11" forecolor="#000000" backcolor="#FFFFCC" uuid="52b0cc35-7ff1-4873-a746-7fc40561b73e"/>
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+						<font fontName="SansSerif" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<text><![CDATA[Forma de pagamento]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="SansSerif_Bold" mode="Transparent" x="170" y="0" width="80" height="11" forecolor="#000000" backcolor="#FFFFCC" uuid="2c2382ce-3419-4670-9edf-6f6c54cfcf15"/>
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+						<font fontName="SansSerif" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<text><![CDATA[Situação]]></text>
 				</staticText>
 			</frame>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="16" splitType="Stretch">
-			<textField pattern="dd/MM/yyyy HH:mm">
-				<reportElement x="5" y="0" width="105" height="15" uuid="2d774bde-4343-4bdb-a60a-91d51aa9aa32"/>
-				<textElement>
-					<font size="8"/>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="10" y="0" width="50" height="15" forecolor="#000000" backcolor="#FFFFFF" uuid="4bad0f60-a76d-4822-bdd4-1b0abb3271cd">
+					<printWhenExpression><![CDATA[new Boolean(!$F{situacao}.toString().equals( "PENDENTE" ))]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{manutencao.cadastro}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="110" y="0" width="50" height="15" uuid="791b714d-371b-4b78-9b35-9045ab80a8cf"/>
+				<reportElement x="370" y="0" width="50" height="15" uuid="791b714d-371b-4b78-9b35-9045ab80a8cf"/>
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{quantidade}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#0.00">
-				<reportElement x="160" y="0" width="65" height="15" uuid="ab2a135d-9943-4d2e-91f0-c8a017040651"/>
+				<reportElement x="420" y="0" width="80" height="15" uuid="ab2a135d-9943-4d2e-91f0-c8a017040651"/>
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{custo}]]></textFieldExpression>
 			</textField>
+			<textField pattern="dd/MM/yyyy HH:mm">
+				<reportElement x="60" y="0" width="110" height="15" uuid="2d774bde-4343-4bdb-a60a-91d51aa9aa32"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{manutencao.cadastro}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="250" y="0" width="120" height="15" forecolor="#000000" backcolor="#FFFFFF" uuid="569a96f7-0b5c-49ef-81a7-d91a0243dc49"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{formaPagamento}.toString()]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy HH:mm" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="170" y="0" width="80" height="15" forecolor="#000000" backcolor="#FFFFFF" uuid="6eccb04a-279f-4c08-8fc2-94b752597a52"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{situacao}.toString()]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="5" y="4" width="1" height="1" forecolor="#FF0000" backcolor="#FF0000" uuid="25247790-2aa0-4b68-b666-a21c9148d5ed">
+					<printWhenExpression><![CDATA[new Boolean($F{situacao}.toString().equals( "PENDENTE" ))]]></printWhenExpression>
+				</reportElement>
+			</rectangle>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement style="SansSerif_Bold" mode="Transparent" x="10" y="0" width="50" height="15" forecolor="#FF0000" backcolor="#FFFFFF" uuid="c9d5231e-f318-440d-a95b-3723f6e9914b">
+					<printWhenExpression><![CDATA[new Boolean($F{situacao}.toString().equals( "PENDENTE" ))]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
+	<columnFooter>
+		<band height="11">
+			<frame>
+				<reportElement mode="Opaque" x="0" y="0" width="510" height="11" forecolor="#000000" backcolor="#FFFFCC" uuid="186a44fc-ea3d-4d03-83ff-7b32e623976c"/>
+				<staticText>
+					<reportElement style="SansSerif_Bold" mode="Transparent" x="10" y="0" width="50" height="11" forecolor="#000000" backcolor="#FFFFCC" uuid="cfec21fe-b57a-4f81-96d5-655a27fba31a"/>
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" markup="none">
+						<font fontName="SansSerif" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<text><![CDATA[Qtd :]]></text>
+				</staticText>
+				<textField pattern="" isBlankWhenNull="false">
+					<reportElement style="SansSerif_Bold" mode="Transparent" x="60" y="0" width="50" height="11" forecolor="#000000" backcolor="#FFFFCC" uuid="34d75af3-7036-4cb6-a7f5-ac180f7a8a4d"/>
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" markup="none">
+						<font fontName="SansSerif" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{COLUMN_COUNT}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#0.00" isBlankWhenNull="false">
+					<reportElement style="SansSerif_Bold" mode="Transparent" x="420" y="0" width="80" height="11" forecolor="#000000" backcolor="#FFFFCC" uuid="69781693-34a4-4970-922c-30e3571c81e3"/>
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" markup="none">
+						<font fontName="SansSerif" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{somaCustoColumn}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement style="SansSerif_Bold" mode="Transparent" x="370" y="0" width="50" height="11" forecolor="#000000" backcolor="#FFFFCC" uuid="bdbb9dd2-1d32-42fe-88fc-3df4114b3119"/>
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" markup="none">
+						<font fontName="SansSerif" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<text><![CDATA[Total (R$) :]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</columnFooter>
 </jasperReport>

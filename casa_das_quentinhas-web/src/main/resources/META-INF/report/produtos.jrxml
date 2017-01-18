@@ -4,6 +4,7 @@
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Casas das Quentinhas"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<style name="SansSerif_Normal" isDefault="true" fontSize="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false"/>
 	<style name="SansSerif_Bold" fill="Solid" fontSize="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false"/>
 	<subDataset name="Produto_Pedidos" uuid="b29745ca-bdfe-42b5-8b1a-fa9c9e28cbd1">
@@ -11,7 +12,12 @@
 		<queryString>
 			<![CDATA[select * from (
 select
-i.quantidade, pdt.id_produto as "produto.id", pdt.custo as "produto.custo", pdd.data_cadastro as "pedido.manutencao.cadastro", c.cpf as "pedido.cliente.cpfOrCnpj", cc.nome as "pedido.cliente.cidade.nome"
+i.quantidade,
+pdt.id_produto as "produto.id",
+pdt.custo as "produto.custo",
+pdd.data_cadastro as "pedido.manutencao.cadastro",
+c.cpf as "pedido.cliente.cpf",
+cc.nome as "pedido.cliente.cidade.nome"
 from pedido_item i
 inner join produto pdt on pdt.id_produto=i.id_produto
 inner join pedido pdd on pdd.id_pedido=i.id_pedido
@@ -20,7 +26,12 @@ inner join cliente c on c.id_cliente=cp.id_cliente
 inner join cidade cc on cc.Id_cidade=c.id_cidade
 union
 select
-i.quantidade, pdt.id_produto as "produto.id", pdt.custo as "produto.custo", pdd.data_cadastro as "pedido.manutencao.cadastro", e.cnpj as "pedido.cliente.cpfOrCnpj", ec.nome as "pedido.cliente.cidade.nome"
+i.quantidade,
+pdt.id_produto as "produto.id",
+pdt.custo as "produto.custo",
+pdd.data_cadastro as "pedido.manutencao.cadastro",
+e.cnpj as "pedido.cliente.cpf",
+ec.nome as "pedido.cliente.cidade.nome"
 from pedido_item i
 inner join produto pdt on pdt.id_produto=i.id_produto
 inner join pedido pdd on pdd.id_pedido=i.id_pedido
@@ -30,17 +41,22 @@ inner join cidade ec on ec.Id_cidade=e.id_cidade) p where "produto.id" = $P{prod
 		</queryString>
 		<field name="pedido.manutencao.cadastro" class="java.sql.Timestamp"/>
 		<field name="pedido.cliente.cidade.nome" class="java.lang.String"/>
-		<field name="pedido.cliente.cpfOrCnpj" class="java.lang.String"/>
+		<field name="pedido.cliente.cpf" class="java.lang.String"/>
 		<field name="produto.custo" class="java.lang.Float"/>
-		<field name="produto.id" class="java.lang.Integer"/>
 		<field name="quantidade" class="java.lang.Short"/>
 	</subDataset>
 	<queryString>
-		<![CDATA[select id_produto as "id", nome, CASE WHEN tamanho=0 THEN 'GRANDE' WHEN tamanho=1 THEN 'MEDIO' ELSE 'PEQUENO' END as "tamanho" from produto]]>
+		<![CDATA[SELECT
+id_produto AS "id",
+nome,
+CASE WHEN tamanho=0 THEN 'GRANDE' WHEN tamanho=1 THEN 'MEDIO' ELSE 'PEQUENO' END AS "tamanho",
+NULL AS itens
+FROM produto]]>
 	</queryString>
 	<field name="id" class="java.lang.Integer"/>
 	<field name="nome" class="java.lang.String"/>
 	<field name="tamanho" class="java.lang.Object"/>
+	<field name="itens" class="java.util.List"/>
 	<title>
 		<band height="65" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
@@ -66,7 +82,7 @@ inner join cidade ec on ec.Id_cidade=e.id_cidade) p where "produto.id" = $P{prod
 				<textElement textAlignment="Right">
 					<font size="22" isBold="true" isItalic="false"/>
 				</textElement>
-				<text><![CDATA[Relatório de pedidos]]></text>
+				<text><![CDATA[Relatório de produtos]]></text>
 			</staticText>
 		</band>
 	</title>
@@ -86,10 +102,11 @@ inner join cidade ec on ec.Id_cidade=e.id_cidade) p where "produto.id" = $P{prod
 				</crosstabParameter>
 				<crosstabDataset>
 					<dataset>
-						<datasetRun subDataset="Produto_Pedidos" uuid="af0c2f04-5522-4e5f-917c-7e159eae972e">
+						<datasetRun subDataset="Produto_Pedidos" uuid="5c333e88-e74d-404c-835e-806da6e7718b">
 							<datasetParameter name="produtoId">
 								<datasetParameterExpression><![CDATA[$F{id}]]></datasetParameterExpression>
 							</datasetParameter>
+							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{itens})]]></dataSourceExpression>
 						</datasetRun>
 					</dataset>
 				</crosstabDataset>
@@ -118,15 +135,15 @@ inner join cidade ec on ec.Id_cidade=e.id_cidade) p where "produto.id" = $P{prod
 								<rightPen lineWidth="2.0" lineStyle="Solid"/>
 							</box>
 							<staticText>
-								<reportElement style="SansSerif_Bold" x="3" y="5" width="132" height="20" uuid="43a818f8-a303-4744-b19b-5dcc12dc102a"/>
+								<reportElement style="SansSerif_Bold" x="3" y="5" width="145" height="20" uuid="43a818f8-a303-4744-b19b-5dcc12dc102a"/>
 								<text><![CDATA[Total (R$)]]></text>
 							</staticText>
 						</cellContents>
 					</crosstabTotalRowHeader>
 				</rowGroup>
-				<rowGroup name="clienteCpfOrCnpj" width="87" totalPosition="End">
+				<rowGroup name="clienteCpfOrCnpj" width="100" totalPosition="End">
 					<bucket class="java.lang.String">
-						<bucketExpression><![CDATA[$F{pedido.cliente.cpfOrCnpj}.length()==14?$F{pedido.cliente.cpfOrCnpj}.replaceAll("^(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})$", "$1.$2.$3/$4-$5"):$F{pedido.cliente.cpfOrCnpj}.replaceAll("^(\\d{3})(\\d{3})(\\d{3})(\\d{2})$", "$1.$2.$3-$4")]]></bucketExpression>
+						<bucketExpression><![CDATA[$F{pedido.cliente.cpf}.length()==14?$F{pedido.cliente.cpf}.replaceAll("^(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})$", "$1.$2.$3/$4-$5"):$F{pedido.cliente.cpf}.replaceAll("^(\\d{3})(\\d{3})(\\d{3})(\\d{2})$", "$1.$2.$3-$4")]]></bucketExpression>
 					</bucket>
 					<crosstabRowHeader>
 						<cellContents backcolor="#FFFFFF" mode="Opaque">
@@ -135,7 +152,15 @@ inner join cidade ec on ec.Id_cidade=e.id_cidade) p where "produto.id" = $P{prod
 								<rightPen lineWidth="2.0" lineStyle="Solid"/>
 							</box>
 							<textField isBlankWhenNull="true">
-								<reportElement x="3" y="5" width="82" height="15" uuid="1e587ca1-dd74-4d18-9dc6-9482b3f3f121"/>
+								<reportElement x="3" y="5" width="95" height="15" uuid="1e587ca1-dd74-4d18-9dc6-9482b3f3f121">
+									<printWhenExpression><![CDATA[$V{clienteCpfOrCnpj}.length()==14]]></printWhenExpression>
+								</reportElement>
+								<textFieldExpression><![CDATA[$V{clienteCpfOrCnpj}]]></textFieldExpression>
+							</textField>
+							<textField isBlankWhenNull="true">
+								<reportElement style="SansSerif_Bold" x="3" y="5" width="95" height="15" forecolor="#FF0000" uuid="1755c4a7-ec44-44aa-9398-a5e38b20e873">
+									<printWhenExpression><![CDATA[$V{clienteCpfOrCnpj}.length()==18]]></printWhenExpression>
+								</reportElement>
 								<textFieldExpression><![CDATA[$V{clienteCpfOrCnpj}]]></textFieldExpression>
 							</textField>
 						</cellContents>
@@ -147,7 +172,7 @@ inner join cidade ec on ec.Id_cidade=e.id_cidade) p where "produto.id" = $P{prod
 								<rightPen lineWidth="2.0" lineStyle="Solid"/>
 							</box>
 							<staticText>
-								<reportElement x="3" y="5" width="82" height="15" uuid="0836bae1-129f-4c3a-9ed9-a39bed3ec25c"/>
+								<reportElement x="3" y="5" width="95" height="15" uuid="0836bae1-129f-4c3a-9ed9-a39bed3ec25c"/>
 								<text><![CDATA[Total (R$)]]></text>
 							</staticText>
 						</cellContents>

@@ -4,6 +4,7 @@
 package br.com.cams7.casa_das_quentinhas.service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import br.com.cams7.app.AppNotFoundException;
 import br.com.cams7.app.service.AbstractService;
 import br.com.cams7.casa_das_quentinhas.dao.ProdutoDAO;
 import br.com.cams7.casa_das_quentinhas.entity.Manutencao;
+import br.com.cams7.casa_das_quentinhas.entity.PedidoItem;
 import br.com.cams7.casa_das_quentinhas.entity.Produto;
 import br.com.cams7.casa_das_quentinhas.entity.Usuario;
 
@@ -117,6 +119,12 @@ public class ProdutoServiceImpl extends AbstractService<Integer, Produto, Produt
 	@Override
 	public Map<Integer, String> getProdutosByNomeOrCusto(String nomeOrCusto) {
 		return getDao().getProdutosByNomeOrCusto(nomeOrCusto);
+	}
+
+	@Transactional(readOnly = true)
+	@Override
+	public List<PedidoItem> getItensIdByProdutoId(Integer produtoId) {
+		return getDao().getItensIdByProdutoId(produtoId);
 	}
 
 }

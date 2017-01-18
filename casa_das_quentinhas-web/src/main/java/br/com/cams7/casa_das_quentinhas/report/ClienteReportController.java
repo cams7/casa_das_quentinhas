@@ -3,12 +3,16 @@
  */
 package br.com.cams7.casa_das_quentinhas.report;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import br.com.cams7.app.controller.AbstractReportController;
 import br.com.cams7.casa_das_quentinhas.entity.Cidade;
 import br.com.cams7.casa_das_quentinhas.entity.Cliente;
+import br.com.cams7.casa_das_quentinhas.entity.Pedido;
 import br.com.cams7.casa_das_quentinhas.service.ClienteService;
 
 /**
@@ -35,6 +39,15 @@ public class ClienteReportController extends AbstractReportController<Integer, C
 	@Override
 	protected Class<?>[] getIgnoredJoins() {
 		return new Class<?>[] { Cidade.class };
+	}
+
+	@Override
+	protected List<Cliente> getEntities(List<Cliente> clientes) {
+		return clientes.stream().map(cliente -> {
+			List<Pedido> pedidos = getService().getPedidosIdByClienteId(cliente.getId());
+			cliente.setPedidos(pedidos);
+			return cliente;
+		}).collect(Collectors.toList());
 	}
 
 }

@@ -3,9 +3,11 @@
  */
 package br.com.cams7.casa_das_quentinhas.dao;
 
+import java.util.List;
 import java.util.Map;
 
 import br.com.cams7.app.dao.BaseDAO;
+import br.com.cams7.casa_das_quentinhas.entity.PedidoItem;
 import br.com.cams7.casa_das_quentinhas.entity.Produto;
 
 /**
@@ -41,5 +43,12 @@ public interface ProdutoDAO extends BaseDAO<Integer, Produto> {
 	 * @return Produtos
 	 */
 	Map<Integer, String> getProdutosByNomeOrCusto(String nomeOrCusto);
+
+	/**
+	 * @param produtoId
+	 *            ID do produto
+	 * @return Itens de pedido
+	 */
+	List<PedidoItem> getItensIdByProdutoId(Integer produtoId);
 
 }
