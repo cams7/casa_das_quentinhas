@@ -5,22 +5,28 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
 						http://www.springframework.org/schema/util 	http://www.springframework.org/schema/util/spring-util-4.2.xsd">
 
-	<bean id="funcionarioPdfView"
-		class="org.springframework.web.servlet.view.jasperreports.JasperReportsPdfView"
-		p:url="classpath:META-INF/report/funcionarios.jrxml" p:reportDataKey="datasource" />
-
 	<bean id="pedidoPdfView"
 		class="org.springframework.web.servlet.view.jasperreports.JasperReportsPdfView"
-		p:url="classpath:META-INF/report/pedidos.jrxml"
+		p:url="classpath:META-INF/report/pedidos_report.jrxml"
 		p:reportDataKey="datasource" />
 
 	<bean id="produtoPdfView"
 		class="org.springframework.web.servlet.view.jasperreports.JasperReportsPdfView"
-		p:url="classpath:META-INF/report/produtos.jrxml"
+		p:url="classpath:META-INF/report/produtos_report.jrxml"
 		p:reportDataKey="datasource" />
-		
+
 	<bean id="clientePdfView"
 		class="org.springframework.web.servlet.view.jasperreports.JasperReportsPdfView"
-		p:url="classpath:META-INF/report/clientes.jrxml"
+		p:url="classpath:META-INF/report/clientes_report.jrxml"
+		p:reportDataKey="datasource" />
+
+	<bean id="empresaPdfView"
+		class="org.springframework.web.servlet.view.jasperreports.JasperReportsPdfView"
+		p:url="classpath:META-INF/report/empresas_report.jrxml"
+		p:reportDataKey="datasource" />
+
+	<bean id="funcionarioPdfView"
+		class="org.springframework.web.servlet.view.jasperreports.JasperReportsPdfView"
+		p:url="classpath:META-INF/report/funcionarios_report.jrxml"
 		p:reportDataKey="datasource" />
 </beans>

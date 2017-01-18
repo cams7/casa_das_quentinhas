@@ -33,14 +33,16 @@ import br.com.cams7.casa_das_quentinhas.entity.Cidade;
 import br.com.cams7.casa_das_quentinhas.entity.Cidade_;
 import br.com.cams7.casa_das_quentinhas.entity.Contato_;
 import br.com.cams7.casa_das_quentinhas.entity.Empresa;
-import br.com.cams7.casa_das_quentinhas.entity.Empresa_;
-import br.com.cams7.casa_das_quentinhas.entity.Estado;
-import br.com.cams7.casa_das_quentinhas.entity.Manutencao_;
-import br.com.cams7.casa_das_quentinhas.entity.Usuario;
-import br.com.cams7.casa_das_quentinhas.entity.Usuario_;
 import br.com.cams7.casa_das_quentinhas.entity.Empresa.RelacionamentoEmpresa;
 import br.com.cams7.casa_das_quentinhas.entity.Empresa.Tipo;
+import br.com.cams7.casa_das_quentinhas.entity.Empresa_;
+import br.com.cams7.casa_das_quentinhas.entity.Estado;
+import br.com.cams7.casa_das_quentinhas.entity.Funcionario;
+import br.com.cams7.casa_das_quentinhas.entity.Manutencao_;
+import br.com.cams7.casa_das_quentinhas.entity.Pedido;
+import br.com.cams7.casa_das_quentinhas.entity.Usuario;
 import br.com.cams7.casa_das_quentinhas.entity.Usuario.RelacionamentoUsuario;
+import br.com.cams7.casa_das_quentinhas.entity.Usuario_;
 
 /**
  * @author César Magalhães
@@ -61,11 +63,20 @@ public class EmpresaDAOImpl extends AbstractDAO<Integer, Empresa> implements Emp
 	protected List<From<?, ?>> getFetchJoins(Root<Empresa> from) {
 		List<From<?, ?>> fetchJoins = new ArrayList<>();
 
-		Join<Empresa, Cidade> joinCidade = (Join<Empresa, Cidade>) from.fetch(Empresa_.cidade, JoinType.INNER);
-		Join<Cidade, Estado> joinEstado = (Join<Cidade, Estado>) joinCidade.fetch(Cidade_.estado, JoinType.INNER);
+		final boolean IS_NULL = getIgnoredJoins() == null;
 
-		fetchJoins.add(joinCidade);
-		fetchJoins.add(joinEstado);
+		boolean noneMatch = IS_NULL || getIgnoredJoins().stream().noneMatch(type -> type.equals(Cidade.class));
+		if (noneMatch) {
+			Join<Empresa, Cidade> joinCidade = (Join<Empresa, Cidade>) from.fetch(Empresa_.cidade, JoinType.INNER);
+			fetchJoins.add(joinCidade);
+
+			noneMatch = IS_NULL || getIgnoredJoins().stream().noneMatch(type -> type.equals(Estado.class));
+			if (noneMatch) {
+				Join<Cidade, Estado> joinEstado = (Join<Cidade, Estado>) joinCidade.fetch(Cidade_.estado,
+						JoinType.INNER);
+				fetchJoins.add(joinEstado);
+			}
+		}
 
 		return fetchJoins;
 	}
@@ -81,11 +92,20 @@ public class EmpresaDAOImpl extends AbstractDAO<Integer, Empresa> implements Emp
 	protected List<From<?, ?>> getJoins(Root<Empresa> from) {
 		List<From<?, ?>> fetchJoins = new ArrayList<>();
 
-		Join<Empresa, Cidade> joinCidade = (Join<Empresa, Cidade>) from.join(Empresa_.cidade, JoinType.INNER);
-		Join<Cidade, Estado> joinEstado = (Join<Cidade, Estado>) joinCidade.join(Cidade_.estado, JoinType.INNER);
+		final boolean IS_NULL = getIgnoredJoins() == null;
 
-		fetchJoins.add(joinCidade);
-		fetchJoins.add(joinEstado);
+		boolean noneMatch = IS_NULL || getIgnoredJoins().stream().noneMatch(type -> type.equals(Cidade.class));
+		if (noneMatch) {
+			Join<Empresa, Cidade> joinCidade = (Join<Empresa, Cidade>) from.join(Empresa_.cidade, JoinType.INNER);
+			fetchJoins.add(joinCidade);
+
+			noneMatch = IS_NULL || getIgnoredJoins().stream().noneMatch(type -> type.equals(Estado.class));
+			if (noneMatch) {
+				Join<Cidade, Estado> joinEstado = (Join<Cidade, Estado>) joinCidade.join(Cidade_.estado,
+						JoinType.INNER);
+				fetchJoins.add(joinEstado);
+			}
+		}
 
 		return fetchJoins;
 	}
@@ -364,6 +384,49 @@ public class EmpresaDAOImpl extends AbstractDAO<Integer, Empresa> implements Emp
 	 */
 	private SingularAttribute<Empresa, Usuario> getAtributte(RelacionamentoUsuario relacionamento) {
 		return ACESSO.equals(relacionamento) ? Empresa_.usuarioAcesso : Empresa_.usuarioCadastro;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.casa_das_quentinhas.dao.EmpresaDAO#getPedidosIdByEmpresaId(
+	 * java.lang.Integer)
+	 */
+	@Override
+	public List<Pedido> getPedidosIdByEmpresaId(Integer empresaId) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Pedido> cq = cb.createQuery(Pedido.class);
+
+		Root<Empresa> from = cq.from(ENTITY_TYPE);
+		cq.select(from.join(Empresa_.pedidos, JoinType.INNER));
+		cq.where(cb.equal(from.get(Empresa_.id), empresaId));
+
+		TypedQuery<Pedido> tq = getEntityManager().createQuery(cq);
+
+		List<Pedido> pedidos = tq.getResultList();
+		return pedidos;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.casa_das_quentinhas.dao.EmpresaDAO#
+	 * getFuncionariosIdByEmpresaId(java.lang.Integer)
+	 */
+	@Override
+	public List<Funcionario> getFuncionariosIdByEmpresaId(Integer empresaId) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Funcionario> cq = cb.createQuery(Funcionario.class);
+
+		Root<Empresa> from = cq.from(ENTITY_TYPE);
+		cq.select(from.join(Empresa_.funcionarios, JoinType.INNER));
+		cq.where(cb.equal(from.get(Empresa_.id), empresaId));
+
+		TypedQuery<Funcionario> tq = getEntityManager().createQuery(cq);
+
+		List<Funcionario> funcionarios = tq.getResultList();
+		return funcionarios;
 	}
 
 }

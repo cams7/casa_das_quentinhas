@@ -25,8 +25,4 @@ bin/
 *.ear
 
 #JasperReports
-pedidos.jasper
-produtos.jasper
-clientes.jasper
-empresas.jasper
-funcionarios.jasper
+*_report.jasper

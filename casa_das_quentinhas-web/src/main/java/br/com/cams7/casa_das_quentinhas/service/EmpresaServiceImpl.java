@@ -8,6 +8,7 @@ import static br.com.cams7.casa_das_quentinhas.entity.Usuario.RelacionamentoUsua
 import static br.com.cams7.casa_das_quentinhas.entity.Usuario.Tipo.EMPRESA;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +21,11 @@ import br.com.cams7.app.service.AbstractService;
 import br.com.cams7.casa_das_quentinhas.dao.EmpresaDAO;
 import br.com.cams7.casa_das_quentinhas.entity.Empresa;
 import br.com.cams7.casa_das_quentinhas.entity.Manutencao;
+import br.com.cams7.casa_das_quentinhas.entity.Pedido;
 import br.com.cams7.casa_das_quentinhas.entity.Usuario;
 import br.com.cams7.casa_das_quentinhas.entity.Empresa.RelacionamentoEmpresa;
 import br.com.cams7.casa_das_quentinhas.entity.Empresa.Tipo;
+import br.com.cams7.casa_das_quentinhas.entity.Funcionario;
 import br.com.cams7.casa_das_quentinhas.entity.Usuario.RelacionamentoUsuario;
 
 /**
@@ -231,6 +234,31 @@ public class EmpresaServiceImpl extends AbstractService<Integer, Empresa, Empres
 	@Override
 	public Map<Integer, String> getEmpresasByRazaoSocialOrCnpj(String razaoSocialOrCnpj, Tipo tipo) {
 		return getDao().getEmpresasByRazaoSocialOrCnpj(razaoSocialOrCnpj, tipo);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.casa_das_quentinhas.dao.EmpresaDAO#getPedidosIdByEmpresaId(
+	 * java.lang.Integer)
+	 */
+	@Transactional(readOnly = true)
+	@Override
+	public List<Pedido> getPedidosIdByEmpresaId(Integer empresaId) {
+		return getDao().getPedidosIdByEmpresaId(empresaId);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.casa_das_quentinhas.dao.EmpresaDAO#
+	 * getFuncionariosIdByEmpresaId(java.lang.Integer)
+	 */
+	@Transactional(readOnly = true)
+	@Override
+	public List<Funcionario> getFuncionariosIdByEmpresaId(Integer empresaId) {
+		return getDao().getFuncionariosIdByEmpresaId(empresaId);
 	}
 
 	/*

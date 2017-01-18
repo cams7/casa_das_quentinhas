@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2017-01-18T12:36:25 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="clientes" language="groovy" pageWidth="595" pageHeight="842" columnWidth="515" leftMargin="40" rightMargin="40" topMargin="50" bottomMargin="50" uuid="db7d3266-f459-4479-b2a0-ecc23d8d8817">
 	<property name="ireport.zoom" value="2.0"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="102"/>
 	<property name="ireport.y" value="0"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Casas das Quentinhas"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
@@ -65,7 +63,7 @@ ORDER BY nome asc]]>
 			</rectangle>
 			<staticText>
 				<reportElement style="SansSerif_Bold" mode="Opaque" x="0" y="4" width="515" height="16" forecolor="#FFFFFF" backcolor="#333333" uuid="b63e1820-7092-4f7d-b2dc-efd5d7b67e22"/>
-				<text><![CDATA[Clientes]]></text>
+				<text><![CDATA[Cliente]]></text>
 			</staticText>
 			<line>
 				<reportElement x="0" y="20" width="515" height="1" uuid="2e8bc444-41a6-4d7f-8390-de471d9cef99"/>
@@ -75,7 +73,9 @@ ORDER BY nome asc]]>
 	<detail>
 		<band height="50" splitType="Stretch">
 			<textField>
-				<reportElement style="SansSerif_Bold" x="5" y="5" width="100" height="16" uuid="82fb2ce8-f401-4971-b857-2be041f26454"/>
+				<reportElement style="SansSerif_Bold" x="5" y="5" width="350" height="16" uuid="82fb2ce8-f401-4971-b857-2be041f26454">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
 				<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
 			</textField>
 			<line>
@@ -87,7 +87,7 @@ ORDER BY nome asc]]>
 					<subreportParameterExpression><![CDATA[$F{id}]]></subreportParameterExpression>
 				</subreportParameter>
 				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{pedidos})]]></dataSourceExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "cliente_pedidos.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "pedidos_subreport.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</detail>

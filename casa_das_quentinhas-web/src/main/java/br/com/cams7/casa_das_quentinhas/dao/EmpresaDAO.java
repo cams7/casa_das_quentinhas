@@ -3,12 +3,15 @@
  */
 package br.com.cams7.casa_das_quentinhas.dao;
 
+import java.util.List;
 import java.util.Map;
 
 import br.com.cams7.app.dao.BaseDAO;
 import br.com.cams7.casa_das_quentinhas.entity.Empresa;
 import br.com.cams7.casa_das_quentinhas.entity.Empresa.RelacionamentoEmpresa;
 import br.com.cams7.casa_das_quentinhas.entity.Empresa.Tipo;
+import br.com.cams7.casa_das_quentinhas.entity.Funcionario;
+import br.com.cams7.casa_das_quentinhas.entity.Pedido;
 import br.com.cams7.casa_das_quentinhas.entity.Usuario.RelacionamentoUsuario;
 
 /**
@@ -91,4 +94,19 @@ public interface EmpresaDAO extends BaseDAO<Integer, Empresa> {
 	 * @return Empresas
 	 */
 	Map<Integer, String> getEmpresasByRazaoSocialOrCnpj(String nomeOrCnpj, Tipo tipo);
+
+	/**
+	 * @param empresaId
+	 *            ID da empresa
+	 * @return Pedidos
+	 */
+	List<Pedido> getPedidosIdByEmpresaId(Integer empresaId);
+
+	/**
+	 * @param empresaId
+	 *            ID da empresa
+	 * @return Funcionários
+	 */
+	List<Funcionario> getFuncionariosIdByEmpresaId(Integer empresaId);
+
 }
