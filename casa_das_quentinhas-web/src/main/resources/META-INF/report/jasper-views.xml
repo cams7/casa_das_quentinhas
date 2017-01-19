@@ -29,7 +29,7 @@
 		class="org.springframework.web.servlet.view.jasperreports.JasperReportsPdfView"
 		p:url="classpath:META-INF/report/funcionarios_report.jrxml"
 		p:reportDataKey="datasource" />
-		
+
 	<bean id="entregadorPdfView"
 		class="org.springframework.web.servlet.view.jasperreports.JasperReportsPdfView"
 		p:url="classpath:META-INF/report/entregadores_report.jrxml"

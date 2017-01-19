@@ -137,6 +137,14 @@
 					</exclusion>
 				</exclusions>
 			</dependency>
+
+			<!-- Teste -->
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.12</version>
+				<scope>test</scope>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -205,6 +213,12 @@
 						</archive>
 					</configuration>
 				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.19.1</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 
@@ -236,4 +250,82 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<!-- mvn clean test -->
+		<profile>
+			<id>selenium-phantomjs-linux</id>
+			<activation>
+				<os>
+					<family>Linux</family>
+				</os>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<systemPropertyVariables>
+								<phantomjs.binary.path>phantomjs</phantomjs.binary.path>
+							</systemPropertyVariables>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<!-- mvn clean test -Dphantomjs -->
+		<profile>
+			<id>selenium-phantomjs-windows</id>
+			<activation>
+				<os>
+					<family>Windows</family>
+				</os>
+				<property>
+					<name>phantomjs</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<systemPropertyVariables>
+								<phantomjs.binary.path>phantomjs.exe</phantomjs.binary.path>
+							</systemPropertyVariables>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<!-- The following profile will be activated when the system property "phantomjs" 
+			is not defined at all -->
+		<!-- mvn clean test -->
+		<profile>
+			<id>selenium-chrome-windows</id>
+			<activation>
+				<os>
+					<family>Windows</family>
+				</os>
+				<property>
+					<name>!phantomjs</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<systemPropertyVariables>
+								<webdriver.chrome.driver>chromedriver.exe</webdriver.chrome.driver>
+							</systemPropertyVariables>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
