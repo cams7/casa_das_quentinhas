@@ -3,6 +3,8 @@
 
 #Linux files
 *~
+hs_err_pid*.log
+replay_pid*.log
 
 #Windows file
 Thumbs.db

@@ -11,6 +11,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterClass;
 //import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeClass;
@@ -26,9 +28,30 @@ public abstract class AbstractTest implements BaseTest {
 
 	private boolean sleepEnabled = false;
 
-	@BeforeClass(alwaysRun = true)
+	protected final Logger LOGGER;
+
+	/**
+	 * 
+	 */
+	public AbstractTest() {
+		super();
+		LOGGER = LoggerFactory.getLogger(this.getClass());
+	}
+
+	// @BeforeSuite(alwaysRun = true)
+	// public void begin() {
+	// LOGGER.info("@BeforeSuite");
+	// }
+	//
 	// @AfterSuite(alwaysRun = true)
+	// public void end() {
+	// LOGGER.info("@AfterSuite");
+	// }
+
+	@BeforeClass(alwaysRun = true)
 	public void setUp() {
+		// LOGGER.info("@BeforeClass");
+
 		setDriverAndUrl();
 
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
@@ -37,8 +60,8 @@ public abstract class AbstractTest implements BaseTest {
 	}
 
 	@AfterClass(alwaysRun = true)
-	// @BeforeSuite(alwaysRun = true)
 	public void tearDown() {
+		// LOGGER.info("@AfterClass");
 		logout();
 
 		driver.quit();
@@ -120,16 +143,17 @@ public abstract class AbstractTest implements BaseTest {
 	 * Exibe o pop-pop de exclusão
 	 */
 	protected void showDeleteModal() {
-//		driver.findElement(By.xpath("//button[@value='1']")).click();
-//		sleep();
+		// driver.findElement(By.xpath("//button[@value='1']")).click();
+		// sleep();
 	}
 
 	/**
 	 * Fecha o pop-up
 	 */
 	protected void closeDeleteModal() {
-//		driver.findElement(By.cssSelector("div.modal-footer > button.btn.btn-default")).click();
-//		sleep();
+		// driver.findElement(By.cssSelector("div.modal-footer >
+		// button.btn.btn-default")).click();
+		// sleep();
 	}
 
 	protected void sleep() {
@@ -151,8 +175,11 @@ public abstract class AbstractTest implements BaseTest {
 		if (System.getProperty("webdriver.chrome.driver") != null) {
 			driver = new ChromeDriver();
 			sleepEnabled = true;
-		} else
+			LOGGER.info("You are testing in Chrome");
+		} else {
 			driver = new PhantomJSDriver();
+			LOGGER.info("You are testing in PhantomJS");
+		}
 
 		baseUrl = System.getProperty("base.url");
 	}
