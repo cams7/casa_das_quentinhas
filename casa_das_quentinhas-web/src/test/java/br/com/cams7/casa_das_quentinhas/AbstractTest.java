@@ -14,8 +14,10 @@ import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterSuite;
 //import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeSuite;
 //import org.testng.annotations.BeforeSuite;
 
 public abstract class AbstractTest implements BaseTest {
@@ -23,10 +25,10 @@ public abstract class AbstractTest implements BaseTest {
 	// private boolean acceptNextAlert = true;
 	// private StringBuffer verificationErrors = new StringBuffer();
 
-	private WebDriver driver;
-	private String baseUrl;
+	private static WebDriver driver;
+	private static String baseUrl;
 
-	private boolean sleepEnabled = false;
+	private static boolean sleepEnabled = false;
 
 	protected final Logger LOGGER;
 
@@ -38,33 +40,34 @@ public abstract class AbstractTest implements BaseTest {
 		LOGGER = LoggerFactory.getLogger(this.getClass());
 	}
 
-	// @BeforeSuite(alwaysRun = true)
-	// public void begin() {
-	// LOGGER.info("@BeforeSuite");
-	// }
-	//
-	// @AfterSuite(alwaysRun = true)
-	// public void end() {
-	// LOGGER.info("@AfterSuite");
-	// }
-
-	@BeforeClass(alwaysRun = true)
-	public void setUp() {
-		// LOGGER.info("@BeforeClass");
+	@BeforeSuite
+	public void setUp() throws Exception {
+		LOGGER.info("@BeforeSuite");
 
 		setDriverAndUrl();
-
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 
 		login();
 	}
 
-	@AfterClass(alwaysRun = true)
-	public void tearDown() {
-		// LOGGER.info("@AfterClass");
+	@AfterSuite
+	public void tearDown() throws Exception {
+		LOGGER.info("@AfterSuite");
+
 		logout();
 
 		driver.quit();
+	}
+
+	@BeforeClass(alwaysRun = true)
+	public void begin() {
+		LOGGER.info("@BeforeClass");
+
+	}
+
+	@AfterClass(alwaysRun = true)
+	public void end() {
+		LOGGER.info("@AfterClass");
 		// String verificationErrorString = verificationErrors.toString();
 		// if (!"".equals(verificationErrorString)) {
 		// fail(verificationErrorString);
@@ -72,6 +75,19 @@ public abstract class AbstractTest implements BaseTest {
 	}
 
 	protected void paginate() {
+		// short maxResults =
+		// Short.valueOf(driver.findElement(By.id("dataTable_maxResults")).getAttribute("value"));
+		// long count =
+		// Long.valueOf(driver.findElement(By.id("dataTable_count")).getAttribute("value"));
+		//
+		// int totalPages = (int) (count / maxResults);
+		// if (count % maxResults > 0)
+		// totalPages++;
+		//
+		// for (int i = 2; i <= totalPages; i++) {
+		// driver.findElement(By.linkText(String.valueOf(i))).click();
+		// sleep();
+		// }
 		driver.findElement(By.linkText("2")).click();
 		sleep();
 	}
@@ -111,7 +127,8 @@ public abstract class AbstractTest implements BaseTest {
 	 * Vai para a página de visualização dos dados
 	 */
 	protected void goToViewPage() {
-		driver.findElement(By.linkText("Visualizar")).click();
+		// driver.findElement(By.linkText("Visualizar")).click();
+		driver.findElement(By.cssSelector("a.btn.btn-success.btn-xs")).click();
 		sleep();
 	}
 
@@ -119,7 +136,8 @@ public abstract class AbstractTest implements BaseTest {
 	 * Vai para a página anterior
 	 */
 	protected void cancelViewPage() {
-		driver.findElement(By.linkText("Cancelar")).click();
+		// driver.findElement(By.linkText("Cancelar")).click();
+		driver.findElement(By.cssSelector("a.btn.btn-default")).click();
 		sleep();
 	}
 
@@ -127,7 +145,8 @@ public abstract class AbstractTest implements BaseTest {
 	 * Vai para a página de edição dos dados
 	 */
 	protected void goToEditPage() {
-		driver.findElement(By.linkText("Alterar")).click();
+		// driver.findElement(By.linkText("Alterar")).click();
+		driver.findElement(By.cssSelector("a.btn.btn-warning.btn-xs")).click();
 		sleep();
 	}
 
@@ -144,6 +163,7 @@ public abstract class AbstractTest implements BaseTest {
 	 */
 	protected void showDeleteModal() {
 		// driver.findElement(By.xpath("//button[@value='1']")).click();
+		// driver.findElement(By.cssSelector("button.btn.btn-danger.btn-xs.delete")).click();
 		// sleep();
 	}
 
@@ -165,8 +185,12 @@ public abstract class AbstractTest implements BaseTest {
 			}
 	}
 
-	protected final WebDriver getDriver() {
+	protected static WebDriver getDriver() {
 		return driver;
+	}
+
+	protected static String getBaseUrl() {
+		return baseUrl;
 	}
 
 	protected abstract void goToIndexPage();
@@ -190,7 +214,7 @@ public abstract class AbstractTest implements BaseTest {
 		driver.findElement(By.id("email")).sendKeys("gerente@casa-das-quentinhas.com");
 		driver.findElement(By.id("senha")).clear();
 		driver.findElement(By.id("senha")).sendKeys("12345");
-		// driver.findElement(By.id("lembre_me")).click();
+		driver.findElement(By.id("lembre_me")).click();
 		driver.findElement(By.xpath("//input[@value='Entrar']")).click();
 	}
 
