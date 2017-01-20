@@ -139,12 +139,8 @@
 			</dependency>
 
 			<!-- Teste -->
-			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<version>4.12</version>
-				<scope>test</scope>
-			</dependency>
+			<!--dependency> <groupId>junit</groupId> <artifactId>junit</artifactId> 
+				<version>4.12</version> <scope>test</scope> </dependency -->
 		</dependencies>
 	</dependencyManagement>
 
@@ -252,13 +248,15 @@
 	</build>
 
 	<profiles>
-		<!-- mvn clean test -->
 		<profile>
 			<id>selenium-phantomjs-linux</id>
 			<activation>
 				<os>
 					<family>Linux</family>
 				</os>
+				<property>
+					<name>!heroku</name>
+				</property>
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<build>
@@ -269,13 +267,38 @@
 						<configuration>
 							<systemPropertyVariables>
 								<phantomjs.binary.path>phantomjs</phantomjs.binary.path>
+								<base.url>http://localhost:8080</base.url>
 							</systemPropertyVariables>
 						</configuration>
 					</plugin>
 				</plugins>
 			</build>
 		</profile>
-		<!-- mvn clean test -Dphantomjs -->
+		<profile>
+			<id>selenium-phantomjs-heroku</id>
+			<activation>
+				<os>
+					<family>Linux</family>
+				</os>
+				<property>
+					<name>heroku</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<systemPropertyVariables>
+								<phantomjs.binary.path>phantomjs</phantomjs.binary.path>
+								<base.url>http://casa-das-quentinhas.herokuapp.com</base.url>
+							</systemPropertyVariables>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 		<profile>
 			<id>selenium-phantomjs-windows</id>
 			<activation>
@@ -294,15 +317,13 @@
 						<configuration>
 							<systemPropertyVariables>
 								<phantomjs.binary.path>phantomjs.exe</phantomjs.binary.path>
+								<base.url>http://localhost:8090</base.url>
 							</systemPropertyVariables>
 						</configuration>
 					</plugin>
 				</plugins>
 			</build>
 		</profile>
-		<!-- The following profile will be activated when the system property "phantomjs" 
-			is not defined at all -->
-		<!-- mvn clean test -->
 		<profile>
 			<id>selenium-chrome-windows</id>
 			<activation>
@@ -321,6 +342,7 @@
 						<configuration>
 							<systemPropertyVariables>
 								<webdriver.chrome.driver>chromedriver.exe</webdriver.chrome.driver>
+								<base.url>http://localhost:8090</base.url>
 							</systemPropertyVariables>
 						</configuration>
 					</plugin>
