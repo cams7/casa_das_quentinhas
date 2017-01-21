@@ -94,10 +94,8 @@ public abstract class AbstractTest implements BaseTest {
 	}
 
 	protected void search(String query) {
-		// driver.findElement(By.id("search_query")).clear();
-		// driver.findElement(By.id("search_query")).sendKeys(query);
-		// driver.findElement(By.id("search_btn")).click();
-		// sleep();
+		getJS().executeScript("$('input#search_query').val('" + query + "');$('button#search_btn').click();");
+		sleep();
 	}
 
 	/**

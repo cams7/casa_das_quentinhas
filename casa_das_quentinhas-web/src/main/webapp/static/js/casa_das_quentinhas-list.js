@@ -83,7 +83,7 @@ function loadTable(removedRow = false, offset = null, sortField = null, sortOrde
 $('button#search_btn').click(event => {
 	event.preventDefault();
 	
-	query = $('#search_query').val();
+	query = $('input#search_query').val();
 	loadTable(false, 0, null, null, query);
 });
 
