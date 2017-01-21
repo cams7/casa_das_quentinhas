@@ -75,20 +75,21 @@ public abstract class AbstractTest implements BaseTest {
 	}
 
 	protected void paginate() {
-		// short maxResults =
-		// Short.valueOf(driver.findElement(By.id("dataTable_maxResults")).getAttribute("value"));
-		// long count =
-		// Long.valueOf(driver.findElement(By.id("dataTable_count")).getAttribute("value"));
-		//
-		// int totalPages = (int) (count / maxResults);
-		// if (count % maxResults > 0)
-		// totalPages++;
-		//
-		// for (int i = 2; i <= totalPages; i++) {
-		// driver.findElement(By.linkText(String.valueOf(i))).click();
-		// sleep();
-		// }
-		driver.findElement(By.linkText("2")).click();
+		short maxResults = Short
+				.valueOf((String) getJS().executeScript("return $('input#dataTable_maxResults').val();"));
+		long count = Long.valueOf((String) getJS().executeScript("return $('input#dataTable_count').val();"));
+
+		int totalPages = (int) (count / maxResults);
+		if (count % maxResults > 0)
+			totalPages++;
+
+		LOGGER.info("maxResults: {}, count: {}, total pages: {}", maxResults, count, totalPages);
+
+		for (int i = 2; i <= totalPages; i++) {
+			getJS().executeScript("$('ul.pagination li a').eq( " + i + " ).click();");
+			sleep();
+		}
+
 		sleep();
 	}
 

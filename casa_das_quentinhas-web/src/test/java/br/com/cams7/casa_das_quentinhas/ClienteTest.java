@@ -79,7 +79,7 @@ public class ClienteTest extends AbstractTest {
 		getDriver().findElement(By.name("contato.telefone")).sendKeys(ContatoMock.getTelefone());
 		getDriver().findElement(By.name("cidade.nome")).clear();
 		getDriver().findElement(By.name("cidade.nome")).sendKeys(cidade.getNome());
-		getJS().executeScript("document.getElementById('cidade_id').value='" + cidade.getId() + "';");
+		getJS().executeScript("$('input#cidade_id').val(" + cidade.getId() + ");");
 		getDriver().findElement(By.name("endereco.cep")).clear();
 		getDriver().findElement(By.name("endereco.cep")).sendKeys(EnderecoMock.getCep(cidade.getId()));
 		getDriver().findElement(By.name("endereco.bairro")).clear();
