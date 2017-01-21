@@ -16,10 +16,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterSuite;
-//import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeSuite;
-//import org.testng.annotations.BeforeSuite;
 
 public abstract class AbstractTest implements BaseTest {
 
@@ -83,12 +81,12 @@ public abstract class AbstractTest implements BaseTest {
 		if (count % maxResults > 0)
 			totalPages++;
 
-		LOGGER.info("maxResults: {}, count: {}, total pages: {}", maxResults, count, totalPages);
-
 		for (int i = 2; i <= totalPages; i++) {
 			getJS().executeScript("$('ul.pagination li a').eq( " + i + " ).click();");
 			sleep();
 		}
+
+		LOGGER.info("maxResults: {}, count: {}, pages: {}", maxResults, count, totalPages);
 
 		sleep();
 	}
@@ -126,7 +124,6 @@ public abstract class AbstractTest implements BaseTest {
 	 * Vai para a página de visualização dos dados
 	 */
 	protected void goToViewPage() {
-		// driver.findElement(By.linkText("Visualizar")).click();
 		driver.findElement(By.cssSelector("a.btn.btn-success.btn-xs")).click();
 		sleep();
 	}
@@ -135,7 +132,6 @@ public abstract class AbstractTest implements BaseTest {
 	 * Vai para a página anterior
 	 */
 	protected void cancelViewPage() {
-		// driver.findElement(By.linkText("Cancelar")).click();
 		driver.findElement(By.cssSelector("a.btn.btn-default")).click();
 		sleep();
 	}
@@ -144,7 +140,6 @@ public abstract class AbstractTest implements BaseTest {
 	 * Vai para a página de edição dos dados
 	 */
 	protected void goToEditPage() {
-		// driver.findElement(By.linkText("Alterar")).click();
 		driver.findElement(By.cssSelector("a.btn.btn-warning.btn-xs")).click();
 		sleep();
 	}
@@ -161,18 +156,16 @@ public abstract class AbstractTest implements BaseTest {
 	 * Exibe o pop-pop de exclusão
 	 */
 	protected void showDeleteModal() {
-		// driver.findElement(By.xpath("//button[@value='1']")).click();
-		// driver.findElement(By.cssSelector("button.btn.btn-danger.btn-xs.delete")).click();
-		// sleep();
+		driver.findElement(By.cssSelector("button.btn.btn-danger.btn-xs.delete")).click();
+		sleep();
 	}
 
 	/**
 	 * Fecha o pop-up
 	 */
 	protected void closeDeleteModal() {
-		// driver.findElement(By.cssSelector("div.modal-footer >
-		// button.btn.btn-default")).click();
-		// sleep();
+		getJS().executeScript("$('div.modal-footer button.btn.btn-default').click();");
+		sleep();
 	}
 
 	protected void sleep() {
