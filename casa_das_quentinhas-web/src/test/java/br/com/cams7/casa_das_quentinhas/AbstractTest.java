@@ -19,6 +19,8 @@ import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeSuite;
 
+import br.com.cams7.casa_das_quentinhas.mock.UsuarioMock;
+
 public abstract class AbstractTest implements BaseTest {
 
 	// private boolean acceptNextAlert = true;
@@ -44,9 +46,11 @@ public abstract class AbstractTest implements BaseTest {
 		LOGGER.info("@BeforeSuite");
 
 		setDriverAndUrl();
-		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
-		login("gerente@casa-das-quentinhas.com", "12345");
+		final String EMAIL_ACESSO = UsuarioMock.getQualquerEmailAcesso();
+		LOGGER.info("E-mail de acesso: {}", EMAIL_ACESSO);
+		login(EMAIL_ACESSO, UsuarioMock.getSenhaAcesso());
 	}
 
 	@AfterSuite
@@ -97,10 +101,22 @@ public abstract class AbstractTest implements BaseTest {
 	}
 
 	/**
+	 * Vai para página de listagem
+	 * 
+	 * @param mainPage
+	 */
+	protected void goToIndexPage(String mainPage) {
+		// getDriver().findElement(By.linkText("Cliente(s)")).click();
+		getDriver().get(baseUrl + "/" + mainPage);
+		sleep();
+	}
+
+	/**
 	 * Vai para página de cadastro
 	 */
-	protected void goToCreatePage() {
-		driver.findElement(By.cssSelector("a.btn.btn-primary")).click();
+	protected void goToCreatePage(String mainPage) {
+		// driver.findElement(By.cssSelector("a.btn.btn-primary")).click();
+		driver.get(baseUrl + "/" + mainPage + "/create");
 		sleep();
 	}
 
@@ -123,8 +139,9 @@ public abstract class AbstractTest implements BaseTest {
 	/**
 	 * Vai para a página de visualização dos dados
 	 */
-	protected void goToViewPage() {
-		driver.findElement(By.cssSelector("a.btn.btn-success.btn-xs")).click();
+	protected void goToViewPage(String mainPage) {
+		// driver.findElement(By.cssSelector("a.btn.btn-success.btn-xs")).click();
+		driver.get(baseUrl + "/" + mainPage + "/" + getId());
 		sleep();
 	}
 
@@ -139,8 +156,9 @@ public abstract class AbstractTest implements BaseTest {
 	/**
 	 * Vai para a página de edição dos dados
 	 */
-	protected void goToEditPage() {
-		driver.findElement(By.cssSelector("a.btn.btn-warning.btn-xs")).click();
+	protected void goToEditPage(String mainPage) {
+		// driver.findElement(By.cssSelector("a.btn.btn-warning.btn-xs")).click();
+		driver.get(baseUrl + "/" + mainPage + "/" + getId() + "/edit");
 		sleep();
 	}
 
@@ -192,8 +210,6 @@ public abstract class AbstractTest implements BaseTest {
 		return baseUrl;
 	}
 
-	protected abstract void goToIndexPage();
-
 	private void setDriverAndUrl() {
 		if (System.getProperty("webdriver.chrome.driver") != null) {
 			driver = new ChromeDriver();
@@ -222,6 +238,10 @@ public abstract class AbstractTest implements BaseTest {
 
 	private void logout() {
 		driver.findElement(By.cssSelector("span.glyphicon.glyphicon-log-out")).click();
+	}
+
+	private String getId() {
+		return (String) getJS().executeScript("return $('table.dataTable tbody tr:first td:first').html();");
 	}
 
 	// private boolean isElementPresent(By by) {

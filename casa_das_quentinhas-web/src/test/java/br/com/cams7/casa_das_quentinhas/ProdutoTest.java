@@ -3,6 +3,8 @@
  */
 package br.com.cams7.casa_das_quentinhas;
 
+import static org.junit.Assert.assertEquals;
+
 import org.openqa.selenium.By;
 import org.testng.annotations.Test;
 
@@ -45,7 +47,8 @@ public class ProdutoTest extends AbstractTest {
 		goToIndexPage();
 
 		// Carrega um formulário para o cadasatro do produto
-		goToCreatePage();
+		goToCreatePage("produto");
+		assertEquals("Adicionar Produto", getDriver().getTitle());
 
 		// Tenta salvar os dados do produto
 		saveCreatePage();
@@ -66,7 +69,8 @@ public class ProdutoTest extends AbstractTest {
 		goToIndexPage();
 
 		// Visualiza os dados do produto
-		goToViewPage();
+		goToViewPage("produto");
+		assertEquals("Visualizar Produto", getDriver().getTitle());
 
 		// Volta à página anterior
 		cancelViewPage();
@@ -84,7 +88,8 @@ public class ProdutoTest extends AbstractTest {
 		goToIndexPage();
 
 		// Carrega um formulário para a alteração dos dados do produto
-		goToEditPage();
+		goToEditPage("produto");
+		assertEquals("Editar Produto", getDriver().getTitle());
 
 		// Tenta salvar os dados do produto
 		saveEditPage();
@@ -108,15 +113,9 @@ public class ProdutoTest extends AbstractTest {
 		closeDeleteModal();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see br.com.cams7.casa_das_quentinhas.AbstractTest#goToIndexPage()
-	 */
-	@Override
-	protected void goToIndexPage() {
-		getDriver().findElement(By.linkText("Produto(s)")).click();
-		sleep();
+	private void goToIndexPage() {
+		goToIndexPage("produto");
+		assertEquals("Lista de Produtos", getDriver().getTitle());
 	}
 
 	private void ordenaClientes() {

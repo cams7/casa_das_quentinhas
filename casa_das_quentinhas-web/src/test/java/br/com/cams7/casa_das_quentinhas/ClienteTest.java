@@ -3,6 +3,8 @@
  */
 package br.com.cams7.casa_das_quentinhas;
 
+import static org.junit.Assert.assertEquals;
+
 import org.joda.time.format.DateTimeFormat;
 import org.openqa.selenium.By;
 import org.testng.annotations.Test;
@@ -11,6 +13,7 @@ import br.com.cams7.casa_das_quentinhas.entity.Cidade;
 import br.com.cams7.casa_das_quentinhas.mock.ContatoMock;
 import br.com.cams7.casa_das_quentinhas.mock.EnderecoMock;
 import br.com.cams7.casa_das_quentinhas.mock.PessoaMock;
+import br.com.cams7.casa_das_quentinhas.mock.UsuarioMock;
 import io.codearte.jfairy.Fairy;
 import io.codearte.jfairy.producer.person.Address;
 import io.codearte.jfairy.producer.person.Person;
@@ -55,7 +58,8 @@ public class ClienteTest extends AbstractTest {
 		goToIndexPage();
 
 		// Carrega um formulário para o cadasatro do cliente
-		goToCreatePage();
+		goToCreatePage("cliente");
+		assertEquals("Adicionar Cliente", getDriver().getTitle());
 
 		Fairy fairy = Fairy.create();
 
@@ -81,21 +85,21 @@ public class ClienteTest extends AbstractTest {
 		getDriver().findElement(By.name("cidade.nome")).sendKeys(cidade.getNome());
 		getJS().executeScript("$('input#cidade_id').val(" + cidade.getId() + ");");
 		getDriver().findElement(By.name("endereco.cep")).clear();
-		getDriver().findElement(By.name("endereco.cep")).sendKeys(EnderecoMock.getCep(cidade.getId()));
+		getDriver().findElement(By.name("endereco.cep")).sendKeys(EnderecoMock.getQualquerCep(cidade.getId()));
 		getDriver().findElement(By.name("endereco.bairro")).clear();
 		getDriver().findElement(By.name("endereco.bairro")).sendKeys(EnderecoMock.getQualquerBairro(cidade.getId()));
 		getDriver().findElement(By.name("endereco.logradouro")).clear();
 		getDriver().findElement(By.name("endereco.logradouro")).sendKeys(address.getStreet());
 		getDriver().findElement(By.name("endereco.numeroImovel")).clear();
 		getDriver().findElement(By.name("endereco.numeroImovel")).sendKeys(address.getStreetNumber());
-		getDriver().findElement(By.name("endereco.complemento")).clear();
-		getDriver().findElement(By.name("endereco.complemento")).sendKeys("");
-		getDriver().findElement(By.name("endereco.pontoReferencia")).clear();
-		getDriver().findElement(By.name("endereco.pontoReferencia")).sendKeys("");
+		// getDriver().findElement(By.name("endereco.complemento")).clear();
+		// getDriver().findElement(By.name("endereco.complemento")).sendKeys("");
+		// getDriver().findElement(By.name("endereco.pontoReferencia")).clear();
+		// getDriver().findElement(By.name("endereco.pontoReferencia")).sendKeys("");
 		getDriver().findElement(By.name("usuarioAcesso.senha")).clear();
-		getDriver().findElement(By.name("usuarioAcesso.senha")).sendKeys("12345");
+		getDriver().findElement(By.name("usuarioAcesso.senha")).sendKeys(UsuarioMock.getSenhaAcesso());
 		getDriver().findElement(By.name("usuarioAcesso.confirmacaoSenha")).clear();
-		getDriver().findElement(By.name("usuarioAcesso.confirmacaoSenha")).sendKeys("12345");
+		getDriver().findElement(By.name("usuarioAcesso.confirmacaoSenha")).sendKeys(UsuarioMock.getSenhaAcesso());
 		sleep();
 
 		// Tenta salvar os dados do cliente
@@ -117,7 +121,8 @@ public class ClienteTest extends AbstractTest {
 		goToIndexPage();
 
 		// Visualiza os dados do cliente
-		goToViewPage();
+		goToViewPage("cliente");
+		assertEquals("Visualizar Cliente", getDriver().getTitle());
 
 		// Volta à página anterior
 		cancelViewPage();
@@ -135,7 +140,8 @@ public class ClienteTest extends AbstractTest {
 		goToIndexPage();
 
 		// Carrega um formulário para a alteração dos dados do cliente
-		goToEditPage();
+		goToEditPage("cliente");
+		assertEquals("Editar Cliente", getDriver().getTitle());
 
 		// Tenta salvar os dados do cliente
 		saveEditPage();
@@ -159,15 +165,9 @@ public class ClienteTest extends AbstractTest {
 		closeDeleteModal();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see br.com.cams7.casa_das_quentinhas.AbstractTest#goToIndexPage()
-	 */
-	@Override
-	protected void goToIndexPage() {
-		getDriver().findElement(By.linkText("Cliente(s)")).click();
-		sleep();
+	private void goToIndexPage() {
+		goToIndexPage("cliente");
+		assertEquals("Lista de Clientes", getDriver().getTitle());
 	}
 
 	private void ordenaClientes() {

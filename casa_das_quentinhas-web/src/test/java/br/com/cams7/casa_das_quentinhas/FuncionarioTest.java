@@ -3,6 +3,8 @@
  */
 package br.com.cams7.casa_das_quentinhas;
 
+import static org.junit.Assert.assertEquals;
+
 import org.openqa.selenium.By;
 import org.testng.annotations.Test;
 
@@ -46,7 +48,8 @@ public class FuncionarioTest extends AbstractTest {
 		goToIndexPage();
 
 		// Carrega um formulário para o cadasatro do funcionário
-		goToCreatePage();
+		goToCreatePage("funcionario");
+		assertEquals("Adicionar Funcionário", getDriver().getTitle());
 
 		// Tenta salvar os dados do funcionário
 		saveCreatePage();
@@ -67,7 +70,8 @@ public class FuncionarioTest extends AbstractTest {
 		goToIndexPage();
 
 		// Visualiza os dados do funcionário
-		goToViewPage();
+		goToViewPage("funcionario");
+		assertEquals("Visualizar Funcionário", getDriver().getTitle());
 
 		// Volta à página anterior
 		cancelViewPage();
@@ -85,7 +89,8 @@ public class FuncionarioTest extends AbstractTest {
 		goToIndexPage();
 
 		// Carrega um formulário para a alteração dos dados do funcionário
-		goToEditPage();
+		goToEditPage("funcionario");
+		assertEquals("Editar Funcionário", getDriver().getTitle());
 
 		// Tenta salvar os dados do funcionário
 		saveEditPage();
@@ -109,15 +114,9 @@ public class FuncionarioTest extends AbstractTest {
 		closeDeleteModal();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see br.com.cams7.casa_das_quentinhas.AbstractTest#goToIndexPage()
-	 */
-	@Override
-	protected void goToIndexPage() {
-		getDriver().findElement(By.linkText("Funcionário(s)")).click();
-		sleep();
+	private void goToIndexPage() {
+		goToIndexPage("funcionario");
+		assertEquals("Lista de Funcionários", getDriver().getTitle());
 	}
 
 	private void ordenaFuncionarios() {

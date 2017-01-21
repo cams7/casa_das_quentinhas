@@ -3,6 +3,8 @@
  */
 package br.com.cams7.casa_das_quentinhas;
 
+import static org.junit.Assert.assertEquals;
+
 import org.openqa.selenium.By;
 import org.testng.annotations.Test;
 
@@ -46,7 +48,8 @@ public class PedidoTest extends AbstractTest {
 		goToIndexPage();
 
 		// Carrega um formulário para o cadasatro do pedido
-		goToCreatePage();
+		goToCreatePage("pedido");
+		assertEquals("Adicionar Pedido", getDriver().getTitle());
 
 		// Tenta salvar os dados do pedido
 		saveCreatePage();
@@ -67,7 +70,8 @@ public class PedidoTest extends AbstractTest {
 		goToIndexPage();
 
 		// Visualiza os dados do pedido
-		goToViewPage();
+		goToViewPage("pedido");
+		assertEquals("Visualizar Pedido", getDriver().getTitle());
 
 		// Volta à página anterior
 		cancelViewPage();
@@ -85,7 +89,8 @@ public class PedidoTest extends AbstractTest {
 		goToIndexPage();
 
 		// Carrega um formulário para a alteração dos dados do pedido
-		goToEditPage();
+		goToEditPage("pedido");
+		assertEquals("Editar Pedido", getDriver().getTitle());
 
 		// Tenta salvar os dados do pedido
 		saveEditPage();
@@ -109,15 +114,9 @@ public class PedidoTest extends AbstractTest {
 		closeDeleteModal();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see br.com.cams7.casa_das_quentinhas.AbstractTest#goToIndexPage()
-	 */
-	@Override
-	protected void goToIndexPage() {
-		getDriver().findElement(By.linkText("Pedido(s)")).click();
-		sleep();
+	private void goToIndexPage() {
+		goToIndexPage("pedido");
+		assertEquals("Lista de Pedidos", getDriver().getTitle());
 	}
 
 	private void ordenaClientes() {

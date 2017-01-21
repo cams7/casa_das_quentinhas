@@ -3,6 +3,8 @@
  */
 package br.com.cams7.casa_das_quentinhas;
 
+import static org.junit.Assert.assertEquals;
+
 import org.openqa.selenium.By;
 import org.testng.annotations.Test;
 
@@ -46,7 +48,8 @@ public class EmpresaTest extends AbstractTest {
 		goToIndexPage();
 
 		// Carrega um formulário para o cadasatro da empresa
-		goToCreatePage();
+		goToCreatePage("empresa");
+		assertEquals("Adicionar Empresa", getDriver().getTitle());
 
 		// Tenta salvar os dados da empresa
 		saveCreatePage();
@@ -67,7 +70,8 @@ public class EmpresaTest extends AbstractTest {
 		goToIndexPage();
 
 		// Visualiza os dados da empresa
-		goToViewPage();
+		goToViewPage("empresa");
+		assertEquals("Visualizar Empresa", getDriver().getTitle());
 
 		// Volta à página anterior
 		cancelViewPage();
@@ -85,7 +89,8 @@ public class EmpresaTest extends AbstractTest {
 		goToIndexPage();
 
 		// Carrega um formulário para a alteração dos dados da empresa
-		goToEditPage();
+		goToEditPage("empresa");
+		assertEquals("Editar Empresa", getDriver().getTitle());
 
 		// Tenta salvar os dados da empresa
 		saveEditPage();
@@ -109,15 +114,9 @@ public class EmpresaTest extends AbstractTest {
 		closeDeleteModal();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see br.com.cams7.casa_das_quentinhas.AbstractTest#goToIndexPage()
-	 */
-	@Override
-	protected void goToIndexPage() {
-		getDriver().findElement(By.linkText("Empresa(s)")).click();
-		sleep();
+	private void goToIndexPage() {
+		goToIndexPage("empresa");
+		assertEquals("Lista de Empresas", getDriver().getTitle());
 	}
 
 	private void ordenaClientes() {

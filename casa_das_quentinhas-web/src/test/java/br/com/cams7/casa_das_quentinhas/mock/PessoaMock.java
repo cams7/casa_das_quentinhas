@@ -23,6 +23,11 @@ public class PessoaMock extends AbstractMock {
 		return primDig.toString() + segDig.toString();
 	}
 
+	/**
+	 * Gera um CPF aleatório
+	 * 
+	 * @return CPF
+	 */
 	public static String getCpf() {
 		String iniciais = "";
 		Integer numero;

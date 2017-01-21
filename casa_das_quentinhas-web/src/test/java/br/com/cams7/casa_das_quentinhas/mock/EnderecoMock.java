@@ -16,7 +16,7 @@ public class EnderecoMock extends AbstractMock {
 		cidades.put(2308, "Belo Horizonte");
 		cidades.put(2901, "Sabará");
 		cidades.put(2917, "Santa Luzia");
-		
+
 		bairros = new HashMap<>();
 		// Belo Horizonte - 3106200
 		bairros.put(2308, new String[] {
@@ -170,15 +170,24 @@ public class EnderecoMock extends AbstractMock {
 	}
 
 	/**
+	 * Gera um bairro aletório de acordo com o id da cidade informado
+	 * 
 	 * @param cidadeId
-	 * @return Gerar um nome de bairro aletório de acordo com o id da cidade
-	 *         informado
+	 *            ID da cidade
+	 * @return Nome do bairro
 	 */
 	public static String getQualquerBairro(Integer cidadeId) {
 		return bairros.get(cidadeId)[rand(0, bairros.get(cidadeId).length - 1)];
 	}
 
-	public static String getCep(Integer cidadeId) {
+	/**
+	 * Gera um CEP aletório de acordo com o id da cidade informado
+	 * 
+	 * @param cidadeId
+	 *            ID da cidade
+	 * @return CEP
+	 */
+	public static String getQualquerCep(Integer cidadeId) {
 		// Belo Horizonte - 2308
 		// 30001970 - 31999899
 		// Sabará - 2901
@@ -204,7 +213,9 @@ public class EnderecoMock extends AbstractMock {
 	}
 
 	/**
-	 * @return Gera, aleatoriamente, um id e um nome de uma cidade
+	 * Gera, aleatoriamente, as informações de uma cidade
+	 * 
+	 * @return Cidade
 	 */
 	public static Cidade getQualquerCidade() {
 		Integer cidadeId = cidades.keySet().stream().collect(Collectors.toList()).get(rand(0, 2));

@@ -3,6 +3,8 @@
  */
 package br.com.cams7.casa_das_quentinhas;
 
+import static org.junit.Assert.assertEquals;
+
 import org.openqa.selenium.By;
 import org.testng.annotations.Test;
 
@@ -46,7 +48,8 @@ public class EntregadorTest extends AbstractTest {
 		goToIndexPage();
 
 		// Carrega um formulário para o cadasatro do entregador
-		goToCreatePage();
+		goToCreatePage("entregador");
+		assertEquals("Adicionar Entregador", getDriver().getTitle());
 
 		// Tenta salvar os dados do entregador
 		saveCreatePage();
@@ -67,7 +70,8 @@ public class EntregadorTest extends AbstractTest {
 		goToIndexPage();
 
 		// Visualiza os dados do entregador
-		goToViewPage();
+		goToViewPage("entregador");
+		assertEquals("Visualizar Entregador", getDriver().getTitle());
 
 		// Volta à página anterior
 		cancelViewPage();
@@ -85,7 +89,8 @@ public class EntregadorTest extends AbstractTest {
 		goToIndexPage();
 
 		// Carrega um formulário para a alteração dos dados do entregador
-		goToEditPage();
+		goToEditPage("entregador");
+		assertEquals("Editar Entregador", getDriver().getTitle());
 
 		// Tenta salvar os dados do entregador
 		saveEditPage();
@@ -109,15 +114,9 @@ public class EntregadorTest extends AbstractTest {
 		closeDeleteModal();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see br.com.cams7.casa_das_quentinhas.AbstractTest#goToIndexPage()
-	 */
-	@Override
-	protected void goToIndexPage() {
-		getDriver().findElement(By.linkText("Entregador(es)")).click();
-		sleep();
+	private void goToIndexPage() {
+		goToIndexPage("entregador");
+		assertEquals("Lista de Entregadores", getDriver().getTitle());
 	}
 
 	private void ordenaEntregadores() {
