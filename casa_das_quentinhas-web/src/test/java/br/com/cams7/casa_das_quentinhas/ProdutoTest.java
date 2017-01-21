@@ -48,7 +48,7 @@ public class ProdutoTest extends AbstractTest {
 		goToCreatePage();
 
 		// Tenta salvar os dados do produto
-		trySaveCreatePage();
+		saveCreatePage();
 
 		// Volta à página anterior
 		cancelCreatePage();

@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 
 //import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 //import org.openqa.selenium.NoAlertPresentException;
 //import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -47,7 +48,7 @@ public abstract class AbstractTest implements BaseTest {
 		setDriverAndUrl();
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 
-		login();
+		login("gerente@casa-das-quentinhas.com", "12345");
 	}
 
 	@AfterSuite
@@ -62,7 +63,6 @@ public abstract class AbstractTest implements BaseTest {
 	@BeforeClass(alwaysRun = true)
 	public void begin() {
 		LOGGER.info("@BeforeClass");
-
 	}
 
 	@AfterClass(alwaysRun = true)
@@ -110,7 +110,7 @@ public abstract class AbstractTest implements BaseTest {
 	/**
 	 * Tenta salva dos dados do formulário
 	 */
-	protected void trySaveCreatePage() {
+	protected void saveCreatePage() {
 		driver.findElement(By.cssSelector("input.btn.btn-primary")).click();
 		sleep();
 	}
@@ -189,6 +189,13 @@ public abstract class AbstractTest implements BaseTest {
 		return driver;
 	}
 
+	protected final JavascriptExecutor getJS() {
+		if (!(driver instanceof JavascriptExecutor))
+			throw new IllegalStateException("This driver does not support JavaScript!");
+
+		return (JavascriptExecutor) driver;
+	}
+
 	protected static String getBaseUrl() {
 		return baseUrl;
 	}
@@ -200,20 +207,23 @@ public abstract class AbstractTest implements BaseTest {
 			driver = new ChromeDriver();
 			sleepEnabled = true;
 			LOGGER.info("You are testing in Chrome");
+			LOGGER.info("webdriver.chrome.driver: {}", System.getProperty("webdriver.chrome.driver"));
 		} else {
 			driver = new PhantomJSDriver();
 			LOGGER.info("You are testing in PhantomJS");
+			LOGGER.info("phantomjs.binary.path: {}", System.getProperty("phantomjs.binary.path"));
 		}
 
 		baseUrl = System.getProperty("base.url");
+		LOGGER.info("url: {}", System.getProperty("base.url"));
 	}
 
-	private void login() {
+	private void login(String username, String password) {
 		driver.get(baseUrl + "/login");
 		driver.findElement(By.id("email")).clear();
-		driver.findElement(By.id("email")).sendKeys("gerente@casa-das-quentinhas.com");
+		driver.findElement(By.id("email")).sendKeys(username);
 		driver.findElement(By.id("senha")).clear();
-		driver.findElement(By.id("senha")).sendKeys("12345");
+		driver.findElement(By.id("senha")).sendKeys(password);
 		driver.findElement(By.id("lembre_me")).click();
 		driver.findElement(By.xpath("//input[@value='Entrar']")).click();
 	}

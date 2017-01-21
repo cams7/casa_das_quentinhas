@@ -145,12 +145,11 @@
 		</dependency>
 
 		<!-- Teste -->
-		<dependency>
+		<!--dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
 			<scope>test</scope>
-		</dependency>
-
+		</dependency-->
 		<!--dependency> <groupId>junit</groupId> <artifactId>junit</artifactId> 
 			</dependency -->
 		<dependency>
@@ -159,17 +158,29 @@
 			<version>6.10</version>
 			<scope>test</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-java</artifactId>
 			<version>3.0.1</version>
 			<scope>test</scope>
 		</dependency>
-		<!--dependency> <groupId>org.seleniumhq.selenium</groupId> <artifactId>selenium-firefox-driver</artifactId> 
-			<version>3.0.1</version> <scope>test</scope> </dependency -->
-		<!--dependency> <groupId>org.seleniumhq.selenium</groupId> <artifactId>selenium-htmlunit-driver</artifactId> 
-			<version>2.52.0</version> <scope>test</scope> </dependency -->
+		<!--dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-chrome-driver</artifactId>
+			<version>3.0.1</version>
+			<scope>test</scope>
+		</dependency-->
+		<!--dependency> 
+			<groupId>org.seleniumhq.selenium</groupId> 
+			<artifactId>selenium-firefox-driver</artifactId> 
+			<version>3.0.1</version> <scope>test</scope> 
+		</dependency -->
+		<!--dependency> 
+			<groupId>org.seleniumhq.selenium</groupId> 
+			<artifactId>selenium-htmlunit-driver</artifactId> 
+			<version>2.52.0</version>
+			<scope>test</scope> 
+		</dependency-->
 		<dependency>
 			<groupId>io.codearte.jfairy</groupId>
 			<artifactId>jfairy</artifactId>

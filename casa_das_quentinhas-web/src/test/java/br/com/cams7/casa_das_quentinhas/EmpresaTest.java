@@ -49,7 +49,7 @@ public class EmpresaTest extends AbstractTest {
 		goToCreatePage();
 
 		// Tenta salvar os dados da empresa
-		trySaveCreatePage();
+		saveCreatePage();
 
 		// Volta à página anterior
 		cancelCreatePage();

@@ -49,7 +49,7 @@ public class FuncionarioTest extends AbstractTest {
 		goToCreatePage();
 
 		// Tenta salvar os dados do funcionário
-		trySaveCreatePage();
+		saveCreatePage();
 
 		// Volta à página anterior
 		cancelCreatePage();

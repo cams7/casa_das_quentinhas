@@ -32,3 +32,6 @@ bin/
 #Selenium
 chromedriver*
 phantomjs*
+
+#TestNG
+test-output/

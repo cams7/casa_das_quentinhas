@@ -49,7 +49,7 @@ public class PedidoTest extends AbstractTest {
 		goToCreatePage();
 
 		// Tenta salvar os dados do pedido
-		trySaveCreatePage();
+		saveCreatePage();
 
 		// Volta à página anterior
 		cancelCreatePage();

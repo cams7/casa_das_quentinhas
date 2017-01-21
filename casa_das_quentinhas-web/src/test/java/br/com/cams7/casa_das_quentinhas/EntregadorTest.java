@@ -49,7 +49,7 @@ public class EntregadorTest extends AbstractTest {
 		goToCreatePage();
 
 		// Tenta salvar os dados do entregador
-		trySaveCreatePage();
+		saveCreatePage();
 
 		// Volta à página anterior
 		cancelCreatePage();
