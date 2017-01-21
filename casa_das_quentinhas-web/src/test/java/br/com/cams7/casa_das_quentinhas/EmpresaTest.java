@@ -48,7 +48,9 @@ public class EmpresaTest extends AbstractTest {
 		goToIndexPage();
 
 		// Carrega um formulário para o cadasatro da empresa
-		goToCreatePage("empresa");
+		if (!goToCreatePage("empresa"))
+			return;
+
 		assertEquals("Adicionar Empresa", getDriver().getTitle());
 
 		// Tenta salvar os dados da empresa
@@ -89,7 +91,9 @@ public class EmpresaTest extends AbstractTest {
 		goToIndexPage();
 
 		// Carrega um formulário para a alteração dos dados da empresa
-		goToEditPage("empresa");
+		if (!goToEditPage("empresa"))
+			return;
+		
 		assertEquals("Editar Empresa", getDriver().getTitle());
 
 		// Tenta salvar os dados da empresa

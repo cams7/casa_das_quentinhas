@@ -48,7 +48,9 @@ public class EntregadorTest extends AbstractTest {
 		goToIndexPage();
 
 		// Carrega um formulário para o cadasatro do entregador
-		goToCreatePage("entregador");
+		if (!goToCreatePage("entregador"))
+			return;
+
 		assertEquals("Adicionar Entregador", getDriver().getTitle());
 
 		// Tenta salvar os dados do entregador
@@ -89,7 +91,9 @@ public class EntregadorTest extends AbstractTest {
 		goToIndexPage();
 
 		// Carrega um formulário para a alteração dos dados do entregador
-		goToEditPage("entregador");
+		if (!goToEditPage("entregador"))
+			return;
+
 		assertEquals("Editar Entregador", getDriver().getTitle());
 
 		// Tenta salvar os dados do entregador

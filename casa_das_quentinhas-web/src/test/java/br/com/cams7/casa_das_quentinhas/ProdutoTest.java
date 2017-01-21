@@ -47,7 +47,9 @@ public class ProdutoTest extends AbstractTest {
 		goToIndexPage();
 
 		// Carrega um formulário para o cadasatro do produto
-		goToCreatePage("produto");
+		if (!goToCreatePage("produto"))
+			return;
+
 		assertEquals("Adicionar Produto", getDriver().getTitle());
 
 		// Tenta salvar os dados do produto
@@ -88,7 +90,9 @@ public class ProdutoTest extends AbstractTest {
 		goToIndexPage();
 
 		// Carrega um formulário para a alteração dos dados do produto
-		goToEditPage("produto");
+		if (!goToEditPage("produto"))
+			return;
+
 		assertEquals("Editar Produto", getDriver().getTitle());
 
 		// Tenta salvar os dados do produto

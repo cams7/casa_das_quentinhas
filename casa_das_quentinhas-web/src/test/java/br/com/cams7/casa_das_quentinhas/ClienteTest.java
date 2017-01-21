@@ -58,7 +58,9 @@ public class ClienteTest extends AbstractTest {
 		goToIndexPage();
 
 		// Carrega um formulário para o cadasatro do cliente
-		goToCreatePage("cliente");
+		if (!goToCreatePage("cliente"))
+			return;
+
 		assertEquals("Adicionar Cliente", getDriver().getTitle());
 
 		Fairy fairy = Fairy.create();
@@ -140,7 +142,9 @@ public class ClienteTest extends AbstractTest {
 		goToIndexPage();
 
 		// Carrega um formulário para a alteração dos dados do cliente
-		goToEditPage("cliente");
+		if (!goToEditPage("cliente"))
+			return;
+
 		assertEquals("Editar Cliente", getDriver().getTitle());
 
 		// Tenta salvar os dados do cliente

@@ -1,5 +1,9 @@
 package br.com.cams7.casa_das_quentinhas;
 
+import static br.com.cams7.casa_das_quentinhas.entity.Funcionario.Funcao.ATENDENTE;
+import static br.com.cams7.casa_das_quentinhas.entity.Funcionario.Funcao.GERENTE;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.concurrent.TimeUnit;
@@ -7,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 //import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchElementException;
 //import org.openqa.selenium.NoAlertPresentException;
 //import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -30,6 +35,7 @@ public abstract class AbstractTest implements BaseTest {
 	private static String baseUrl;
 
 	private static boolean sleepEnabled = false;
+	private static Object acesso;
 
 	protected final Logger LOGGER;
 
@@ -49,8 +55,11 @@ public abstract class AbstractTest implements BaseTest {
 		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
 		final String EMAIL_ACESSO = UsuarioMock.getQualquerEmailAcesso();
-		LOGGER.info("E-mail de acesso: {}", EMAIL_ACESSO);
 		login(EMAIL_ACESSO, UsuarioMock.getSenhaAcesso());
+
+		acesso = UsuarioMock.getAcesso(EMAIL_ACESSO);
+
+		LOGGER.info("E-mail: {}, acesso: {}", EMAIL_ACESSO, acesso);
 	}
 
 	@AfterSuite
@@ -114,10 +123,16 @@ public abstract class AbstractTest implements BaseTest {
 	/**
 	 * Vai para página de cadastro
 	 */
-	protected void goToCreatePage(String mainPage) {
+	protected boolean goToCreatePage(String mainPage) {
 		// driver.findElement(By.cssSelector("a.btn.btn-primary")).click();
 		driver.get(baseUrl + "/" + mainPage + "/create");
 		sleep();
+
+		boolean isGererente = GERENTE.equals(acesso);
+		if (!isGererente)
+			assertEquals("Não autorizado", getDriver().getTitle());
+
+		return isGererente;
 	}
 
 	/**
@@ -156,10 +171,16 @@ public abstract class AbstractTest implements BaseTest {
 	/**
 	 * Vai para a página de edição dos dados
 	 */
-	protected void goToEditPage(String mainPage) {
+	protected boolean goToEditPage(String mainPage) {
 		// driver.findElement(By.cssSelector("a.btn.btn-warning.btn-xs")).click();
 		driver.get(baseUrl + "/" + mainPage + "/" + getId() + "/edit");
 		sleep();
+
+		boolean isGererenteOrAtendente = GERENTE.equals(acesso) || ATENDENTE.equals(acesso);
+		if (!isGererenteOrAtendente)
+			assertEquals("Não autorizado", getDriver().getTitle());
+
+		return isGererenteOrAtendente;
 	}
 
 	/**
@@ -174,8 +195,12 @@ public abstract class AbstractTest implements BaseTest {
 	 * Exibe o pop-pop de exclusão
 	 */
 	protected void showDeleteModal() {
-		driver.findElement(By.cssSelector("button.btn.btn-danger.btn-xs.delete")).click();
-		sleep();
+		try {
+			driver.findElement(By.cssSelector("button.btn.btn-danger.btn-xs.delete")).click();
+			sleep();
+		} catch (NoSuchElementException e) {
+			assertTrue(!GERENTE.equals(acesso));
+		}
 	}
 
 	/**
@@ -208,6 +233,10 @@ public abstract class AbstractTest implements BaseTest {
 
 	protected static String getBaseUrl() {
 		return baseUrl;
+	}
+
+	public static Object getAcesso() {
+		return acesso;
 	}
 
 	private void setDriverAndUrl() {

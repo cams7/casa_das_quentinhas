@@ -48,7 +48,9 @@ public class FuncionarioTest extends AbstractTest {
 		goToIndexPage();
 
 		// Carrega um formulário para o cadasatro do funcionário
-		goToCreatePage("funcionario");
+		if (!goToCreatePage("funcionario"))
+			return;
+
 		assertEquals("Adicionar Funcionário", getDriver().getTitle());
 
 		// Tenta salvar os dados do funcionário
@@ -89,7 +91,9 @@ public class FuncionarioTest extends AbstractTest {
 		goToIndexPage();
 
 		// Carrega um formulário para a alteração dos dados do funcionário
-		goToEditPage("funcionario");
+		if (!goToEditPage("funcionario"))
+			return;
+
 		assertEquals("Editar Funcionário", getDriver().getTitle());
 
 		// Tenta salvar os dados do funcionário
