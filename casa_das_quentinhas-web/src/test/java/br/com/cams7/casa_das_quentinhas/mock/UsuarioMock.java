@@ -5,6 +5,11 @@ import static br.com.cams7.casa_das_quentinhas.entity.Funcionario.Funcao.ENTREGA
 import static br.com.cams7.casa_das_quentinhas.entity.Funcionario.Funcao.GERENTE;
 import static br.com.cams7.casa_das_quentinhas.entity.Usuario.Tipo.CLIENTE;
 import static br.com.cams7.casa_das_quentinhas.entity.Usuario.Tipo.EMPRESA;
+import io.codearte.jfairy.Fairy;
+import io.codearte.jfairy.producer.BaseProducer;
+import io.codearte.jfairy.producer.DateProducer;
+import io.codearte.jfairy.producer.net.NetworkProducer;
+import io.codearte.jfairy.producer.person.Person;
 
 public class UsuarioMock extends AbstractMock {
 
@@ -12,9 +17,9 @@ public class UsuarioMock extends AbstractMock {
 	private static final String SENHA_ACESSO = "12345";
 
 	static {
-		emails = new String[] { "gerente@casa-das-quentinhas.com", "atendente@casa-das-quentinhas.com",
+		emails = new String[] { "gerente@casa-das-quentinhas.com"/*, "atendente@casa-das-quentinhas.com",
 				"entregador@casa-das-quentinhas.com", "empresa@casa-das-quentinhas.com",
-				"cliente@casa-das-quentinhas.com" };
+				"cliente@casa-das-quentinhas.com"*/ };
 	}
 
 	/**
@@ -23,7 +28,7 @@ public class UsuarioMock extends AbstractMock {
 	 * @return E-mail de acesso
 	 */
 	public static String getQualquerEmailAcesso() {
-		return emails[rand(0, emails.length - 1)];
+		return emails[getBaseProducer().randomBetween(0, emails.length - 1)];
 	}
 
 	/**

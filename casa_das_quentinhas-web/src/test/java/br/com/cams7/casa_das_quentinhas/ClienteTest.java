@@ -65,6 +65,7 @@ public class ClienteTest extends AbstractTest {
 
 		Person person = fairy.person();
 		Address address = person.getAddress();
+		Cidade cidade = EnderecoMock.getQualquerCidade();
 
 		// By.xpath("//input[@name='nome']")
 		getDriver().findElement(By.name("nome")).clear();
@@ -76,13 +77,10 @@ public class ClienteTest extends AbstractTest {
 				.sendKeys(DateTimeFormat.forPattern("dd/MM/yyyy").print(person.getDateOfBirth()));
 		getDriver().findElement(By.name("contato.email")).clear();
 		getDriver().findElement(By.name("contato.email")).sendKeys(person.getEmail());
-
-		Cidade cidade = EnderecoMock.getQualquerCidade();
-
 		getDriver().findElement(By.name("contato.telefone")).clear();
 		getDriver().findElement(By.name("contato.telefone")).sendKeys(ContatoMock.getTelefone());
 		getDriver().findElement(By.name("cidade.nome")).clear();
-		getDriver().findElement(By.name("cidade.nome")).sendKeys(cidade.getNome());
+		getDriver().findElement(By.name("cidade.nome")).sendKeys(cidade.getNome() + " < MG >");
 		getJS().executeScript("$('input#cidade_id').val(" + cidade.getId() + ");");
 		getDriver().findElement(By.name("endereco.cep")).clear();
 		getDriver().findElement(By.name("endereco.cep")).sendKeys(EnderecoMock.getQualquerCep(cidade.getId()));

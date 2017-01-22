@@ -8,6 +8,6 @@ public class ContatoMock extends AbstractMock {
 	 * @return Número de telefone
 	 */
 	public static String getTelefone() {
-		return DDD + "3" + rand(6410000, 6430000);
+		return DDD + "3" + getBaseProducer().randomBetween(6410000l, 6430000l);
 	}
 }

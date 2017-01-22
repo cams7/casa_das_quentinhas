@@ -177,7 +177,7 @@ public class EnderecoMock extends AbstractMock {
 	 * @return Nome do bairro
 	 */
 	public static String getQualquerBairro(Integer cidadeId) {
-		return bairros.get(cidadeId)[rand(0, bairros.get(cidadeId).length - 1)];
+		return bairros.get(cidadeId)[getBaseProducer().randomBetween(0, bairros.get(cidadeId).length - 1)];
 	}
 
 	/**
@@ -194,16 +194,16 @@ public class EnderecoMock extends AbstractMock {
 		// 34505000 - 34750970
 		// Santa Luzia - 2917
 		// 33010000 33199899
-		int cep = 0;
+		long cep = 0l;
 		switch (cidadeId) {
 		case 2308:
-			cep = rand(30001970, 31999899);
+			cep = getBaseProducer().randomBetween(30001970l, 31999899l);
 			break;
 		case 2901:
-			cep = rand(34505000, 34750970);
+			cep = getBaseProducer().randomBetween(34505000l, 34750970l);
 			break;
 		case 2917:
-			cep = rand(33010000, 33199899);
+			cep = getBaseProducer().randomBetween(33010000l, 33199899l);
 			break;
 		default:
 			break;
@@ -218,7 +218,8 @@ public class EnderecoMock extends AbstractMock {
 	 * @return Cidade
 	 */
 	public static Cidade getQualquerCidade() {
-		Integer cidadeId = cidades.keySet().stream().collect(Collectors.toList()).get(rand(0, 2));
+		Integer cidadeId = cidades.keySet().stream().collect(Collectors.toList())
+				.get(getBaseProducer().randomBetween(0, 2));
 
 		Cidade cidade = new Cidade(cidadeId);
 		cidade.setNome(cidades.get(cidadeId));
@@ -230,8 +231,8 @@ public class EnderecoMock extends AbstractMock {
 	public static void main(String[] args) {
 		for (int i = 0; i < 10000; i++) {
 			Cidade cidade = EnderecoMock.getQualquerCidade();
-			System.out.println(
-					cidade.getId() + " - " + cidade.getNome() + ", " + EnderecoMock.getQualquerBairro(cidade.getId()));
+			System.out.println((i + 1) + ")\t" + cidade.getId() + "\t" + cidade.getNome() + ", "
+					+ EnderecoMock.getQualquerBairro(cidade.getId()));
 		}
 	}
 }

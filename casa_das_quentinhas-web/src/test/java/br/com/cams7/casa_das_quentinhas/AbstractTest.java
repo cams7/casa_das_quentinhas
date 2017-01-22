@@ -54,7 +54,7 @@ public abstract class AbstractTest implements BaseTest {
 		LOGGER.info("@BeforeSuite");
 
 		setDriverAndUrl();
-		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 
 		final String EMAIL_ACESSO = UsuarioMock.getQualquerEmailAcesso();
 		login(EMAIL_ACESSO, UsuarioMock.getSenhaAcesso());
