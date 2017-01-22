@@ -114,7 +114,7 @@ public class ProdutoTest extends AbstractTest {
 	}
 
 	private void goToIndexPage() {
-		goToIndexPage("produto");
+		goToIndexPage("produto", "Produto(s)");
 		assertEquals("Lista de Produtos", getDriver().getTitle());
 	}
 

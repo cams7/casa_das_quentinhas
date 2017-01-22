@@ -115,7 +115,7 @@ public class FuncionarioTest extends AbstractTest {
 	}
 
 	private void goToIndexPage() {
-		goToIndexPage("funcionario");
+		goToIndexPage("funcionario", "Funcionário(s)");
 		assertEquals("Lista de Funcionários", getDriver().getTitle());
 	}
 

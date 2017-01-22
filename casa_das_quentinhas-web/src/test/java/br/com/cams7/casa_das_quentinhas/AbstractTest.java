@@ -3,7 +3,7 @@ package br.com.cams7.casa_das_quentinhas;
 import static br.com.cams7.casa_das_quentinhas.entity.Funcionario.Funcao.ATENDENTE;
 import static br.com.cams7.casa_das_quentinhas.entity.Funcionario.Funcao.GERENTE;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
 import java.util.concurrent.TimeUnit;
@@ -38,6 +38,8 @@ public abstract class AbstractTest implements BaseTest {
 	private static Object acesso;
 
 	protected final Logger LOGGER;
+
+	private final String UNAUTHORIZED_MESSAGE = "Não autorizado";
 
 	/**
 	 * 
@@ -90,8 +92,13 @@ public abstract class AbstractTest implements BaseTest {
 	 * 
 	 * @param mainPage
 	 */
-	protected void goToIndexPage(String mainPage) {
-		getDriver().get(baseUrl + "/" + mainPage);
+	protected void goToIndexPage(String mainPage, String menu) {
+		boolean isGerente = GERENTE.equals(acesso);
+		if (isGerente)
+			driver.findElement(By.linkText(menu)).click();
+		else
+			getDriver().get(baseUrl + "/" + mainPage);
+
 		sleep();
 	}
 
@@ -122,19 +129,21 @@ public abstract class AbstractTest implements BaseTest {
 	 * Vai para página de cadastro
 	 */
 	protected void goToCreatePage(String mainPage) {
-		boolean finded = ((Boolean) getJS()
-				.executeScript("return $('div#top').find('div.h2 a.btn.btn-primary').length > 0;"));
-		if (finded)
+		boolean isGerente = GERENTE.equals(acesso);
+		if (isGerente)
 			driver.findElement(By.cssSelector("div#top > div.h2 > a.btn.btn-primary")).click();
-		else
-			driver.get(baseUrl + "/" + mainPage + "/create");
+		else {
+			boolean finded = (Boolean) getJS()
+					.executeScript("return $('div#top').find('div.h2 a.btn.btn-primary').length > 0;");
+			assertFalse(finded);
 
+			driver.get(baseUrl + "/" + mainPage + "/create");
+		}
 		sleep();
 
-		boolean isGererente = GERENTE.equals(acesso);
-		if (!isGererente) {
-			assertEquals("Não autorizado", getDriver().getTitle());
-			throw new SkipException("Não autorizado");
+		if (!isGerente) {
+			assertEquals(UNAUTHORIZED_MESSAGE, getDriver().getTitle());
+			throw new SkipException(UNAUTHORIZED_MESSAGE);
 		}
 	}
 
@@ -142,13 +151,7 @@ public abstract class AbstractTest implements BaseTest {
 	 * Vai para a página de visualização dos dados
 	 */
 	protected void goToViewPage(String mainPage) {
-		boolean finded = ((Boolean) getJS()
-				.executeScript("return $('table.dataTable tbody tr td').find('a.btn.btn-success.btn-xs').length > 0;"));
-		if (finded)
-			driver.findElement(By.cssSelector("table.dataTable > tbody > tr > td > a.btn.btn-success.btn-xs")).click();
-		else
-			driver.get(baseUrl + "/" + mainPage + "/" + getId());
-
+		driver.findElement(By.cssSelector("table.dataTable > tbody > tr > td > a.btn.btn-success.btn-xs")).click();
 		sleep();
 	}
 
@@ -164,19 +167,22 @@ public abstract class AbstractTest implements BaseTest {
 	 * Vai para a página de edição dos dados
 	 */
 	protected void goToEditPage(String mainPage) {
-		boolean finded = ((Boolean) getJS()
-				.executeScript("return $('table.dataTable tbody tr td').find('a.btn.btn-warning.btn-xs').length > 0;"));
-		if (finded)
-			driver.findElement(By.cssSelector("table.dataTable > tbody > tr > td > a.btn.btn-warning.btn-xs")).click();
-		else
-			driver.get(baseUrl + "/" + mainPage + "/" + getId() + "/edit");
+		boolean isGerenteOrAtendente = GERENTE.equals(acesso) || ATENDENTE.equals(acesso);
 
+		if (isGerenteOrAtendente)
+			driver.findElement(By.cssSelector("table.dataTable > tbody > tr > td > a.btn.btn-warning.btn-xs")).click();
+		else {
+			boolean finded = (Boolean) getJS().executeScript(
+					"return $('table.dataTable tbody tr td').find('a.btn.btn-warning.btn-xs').length > 0;");
+			assertFalse(finded);
+
+			driver.get(baseUrl + "/" + mainPage + "/" + getId() + "/edit");
+		}
 		sleep();
 
-		boolean isGererenteOrAtendente = GERENTE.equals(acesso) || ATENDENTE.equals(acesso);
-		if (!isGererenteOrAtendente) {
-			assertEquals("Não autorizado", getDriver().getTitle());
-			throw new SkipException("Não autorizado");
+		if (!isGerenteOrAtendente) {
+			assertEquals(UNAUTHORIZED_MESSAGE, getDriver().getTitle());
+			throw new SkipException(UNAUTHORIZED_MESSAGE);
 		}
 	}
 
@@ -184,12 +190,14 @@ public abstract class AbstractTest implements BaseTest {
 	 * Exibe o pop-pop de exclusão
 	 */
 	protected void showDeleteModal() {
-		boolean finded = ((Boolean) getJS().executeScript(
-				"return $('table.dataTable tbody tr td').find('button.btn.btn-danger.btn-xs.delete').length > 0;"));
+		boolean isGerente = GERENTE.equals(acesso);
 
-		if (!finded) {
-			assertTrue(!GERENTE.equals(acesso));
-			throw new SkipException("Não autorizado");
+		if (!isGerente) {
+			boolean finded = ((Boolean) getJS().executeScript(
+					"return $('table.dataTable tbody tr td').find('button.btn.btn-danger.btn-xs.delete').length > 0;"));
+			assertFalse(finded);
+
+			throw new SkipException(UNAUTHORIZED_MESSAGE);
 		}
 
 		driver.findElement(By.cssSelector("table.dataTable > tbody > tr > td > button.btn.btn-danger.btn-xs.delete"))

@@ -115,7 +115,7 @@ public class PedidoTest extends AbstractTest {
 	}
 
 	private void goToIndexPage() {
-		goToIndexPage("pedido");
+		goToIndexPage("pedido", "Pedido(s)");
 		assertEquals("Lista de Pedidos", getDriver().getTitle());
 	}
 

@@ -166,7 +166,7 @@ public class ClienteTest extends AbstractTest {
 	}
 
 	private void goToIndexPage() {
-		goToIndexPage("cliente");
+		goToIndexPage("cliente", "Cliente(s)");
 		assertEquals("Lista de Clientes", getDriver().getTitle());
 	}
 

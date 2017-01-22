@@ -115,7 +115,7 @@ public class EmpresaTest extends AbstractTest {
 	}
 
 	private void goToIndexPage() {
-		goToIndexPage("empresa");
+		goToIndexPage("empresa", "Empresa(s)");
 		assertEquals("Lista de Empresas", getDriver().getTitle());
 	}
 

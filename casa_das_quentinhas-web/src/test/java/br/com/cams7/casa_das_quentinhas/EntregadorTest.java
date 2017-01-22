@@ -115,7 +115,7 @@ public class EntregadorTest extends AbstractTest {
 	}
 
 	private void goToIndexPage() {
-		goToIndexPage("entregador");
+		goToIndexPage("entregador", "Entregador(es)");
 		assertEquals("Lista de Entregadores", getDriver().getTitle());
 	}
 
