@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="TestNgSeleniumSuite" parallel="false">
-	<test name="TestNgSeleniumTest">
+<suite name="SeleniumSuite" parallel="false">
+	<test name="SeleniumTest">
 		<classes>
 			<class name="br.com.cams7.casa_das_quentinhas.ClienteTest"></class>
 			<class name="br.com.cams7.casa_das_quentinhas.PedidoTest"></class>

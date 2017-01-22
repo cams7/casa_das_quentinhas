@@ -11,7 +11,6 @@ import java.util.concurrent.TimeUnit;
 //import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.NoSuchElementException;
 //import org.openqa.selenium.NoAlertPresentException;
 //import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -19,6 +18,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.SkipException;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeClass;
@@ -85,6 +85,16 @@ public abstract class AbstractTest implements BaseTest {
 		// }
 	}
 
+	/**
+	 * Vai para página de listagem
+	 * 
+	 * @param mainPage
+	 */
+	protected void goToIndexPage(String mainPage) {
+		getDriver().get(baseUrl + "/" + mainPage);
+		sleep();
+	}
+
 	protected void paginate() {
 		short maxResults = Short
 				.valueOf((String) getJS().executeScript("return $('input#dataTable_maxResults').val();"));
@@ -99,9 +109,8 @@ public abstract class AbstractTest implements BaseTest {
 			sleep();
 		}
 
-		LOGGER.info("maxResults: {}, count: {}, pages: {}", maxResults, count, totalPages);
-
-		sleep();
+		// LOGGER.info("maxResults: {}, count: {}, pages: {}", maxResults,
+		// count, totalPages);
 	}
 
 	protected void search(String query) {
@@ -110,53 +119,36 @@ public abstract class AbstractTest implements BaseTest {
 	}
 
 	/**
-	 * Vai para página de listagem
-	 * 
-	 * @param mainPage
-	 */
-	protected void goToIndexPage(String mainPage) {
-		// getDriver().findElement(By.linkText("Cliente(s)")).click();
-		getDriver().get(baseUrl + "/" + mainPage);
-		sleep();
-	}
-
-	/**
 	 * Vai para página de cadastro
 	 */
-	protected boolean goToCreatePage(String mainPage) {
-		// driver.findElement(By.cssSelector("a.btn.btn-primary")).click();
-		driver.get(baseUrl + "/" + mainPage + "/create");
+	protected void goToCreatePage(String mainPage) {
+		boolean finded = ((Boolean) getJS()
+				.executeScript("return $('div#top').find('div.h2 a.btn.btn-primary').length > 0;"));
+		if (finded)
+			driver.findElement(By.cssSelector("div#top > div.h2 > a.btn.btn-primary")).click();
+		else
+			driver.get(baseUrl + "/" + mainPage + "/create");
+
 		sleep();
 
 		boolean isGererente = GERENTE.equals(acesso);
-		if (!isGererente)
+		if (!isGererente) {
 			assertEquals("Não autorizado", getDriver().getTitle());
-
-		return isGererente;
-	}
-
-	/**
-	 * Tenta salva dos dados do formulário
-	 */
-	protected void saveCreatePage() {
-		driver.findElement(By.cssSelector("input.btn.btn-primary")).click();
-		sleep();
-	}
-
-	/**
-	 * Vai para a página anterior
-	 */
-	protected void cancelCreatePage() {
-		driver.findElement(By.id("cancelar")).click();
-		sleep();
+			throw new SkipException("Não autorizado");
+		}
 	}
 
 	/**
 	 * Vai para a página de visualização dos dados
 	 */
 	protected void goToViewPage(String mainPage) {
-		// driver.findElement(By.cssSelector("a.btn.btn-success.btn-xs")).click();
-		driver.get(baseUrl + "/" + mainPage + "/" + getId());
+		boolean finded = ((Boolean) getJS()
+				.executeScript("return $('table.dataTable tbody tr td').find('a.btn.btn-success.btn-xs').length > 0;"));
+		if (finded)
+			driver.findElement(By.cssSelector("table.dataTable > tbody > tr > td > a.btn.btn-success.btn-xs")).click();
+		else
+			driver.get(baseUrl + "/" + mainPage + "/" + getId());
+
 		sleep();
 	}
 
@@ -164,43 +156,45 @@ public abstract class AbstractTest implements BaseTest {
 	 * Vai para a página anterior
 	 */
 	protected void cancelViewPage() {
-		driver.findElement(By.cssSelector("a.btn.btn-default")).click();
+		driver.findElement(By.cssSelector("div#actions > div > a.btn.btn-default")).click();
 		sleep();
 	}
 
 	/**
 	 * Vai para a página de edição dos dados
 	 */
-	protected boolean goToEditPage(String mainPage) {
-		// driver.findElement(By.cssSelector("a.btn.btn-warning.btn-xs")).click();
-		driver.get(baseUrl + "/" + mainPage + "/" + getId() + "/edit");
+	protected void goToEditPage(String mainPage) {
+		boolean finded = ((Boolean) getJS()
+				.executeScript("return $('table.dataTable tbody tr td').find('a.btn.btn-warning.btn-xs').length > 0;"));
+		if (finded)
+			driver.findElement(By.cssSelector("table.dataTable > tbody > tr > td > a.btn.btn-warning.btn-xs")).click();
+		else
+			driver.get(baseUrl + "/" + mainPage + "/" + getId() + "/edit");
+
 		sleep();
 
 		boolean isGererenteOrAtendente = GERENTE.equals(acesso) || ATENDENTE.equals(acesso);
-		if (!isGererenteOrAtendente)
+		if (!isGererenteOrAtendente) {
 			assertEquals("Não autorizado", getDriver().getTitle());
-
-		return isGererenteOrAtendente;
-	}
-
-	/**
-	 * Salva os dados do formulário
-	 */
-	protected void saveEditPage() {
-		driver.findElement(By.cssSelector("input.btn.btn-primary")).click();
-		sleep();
+			throw new SkipException("Não autorizado");
+		}
 	}
 
 	/**
 	 * Exibe o pop-pop de exclusão
 	 */
 	protected void showDeleteModal() {
-		try {
-			driver.findElement(By.cssSelector("button.btn.btn-danger.btn-xs.delete")).click();
-			sleep();
-		} catch (NoSuchElementException e) {
+		boolean finded = ((Boolean) getJS().executeScript(
+				"return $('table.dataTable tbody tr td').find('button.btn.btn-danger.btn-xs.delete').length > 0;"));
+
+		if (!finded) {
 			assertTrue(!GERENTE.equals(acesso));
+			throw new SkipException("Não autorizado");
 		}
+
+		driver.findElement(By.cssSelector("table.dataTable > tbody > tr > td > button.btn.btn-danger.btn-xs.delete"))
+				.click();
+		sleep();
 	}
 
 	/**
@@ -208,13 +202,31 @@ public abstract class AbstractTest implements BaseTest {
 	 */
 	protected void closeDeleteModal() {
 		getJS().executeScript("$('div.modal-footer button.btn.btn-default').click();");
+		// driver.findElement(By.cssSelector("div.modal-footer >
+		// button.btn.btn-default")).click();
+		sleep();
+	}
+
+	/**
+	 * Tenta salva dos dados do formulário
+	 */
+	protected void saveCreateAndEditPage() {
+		driver.findElement(By.cssSelector("div#actions > div > input.btn.btn-primary")).click();
+		sleep();
+	}
+
+	/**
+	 * Vai para a página anterior
+	 */
+	protected void cancelCreateAndEditPage() {
+		driver.findElement(By.cssSelector("div#actions > div > button.btn.btn-default")).click();
 		sleep();
 	}
 
 	protected void sleep() {
 		if (sleepEnabled)
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(Short.valueOf(System.getProperty("sleep.millisecounds")));
 			} catch (InterruptedException e) {
 				fail(e.getMessage());
 			}

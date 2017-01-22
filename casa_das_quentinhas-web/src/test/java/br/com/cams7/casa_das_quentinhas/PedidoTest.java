@@ -48,16 +48,14 @@ public class PedidoTest extends AbstractTest {
 		goToIndexPage();
 
 		// Carrega um formulário para o cadasatro do pedido
-		if (!goToCreatePage("pedido"))
-			return;
-
+		goToCreatePage("pedido");
 		assertEquals("Adicionar Pedido", getDriver().getTitle());
 
 		// Tenta salvar os dados do pedido
-		saveCreatePage();
+		saveCreateAndEditPage();
 
 		// Volta à página anterior
-		cancelCreatePage();
+		cancelCreateAndEditPage();
 	}
 
 	/*
@@ -91,13 +89,11 @@ public class PedidoTest extends AbstractTest {
 		goToIndexPage();
 
 		// Carrega um formulário para a alteração dos dados do pedido
-		if (!goToEditPage("pedido"))
-			return;
-
+		goToEditPage("pedido");
 		assertEquals("Editar Pedido", getDriver().getTitle());
 
 		// Tenta salvar os dados do pedido
-		saveEditPage();
+		saveCreateAndEditPage();
 	}
 
 	/*

@@ -214,6 +214,12 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>2.19.1</version>
+					<configuration>
+						<systemPropertyVariables>
+							<base.url>http://localhost:8090</base.url>
+							<sleep.millisecounds>1000</sleep.millisecounds>
+						</systemPropertyVariables>
+					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -267,7 +273,6 @@
 						<configuration>
 							<systemPropertyVariables>
 								<phantomjs.binary.path>phantomjs</phantomjs.binary.path>
-								<base.url>http://localhost:8080</base.url>
 							</systemPropertyVariables>
 						</configuration>
 					</plugin>
@@ -317,7 +322,6 @@
 						<configuration>
 							<systemPropertyVariables>
 								<phantomjs.binary.path>phantomjs.exe</phantomjs.binary.path>
-								<base.url>http://localhost:8090</base.url>
 							</systemPropertyVariables>
 						</configuration>
 					</plugin>
@@ -342,7 +346,6 @@
 						<configuration>
 							<systemPropertyVariables>
 								<webdriver.chrome.driver>chromedriver.exe</webdriver.chrome.driver>
-								<base.url>http://localhost:8090</base.url>
 							</systemPropertyVariables>
 						</configuration>
 					</plugin>
