@@ -17,6 +17,7 @@ import br.com.cams7.casa_das_quentinhas.mock.UsuarioMock;
 import io.codearte.jfairy.Fairy;
 import io.codearte.jfairy.producer.company.Company;
 import io.codearte.jfairy.producer.person.Address;
+import io.codearte.jfairy.producer.person.Person;
 
 /**
  * @author César Magalhães
@@ -62,8 +63,10 @@ public class EmpresaTest extends AbstractTest {
 		assertEquals("Adicionar Empresa", getDriver().getTitle());
 
 		Fairy fairy = Fairy.create();
-		Company company = fairy.company();
-		Address address = fairy.person().getAddress();
+		Person person = fairy.person();
+		Company company = person.getCompany();
+		Address address = person.getAddress();
+
 		Cidade cidade = EnderecoMock.getQualquerCidade();
 
 		getDriver().findElement(By.name("razaoSocial")).clear();

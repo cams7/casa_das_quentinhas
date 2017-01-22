@@ -67,7 +67,6 @@ public class ClienteTest extends AbstractTest {
 		Address address = person.getAddress();
 		Cidade cidade = EnderecoMock.getQualquerCidade();
 
-		// By.xpath("//input[@name='nome']")
 		getDriver().findElement(By.name("nome")).clear();
 		getDriver().findElement(By.name("nome")).sendKeys(person.getFullName());
 		getDriver().findElement(By.name("cpf")).clear();
@@ -98,8 +97,7 @@ public class ClienteTest extends AbstractTest {
 		getDriver().findElement(By.name("usuarioAcesso.senha")).sendKeys(UsuarioMock.getSenhaAcesso());
 		getDriver().findElement(By.name("usuarioAcesso.confirmacaoSenha")).clear();
 		getDriver().findElement(By.name("usuarioAcesso.confirmacaoSenha")).sendKeys(UsuarioMock.getSenhaAcesso());
-		sleep();
-
+		
 		// Tenta salvar os dados do cliente
 		saveCreateAndEditPage();
 

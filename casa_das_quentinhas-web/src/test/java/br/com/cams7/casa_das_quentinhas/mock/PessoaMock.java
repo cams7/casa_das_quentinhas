@@ -35,6 +35,15 @@ public class PessoaMock extends AbstractMock {
 		return "" + n1 + n2 + n3 + n4 + n5 + n6 + n7 + n8 + n9 + d1 + d2;
 	}
 
+	/**
+	 * Gera um número de identidade aleatório
+	 * 
+	 * @return RG
+	 */
+	public static String getRg() {
+		return String.valueOf(getBaseProducer().randomBetween(11111111l, 99999999l));
+	}
+
 	public static void main(String args[]) {
 		for (int i = 0; i < 100; i++)
 			System.out.println("cpf\t" + getCpf());

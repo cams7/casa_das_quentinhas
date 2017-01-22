@@ -6,7 +6,15 @@ package br.com.cams7.casa_das_quentinhas;
 import static org.junit.Assert.assertEquals;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.Select;
 import org.testng.annotations.Test;
+
+import br.com.cams7.casa_das_quentinhas.mock.ContatoMock;
+import br.com.cams7.casa_das_quentinhas.mock.FuncionarioMock;
+import br.com.cams7.casa_das_quentinhas.mock.PessoaMock;
+import br.com.cams7.casa_das_quentinhas.mock.UsuarioMock;
+import io.codearte.jfairy.Fairy;
+import io.codearte.jfairy.producer.person.Person;
 
 /**
  * @author César Magalhães
@@ -51,11 +59,30 @@ public class FuncionarioTest extends AbstractTest {
 		goToCreatePage("funcionario");
 		assertEquals("Adicionar Funcionário", getDriver().getTitle());
 
+		Fairy fairy = Fairy.create();
+		Person person = fairy.person();
+
+		getDriver().findElement(By.name("nome")).clear();
+		getDriver().findElement(By.name("nome")).sendKeys(person.getFullName());
+		getDriver().findElement(By.name("celular")).clear();
+		getDriver().findElement(By.name("celular")).sendKeys(ContatoMock.getCelular());
+		new Select(getDriver().findElement(By.name("funcao"))).selectByVisibleText(FuncionarioMock.getFuncao());
+		getDriver().findElement(By.name("usuario.email")).clear();
+		getDriver().findElement(By.name("usuario.email")).sendKeys(person.getEmail());
+		getDriver().findElement(By.name("cpf")).clear();
+		getDriver().findElement(By.name("cpf")).sendKeys(PessoaMock.getCpf());
+		getDriver().findElement(By.name("rg")).clear();
+		getDriver().findElement(By.name("rg")).sendKeys(PessoaMock.getRg());
+		getDriver().findElement(By.name("usuario.senha")).clear();
+		getDriver().findElement(By.name("usuario.senha")).sendKeys(UsuarioMock.getSenhaAcesso());
+		getDriver().findElement(By.name("usuario.confirmacaoSenha")).clear();
+		getDriver().findElement(By.name("usuario.confirmacaoSenha")).sendKeys(UsuarioMock.getSenhaAcesso());
+
 		// Tenta salvar os dados do funcionário
 		saveCreateAndEditPage();
 
 		// Volta à página anterior
-		cancelCreateAndEditPage();
+		// cancelCreateAndEditPage();
 	}
 
 	/*
