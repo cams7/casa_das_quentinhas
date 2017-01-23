@@ -3,17 +3,17 @@
  */
 package br.com.cams7.casa_das_quentinhas;
 
+import static br.com.cams7.casa_das_quentinhas.mock.ContatoMock.getCelular;
+import static br.com.cams7.casa_das_quentinhas.mock.FuncionarioMock.getFuncao;
+import static br.com.cams7.casa_das_quentinhas.mock.PessoaMock.getCpf;
+import static br.com.cams7.casa_das_quentinhas.mock.PessoaMock.getRg;
+import static br.com.cams7.casa_das_quentinhas.mock.UsuarioMock.getSenhaAcesso;
 import static org.junit.Assert.assertEquals;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.annotations.Test;
 
-import br.com.cams7.casa_das_quentinhas.mock.ContatoMock;
-import br.com.cams7.casa_das_quentinhas.mock.FuncionarioMock;
-import br.com.cams7.casa_das_quentinhas.mock.PessoaMock;
-import br.com.cams7.casa_das_quentinhas.mock.UsuarioMock;
-import io.codearte.jfairy.Fairy;
 import io.codearte.jfairy.producer.person.Person;
 
 /**
@@ -34,7 +34,7 @@ public class FuncionarioTest extends AbstractTest {
 		goToIndexPage();
 
 		// Ordena todos os campos da tabela de funcionários
-		ordenaFuncionarios();
+		sortFields();
 
 		// Pagina a lista de funcionários
 		paginate();
@@ -59,24 +59,23 @@ public class FuncionarioTest extends AbstractTest {
 		goToCreatePage("funcionario");
 		assertEquals("Adicionar Funcionário", getDriver().getTitle());
 
-		Fairy fairy = Fairy.create();
-		Person person = fairy.person();
+		Person person = getFairy().person();
 
 		getDriver().findElement(By.name("nome")).clear();
 		getDriver().findElement(By.name("nome")).sendKeys(person.getFullName());
 		getDriver().findElement(By.name("celular")).clear();
-		getDriver().findElement(By.name("celular")).sendKeys(ContatoMock.getCelular());
-		new Select(getDriver().findElement(By.name("funcao"))).selectByVisibleText(FuncionarioMock.getFuncao());
+		getDriver().findElement(By.name("celular")).sendKeys(getCelular());
+		new Select(getDriver().findElement(By.name("funcao"))).selectByVisibleText(getFuncao());
 		getDriver().findElement(By.name("usuario.email")).clear();
 		getDriver().findElement(By.name("usuario.email")).sendKeys(person.getEmail());
 		getDriver().findElement(By.name("cpf")).clear();
-		getDriver().findElement(By.name("cpf")).sendKeys(PessoaMock.getCpf());
+		getDriver().findElement(By.name("cpf")).sendKeys(getCpf());
 		getDriver().findElement(By.name("rg")).clear();
-		getDriver().findElement(By.name("rg")).sendKeys(PessoaMock.getRg());
+		getDriver().findElement(By.name("rg")).sendKeys(getRg());
 		getDriver().findElement(By.name("usuario.senha")).clear();
-		getDriver().findElement(By.name("usuario.senha")).sendKeys(UsuarioMock.getSenhaAcesso());
+		getDriver().findElement(By.name("usuario.senha")).sendKeys(getSenhaAcesso());
 		getDriver().findElement(By.name("usuario.confirmacaoSenha")).clear();
-		getDriver().findElement(By.name("usuario.confirmacaoSenha")).sendKeys(UsuarioMock.getSenhaAcesso());
+		getDriver().findElement(By.name("usuario.confirmacaoSenha")).sendKeys(getSenhaAcesso());
 
 		// Tenta salvar os dados do funcionário
 		saveCreateAndEditPage();
@@ -141,24 +140,19 @@ public class FuncionarioTest extends AbstractTest {
 		closeDeleteModal();
 	}
 
+	/**
+	 * Vai para a página de listagem de funcionários
+	 */
 	private void goToIndexPage() {
 		goToIndexPage("funcionario", "Funcionário(s)");
 		assertEquals("Lista de Funcionários", getDriver().getTitle());
 	}
 
-	private void ordenaFuncionarios() {
-		getDriver().findElement(By.id("id")).click();
-		sleep();
-		getDriver().findElement(By.id("nome")).click();
-		sleep();
-		getDriver().findElement(By.id("cpf")).click();
-		sleep();
-		getDriver().findElement(By.id("usuario.email")).click();
-		sleep();
-		getDriver().findElement(By.id("celular")).click();
-		sleep();
-		getDriver().findElement(By.id("funcao")).click();
-		sleep();
+	/**
+	 * Ordena, aletoriamente, os campos da tabela funcionário
+	 */
+	private void sortFields() {
+		sortFields("id", "nome", "cpf", "usuario.email", "celular", "funcao");
 	}
 
 }

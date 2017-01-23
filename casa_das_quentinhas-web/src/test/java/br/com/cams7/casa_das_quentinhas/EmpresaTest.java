@@ -3,6 +3,14 @@
  */
 package br.com.cams7.casa_das_quentinhas;
 
+import static br.com.cams7.casa_das_quentinhas.mock.ContatoMock.getTelefone;
+import static br.com.cams7.casa_das_quentinhas.mock.EmpresaMock.getCnpj;
+import static br.com.cams7.casa_das_quentinhas.mock.EmpresaMock.getRegimeTributario;
+import static br.com.cams7.casa_das_quentinhas.mock.EmpresaMock.getTipo;
+import static br.com.cams7.casa_das_quentinhas.mock.EnderecoMock.getQualquerBairro;
+import static br.com.cams7.casa_das_quentinhas.mock.EnderecoMock.getQualquerCep;
+import static br.com.cams7.casa_das_quentinhas.mock.EnderecoMock.getQualquerCidade;
+import static br.com.cams7.casa_das_quentinhas.mock.UsuarioMock.getSenhaAcesso;
 import static org.junit.Assert.assertEquals;
 
 import org.openqa.selenium.By;
@@ -10,11 +18,6 @@ import org.openqa.selenium.support.ui.Select;
 import org.testng.annotations.Test;
 
 import br.com.cams7.casa_das_quentinhas.entity.Cidade;
-import br.com.cams7.casa_das_quentinhas.mock.ContatoMock;
-import br.com.cams7.casa_das_quentinhas.mock.EmpresaMock;
-import br.com.cams7.casa_das_quentinhas.mock.EnderecoMock;
-import br.com.cams7.casa_das_quentinhas.mock.UsuarioMock;
-import io.codearte.jfairy.Fairy;
 import io.codearte.jfairy.producer.company.Company;
 import io.codearte.jfairy.producer.person.Address;
 import io.codearte.jfairy.producer.person.Person;
@@ -37,7 +40,7 @@ public class EmpresaTest extends AbstractTest {
 		goToIndexPage();
 
 		// Ordena todos os campos da tabela de empresas
-		ordenaClientes();
+		sortFields();
 
 		// Pagina a lista de clientes
 		paginate();
@@ -62,26 +65,24 @@ public class EmpresaTest extends AbstractTest {
 		goToCreatePage("empresa");
 		assertEquals("Adicionar Empresa", getDriver().getTitle());
 
-		Fairy fairy = Fairy.create();
-		Person person = fairy.person();
+		Person person = getFairy().person();
 		Company company = person.getCompany();
 		Address address = person.getAddress();
 
-		Cidade cidade = EnderecoMock.getQualquerCidade();
+		Cidade cidade = getQualquerCidade();
 
 		getDriver().findElement(By.name("razaoSocial")).clear();
 		getDriver().findElement(By.name("razaoSocial")).sendKeys(company.getName());
 		getDriver().findElement(By.name("nomeFantasia")).clear();
 		getDriver().findElement(By.name("nomeFantasia")).sendKeys(company.getName());
 		getDriver().findElement(By.name("cnpj")).clear();
-		getDriver().findElement(By.name("cnpj")).sendKeys(EmpresaMock.getCnpj());
-		new Select(getDriver().findElement(By.name("tipo"))).selectByVisibleText(EmpresaMock.getTipo());
+		getDriver().findElement(By.name("cnpj")).sendKeys(getCnpj());
+		new Select(getDriver().findElement(By.name("tipo"))).selectByVisibleText(getTipo());
 		getDriver().findElement(By.name("contato.email")).clear();
 		getDriver().findElement(By.name("contato.email")).sendKeys(company.getEmail());
 		getDriver().findElement(By.name("contato.telefone")).clear();
-		getDriver().findElement(By.name("contato.telefone")).sendKeys(ContatoMock.getTelefone());
-		new Select(getDriver().findElement(By.name("regimeTributario")))
-				.selectByVisibleText(EmpresaMock.getRegimeTributario());
+		getDriver().findElement(By.name("contato.telefone")).sendKeys(getTelefone());
+		new Select(getDriver().findElement(By.name("regimeTributario"))).selectByVisibleText(getRegimeTributario());
 		// getDriver().findElement(By.name("inscricaoEstadual")).clear();
 		// getDriver().findElement(By.name("inscricaoEstadual")).sendKeys("0142315578483");
 		// getDriver().findElement(By.name("inscricaoEstadualST")).clear();
@@ -94,9 +95,9 @@ public class EmpresaTest extends AbstractTest {
 		getDriver().findElement(By.name("cidade.nome")).sendKeys(cidade.getNome() + " < MG >");
 		getJS().executeScript("$('input#cidade_id').val(" + cidade.getId() + ");");
 		getDriver().findElement(By.name("endereco.cep")).clear();
-		getDriver().findElement(By.name("endereco.cep")).sendKeys(EnderecoMock.getQualquerCep(cidade.getId()));
+		getDriver().findElement(By.name("endereco.cep")).sendKeys(getQualquerCep(cidade.getId()));
 		getDriver().findElement(By.name("endereco.bairro")).clear();
-		getDriver().findElement(By.name("endereco.bairro")).sendKeys(EnderecoMock.getQualquerBairro(cidade.getId()));
+		getDriver().findElement(By.name("endereco.bairro")).sendKeys(getQualquerBairro(cidade.getId()));
 		getDriver().findElement(By.name("endereco.logradouro")).clear();
 		getDriver().findElement(By.name("endereco.logradouro")).sendKeys(address.getStreet());
 		getDriver().findElement(By.name("endereco.numeroImovel")).clear();
@@ -106,9 +107,9 @@ public class EmpresaTest extends AbstractTest {
 		// getDriver().findElement(By.name("endereco.pontoReferencia")).clear();
 		// getDriver().findElement(By.name("endereco.pontoReferencia")).sendKeys("");
 		getDriver().findElement(By.name("usuarioAcesso.senha")).clear();
-		getDriver().findElement(By.name("usuarioAcesso.senha")).sendKeys(UsuarioMock.getSenhaAcesso());
+		getDriver().findElement(By.name("usuarioAcesso.senha")).sendKeys(getSenhaAcesso());
 		getDriver().findElement(By.name("usuarioAcesso.confirmacaoSenha")).clear();
-		getDriver().findElement(By.name("usuarioAcesso.confirmacaoSenha")).sendKeys(UsuarioMock.getSenhaAcesso());
+		getDriver().findElement(By.name("usuarioAcesso.confirmacaoSenha")).sendKeys(getSenhaAcesso());
 		// Tenta salvar os dados da empresa
 		saveCreateAndEditPage();
 
@@ -172,26 +173,19 @@ public class EmpresaTest extends AbstractTest {
 		closeDeleteModal();
 	}
 
+	/**
+	 * Vai para a página de listagem de empresas
+	 */
 	private void goToIndexPage() {
 		goToIndexPage("empresa", "Empresa(s)");
 		assertEquals("Lista de Empresas", getDriver().getTitle());
 	}
 
-	private void ordenaClientes() {
-		getDriver().findElement(By.id("id")).click();
-		sleep();
-		getDriver().findElement(By.id("razaoSocial")).click();
-		sleep();
-		getDriver().findElement(By.id("cnpj")).click();
-		sleep();
-		getDriver().findElement(By.id("contato.email")).click();
-		sleep();
-		getDriver().findElement(By.id("contato.telefone")).click();
-		sleep();
-		getDriver().findElement(By.id("tipo")).click();
-		sleep();
-		getDriver().findElement(By.id("cidade.nome")).click();
-		sleep();
+	/**
+	 * Ordena, aletoriamente, os campos da tabela empresa
+	 */
+	private void sortFields() {
+		sortFields("id", "razaoSocial", "cnpj", "contato.email", "contato.telefone", "tipo", "cidade.nome");
 	}
 
 }

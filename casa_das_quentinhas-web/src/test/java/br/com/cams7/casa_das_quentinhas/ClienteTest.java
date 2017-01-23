@@ -3,6 +3,12 @@
  */
 package br.com.cams7.casa_das_quentinhas;
 
+import static br.com.cams7.casa_das_quentinhas.mock.ContatoMock.getTelefone;
+import static br.com.cams7.casa_das_quentinhas.mock.EnderecoMock.getQualquerBairro;
+import static br.com.cams7.casa_das_quentinhas.mock.EnderecoMock.getQualquerCep;
+import static br.com.cams7.casa_das_quentinhas.mock.EnderecoMock.getQualquerCidade;
+import static br.com.cams7.casa_das_quentinhas.mock.PessoaMock.getCpf;
+import static br.com.cams7.casa_das_quentinhas.mock.UsuarioMock.getSenhaAcesso;
 import static org.junit.Assert.assertEquals;
 
 import org.joda.time.format.DateTimeFormat;
@@ -10,11 +16,6 @@ import org.openqa.selenium.By;
 import org.testng.annotations.Test;
 
 import br.com.cams7.casa_das_quentinhas.entity.Cidade;
-import br.com.cams7.casa_das_quentinhas.mock.ContatoMock;
-import br.com.cams7.casa_das_quentinhas.mock.EnderecoMock;
-import br.com.cams7.casa_das_quentinhas.mock.PessoaMock;
-import br.com.cams7.casa_das_quentinhas.mock.UsuarioMock;
-import io.codearte.jfairy.Fairy;
 import io.codearte.jfairy.producer.person.Address;
 import io.codearte.jfairy.producer.person.Person;
 
@@ -36,7 +37,7 @@ public class ClienteTest extends AbstractTest {
 		goToIndexPage();
 
 		// Ordena todos os campos da tabela de clientes
-		ordenaClientes();
+		sortFields();
 
 		// Pagina a lista de clientes
 		paginate();
@@ -61,30 +62,28 @@ public class ClienteTest extends AbstractTest {
 		goToCreatePage("cliente");
 		assertEquals("Adicionar Cliente", getDriver().getTitle());
 
-		Fairy fairy = Fairy.create();
-
-		Person person = fairy.person();
+		Person person = getFairy().person();
 		Address address = person.getAddress();
-		Cidade cidade = EnderecoMock.getQualquerCidade();
+		Cidade cidade = getQualquerCidade();
 
 		getDriver().findElement(By.name("nome")).clear();
 		getDriver().findElement(By.name("nome")).sendKeys(person.getFullName());
 		getDriver().findElement(By.name("cpf")).clear();
-		getDriver().findElement(By.name("cpf")).sendKeys(PessoaMock.getCpf());
+		getDriver().findElement(By.name("cpf")).sendKeys(getCpf());
 		getDriver().findElement(By.name("nascimento")).clear();
 		getDriver().findElement(By.name("nascimento"))
 				.sendKeys(DateTimeFormat.forPattern("dd/MM/yyyy").print(person.getDateOfBirth()));
 		getDriver().findElement(By.name("contato.email")).clear();
 		getDriver().findElement(By.name("contato.email")).sendKeys(person.getEmail());
 		getDriver().findElement(By.name("contato.telefone")).clear();
-		getDriver().findElement(By.name("contato.telefone")).sendKeys(ContatoMock.getTelefone());
+		getDriver().findElement(By.name("contato.telefone")).sendKeys(getTelefone());
 		getDriver().findElement(By.name("cidade.nome")).clear();
 		getDriver().findElement(By.name("cidade.nome")).sendKeys(cidade.getNome() + " < MG >");
 		getJS().executeScript("$('input#cidade_id').val(" + cidade.getId() + ");");
 		getDriver().findElement(By.name("endereco.cep")).clear();
-		getDriver().findElement(By.name("endereco.cep")).sendKeys(EnderecoMock.getQualquerCep(cidade.getId()));
+		getDriver().findElement(By.name("endereco.cep")).sendKeys(getQualquerCep(cidade.getId()));
 		getDriver().findElement(By.name("endereco.bairro")).clear();
-		getDriver().findElement(By.name("endereco.bairro")).sendKeys(EnderecoMock.getQualquerBairro(cidade.getId()));
+		getDriver().findElement(By.name("endereco.bairro")).sendKeys(getQualquerBairro(cidade.getId()));
 		getDriver().findElement(By.name("endereco.logradouro")).clear();
 		getDriver().findElement(By.name("endereco.logradouro")).sendKeys(address.getStreet());
 		getDriver().findElement(By.name("endereco.numeroImovel")).clear();
@@ -94,10 +93,10 @@ public class ClienteTest extends AbstractTest {
 		// getDriver().findElement(By.name("endereco.pontoReferencia")).clear();
 		// getDriver().findElement(By.name("endereco.pontoReferencia")).sendKeys("");
 		getDriver().findElement(By.name("usuarioAcesso.senha")).clear();
-		getDriver().findElement(By.name("usuarioAcesso.senha")).sendKeys(UsuarioMock.getSenhaAcesso());
+		getDriver().findElement(By.name("usuarioAcesso.senha")).sendKeys(getSenhaAcesso());
 		getDriver().findElement(By.name("usuarioAcesso.confirmacaoSenha")).clear();
-		getDriver().findElement(By.name("usuarioAcesso.confirmacaoSenha")).sendKeys(UsuarioMock.getSenhaAcesso());
-		
+		getDriver().findElement(By.name("usuarioAcesso.confirmacaoSenha")).sendKeys(getSenhaAcesso());
+
 		// Tenta salvar os dados do cliente
 		saveCreateAndEditPage();
 
@@ -161,24 +160,19 @@ public class ClienteTest extends AbstractTest {
 		closeDeleteModal();
 	}
 
+	/**
+	 * Vai para a página de listagem de clientes
+	 */
 	private void goToIndexPage() {
 		goToIndexPage("cliente", "Cliente(s)");
 		assertEquals("Lista de Clientes", getDriver().getTitle());
 	}
 
-	private void ordenaClientes() {
-		getDriver().findElement(By.id("id")).click();
-		sleep();
-		getDriver().findElement(By.id("nome")).click();
-		sleep();
-		getDriver().findElement(By.id("cpf")).click();
-		sleep();
-		getDriver().findElement(By.id("contato.email")).click();
-		sleep();
-		getDriver().findElement(By.id("contato.telefone")).click();
-		sleep();
-		getDriver().findElement(By.id("cidade.nome")).click();
-		sleep();
+	/**
+	 * Ordena, aletoriamente, os campos da tabela cliente
+	 */
+	private void sortFields() {
+		sortFields("id", "nome", "cpf", "contato.email", "contato.telefone", "cidade.nome");
 	}
 
 }

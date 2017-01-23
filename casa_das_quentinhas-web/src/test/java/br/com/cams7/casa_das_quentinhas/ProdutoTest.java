@@ -5,7 +5,6 @@ package br.com.cams7.casa_das_quentinhas;
 
 import static org.junit.Assert.assertEquals;
 
-import org.openqa.selenium.By;
 import org.testng.annotations.Test;
 
 /**
@@ -26,7 +25,7 @@ public class ProdutoTest extends AbstractTest {
 		goToIndexPage();
 
 		// Ordena todos os campos da tabela de produtos
-		ordenaClientes();
+		sortFields();
 
 		// Pagina a lista de produtos
 		paginate();
@@ -113,20 +112,19 @@ public class ProdutoTest extends AbstractTest {
 		closeDeleteModal();
 	}
 
+	/**
+	 * Vai para a página de listagem de produtos
+	 */
 	private void goToIndexPage() {
 		goToIndexPage("produto", "Produto(s)");
 		assertEquals("Lista de Produtos", getDriver().getTitle());
 	}
 
-	private void ordenaClientes() {
-		getDriver().findElement(By.id("id")).click();
-		sleep();
-		getDriver().findElement(By.id("nome")).click();
-		sleep();
-		getDriver().findElement(By.id("tamanho")).click();
-		sleep();
-		getDriver().findElement(By.id("custo")).click();
-		sleep();
+	/**
+	 * Ordena, aletoriamente, os campos da tabela produto
+	 */
+	private void sortFields() {
+		sortFields("id", "nome", "tamanho", "custo");
 	}
 
 }

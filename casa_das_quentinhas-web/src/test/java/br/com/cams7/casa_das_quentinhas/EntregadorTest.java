@@ -5,7 +5,6 @@ package br.com.cams7.casa_das_quentinhas;
 
 import static org.junit.Assert.assertEquals;
 
-import org.openqa.selenium.By;
 import org.testng.annotations.Test;
 
 /**
@@ -26,7 +25,7 @@ public class EntregadorTest extends AbstractTest {
 		goToIndexPage();
 
 		// Ordena todos os campos da tabela de entregadores
-		ordenaEntregadores();
+		sortFields();
 
 		// Pagina a lista de entregadores
 		paginate();
@@ -114,24 +113,19 @@ public class EntregadorTest extends AbstractTest {
 		closeDeleteModal();
 	}
 
+	/**
+	 * Vai para a página de listagem de entregadores
+	 */
 	private void goToIndexPage() {
 		goToIndexPage("entregador", "Entregador(es)");
 		assertEquals("Lista de Entregadores", getDriver().getTitle());
 	}
 
-	private void ordenaEntregadores() {
-		getDriver().findElement(By.id("id")).click();
-		sleep();
-		getDriver().findElement(By.id("nome")).click();
-		sleep();
-		getDriver().findElement(By.id("cpf")).click();
-		sleep();
-		getDriver().findElement(By.id("usuario.email")).click();
-		sleep();
-		getDriver().findElement(By.id("celular")).click();
-		sleep();
-		getDriver().findElement(By.id("empresa.razaoSocial")).click();
-		sleep();
+	/**
+	 * Ordena, aletoriamente, os campos da tabela entregador
+	 */
+	private void sortFields() {
+		sortFields("id", "nome", "cpf", "usuario.email", "celular", "empresa.razaoSocial");
 	}
 
 }

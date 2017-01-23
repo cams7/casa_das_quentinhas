@@ -25,19 +25,25 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeSuite;
 
 import br.com.cams7.casa_das_quentinhas.mock.UsuarioMock;
+import io.codearte.jfairy.Fairy;
+import io.codearte.jfairy.producer.BaseProducer;
 
 public abstract class AbstractTest implements BaseTest {
 
 	// private boolean acceptNextAlert = true;
 	// private StringBuffer verificationErrors = new StringBuffer();
 
+	protected final Logger LOGGER;
+
 	private static WebDriver driver;
 	private static String baseUrl;
 
 	private static boolean sleepEnabled = false;
+
 	private static Object acesso;
 
-	protected final Logger LOGGER;
+	private static Fairy fairy;
+	private static BaseProducer baseProducer;
 
 	private final String UNAUTHORIZED_MESSAGE = "Não autorizado";
 
@@ -55,6 +61,9 @@ public abstract class AbstractTest implements BaseTest {
 
 		setDriverAndUrl();
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+
+		fairy = Fairy.create();
+		baseProducer = fairy.baseProducer();
 
 		final String EMAIL_ACESSO = UsuarioMock.getQualquerEmailAcesso();
 		login(EMAIL_ACESSO, UsuarioMock.getSenhaAcesso());
@@ -102,6 +111,9 @@ public abstract class AbstractTest implements BaseTest {
 		sleep();
 	}
 
+	/**
+	 * Pagina a tabela
+	 */
 	protected void paginate() {
 		short maxResults = Short
 				.valueOf((String) getJS().executeScript("return $('input#dataTable_maxResults').val();"));
@@ -111,18 +123,38 @@ public abstract class AbstractTest implements BaseTest {
 		if (count % maxResults > 0)
 			totalPages++;
 
-		for (int i = 2; i <= totalPages; i++) {
-			getJS().executeScript("$('ul.pagination li a').eq( " + i + " ).click();");
-			sleep();
-		}
+		// for (int i = 2; i <= totalPages; i++) {
+		getJS().executeScript("$('ul.pagination li a').eq( " + totalPages + " ).click();");
+		sleep();
+		// }
 
 		// LOGGER.info("maxResults: {}, count: {}, pages: {}", maxResults,
 		// count, totalPages);
 	}
 
+	/**
+	 * Pesquisa os dados
+	 * 
+	 * @param query
+	 */
 	protected void search(String query) {
 		getJS().executeScript("$('input#search_query').val('" + query + "');$('button#search_btn').click();");
 		sleep();
+	}
+
+	/**
+	 * Ordena todos os campos da tabela
+	 * 
+	 * @param fields
+	 *            Campos da tabela
+	 */
+	protected void sortFields(String... fields) {
+		for (String field : fields) {
+			if (baseProducer.trueOrFalse()) {
+				getDriver().findElement(By.id(field)).click();
+				sleep();
+			}
+		}
 	}
 
 	/**
@@ -257,6 +289,14 @@ public abstract class AbstractTest implements BaseTest {
 
 	public static Object getAcesso() {
 		return acesso;
+	}
+
+	protected static Fairy getFairy() {
+		return fairy;
+	}
+
+	protected static BaseProducer getBaseProducer() {
+		return baseProducer;
 	}
 
 	private void setDriverAndUrl() {

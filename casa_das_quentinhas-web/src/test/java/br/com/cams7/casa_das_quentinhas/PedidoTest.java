@@ -5,7 +5,6 @@ package br.com.cams7.casa_das_quentinhas;
 
 import static org.junit.Assert.assertEquals;
 
-import org.openqa.selenium.By;
 import org.testng.annotations.Test;
 
 /**
@@ -26,7 +25,7 @@ public class PedidoTest extends AbstractTest {
 		goToIndexPage();
 
 		// Ordena todos os campos da tabela de pedidos
-		ordenaClientes();
+		sortFields();
 
 		// Pagina a lista de pedidos
 		paginate();
@@ -114,22 +113,19 @@ public class PedidoTest extends AbstractTest {
 		closeDeleteModal();
 	}
 
+	/**
+	 * Vai para a página de listagem de pedidos
+	 */
 	private void goToIndexPage() {
 		goToIndexPage("pedido", "Pedido(s)");
 		assertEquals("Lista de Pedidos", getDriver().getTitle());
 	}
 
-	private void ordenaClientes() {
-		getDriver().findElement(By.id("id")).click();
-		sleep();
-		getDriver().findElement(By.id("tipoCliente")).click();
-		sleep();
-		getDriver().findElement(By.id("quantidade")).click();
-		sleep();
-		getDriver().findElement(By.id("custo")).click();
-		sleep();
-		getDriver().findElement(By.id("manutencao.cadastro")).click();
-		sleep();
+	/**
+	 * Ordena, aletoriamente, os campos da tabela pedido
+	 */
+	private void sortFields() {
+		sortFields("id", "tipoCliente", "quantidade", "custo", "manutencao.cadastro");
 	}
 
 }
