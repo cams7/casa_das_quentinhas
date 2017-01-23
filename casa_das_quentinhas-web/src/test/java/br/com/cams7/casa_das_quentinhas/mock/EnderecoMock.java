@@ -13,9 +13,9 @@ public class EnderecoMock extends AbstractMock {
 
 	static {
 		cidades = new HashMap<>();
-		cidades.put(2308, "Belo Horizonte");
-		cidades.put(2901, "Sabará");
-		cidades.put(2917, "Santa Luzia");
+		cidades.put(2308, "Belo Horizonte < MG >");
+		cidades.put(2901, "Sabará < MG >");
+		cidades.put(2917, "Santa Luzia < MG >");
 
 		bairros = new HashMap<>();
 		// Belo Horizonte - 3106200

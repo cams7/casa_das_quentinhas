@@ -3,6 +3,12 @@
  */
 package br.com.cams7.casa_das_quentinhas.mock;
 
+import static br.com.cams7.casa_das_quentinhas.entity.Empresa.RegimeTributario.REGIME_NORMAL;
+import static br.com.cams7.casa_das_quentinhas.entity.Empresa.RegimeTributario.SIMPLES_NACIONAL;
+import static br.com.cams7.casa_das_quentinhas.entity.Empresa.RegimeTributario.SUBLIMITE_RECEITA;
+import static br.com.cams7.casa_das_quentinhas.entity.Empresa.Tipo.CLIENTE;
+import static br.com.cams7.casa_das_quentinhas.entity.Empresa.Tipo.ENTREGA;
+
 /**
  * @author César Magalhães
  *
@@ -15,7 +21,7 @@ public class EmpresaMock extends AbstractMock {
 	 * @return Tipo de empresa
 	 */
 	public static String getTipo() {
-		return getBaseProducer().randomElement("Cliente", "Entrega");
+		return getBaseProducer().randomElement(CLIENTE.name(), ENTREGA.name());
 	}
 
 	/**
@@ -24,8 +30,7 @@ public class EmpresaMock extends AbstractMock {
 	 * @return Regime tributário
 	 */
 	public static String getRegimeTributario() {
-		return getBaseProducer().randomElement("Simples Nacional",
-				"Simples Nacional - excesso de sublimite de receita bruta", "Regime Normal");
+		return getBaseProducer().randomElement(SIMPLES_NACIONAL.name(), SUBLIMITE_RECEITA.name(), REGIME_NORMAL.name());
 	}
 
 	/**

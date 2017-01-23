@@ -77,12 +77,12 @@ public class EmpresaTest extends AbstractTest {
 		getDriver().findElement(By.name("nomeFantasia")).sendKeys(company.getName());
 		getDriver().findElement(By.name("cnpj")).clear();
 		getDriver().findElement(By.name("cnpj")).sendKeys(getCnpj());
-		new Select(getDriver().findElement(By.name("tipo"))).selectByVisibleText(getTipo());
+		new Select(getDriver().findElement(By.name("tipo"))).selectByValue(getTipo());
 		getDriver().findElement(By.name("contato.email")).clear();
 		getDriver().findElement(By.name("contato.email")).sendKeys(company.getEmail());
 		getDriver().findElement(By.name("contato.telefone")).clear();
 		getDriver().findElement(By.name("contato.telefone")).sendKeys(getTelefone());
-		new Select(getDriver().findElement(By.name("regimeTributario"))).selectByVisibleText(getRegimeTributario());
+		new Select(getDriver().findElement(By.name("regimeTributario"))).selectByValue(getRegimeTributario());
 		// getDriver().findElement(By.name("inscricaoEstadual")).clear();
 		// getDriver().findElement(By.name("inscricaoEstadual")).sendKeys("0142315578483");
 		// getDriver().findElement(By.name("inscricaoEstadualST")).clear();
@@ -92,7 +92,7 @@ public class EmpresaTest extends AbstractTest {
 		// getDriver().findElement(By.name("codigoCnae")).clear();
 		// getDriver().findElement(By.name("codigoCnae")).sendKeys("");
 		getDriver().findElement(By.name("cidade.nome")).clear();
-		getDriver().findElement(By.name("cidade.nome")).sendKeys(cidade.getNome() + " < MG >");
+		getDriver().findElement(By.name("cidade.nome")).sendKeys(cidade.getNome());
 		getJS().executeScript("$('input#cidade_id').val(" + cidade.getId() + ");");
 		getDriver().findElement(By.name("endereco.cep")).clear();
 		getDriver().findElement(By.name("endereco.cep")).sendKeys(getQualquerCep(cidade.getId()));

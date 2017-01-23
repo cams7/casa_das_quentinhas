@@ -65,7 +65,7 @@ public class FuncionarioTest extends AbstractTest {
 		getDriver().findElement(By.name("nome")).sendKeys(person.getFullName());
 		getDriver().findElement(By.name("celular")).clear();
 		getDriver().findElement(By.name("celular")).sendKeys(getCelular());
-		new Select(getDriver().findElement(By.name("funcao"))).selectByVisibleText(getFuncao());
+		new Select(getDriver().findElement(By.name("funcao"))).selectByValue(getFuncao());
 		getDriver().findElement(By.name("usuario.email")).clear();
 		getDriver().findElement(By.name("usuario.email")).sendKeys(person.getEmail());
 		getDriver().findElement(By.name("cpf")).clear();
