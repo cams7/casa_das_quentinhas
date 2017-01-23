@@ -3,12 +3,12 @@
 <suite name="SeleniumSuite" parallel="false">
 	<test name="SeleniumTest">
 		<classes>
-			<!--class name="br.com.cams7.casa_das_quentinhas.ClienteTest"></class>
+			<class name="br.com.cams7.casa_das_quentinhas.ClienteTest"></class>
 			<class name="br.com.cams7.casa_das_quentinhas.PedidoTest"></class>
 			<class name="br.com.cams7.casa_das_quentinhas.ProdutoTest"></class>
-			<class name="br.com.cams7.casa_das_quentinhas.EmpresaTest"></class-->
+			<class name="br.com.cams7.casa_das_quentinhas.EmpresaTest"></class>
 			<class name="br.com.cams7.casa_das_quentinhas.EntregadorTest"></class>
-			<!--class name="br.com.cams7.casa_das_quentinhas.FuncionarioTest"></class-->
+			<class name="br.com.cams7.casa_das_quentinhas.FuncionarioTest"></class>
 		</classes>
 	</test>
 </suite>

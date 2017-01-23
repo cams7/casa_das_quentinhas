@@ -56,17 +56,17 @@ public class EntregadorTest extends AbstractTest {
 		// Carrega um formulário para o cadasatro do entregador
 		goToCreatePage("entregador");
 		assertEquals("Adicionar Entregador", getDriver().getTitle());
-		
+
 		Person person = getFairy().person();
-		
+
 		getDriver().findElement(By.name("nome")).clear();
 		getDriver().findElement(By.name("nome")).sendKeys(person.getFullName());
 		getDriver().findElement(By.name("celular")).clear();
 		getDriver().findElement(By.name("celular")).sendKeys(getCelular());
 		getDriver().findElement(By.name("empresa.razaoSocial")).clear();
 		getDriver().findElement(By.name("empresa.razaoSocial")).sendKeys("Erntogra < 77.848.384/0001-21 >");
-		getJS().executeScript("$('input#empresa_id').val(" + 52 + ");");	   
-	    getDriver().findElement(By.name("usuario.email")).clear();
+		getJS().executeScript("$('input#empresa_id').val(" + 52 + ");");
+		getDriver().findElement(By.name("usuario.email")).clear();
 		getDriver().findElement(By.name("usuario.email")).sendKeys(person.getEmail());
 		getDriver().findElement(By.name("cpf")).clear();
 		getDriver().findElement(By.name("cpf")).sendKeys(getCpf());
@@ -80,7 +80,7 @@ public class EntregadorTest extends AbstractTest {
 		saveCreateAndEditPage();
 
 		// Volta à página anterior
-//		cancelCreateAndEditPage();
+		// cancelCreateAndEditPage();
 	}
 
 	/*

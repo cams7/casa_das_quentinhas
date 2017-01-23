@@ -2,6 +2,9 @@ package br.com.cams7.casa_das_quentinhas;
 
 import static br.com.cams7.casa_das_quentinhas.entity.Funcionario.Funcao.ATENDENTE;
 import static br.com.cams7.casa_das_quentinhas.entity.Funcionario.Funcao.GERENTE;
+import static br.com.cams7.casa_das_quentinhas.mock.UsuarioMock.getAcessoByEmail;
+import static br.com.cams7.casa_das_quentinhas.mock.UsuarioMock.getQualquerEmailAcesso;
+import static br.com.cams7.casa_das_quentinhas.mock.UsuarioMock.getSenhaAcesso;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
@@ -19,12 +22,11 @@ import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.SkipException;
-import org.testng.annotations.AfterClass;
+//import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterSuite;
-import org.testng.annotations.BeforeClass;
+//import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeSuite;
 
-import br.com.cams7.casa_das_quentinhas.mock.UsuarioMock;
 import io.codearte.jfairy.Fairy;
 import io.codearte.jfairy.producer.BaseProducer;
 
@@ -57,7 +59,7 @@ public abstract class AbstractTest implements BaseTest {
 
 	@BeforeSuite
 	public void setUp() throws Exception {
-		LOGGER.info("@BeforeSuite");
+		// LOGGER.info("@BeforeSuite");
 
 		setDriverAndUrl();
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
@@ -65,36 +67,36 @@ public abstract class AbstractTest implements BaseTest {
 		fairy = Fairy.create();
 		baseProducer = fairy.baseProducer();
 
-		final String EMAIL_ACESSO = UsuarioMock.getQualquerEmailAcesso();
-		login(EMAIL_ACESSO, UsuarioMock.getSenhaAcesso());
+		final String EMAIL_ACESSO = getQualquerEmailAcesso();
+		login(EMAIL_ACESSO, getSenhaAcesso());
 
-		acesso = UsuarioMock.getAcesso(EMAIL_ACESSO);
+		acesso = getAcessoByEmail(EMAIL_ACESSO);
 
 		LOGGER.info("E-mail: {}, acesso: {}", EMAIL_ACESSO, acesso);
 	}
 
 	@AfterSuite
 	public void tearDown() throws Exception {
-		LOGGER.info("@AfterSuite");
+		// LOGGER.info("@AfterSuite");
 
 		logout();
 
 		driver.quit();
 	}
 
-	@BeforeClass(alwaysRun = true)
-	public void begin() {
-		LOGGER.info("@BeforeClass");
-	}
-
-	@AfterClass(alwaysRun = true)
-	public void end() {
-		LOGGER.info("@AfterClass");
-		// String verificationErrorString = verificationErrors.toString();
-		// if (!"".equals(verificationErrorString)) {
-		// fail(verificationErrorString);
-		// }
-	}
+	// @BeforeClass(alwaysRun = true)
+	// public void begin() {
+	// LOGGER.info("@BeforeClass");
+	// }
+	//
+	// @AfterClass(alwaysRun = true)
+	// public void end() {
+	// LOGGER.info("@AfterClass");
+	// // String verificationErrorString = verificationErrors.toString();
+	// // if (!"".equals(verificationErrorString)) {
+	// // fail(verificationErrorString);
+	// // }
+	// }
 
 	/**
 	 * Vai para página de listagem
@@ -287,9 +289,9 @@ public abstract class AbstractTest implements BaseTest {
 		return baseUrl;
 	}
 
-	public static Object getAcesso() {
-		return acesso;
-	}
+	// public static Object getAcesso() {
+	// return acesso;
+	// }
 
 	protected static Fairy getFairy() {
 		return fairy;
@@ -330,7 +332,13 @@ public abstract class AbstractTest implements BaseTest {
 	}
 
 	private String getId() {
-		return (String) getJS().executeScript("return $('table.dataTable tbody tr:first td:first').html();");
+		long rows = (Long) getJS().executeScript("return $('table.dataTable tbody tr').length;");
+		long rowIndex = getBaseProducer().randomBetween(1, rows);
+		String id = (String) getJS()
+				.executeScript("return $('table.dataTable tbody tr:nth-child(" + rowIndex + ") td:first').html();");
+		// LOGGER.info("rows: " + rows + ", rowIndex: " + rowIndex + ", id: " +
+		// id);
+		return id;
 	}
 
 	// private boolean isElementPresent(By by) {
