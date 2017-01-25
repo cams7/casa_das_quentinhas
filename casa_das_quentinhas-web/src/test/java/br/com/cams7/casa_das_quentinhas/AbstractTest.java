@@ -17,8 +17,11 @@ import org.openqa.selenium.JavascriptExecutor;
 //import org.openqa.selenium.NoAlertPresentException;
 //import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +44,7 @@ public abstract class AbstractTest implements BaseTest {
 	private static WebDriver driver;
 	private static String baseUrl;
 
-	private static boolean sleepEnabled = false;
+	private static boolean isChrome = false;
 
 	private static Object acesso;
 
@@ -119,20 +122,22 @@ public abstract class AbstractTest implements BaseTest {
 	 */
 	protected void paginate() {
 		short maxResults = Short
-				.valueOf((String) getJS().executeScript("return $('input#dataTable_maxResults').val();"));
-		long count = Long.valueOf((String) getJS().executeScript("return $('input#dataTable_count').val();"));
+				.valueOf(driver.findElement(By.xpath("//input[@id='dataTable_maxResults']")).getAttribute("value"));
+		long count = Long.valueOf(driver.findElement(By.xpath("//input[@id='dataTable_count']")).getAttribute("value"));
 
 		int totalPages = (int) (count / maxResults);
 		if (count % maxResults > 0)
 			totalPages++;
 
-		// for (int i = 2; i <= totalPages; i++) {
-		getJS().executeScript("$('ul.pagination li a').eq( " + totalPages + " ).click();");
-		sleep();
-		// }
-
 		// LOGGER.info("maxResults: {}, count: {}, pages: {}", maxResults,
 		// count, totalPages);
+
+		WebDriverWait wait = getWait();
+		WebElement selectPage = getDriver().findElements(By.cssSelector("ul.pagination > li > a")).get(totalPages);
+		wait.until(ExpectedConditions.elementToBeClickable(selectPage));
+		selectPage.click();
+
+		sleep();
 	}
 
 	/**
@@ -267,7 +272,7 @@ public abstract class AbstractTest implements BaseTest {
 	}
 
 	protected void sleep() {
-		if (sleepEnabled)
+		if (isChrome)
 			try {
 				Thread.sleep(Short.valueOf(System.getProperty("sleep.millisecounds")));
 			} catch (InterruptedException e) {
@@ -279,11 +284,15 @@ public abstract class AbstractTest implements BaseTest {
 		return driver;
 	}
 
-	protected final JavascriptExecutor getJS() {
+	protected final JavascriptExecutor getJS(WebDriver driver) {
 		if (!(driver instanceof JavascriptExecutor))
 			throw new IllegalStateException("This driver does not support JavaScript!");
 
 		return (JavascriptExecutor) driver;
+	}
+
+	protected final JavascriptExecutor getJS() {
+		return getJS(driver);
 	}
 
 	protected final WebDriverWait getWait() {
@@ -309,7 +318,7 @@ public abstract class AbstractTest implements BaseTest {
 	private void setDriverAndUrl() {
 		if (System.getProperty("webdriver.chrome.driver") != null) {
 			driver = new ChromeDriver();
-			sleepEnabled = true;
+			isChrome = true;
 			LOGGER.info("You are testing in Chrome");
 			LOGGER.info("webdriver.chrome.driver: {}", System.getProperty("webdriver.chrome.driver"));
 		} else {
