@@ -82,11 +82,10 @@ public class ClienteTest extends AbstractTest {
 		getDriver().findElement(By.name("contato.email")).sendKeys(person.getEmail());
 		getDriver().findElement(By.name("contato.telefone")).clear();
 		getDriver().findElement(By.name("contato.telefone")).sendKeys(getTelefone());
-		
-		
+
 		getDriver().findElement(By.name("cidade.nome")).clear();
 		getDriver().findElement(By.name("cidade.nome")).sendKeys(String.valueOf(codigoIBGE));
-		
+
 		final By CIDADE_ID = By.name("cidade.id");
 
 		assertEquals(getDriver().findElement(CIDADE_ID).getAttribute("value"), "");
@@ -106,11 +105,7 @@ public class ClienteTest extends AbstractTest {
 			fail("O ID da cidade não foi informado");
 
 		assertNotEquals(getDriver().findElement(CIDADE_ID).getAttribute("value"), "");
-		
-		
-//		getJS().executeScript("$('input#cidade_id').val(" + cidade.getId() + ");");
-		
-		
+
 		getDriver().findElement(By.name("endereco.cep")).clear();
 		getDriver().findElement(By.name("endereco.cep")).sendKeys(getQualquerCep(codigoIBGE));
 		getDriver().findElement(By.name("endereco.bairro")).clear();

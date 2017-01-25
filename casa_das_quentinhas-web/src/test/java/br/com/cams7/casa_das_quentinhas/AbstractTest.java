@@ -9,6 +9,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 //import org.openqa.selenium.Alert;
@@ -20,7 +21,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
@@ -35,9 +35,6 @@ import io.codearte.jfairy.Fairy;
 import io.codearte.jfairy.producer.BaseProducer;
 
 public abstract class AbstractTest implements BaseTest {
-
-	// private boolean acceptNextAlert = true;
-	// private StringBuffer verificationErrors = new StringBuffer();
 
 	protected final Logger LOGGER;
 
@@ -96,10 +93,6 @@ public abstract class AbstractTest implements BaseTest {
 	// @AfterClass(alwaysRun = true)
 	// public void end() {
 	// LOGGER.info("@AfterClass");
-	// // String verificationErrorString = verificationErrors.toString();
-	// // if (!"".equals(verificationErrorString)) {
-	// // fail(verificationErrorString);
-	// // }
 	// }
 
 	/**
@@ -128,9 +121,6 @@ public abstract class AbstractTest implements BaseTest {
 		int totalPages = (int) (count / maxResults);
 		if (count % maxResults > 0)
 			totalPages++;
-
-		// LOGGER.info("maxResults: {}, count: {}, pages: {}", maxResults,
-		// count, totalPages);
 
 		WebDriverWait wait = getWait();
 		WebElement selectPage = getDriver().findElements(By.cssSelector("ul.pagination > li > a")).get(totalPages);
@@ -170,13 +160,13 @@ public abstract class AbstractTest implements BaseTest {
 	 */
 	protected void goToCreatePage(String mainPage) {
 		boolean isGerente = GERENTE.equals(acesso);
-		if (isGerente)
-			driver.findElement(By.cssSelector("div#top > div.h2 > a.btn.btn-primary")).click();
-		else {
-			boolean finded = (Boolean) getJS()
-					.executeScript("return $('div#top').find('div.h2 a.btn.btn-primary').length > 0;");
-			assertFalse(finded);
 
+		final List<WebElement> buttons = driver.findElements(By.cssSelector("div#top > div.h2 > a.btn.btn-primary"));
+
+		if (isGerente)
+			buttons.get(0).click();
+		else {
+			assertFalse(buttons.size() > 0);
 			driver.get(baseUrl + "/" + mainPage + "/create");
 		}
 		sleep();
@@ -191,7 +181,11 @@ public abstract class AbstractTest implements BaseTest {
 	 * Vai para a página de visualização dos dados
 	 */
 	protected void goToViewPage(String mainPage) {
-		driver.findElement(By.cssSelector("table.dataTable > tbody > tr > td > a.btn.btn-success.btn-xs")).click();
+		final List<WebElement> buttons = driver
+				.findElements(By.cssSelector("table.dataTable > tbody > tr > td > a.btn.btn-success.btn-xs"));
+		int index = getBaseProducer().randomBetween(0, buttons.size() - 1);
+		buttons.get(index).click();
+
 		sleep();
 	}
 
@@ -209,13 +203,15 @@ public abstract class AbstractTest implements BaseTest {
 	protected void goToEditPage(String mainPage) {
 		boolean isGerenteOrAtendente = GERENTE.equals(acesso) || ATENDENTE.equals(acesso);
 
-		if (isGerenteOrAtendente)
-			driver.findElement(By.cssSelector("table.dataTable > tbody > tr > td > a.btn.btn-warning.btn-xs")).click();
-		else {
-			boolean finded = (Boolean) getJS().executeScript(
-					"return $('table.dataTable tbody tr td').find('a.btn.btn-warning.btn-xs').length > 0;");
-			assertFalse(finded);
+		final List<WebElement> buttons = driver
+				.findElements(By.cssSelector("table.dataTable > tbody > tr > td > a.btn.btn-warning.btn-xs"));
+		final int totalButtons = buttons.size();
 
+		if (isGerenteOrAtendente) {
+			int index = getBaseProducer().randomBetween(0, totalButtons - 1);
+			buttons.get(index).click();
+		} else {
+			assertFalse(totalButtons > 0);
 			driver.get(baseUrl + "/" + mainPage + "/" + getId() + "/edit");
 		}
 		sleep();
@@ -232,16 +228,17 @@ public abstract class AbstractTest implements BaseTest {
 	protected void showDeleteModal() {
 		boolean isGerente = GERENTE.equals(acesso);
 
-		if (!isGerente) {
-			boolean finded = ((Boolean) getJS().executeScript(
-					"return $('table.dataTable tbody tr td').find('button.btn.btn-danger.btn-xs.delete').length > 0;"));
-			assertFalse(finded);
+		final List<WebElement> buttons = driver.findElements(
+				By.cssSelector("table.dataTable > tbody > tr > td > button.btn.btn-danger.btn-xs.delete"));
+		final int totalButtons = buttons.size();
 
+		if (!isGerente) {
+			assertFalse(totalButtons > 0);
 			throw new SkipException(UNAUTHORIZED_MESSAGE);
 		}
 
-		driver.findElement(By.cssSelector("table.dataTable > tbody > tr > td > button.btn.btn-danger.btn-xs.delete"))
-				.click();
+		int index = getBaseProducer().randomBetween(0, totalButtons - 1);
+		buttons.get(index).click();
 		sleep();
 	}
 
@@ -303,10 +300,6 @@ public abstract class AbstractTest implements BaseTest {
 		return baseUrl;
 	}
 
-	// public static Object getAcesso() {
-	// return acesso;
-	// }
-
 	protected static Fairy getFairy() {
 		return fairy;
 	}
@@ -346,46 +339,10 @@ public abstract class AbstractTest implements BaseTest {
 	}
 
 	private String getId() {
-		long rows = (Long) getJS().executeScript("return $('table.dataTable tbody tr').length;");
-		long rowIndex = getBaseProducer().randomBetween(1, rows);
-		String id = (String) getJS()
-				.executeScript("return $('table.dataTable tbody tr:nth-child(" + rowIndex + ") td:first').html();");
-		// LOGGER.info("rows: " + rows + ", rowIndex: " + rowIndex + ", id: " +
-		// id);
-		return id;
-	}
+		final List<WebElement> buttons = driver.findElements(By.cssSelector("table.dataTable > tbody > tr"));
+		int index = getBaseProducer().randomBetween(0, buttons.size() - 1);
 
-	// private boolean isElementPresent(By by) {
-	// try {
-	// driver.findElement(by);
-	// return true;
-	// } catch (NoSuchElementException e) {
-	// return false;
-	// }
-	// }
-	//
-	// private boolean isAlertPresent() {
-	// try {
-	// driver.switchTo().alert();
-	// return true;
-	// } catch (NoAlertPresentException e) {
-	// return false;
-	// }
-	// }
-	//
-	// private String closeAlertAndGetItsText() {
-	// try {
-	// Alert alert = driver.switchTo().alert();
-	// String alertText = alert.getText();
-	// if (acceptNextAlert) {
-	// alert.accept();
-	// } else {
-	// alert.dismiss();
-	// }
-	// return alertText;
-	// } finally {
-	// acceptNextAlert = true;
-	// }
-	// }
+		return buttons.get(index).findElements(By.tagName("td")).get(0).getText();
+	}
 
 }
