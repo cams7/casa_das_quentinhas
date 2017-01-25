@@ -6,16 +6,21 @@ package br.com.cams7.casa_das_quentinhas;
 import static br.com.cams7.casa_das_quentinhas.mock.ContatoMock.getTelefone;
 import static br.com.cams7.casa_das_quentinhas.mock.EnderecoMock.getQualquerBairro;
 import static br.com.cams7.casa_das_quentinhas.mock.EnderecoMock.getQualquerCep;
-import static br.com.cams7.casa_das_quentinhas.mock.EnderecoMock.getQualquerCidade;
+import static br.com.cams7.casa_das_quentinhas.mock.EnderecoMock.getQualquerCodigoIBGE;
 import static br.com.cams7.casa_das_quentinhas.mock.PessoaMock.getCpf;
 import static br.com.cams7.casa_das_quentinhas.mock.UsuarioMock.getSenhaAcesso;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.fail;
 
 import org.joda.time.format.DateTimeFormat;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Test;
 
-import br.com.cams7.casa_das_quentinhas.entity.Cidade;
 import io.codearte.jfairy.producer.person.Address;
 import io.codearte.jfairy.producer.person.Person;
 
@@ -64,7 +69,7 @@ public class ClienteTest extends AbstractTest {
 
 		Person person = getFairy().person();
 		Address address = person.getAddress();
-		Cidade cidade = getQualquerCidade();
+		Long codigoIBGE = getQualquerCodigoIBGE();
 
 		getDriver().findElement(By.name("nome")).clear();
 		getDriver().findElement(By.name("nome")).sendKeys(person.getFullName());
@@ -77,13 +82,39 @@ public class ClienteTest extends AbstractTest {
 		getDriver().findElement(By.name("contato.email")).sendKeys(person.getEmail());
 		getDriver().findElement(By.name("contato.telefone")).clear();
 		getDriver().findElement(By.name("contato.telefone")).sendKeys(getTelefone());
+		
+		
 		getDriver().findElement(By.name("cidade.nome")).clear();
-		getDriver().findElement(By.name("cidade.nome")).sendKeys(cidade.getNome());
-		getJS().executeScript("$('input#cidade_id').val(" + cidade.getId() + ");");
+		getDriver().findElement(By.name("cidade.nome")).sendKeys(String.valueOf(codigoIBGE));
+		
+		final By CIDADE_ID = By.name("cidade.id");
+
+		assertEquals(getDriver().findElement(CIDADE_ID).getAttribute("value"), "");
+
+		WebDriverWait wait = getWait();
+
+		if (!wait.until(new ExpectedCondition<Boolean>() {
+			public Boolean apply(WebDriver driver) {
+				WebElement autocomplete = driver.findElement(By.cssSelector("ul.ui-autocomplete"));
+				if (autocomplete.isDisplayed()) {
+					autocomplete.findElements(By.cssSelector("li.ui-menu-item")).get(0).click();
+					return true;
+				}
+				return false;
+			}
+		}))
+			fail("O ID da cidade não foi informado");
+
+		assertNotEquals(getDriver().findElement(CIDADE_ID).getAttribute("value"), "");
+		
+		
+//		getJS().executeScript("$('input#cidade_id').val(" + cidade.getId() + ");");
+		
+		
 		getDriver().findElement(By.name("endereco.cep")).clear();
-		getDriver().findElement(By.name("endereco.cep")).sendKeys(getQualquerCep(cidade.getId()));
+		getDriver().findElement(By.name("endereco.cep")).sendKeys(getQualquerCep(codigoIBGE));
 		getDriver().findElement(By.name("endereco.bairro")).clear();
-		getDriver().findElement(By.name("endereco.bairro")).sendKeys(getQualquerBairro(cidade.getId()));
+		getDriver().findElement(By.name("endereco.bairro")).sendKeys(getQualquerBairro(codigoIBGE));
 		getDriver().findElement(By.name("endereco.logradouro")).clear();
 		getDriver().findElement(By.name("endereco.logradouro")).sendKeys(address.getStreet());
 		getDriver().findElement(By.name("endereco.numeroImovel")).clear();

@@ -4,22 +4,23 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import br.com.cams7.casa_das_quentinhas.entity.Cidade;
-
 public class EnderecoMock extends AbstractMock {
 
-	private static final Map<Integer, String> cidades;
-	private static final Map<Integer, String[]> bairros;
+	private static final Map<Long, String> cidades;
+	private static final Map<Long, String[]> bairros;
 
 	static {
 		cidades = new HashMap<>();
-		cidades.put(2308, "Belo Horizonte < MG >");
-		cidades.put(2901, "Sabará < MG >");
-		cidades.put(2917, "Santa Luzia < MG >");
+		// Cidade: Belo Horizonte, IBGE: 3106200
+		cidades.put(3106200l, "Belo Horizonte");
+		// Cidade: Sabará, IBGE: 3156700
+		cidades.put(3156700l, "Sabará");
+		// Cidade: Santa Luzia, IBGE: 3157807
+		cidades.put(3157807l, "Santa Luzia");
 
 		bairros = new HashMap<>();
-		// Belo Horizonte - 3106200
-		bairros.put(2308, new String[] {
+		// Cidade: Belo Horizonte, IBGE: 3106200
+		bairros.put(3106200l, new String[] {
 				// Barreiro
 				"Conjunto Ademar Maldonado", "Araguaia", "Vila Alta Tensão", "Conjunto Átila de Paiva",
 				"Bairro das Indústrias I", "Barreiro", "Vila Bernadete", "Conjunto Boa Esperança", "Bonsucesso",
@@ -127,8 +128,8 @@ public class EnderecoMock extends AbstractMock {
 				"Vila Copacabana", "Vila dos Anjos", "Vila Estrela", "Vila Itamarati", "Vila Mãe dos Pobres",
 				"Vila Mantiqueira", "Vila Minas Caixa", "Vila Nossa Senhora Aparecida", "Vila São João Batista",
 				"Vila Santa Branca", "Vila São José", "Vila Serra Verde", "Vila Sesc" });
-		// Sabará - 3156700
-		bairros.put(2901,
+		// Cidade: Sabará, IBGE: 3156700
+		bairros.put(3156700l,
 				new String[] { "Carvalho de Brito", "Mestre Caetano", "Ravena", "Adelmolândia", "Água Férrea",
 						"Alto do Cabral", "Alto do Fidalgo", "Alvorada", "Ana Lúcia", "Área Rural de Sabará",
 						"Arraial Velho", "Borba Gato", "Borges", "Caieira", "Centro", "Conjunto Morada da Serra",
@@ -142,8 +143,8 @@ public class EnderecoMock extends AbstractMock {
 						"Vila dos Coqueiros", "Vila Esperança", "Vila Eugênio Rossi", "Vila Francisco de Moura",
 						"Vila Marzagão", "Vila Michel", "Vila Nova Vista", "Vila Real", "Vila Rica", "Vila Santa Cruz",
 						"Vila Santa Rita", "Vila Santo Antônio de Pádua", "Vila São Sebastião", "Códigos Postais" });
-		// Santa Luzia - 3157807
-		bairros.put(2917, new String[] { "Adeodato", "Área Rural de Santa Luzia",
+		// Cidade: Santa Luzia, IBGE: 3157807
+		bairros.put(3157807l, new String[] { "Adeodato", "Área Rural de Santa Luzia",
 				"Asteca" /* (São Benedito) */, "do Divino",
 				"Baronesa" /* (São Benedito) */, "Barreiro do Amaral", "Bela Vista", "Belo Vale", "Bicas",
 				"Boa Esperança", "Bom Destino", "Bom Jesus", "Bonanza", "Camelos", "Casa Branca", "Castanheira",
@@ -172,67 +173,53 @@ public class EnderecoMock extends AbstractMock {
 	/**
 	 * Gera um bairro aletório de acordo com o id da cidade informado
 	 * 
-	 * @param cidadeId
+	 * @param codigoIBGE
 	 *            ID da cidade
 	 * @return Nome do bairro
 	 */
-	public static String getQualquerBairro(Integer cidadeId) {
-		return bairros.get(cidadeId)[getBaseProducer().randomBetween(0, bairros.get(cidadeId).length - 1)];
+	public static String getQualquerBairro(Long codigoIBGE) {
+		return bairros.get(codigoIBGE)[getBaseProducer().randomBetween(0, bairros.get(codigoIBGE).length - 1)];
 	}
 
 	/**
 	 * Gera um CEP aletório de acordo com o id da cidade informado
 	 * 
-	 * @param cidadeId
+	 * @param codigoIBGE
 	 *            ID da cidade
 	 * @return CEP
 	 */
-	public static String getQualquerCep(Integer cidadeId) {
-		// Belo Horizonte - 2308
+	public static String getQualquerCep(Long codigoIBGE) {
+		// Cidade: Belo Horizonte, IBGE: 3106200
 		// 30001970 - 31999899
-		// Sabará - 2901
+		// Cidade: Sabará, IBGE: 3156700
 		// 34505000 - 34750970
-		// Santa Luzia - 2917
+		// Cidade: Santa Luzia, IBGE: 3157807
 		// 33010000 33199899
 		long cep = 0l;
-		switch (cidadeId) {
-		case 2308:
+
+		if (codigoIBGE.equals(3106200l))
 			cep = getBaseProducer().randomBetween(30001970l, 31999899l);
-			break;
-		case 2901:
+		else if (codigoIBGE.equals(3156700l))
 			cep = getBaseProducer().randomBetween(34505000l, 34750970l);
-			break;
-		case 2917:
+		else if (codigoIBGE.equals(3157807l))
 			cep = getBaseProducer().randomBetween(33010000l, 33199899l);
-			break;
-		default:
-			break;
-		}
 
 		return cep != 0 ? String.valueOf(cep) : "";
 	}
 
 	/**
-	 * Gera, aleatoriamente, as informações de uma cidade
+	 * Gera, aleatoriamente, um código IBGE
 	 * 
 	 * @return Cidade
 	 */
-	public static Cidade getQualquerCidade() {
-		Integer cidadeId = cidades.keySet().stream().collect(Collectors.toList())
-				.get(getBaseProducer().randomBetween(0, 2));
-
-		Cidade cidade = new Cidade(cidadeId);
-		cidade.setNome(cidades.get(cidadeId));
-		cidade.setDdd(DDD);
-
-		return cidade;
+	public static Long getQualquerCodigoIBGE() {
+		return cidades.keySet().stream().collect(Collectors.toList()).get(getBaseProducer().randomBetween(0, 2));
 	}
 
 	public static void main(String[] args) {
 		for (int i = 0; i < 10000; i++) {
-			Cidade cidade = EnderecoMock.getQualquerCidade();
-			System.out.println((i + 1) + ")\t" + cidade.getId() + "\t" + cidade.getNome() + ", "
-					+ EnderecoMock.getQualquerBairro(cidade.getId()));
+			Long codigoIBGE = EnderecoMock.getQualquerCodigoIBGE();
+			System.out.println((i + 1) + ")\t" + codigoIBGE + ", " + EnderecoMock.getQualquerBairro(codigoIBGE));
 		}
 	}
 }

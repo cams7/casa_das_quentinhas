@@ -2,6 +2,8 @@ package br.com.cams7.casa_das_quentinhas.mock;
 
 public class ContatoMock extends AbstractMock {
 
+	private static final Byte DDD = 31;
+
 	/**
 	 * Gera um número de telefone aletório
 	 * 

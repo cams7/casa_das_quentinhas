@@ -19,6 +19,7 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.SkipException;
@@ -62,7 +63,7 @@ public abstract class AbstractTest implements BaseTest {
 		// LOGGER.info("@BeforeSuite");
 
 		setDriverAndUrl();
-		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 
 		fairy = Fairy.create();
 		baseProducer = fairy.baseProducer();
@@ -283,6 +284,10 @@ public abstract class AbstractTest implements BaseTest {
 			throw new IllegalStateException("This driver does not support JavaScript!");
 
 		return (JavascriptExecutor) driver;
+	}
+
+	protected final WebDriverWait getWait() {
+		return new WebDriverWait(getDriver(), 5);
 	}
 
 	protected static String getBaseUrl() {

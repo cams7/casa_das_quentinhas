@@ -12,8 +12,6 @@ import io.codearte.jfairy.producer.BaseProducer;
  */
 public abstract class AbstractMock {
 
-	protected static final Byte DDD = 31;
-
 	private static final Fairy fairy;
 	private static final BaseProducer baseProducer;
 

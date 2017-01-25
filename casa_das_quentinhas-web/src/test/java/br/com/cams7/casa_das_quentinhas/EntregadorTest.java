@@ -78,7 +78,7 @@ public class EntregadorTest extends AbstractTest {
 
 		assertEquals(getDriver().findElement(EMPRESA_ID).getAttribute("value"), "");
 
-		WebDriverWait wait = new WebDriverWait(getDriver(), 5);
+		WebDriverWait wait = getWait();
 
 		if (!wait.until(new ExpectedCondition<Boolean>() {
 			public Boolean apply(WebDriver driver) {
