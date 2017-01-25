@@ -22,6 +22,8 @@ import io.codearte.jfairy.producer.person.Person;
  */
 public class FuncionarioTest extends AbstractTest {
 
+	private final String MAIN_PAGE = "funcionario";
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -56,7 +58,7 @@ public class FuncionarioTest extends AbstractTest {
 		goToIndexPage();
 
 		// Carrega um formulário para o cadasatro do funcionário
-		goToCreatePage("funcionario");
+		goToCreatePage();
 		assertEquals("Adicionar Funcionário", getDriver().getTitle());
 
 		Person person = getFairy().person();
@@ -96,7 +98,7 @@ public class FuncionarioTest extends AbstractTest {
 		goToIndexPage();
 
 		// Visualiza os dados do funcionário
-		goToViewPage("funcionario");
+		goToViewPage();
 		assertEquals("Visualizar Funcionário", getDriver().getTitle());
 
 		// Volta à página anterior
@@ -115,7 +117,7 @@ public class FuncionarioTest extends AbstractTest {
 		goToIndexPage();
 
 		// Carrega um formulário para a alteração dos dados do funcionário
-		goToEditPage("funcionario");
+		goToEditPage();
 		assertEquals("Editar Funcionário", getDriver().getTitle());
 
 		// Tenta salvar os dados do funcionário
@@ -140,11 +142,16 @@ public class FuncionarioTest extends AbstractTest {
 		closeDeleteModal();
 	}
 
+	@Override
+	protected String getMainPage() {
+		return MAIN_PAGE;
+	}
+
 	/**
 	 * Vai para a página de listagem de funcionários
 	 */
 	private void goToIndexPage() {
-		goToIndexPage("funcionario", "Funcionário(s)");
+		goToIndexPage("Funcionário(s)");
 		assertEquals("Lista de Funcionários", getDriver().getTitle());
 	}
 

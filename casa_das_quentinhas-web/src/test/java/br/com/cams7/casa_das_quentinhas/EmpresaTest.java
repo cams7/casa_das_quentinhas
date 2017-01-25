@@ -33,6 +33,8 @@ import io.codearte.jfairy.producer.person.Person;
  */
 public class EmpresaTest extends AbstractTest {
 
+	private final String MAIN_PAGE = "empresa";
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -67,7 +69,7 @@ public class EmpresaTest extends AbstractTest {
 		goToIndexPage();
 
 		// Carrega um formulário para o cadasatro da empresa
-		goToCreatePage("empresa");
+		goToCreatePage();
 		assertEquals("Adicionar Empresa", getDriver().getTitle());
 
 		Person person = getFairy().person();
@@ -154,7 +156,7 @@ public class EmpresaTest extends AbstractTest {
 		goToIndexPage();
 
 		// Visualiza os dados da empresa
-		goToViewPage("empresa");
+		goToViewPage();
 		assertEquals("Visualizar Empresa", getDriver().getTitle());
 
 		// Volta à página anterior
@@ -173,7 +175,7 @@ public class EmpresaTest extends AbstractTest {
 		goToIndexPage();
 
 		// Carrega um formulário para a alteração dos dados da empresa
-		goToEditPage("empresa");
+		goToEditPage();
 		assertEquals("Editar Empresa", getDriver().getTitle());
 
 		// Tenta salvar os dados da empresa
@@ -198,11 +200,16 @@ public class EmpresaTest extends AbstractTest {
 		closeDeleteModal();
 	}
 
+	@Override
+	protected String getMainPage() {
+		return MAIN_PAGE;
+	}
+
 	/**
 	 * Vai para a página de listagem de empresas
 	 */
 	private void goToIndexPage() {
-		goToIndexPage("empresa", "Empresa(s)");
+		goToIndexPage("Empresa(s)");
 		assertEquals("Lista de Empresas", getDriver().getTitle());
 	}
 

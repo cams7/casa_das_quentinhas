@@ -98,14 +98,15 @@ public abstract class AbstractTest implements BaseTest {
 	/**
 	 * Vai para página de listagem
 	 * 
-	 * @param mainPage
+	 * @param menu
+	 *            Titulo do menu
 	 */
-	protected void goToIndexPage(String mainPage, String menu) {
+	protected void goToIndexPage(String menu) {
 		boolean isGerente = GERENTE.equals(acesso);
 		if (isGerente)
 			driver.findElement(By.linkText(menu)).click();
 		else
-			getDriver().get(baseUrl + "/" + mainPage);
+			getDriver().get(baseUrl + "/" + getMainPage());
 
 		sleep();
 	}
@@ -158,7 +159,7 @@ public abstract class AbstractTest implements BaseTest {
 	/**
 	 * Vai para página de cadastro
 	 */
-	protected void goToCreatePage(String mainPage) {
+	protected void goToCreatePage() {
 		boolean isGerente = GERENTE.equals(acesso);
 
 		final List<WebElement> buttons = driver.findElements(By.cssSelector("div#top > div.h2 > a.btn.btn-primary"));
@@ -167,7 +168,7 @@ public abstract class AbstractTest implements BaseTest {
 			buttons.get(0).click();
 		else {
 			assertFalse(buttons.size() > 0);
-			driver.get(baseUrl + "/" + mainPage + "/create");
+			driver.get(baseUrl + "/" + getMainPage() + "/create");
 		}
 		sleep();
 
@@ -180,7 +181,7 @@ public abstract class AbstractTest implements BaseTest {
 	/**
 	 * Vai para a página de visualização dos dados
 	 */
-	protected void goToViewPage(String mainPage) {
+	protected void goToViewPage() {
 		final List<WebElement> buttons = driver
 				.findElements(By.cssSelector("table.dataTable > tbody > tr > td > a.btn.btn-success.btn-xs"));
 		int index = getBaseProducer().randomBetween(0, buttons.size() - 1);
@@ -200,7 +201,7 @@ public abstract class AbstractTest implements BaseTest {
 	/**
 	 * Vai para a página de edição dos dados
 	 */
-	protected void goToEditPage(String mainPage) {
+	protected void goToEditPage() {
 		boolean isGerenteOrAtendente = GERENTE.equals(acesso) || ATENDENTE.equals(acesso);
 
 		final List<WebElement> buttons = driver
@@ -212,7 +213,7 @@ public abstract class AbstractTest implements BaseTest {
 			buttons.get(index).click();
 		} else {
 			assertFalse(totalButtons > 0);
-			driver.get(baseUrl + "/" + mainPage + "/" + getId() + "/edit");
+			driver.get(baseUrl + "/" + getMainPage() + "/" + getId() + "/edit");
 		}
 		sleep();
 
@@ -308,20 +309,20 @@ public abstract class AbstractTest implements BaseTest {
 		return baseProducer;
 	}
 
+	protected abstract String getMainPage();
+
 	private void setDriverAndUrl() {
 		if (System.getProperty("webdriver.chrome.driver") != null) {
 			driver = new ChromeDriver();
 			isChrome = true;
-			LOGGER.info("You are testing in Chrome");
 			LOGGER.info("webdriver.chrome.driver: {}", System.getProperty("webdriver.chrome.driver"));
 		} else {
 			driver = new PhantomJSDriver();
-			LOGGER.info("You are testing in PhantomJS");
 			LOGGER.info("phantomjs.binary.path: {}", System.getProperty("phantomjs.binary.path"));
 		}
 
 		baseUrl = System.getProperty("base.url");
-		LOGGER.info("url: {}", System.getProperty("base.url"));
+		LOGGER.info("url: {}", baseUrl);
 	}
 
 	private void login(String username, String password) {

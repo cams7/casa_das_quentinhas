@@ -28,6 +28,8 @@ import io.codearte.jfairy.producer.person.Person;
  */
 public class EntregadorTest extends AbstractTest {
 
+	private final String MAIN_PAGE = "entregador";
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -62,7 +64,7 @@ public class EntregadorTest extends AbstractTest {
 		goToIndexPage();
 
 		// Carrega um formulário para o cadasatro do entregador
-		goToCreatePage("entregador");
+		goToCreatePage();
 		assertEquals("Adicionar Entregador", getDriver().getTitle());
 
 		Person person = getFairy().person();
@@ -126,7 +128,7 @@ public class EntregadorTest extends AbstractTest {
 		goToIndexPage();
 
 		// Visualiza os dados do entregador
-		goToViewPage("entregador");
+		goToViewPage();
 		assertEquals("Visualizar Entregador", getDriver().getTitle());
 
 		// Volta à página anterior
@@ -145,7 +147,7 @@ public class EntregadorTest extends AbstractTest {
 		goToIndexPage();
 
 		// Carrega um formulário para a alteração dos dados do entregador
-		goToEditPage("entregador");
+		goToEditPage();
 		assertEquals("Editar Entregador", getDriver().getTitle());
 
 		// Tenta salvar os dados do entregador
@@ -170,11 +172,16 @@ public class EntregadorTest extends AbstractTest {
 		closeDeleteModal();
 	}
 
+	@Override
+	protected String getMainPage() {
+		return MAIN_PAGE;
+	}
+
 	/**
 	 * Vai para a página de listagem de entregadores
 	 */
 	private void goToIndexPage() {
-		goToIndexPage("entregador", "Entregador(es)");
+		goToIndexPage("Entregador(es)");
 		assertEquals("Lista de Entregadores", getDriver().getTitle());
 	}
 

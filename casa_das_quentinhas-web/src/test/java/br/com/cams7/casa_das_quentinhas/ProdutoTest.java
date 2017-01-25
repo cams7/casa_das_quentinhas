@@ -13,6 +13,8 @@ import org.testng.annotations.Test;
  */
 public class ProdutoTest extends AbstractTest {
 
+	private final String MAIN_PAGE = "produto";
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -46,7 +48,7 @@ public class ProdutoTest extends AbstractTest {
 		goToIndexPage();
 
 		// Carrega um formulário para o cadasatro do produto
-		goToCreatePage("produto");
+		goToCreatePage();
 		assertEquals("Adicionar Produto", getDriver().getTitle());
 
 		// Tenta salvar os dados do produto
@@ -68,7 +70,7 @@ public class ProdutoTest extends AbstractTest {
 		goToIndexPage();
 
 		// Visualiza os dados do produto
-		goToViewPage("produto");
+		goToViewPage();
 		assertEquals("Visualizar Produto", getDriver().getTitle());
 
 		// Volta à página anterior
@@ -87,7 +89,7 @@ public class ProdutoTest extends AbstractTest {
 		goToIndexPage();
 
 		// Carrega um formulário para a alteração dos dados do produto
-		goToEditPage("produto");
+		goToEditPage();
 		assertEquals("Editar Produto", getDriver().getTitle());
 
 		// Tenta salvar os dados do produto
@@ -112,11 +114,16 @@ public class ProdutoTest extends AbstractTest {
 		closeDeleteModal();
 	}
 
+	@Override
+	protected String getMainPage() {
+		return MAIN_PAGE;
+	}
+
 	/**
 	 * Vai para a página de listagem de produtos
 	 */
 	private void goToIndexPage() {
-		goToIndexPage("produto", "Produto(s)");
+		goToIndexPage("Produto(s)");
 		assertEquals("Lista de Produtos", getDriver().getTitle());
 	}
 

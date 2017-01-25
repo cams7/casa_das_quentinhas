@@ -13,6 +13,8 @@ import org.testng.annotations.Test;
  */
 public class PedidoTest extends AbstractTest {
 
+	private final String MAIN_PAGE = "pedido";
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -47,7 +49,7 @@ public class PedidoTest extends AbstractTest {
 		goToIndexPage();
 
 		// Carrega um formulário para o cadasatro do pedido
-		goToCreatePage("pedido");
+		goToCreatePage();
 		assertEquals("Adicionar Pedido", getDriver().getTitle());
 
 		// Tenta salvar os dados do pedido
@@ -69,7 +71,7 @@ public class PedidoTest extends AbstractTest {
 		goToIndexPage();
 
 		// Visualiza os dados do pedido
-		goToViewPage("pedido");
+		goToViewPage();
 		assertEquals("Visualizar Pedido", getDriver().getTitle());
 
 		// Volta à página anterior
@@ -88,7 +90,7 @@ public class PedidoTest extends AbstractTest {
 		goToIndexPage();
 
 		// Carrega um formulário para a alteração dos dados do pedido
-		goToEditPage("pedido");
+		goToEditPage();
 		assertEquals("Editar Pedido", getDriver().getTitle());
 
 		// Tenta salvar os dados do pedido
@@ -113,11 +115,16 @@ public class PedidoTest extends AbstractTest {
 		closeDeleteModal();
 	}
 
+	@Override
+	protected String getMainPage() {
+		return MAIN_PAGE;
+	}
+
 	/**
 	 * Vai para a página de listagem de pedidos
 	 */
 	private void goToIndexPage() {
-		goToIndexPage("pedido", "Pedido(s)");
+		goToIndexPage("Pedido(s)");
 		assertEquals("Lista de Pedidos", getDriver().getTitle());
 	}
 

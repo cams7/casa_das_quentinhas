@@ -30,6 +30,8 @@ import io.codearte.jfairy.producer.person.Person;
  */
 public class ClienteTest extends AbstractTest {
 
+	private final String MAIN_PAGE = "cliente";
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -64,7 +66,7 @@ public class ClienteTest extends AbstractTest {
 		goToIndexPage();
 
 		// Carrega um formulário para o cadasatro do cliente
-		goToCreatePage("cliente");
+		goToCreatePage();
 		assertEquals("Adicionar Cliente", getDriver().getTitle());
 
 		Person person = getFairy().person();
@@ -142,7 +144,7 @@ public class ClienteTest extends AbstractTest {
 		goToIndexPage();
 
 		// Visualiza os dados do cliente
-		goToViewPage("cliente");
+		goToViewPage();
 		assertEquals("Visualizar Cliente", getDriver().getTitle());
 
 		// Volta à página anterior
@@ -161,7 +163,7 @@ public class ClienteTest extends AbstractTest {
 		goToIndexPage();
 
 		// Carrega um formulário para a alteração dos dados do cliente
-		goToEditPage("cliente");
+		goToEditPage();
 		assertEquals("Editar Cliente", getDriver().getTitle());
 
 		// Tenta salvar os dados do cliente
@@ -186,11 +188,16 @@ public class ClienteTest extends AbstractTest {
 		closeDeleteModal();
 	}
 
+	@Override
+	protected String getMainPage() {
+		return MAIN_PAGE;
+	}
+
 	/**
 	 * Vai para a página de listagem de clientes
 	 */
 	private void goToIndexPage() {
-		goToIndexPage("cliente", "Cliente(s)");
+		goToIndexPage("Cliente(s)");
 		assertEquals("Lista de Clientes", getDriver().getTitle());
 	}
 
