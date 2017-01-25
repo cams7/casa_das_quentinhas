@@ -8,8 +8,16 @@ import static br.com.cams7.casa_das_quentinhas.mock.PessoaMock.getCpf;
 import static br.com.cams7.casa_das_quentinhas.mock.PessoaMock.getRg;
 import static br.com.cams7.casa_das_quentinhas.mock.UsuarioMock.getSenhaAcesso;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.fail;
+
+import java.util.List;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Test;
 
 import io.codearte.jfairy.producer.person.Person;
@@ -64,8 +72,30 @@ public class EntregadorTest extends AbstractTest {
 		getDriver().findElement(By.name("celular")).clear();
 		getDriver().findElement(By.name("celular")).sendKeys(getCelular());
 		getDriver().findElement(By.name("empresa.razaoSocial")).clear();
-		getDriver().findElement(By.name("empresa.razaoSocial")).sendKeys("Erntogra < 77.848.384/0001-21 >");
-		getJS().executeScript("$('input#empresa_id').val(" + 52 + ");");
+		getDriver().findElement(By.name("empresa.razaoSocial")).sendKeys("a");
+
+		final By EMPRESA_ID = By.name("empresa.id");
+
+		assertEquals(getDriver().findElement(EMPRESA_ID).getAttribute("value"), "");
+
+		WebDriverWait wait = new WebDriverWait(getDriver(), 5);
+
+		if (!wait.until(new ExpectedCondition<Boolean>() {
+			public Boolean apply(WebDriver driver) {
+				WebElement autocomplete = driver.findElement(By.cssSelector("ul.ui-autocomplete"));
+				if (autocomplete.isDisplayed()) {
+					List<WebElement> itens = autocomplete.findElements(By.cssSelector("li.ui-menu-item"));
+					int index = getBaseProducer().randomBetween(0, itens.size() - 1);
+					itens.get(index).click();
+					return true;
+				}
+				return false;
+			}
+		}))
+			fail("O ID da empresa não foi informado");
+
+		assertNotEquals(getDriver().findElement(EMPRESA_ID).getAttribute("value"), "");
+
 		getDriver().findElement(By.name("usuario.email")).clear();
 		getDriver().findElement(By.name("usuario.email")).sendKeys(person.getEmail());
 		getDriver().findElement(By.name("cpf")).clear();
@@ -76,6 +106,7 @@ public class EntregadorTest extends AbstractTest {
 		getDriver().findElement(By.name("usuario.senha")).sendKeys(getSenhaAcesso());
 		getDriver().findElement(By.name("usuario.confirmacaoSenha")).clear();
 		getDriver().findElement(By.name("usuario.confirmacaoSenha")).sendKeys(getSenhaAcesso());
+
 		// Tenta salvar os dados do entregador
 		saveCreateAndEditPage();
 
