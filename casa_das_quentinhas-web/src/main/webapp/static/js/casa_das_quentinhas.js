@@ -37,17 +37,18 @@ function createErrorMessage(status, message) {
     $('div.alert').show();
 }
 
-var loadingShow = event => {
+var loadingShow = function() {
 	$('div#loading_modal').modal('show');
 	// console.log('loading show');
 };
 
-var loadingHide = event => {
+var loadingHide = function() {
 	$('div#loading_modal').modal('hide');
 	// console.log('loading hide');
 };
 
 $(document).ready(function($) {
+//$(function() {
 	$(document).on('ajaxSend', loadingShow).on('ajaxComplete', loadingHide);
 
 	var token = $('meta[name="_csrf"]').attr('content');

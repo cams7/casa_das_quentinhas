@@ -21,6 +21,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
@@ -41,7 +42,7 @@ public abstract class AbstractTest implements BaseTest {
 	private static WebDriver driver;
 	private static String baseUrl;
 
-	private static boolean isChrome = false;
+	private static boolean sleep = false;
 
 	private static Object acesso;
 
@@ -103,9 +104,11 @@ public abstract class AbstractTest implements BaseTest {
 	 */
 	protected void goToIndexPage(String menu) {
 		boolean isGerente = GERENTE.equals(acesso);
-		if (isGerente)
-			driver.findElement(By.linkText(menu)).click();
-		else
+		if (isGerente) {
+			WebElement link = driver.findElement(By.linkText(menu));
+			getWait().until(ExpectedConditions.elementToBeClickable(link));
+			link.click();
+		} else
 			getDriver().get(baseUrl + "/" + getMainPage());
 
 		sleep();
@@ -117,16 +120,28 @@ public abstract class AbstractTest implements BaseTest {
 	protected void paginate() {
 		short maxResults = Short
 				.valueOf(driver.findElement(By.xpath("//input[@id='dataTable_maxResults']")).getAttribute("value"));
-		long count = Long.valueOf(driver.findElement(By.xpath("//input[@id='dataTable_count']")).getAttribute("value"));
+		long count = Long.valueOf(getCount(driver));
+
+		final String id = getId(driver, 0);
 
 		int totalPages = (int) (count / maxResults);
 		if (count % maxResults > 0)
 			totalPages++;
 
 		WebDriverWait wait = getWait();
+
 		WebElement selectPage = getDriver().findElements(By.cssSelector("ul.pagination > li > a")).get(totalPages);
 		wait.until(ExpectedConditions.elementToBeClickable(selectPage));
 		selectPage.click();
+
+		wait.until(new ExpectedCondition<Boolean>() {
+			public Boolean apply(WebDriver driver) {
+				String currentId = getId(driver, 0);
+				return !currentId.isEmpty() && !id.equals(currentId);
+			}
+		});
+
+		LOGGER.info("First id: {}, current id: {}", id, getId(driver, 0));
 
 		sleep();
 	}
@@ -137,7 +152,27 @@ public abstract class AbstractTest implements BaseTest {
 	 * @param query
 	 */
 	protected void search(String query) {
-		getJS().executeScript("$('input#search_query').val('" + query + "');$('button#search_btn').click();");
+		long count = Long.valueOf(getCount(driver));
+
+		WebDriverWait wait = getWait();
+
+		By searchInput = By.id("search_query");
+		wait.until(ExpectedConditions.presenceOfElementLocated(searchInput));
+		driver.findElement(searchInput).sendKeys(query);
+
+		By searchButton = By.id("search_btn");
+		wait.until(ExpectedConditions.elementToBeClickable(searchButton));
+		driver.findElement(searchButton).click();
+
+		wait.until(new ExpectedCondition<Boolean>() {
+			public Boolean apply(WebDriver driver) {
+				String currentCount = getCount(driver);
+				return !currentCount.isEmpty() && count > Long.valueOf(currentCount);
+			}
+		});
+
+		LOGGER.info("First count: {}, current count: {}", count, getCount(driver));
+
 		sleep();
 	}
 
@@ -147,13 +182,33 @@ public abstract class AbstractTest implements BaseTest {
 	 * @param fields
 	 *            Campos da tabela
 	 */
-	protected void sortFields(String... fields) {
-		for (String field : fields) {
-			if (baseProducer.trueOrFalse()) {
-				getDriver().findElement(By.id(field)).click();
-				sleep();
-			}
-		}
+	// protected void sortFields(String... fields) {
+	// }
+	protected void clickSortField(String field) {
+		// final String firstField = getSortField(driver);
+		// final String firstOrder = getSortOrder(driver);
+
+		WebDriverWait wait = getWait();
+		WebElement sortField = driver.findElement(By.cssSelector("table.dataTable > thead > tr"))
+				.findElement(By.id(field));
+		wait.until(ExpectedConditions.elementToBeClickable(sortField));
+		sortField.click();
+
+		// wait.until(new ExpectedCondition<Boolean>() {
+		// public Boolean apply(WebDriver driver) {
+		// String currentField = getSortField(driver);
+		// String curretOrder = getSortOrder(driver);
+		// LOGGER.info("First field: {}, last field: {}", firstField,
+		// currentField);
+		// LOGGER.info("First order: {}, last order: {}", firstOrder,
+		// curretOrder);
+		// return !currentField.isEmpty() && !curretOrder.isEmpty()
+		// && (!firstField.equals(currentField) ||
+		// !firstOrder.equals(curretOrder));
+		// }
+		// });
+
+		sleep();
 	}
 
 	/**
@@ -164,9 +219,11 @@ public abstract class AbstractTest implements BaseTest {
 
 		final List<WebElement> buttons = driver.findElements(By.cssSelector("div#top > div.h2 > a.btn.btn-primary"));
 
-		if (isGerente)
-			buttons.get(0).click();
-		else {
+		if (isGerente) {
+			WebElement create = buttons.get(0);
+			getWait().until(ExpectedConditions.elementToBeClickable(create));
+			create.click();
+		} else {
 			assertFalse(buttons.size() > 0);
 			driver.get(baseUrl + "/" + getMainPage() + "/create");
 		}
@@ -185,7 +242,10 @@ public abstract class AbstractTest implements BaseTest {
 		final List<WebElement> buttons = driver
 				.findElements(By.cssSelector("table.dataTable > tbody > tr > td > a.btn.btn-success.btn-xs"));
 		int index = getBaseProducer().randomBetween(0, buttons.size() - 1);
-		buttons.get(index).click();
+
+		WebElement view = buttons.get(index);
+		getWait().until(ExpectedConditions.elementToBeClickable(view));
+		view.click();
 
 		sleep();
 	}
@@ -194,7 +254,10 @@ public abstract class AbstractTest implements BaseTest {
 	 * Vai para a página anterior
 	 */
 	protected void cancelViewPage() {
-		driver.findElement(By.cssSelector("div#actions > div > a.btn.btn-default")).click();
+		WebElement cancel = driver.findElement(By.cssSelector("div#actions > div > a.btn.btn-default"));
+		getWait().until(ExpectedConditions.elementToBeClickable(cancel));
+		cancel.click();
+
 		sleep();
 	}
 
@@ -210,7 +273,9 @@ public abstract class AbstractTest implements BaseTest {
 
 		if (isGerenteOrAtendente) {
 			int index = getBaseProducer().randomBetween(0, totalButtons - 1);
-			buttons.get(index).click();
+			WebElement edit = buttons.get(index);
+			getWait().until(ExpectedConditions.elementToBeClickable(edit));
+			edit.click();
 		} else {
 			assertFalse(totalButtons > 0);
 			driver.get(baseUrl + "/" + getMainPage() + "/" + getId() + "/edit");
@@ -239,7 +304,21 @@ public abstract class AbstractTest implements BaseTest {
 		}
 
 		int index = getBaseProducer().randomBetween(0, totalButtons - 1);
-		buttons.get(index).click();
+
+		WebDriverWait wait = getWait();
+
+		WebElement delete = buttons.get(index);
+		wait.until(ExpectedConditions.elementToBeClickable(delete));
+		delete.click();
+
+		wait.until(new ExpectedCondition<Boolean>() {
+			public Boolean apply(WebDriver driver) {
+				return driver.findElement(By.id("delete_modal")).isDisplayed();
+			}
+		});
+
+		LOGGER.info("Foi aberto, o modal panel de exclusão");
+
 		sleep();
 	}
 
@@ -247,9 +326,19 @@ public abstract class AbstractTest implements BaseTest {
 	 * Fecha o pop-up
 	 */
 	protected void closeDeleteModal() {
-		getJS().executeScript("$('div.modal-footer button.btn.btn-default').click();");
-		// driver.findElement(By.cssSelector("div.modal-footer >
-		// button.btn.btn-default")).click();
+		By DELETE_MODAL = By.id("delete_modal");
+
+		WebDriverWait wait = getWait();
+
+		WebElement cancel = driver.findElement(DELETE_MODAL)
+				.findElement(By.cssSelector("div.modal-footer > button.btn.btn-default"));
+		wait.until(ExpectedConditions.elementToBeClickable(cancel));
+		cancel.click();
+
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(DELETE_MODAL));
+
+		LOGGER.info("Foi fechado, o modal panel de exclusão");
+
 		sleep();
 	}
 
@@ -257,7 +346,9 @@ public abstract class AbstractTest implements BaseTest {
 	 * Tenta salva dos dados do formulário
 	 */
 	protected void saveCreateAndEditPage() {
-		driver.findElement(By.cssSelector("div#actions > div > input.btn.btn-primary")).click();
+		WebElement save = driver.findElement(By.cssSelector("div#actions > div > input.btn.btn-primary"));
+		getWait().until(ExpectedConditions.elementToBeClickable(save));
+		save.click();
 		sleep();
 	}
 
@@ -265,12 +356,14 @@ public abstract class AbstractTest implements BaseTest {
 	 * Vai para a página anterior
 	 */
 	protected void cancelCreateAndEditPage() {
-		driver.findElement(By.cssSelector("div#actions > div > button.btn.btn-default")).click();
+		WebElement cancel = driver.findElement(By.cssSelector("div#actions > div > button.btn.btn-default"));
+		getWait().until(ExpectedConditions.elementToBeClickable(cancel));
+		cancel.click();
 		sleep();
 	}
 
 	protected void sleep() {
-		if (isChrome)
+		if (sleep)
 			try {
 				Thread.sleep(Short.valueOf(System.getProperty("sleep.millisecounds")));
 			} catch (InterruptedException e) {
@@ -293,8 +386,12 @@ public abstract class AbstractTest implements BaseTest {
 		return getJS(driver);
 	}
 
+	protected final WebDriverWait getWait(WebDriver driver) {
+		return new WebDriverWait(driver, 5);
+	}
+
 	protected final WebDriverWait getWait() {
-		return new WebDriverWait(getDriver(), 5);
+		return getWait(getDriver());
 	}
 
 	protected static String getBaseUrl() {
@@ -314,7 +411,7 @@ public abstract class AbstractTest implements BaseTest {
 	private void setDriverAndUrl() {
 		if (System.getProperty("webdriver.chrome.driver") != null) {
 			driver = new ChromeDriver();
-			isChrome = true;
+			sleep = true;
 			LOGGER.info("webdriver.chrome.driver: {}", System.getProperty("webdriver.chrome.driver"));
 		} else {
 			driver = new PhantomJSDriver();
@@ -332,18 +429,43 @@ public abstract class AbstractTest implements BaseTest {
 		driver.findElement(By.id("senha")).clear();
 		driver.findElement(By.id("senha")).sendKeys(password);
 		driver.findElement(By.id("lembre_me")).click();
-		driver.findElement(By.xpath("//input[@value='Entrar']")).click();
+		WebElement login = driver.findElement(By.xpath("//input[@value='Entrar']"));
+		getWait().until(ExpectedConditions.elementToBeClickable(login));
+		login.click();
 	}
 
 	private void logout() {
-		driver.findElement(By.cssSelector("span.glyphicon.glyphicon-log-out")).click();
+		WebElement logout = driver.findElement(By.cssSelector("span.glyphicon.glyphicon-log-out"));
+		getWait().until(ExpectedConditions.elementToBeClickable(logout));
+		logout.click();
 	}
 
 	private String getId() {
-		final List<WebElement> buttons = driver.findElements(By.cssSelector("table.dataTable > tbody > tr"));
+		final By ROW = By.cssSelector("table.dataTable > tbody > tr");
+		final List<WebElement> buttons = driver.findElements(ROW);
+		getWait().until(ExpectedConditions.presenceOfElementLocated(ROW));
 		int index = getBaseProducer().randomBetween(0, buttons.size() - 1);
 
-		return buttons.get(index).findElements(By.tagName("td")).get(0).getText();
+		return getId(driver, index);
+	}
+
+	private String getId(WebDriver driver, int rowIndex) {
+		final By ROW = By.cssSelector("table.dataTable > tbody > tr");
+		WebElement cell = driver.findElements(ROW).get(rowIndex).findElements(By.tagName("td")).get(0);
+		getWait(driver).until(ExpectedConditions.presenceOfElementLocated(ROW));
+		return cell.getText();
+	}
+
+	private String getCount(WebDriver driver) {
+		return driver.findElement(By.xpath("//input[@id='dataTable_count']")).getAttribute("value");
+	}
+
+	private String getSortField(WebDriver driver) {
+		return driver.findElement(By.xpath("//input[@id='dataTable_sortField']")).getAttribute("value");
+	}
+
+	private String getSortOrder(WebDriver driver) {
+		return driver.findElement(By.xpath("//input[@id='dataTable_sortOrder']")).getAttribute("value");
 	}
 
 }

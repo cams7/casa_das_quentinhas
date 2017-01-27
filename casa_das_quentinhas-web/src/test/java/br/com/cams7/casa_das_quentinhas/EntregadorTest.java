@@ -17,6 +17,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Test;
 
@@ -82,9 +83,11 @@ public class EntregadorTest extends AbstractTest {
 
 		WebDriverWait wait = getWait();
 
+		final By AUTOCOMPLETE = By.cssSelector("ul.ui-autocomplete");
+
 		if (!wait.until(new ExpectedCondition<Boolean>() {
 			public Boolean apply(WebDriver driver) {
-				WebElement autocomplete = driver.findElement(By.cssSelector("ul.ui-autocomplete"));
+				WebElement autocomplete = driver.findElement(AUTOCOMPLETE);
 				if (autocomplete.isDisplayed()) {
 					List<WebElement> itens = autocomplete.findElements(By.cssSelector("li.ui-menu-item"));
 					int index = getBaseProducer().randomBetween(0, itens.size() - 1);
@@ -95,6 +98,8 @@ public class EntregadorTest extends AbstractTest {
 			}
 		}))
 			fail("O ID da empresa não foi informado");
+
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(AUTOCOMPLETE));
 
 		assertNotEquals(getDriver().findElement(EMPRESA_ID).getAttribute("value"), "");
 
@@ -189,7 +194,23 @@ public class EntregadorTest extends AbstractTest {
 	 * Ordena, aletoriamente, os campos da tabela entregador
 	 */
 	private void sortFields() {
-		sortFields("id", "nome", "cpf", "usuario.email", "celular", "empresa.razaoSocial");
+		if (getBaseProducer().trueOrFalse())
+			clickSortField("id");
+
+		if (getBaseProducer().trueOrFalse())
+			clickSortField("nome");
+
+		if (getBaseProducer().trueOrFalse())
+			clickSortField("cpf");
+
+		if (getBaseProducer().trueOrFalse())
+			clickSortField("usuario.email");
+
+		if (getBaseProducer().trueOrFalse())
+			clickSortField("celular");
+
+		if (getBaseProducer().trueOrFalse())
+			clickSortField("empresa.razaoSocial");
 	}
 
 }

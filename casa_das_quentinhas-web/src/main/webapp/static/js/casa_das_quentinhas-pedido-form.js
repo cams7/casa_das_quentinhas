@@ -1,4 +1,4 @@
-$('select#tipoCliente').change(event => {
+$('select#tipoCliente').change(function(event) {
 	event.preventDefault();
 	$('input#cliente, input#cliente_id').val('');
 	if(event.target.value == 'PESSOA_JURIDICA'){
@@ -12,7 +12,7 @@ $('select#tipoCliente').change(event => {
 
 $('input#cliente').autocomplete({
     source : function(request, response) {
-        $.getJSON( MAIN_PAGE + ($( 'select#tipoCliente option:selected' ).val() == 'PESSOA_JURIDICA' ? '/empresas' : '/clientes') + '/' + request.term, function( data ) {
+        $.getJSON( MAIN_PAGE + ($( 'select#tipoCliente option:selected' ).val() == 'PESSOA_JURIDICA' ? '/empresas' : '/clientes') + '/' + request.term, function(data) {
         	// console.log(data);
         	console.log();
             response(

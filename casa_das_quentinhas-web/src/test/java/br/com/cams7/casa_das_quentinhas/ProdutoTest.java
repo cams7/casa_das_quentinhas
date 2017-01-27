@@ -131,7 +131,17 @@ public class ProdutoTest extends AbstractTest {
 	 * Ordena, aletoriamente, os campos da tabela produto
 	 */
 	private void sortFields() {
-		sortFields("id", "nome", "tamanho", "custo");
+		if (getBaseProducer().trueOrFalse())
+			clickSortField("id");
+		
+		if (getBaseProducer().trueOrFalse())
+			clickSortField("nome");
+		
+		if (getBaseProducer().trueOrFalse())
+			clickSortField("tamanho");
+		
+		if (getBaseProducer().trueOrFalse())
+			clickSortField("custo");
 	}
 
 }

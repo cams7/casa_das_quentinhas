@@ -9,7 +9,7 @@ function setPedido (pedido) {
         $('form#pedido_form :input[name="custo"]').val('');
 }
 
-$('button#item_add').click(event => {
+$('button#item_add').click(function(event) {
 	event.preventDefault();
 	
     $('div#item_modal form').trigger('reset');
@@ -19,9 +19,10 @@ $('button#item_add').click(event => {
 });
 
 $(document).ready(function($) {
+//$(function() {	
     $('div#item_modal form :input[name="produto"]').autocomplete({
         source : function(request, response) {
-           $.getJSON(MAIN_PAGE + '/produtos/' + request.term, data => {                                      
+           $.getJSON(MAIN_PAGE + '/produtos/' + request.term, function(data) {                                      
                 response(
                     $.map(data, function (nomeWithTamanho, i) {
                         return {                            
@@ -45,7 +46,7 @@ $(document).ready(function($) {
         minLength : 1
     }); 
     
-    $(document).on('click', 'button.item-updade', event => {
+    $(document).on('click', 'button.item-updade', function(event) {
         event.preventDefault();
 
         $('div#item_modal form').trigger('reset');
@@ -59,7 +60,7 @@ $(document).ready(function($) {
         $.ajax({
             url: url,
             type: 'GET',
-            success: data => {
+            success: function(data) {
             	var item = data.entity;
             	// console.log(item);
             	
@@ -69,13 +70,13 @@ $(document).ready(function($) {
 
                 $('div#item_modal').modal('show');
             },
-            error: data => {
+            error: function(data) {
             	createErrorMessage(data.status, data.responseJSON.message);
             }
         });        
     });   
 
-    $(document).on('click', 'button.item-delete', event => {
+    $(document).on('click', 'button.item-delete', function(event) {
         event.preventDefault();
         
         var id = event.target.value;
@@ -86,17 +87,17 @@ $(document).ready(function($) {
         $.ajax({
             url: url,
             type: method,         
-            success: data => {            	
+            success: function(data) {            	
                 setPedido(data.entity);
                 loadTable(true);
             },
-            error: data => {
+            error: function(data) {
             	createErrorMessage(data.status, data.responseJSON.message);
             }
         });
     });
 
-    $('div#item_modal form').validator().on('submit', event => {      
+    $('div#item_modal form').validator().on('submit', function(event) {      
         if (event.isDefaultPrevented()) 
             return; 
         
@@ -115,14 +116,14 @@ $(document).ready(function($) {
         	url: url,
         	type: method,            
             data: $(form).serialize(),            
-            success: data => {
+            success: function(data) {
             	setPedido(data.entity);
                 loadTable();                
             },
-            error: data => {
+            error: function(data) {
             	createErrorMessage(data.status, data.responseJSON.message);
             },
-            complete: data => {
+            complete: function(data) {
             	$('div#item_modal').modal('hide');
             }
         })        

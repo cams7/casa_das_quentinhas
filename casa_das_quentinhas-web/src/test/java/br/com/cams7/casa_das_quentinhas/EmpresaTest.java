@@ -19,6 +19,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Test;
@@ -106,10 +107,12 @@ public class EmpresaTest extends AbstractTest {
 		assertEquals(getDriver().findElement(CIDADE_ID).getAttribute("value"), "");
 
 		WebDriverWait wait = getWait();
+		
+		final By AUTOCOMPLETE = By.cssSelector("ul.ui-autocomplete");
 
 		if (!wait.until(new ExpectedCondition<Boolean>() {
 			public Boolean apply(WebDriver driver) {
-				WebElement autocomplete = driver.findElement(By.cssSelector("ul.ui-autocomplete"));
+				WebElement autocomplete = driver.findElement(AUTOCOMPLETE);
 				if (autocomplete.isDisplayed()) {
 					autocomplete.findElements(By.cssSelector("li.ui-menu-item")).get(0).click();
 					return true;
@@ -118,6 +121,8 @@ public class EmpresaTest extends AbstractTest {
 			}
 		}))
 			fail("O ID da cidade não foi informado");
+		
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(AUTOCOMPLETE));
 
 		assertNotEquals(getDriver().findElement(CIDADE_ID).getAttribute("value"), "");
 
@@ -217,7 +222,26 @@ public class EmpresaTest extends AbstractTest {
 	 * Ordena, aletoriamente, os campos da tabela empresa
 	 */
 	private void sortFields() {
-		sortFields("id", "razaoSocial", "cnpj", "contato.email", "contato.telefone", "tipo", "cidade.nome");
+		if (getBaseProducer().trueOrFalse())
+			clickSortField("id");
+		
+		if (getBaseProducer().trueOrFalse())
+			clickSortField("razaoSocial");
+		
+		if (getBaseProducer().trueOrFalse())
+			clickSortField("cnpj");
+		
+		if (getBaseProducer().trueOrFalse())
+			clickSortField("contato.email");
+		
+		if (getBaseProducer().trueOrFalse())
+			clickSortField("contato.telefone");
+		
+		if (getBaseProducer().trueOrFalse())
+			clickSortField("tipo");
+		
+		if (getBaseProducer().trueOrFalse())
+			clickSortField("cidade.nome");
 	}
 
 }

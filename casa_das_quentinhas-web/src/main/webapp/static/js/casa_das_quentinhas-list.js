@@ -41,12 +41,12 @@ function setIntervalos() {
 	atualizaIntervalos(1, 1);
 }
 
-function loadTable(removedRow = false, offset = null, sortField = null, sortOrder = null, query = null) {		
-	if(offset == null){
+function loadTable(removedRow, offset, sortField, sortOrder, query) {		
+	if(offset == undefined || offset == null){
     	offset = $('input#dataTable_offset').val();
     	offset = offset != undefined ? offset : 0;
     	
-    	if(removedRow && offset > 0) {
+    	if((removedRow != undefined && removedRow) && offset > 0) {
     		var maxResults = $('input#dataTable_maxResults').val();
     		var count = $('input#dataTable_count').val();
     		
@@ -55,39 +55,34 @@ function loadTable(removedRow = false, offset = null, sortField = null, sortOrde
     	}
     }
     
-    if(sortField == null){
+    if(sortField == undefined || sortField == null){
     	sortField = $('input#dataTable_sortField').val();
     	sortField = sortField != undefined ? sortField : 'id';
     }
     
-    if(sortOrder == null){
+    if(sortOrder == undefined || sortOrder == null){
     	sortOrder = $('input#dataTable_sortOrder').val();
     	sortOrder = sortOrder != undefined ? sortOrder : 'sorting_desc';
     }
     
-    if(query == null){
+    if(query == undefined || query == null){
 		query = $('input#dataTable_query').val();
 	    query = query != undefined ? query : '';
 	}
-    
-    // console.log('get: list?offset=' + offset + '&f=' + sortField + '&s=' +
-	// sortOrder + '&q=' + query);
-	
-	$.get(LIST_PAGE + '?offset=' + offset + '&f=' + sortField + '&s=' + sortOrder + '&q=' + query, data => {
-        // console.log(data);
-		$('.content').html(data);
-		// location.hash = offset;
+    	
+	$.get(LIST_PAGE + '?offset=' + offset + '&f=' + sortField + '&s=' + sortOrder + '&q=' + query, function(data) {
+       $('.content').html(data);
    	});	
 }
 
-$('button#search_btn').click(event => {
+$('button#search_btn').click(function(event) {
 	event.preventDefault();
 	
 	query = $('input#search_query').val();
 	loadTable(false, 0, null, null, query);
 });
 
-$('button#report').click(event => {
+$('button#report').click(function(event) {
 	event.preventDefault();
 	
 	$('div#report_modal form').trigger('reset');
@@ -97,7 +92,8 @@ $('button#report').click(event => {
 });
 
 $(document).ready(function($) {
-	$(document).on('click', '.pagination a', event => {
+//$(function() {
+	$(document).on('click', '.pagination a', function(event) {
 	    event.preventDefault();
 	    
 	    offset = 0;
@@ -109,21 +105,21 @@ $(document).ready(function($) {
 		loadTable(false, offset);
 	});	
 			
-	$(document).on('click', 'table.dataTable tr:eq(0)', event => {
+	$(document).on('click', 'table.dataTable tr:eq(0)', function(event) {
 		event.preventDefault();
 		
-		column = $(event.target);
+		var column = $(event.target);
 		var attr = column.attr('id');
 		
-		if(typeof attr !== typeof undefined && attr !== false) {			
+		if(attr != undefined) {			
 			var sortField = column.attr('id');
 			var sortOrder = column.hasClass('sorting') || column.hasClass('sorting_desc') ? 'sorting_asc' : 'sorting_desc';							
 			
-			loadTable(false, null, sortField, sortOrder);			
+			loadTable(false, null, sortField, sortOrder);		
 		}			
 	});	
 	
-    $(document).on('click', 'table.dataTable button.delete', event => {
+	$(document).on('click', 'table.dataTable button.delete', function(event) {
         event.preventDefault();
                 
         $('div#delete_modal form').attr('action', DELETE_PAGE + '/' + event.target.value + '/delete');
@@ -131,7 +127,7 @@ $(document).ready(function($) {
         $('div#delete_modal').removeClass('delete_from_show_page').addClass('delete_from_list_page').modal('show');
     });
     
-    $(document).on('submit', 'div.delete_from_list_page form', event => {
+    $(document).on('submit', 'div.delete_from_list_page form', function(event) {
         event.preventDefault();
                 
         var form = event.target;        
@@ -139,14 +135,14 @@ $(document).ready(function($) {
         $.ajax({
             url: form.action,
             type: form.method,
-            success: data => {
+            success: function(data) {
             	createSuccessMessage(data.message);            	
             	loadTable(true);            	             	           	
             },
-            error: data => { 
+            error: function(data) { 
             	createErrorMessage(data.status, data.responseJSON.message);  
             },
-            complete: data => {
+            complete: function(data) {
             	$('div#delete_modal').modal('hide');
             }
         });
@@ -159,7 +155,7 @@ $(document).ready(function($) {
         }
     });
     
-    $('div#report_modal form').on('submit', event => {      
+    $('div#report_modal form').on('submit', function(event) {      
         event.preventDefault();
         
         var form = $(event.target);
@@ -197,7 +193,6 @@ $(document).ready(function($) {
         }
         
         var url = MAIN_PAGE + '/report/pdf' + params;
-        // console.log(url);
         
        window.open(url,'_blank');
                        
