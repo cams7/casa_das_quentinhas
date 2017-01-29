@@ -21,9 +21,6 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.annotations.Test;
 
-import br.com.cams7.app.validator.CepValidator;
-import br.com.cams7.app.validator.CpfValidator;
-import br.com.cams7.app.validator.TelefoneValidator;
 import io.codearte.jfairy.producer.person.Address;
 import io.codearte.jfairy.producer.person.Person;
 
@@ -183,7 +180,7 @@ public class ClienteTest extends AbstractTest {
 		}
 		if (isCreatePage || getBaseProducer().trueOrFalse()) {
 			getDriver().findElement(By.name("cpf")).clear();
-			getDriver().findElement(By.name("cpf")).sendKeys(CpfValidator.formatCpf(getCpf()));
+			getDriver().findElement(By.name("cpf")).sendKeys(getCpf());
 			sleep();
 		}
 		if (isCreatePage || getBaseProducer().trueOrFalse()) {
@@ -199,8 +196,7 @@ public class ClienteTest extends AbstractTest {
 		}
 		if (isCreatePage || getBaseProducer().trueOrFalse()) {
 			getDriver().findElement(By.name("contato.telefone")).clear();
-			getDriver().findElement(By.name("contato.telefone"))
-					.sendKeys(TelefoneValidator.formatTelefone(getTelefone()));
+			getDriver().findElement(By.name("contato.telefone")).sendKeys(getTelefone());
 			sleep();
 		}
 
@@ -236,8 +232,7 @@ public class ClienteTest extends AbstractTest {
 		}
 		if (isCreatePage || (cidadeAlterada && getBaseProducer().trueOrFalse())) {
 			getDriver().findElement(By.name("endereco.cep")).clear();
-			getDriver().findElement(By.name("endereco.cep"))
-					.sendKeys(CepValidator.formatCep(getQualquerCep(codigoIBGE)));
+			getDriver().findElement(By.name("endereco.cep")).sendKeys(getQualquerCep(codigoIBGE));
 			sleep();
 		}
 		if (isCreatePage || (cidadeAlterada && getBaseProducer().trueOrFalse())) {

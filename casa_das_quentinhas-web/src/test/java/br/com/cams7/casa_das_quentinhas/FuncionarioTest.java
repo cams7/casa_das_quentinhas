@@ -17,8 +17,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.annotations.Test;
 
-import br.com.cams7.app.validator.CelularValidator;
-import br.com.cams7.app.validator.CpfValidator;
 import io.codearte.jfairy.producer.person.Person;
 
 /**
@@ -175,7 +173,7 @@ public class FuncionarioTest extends AbstractTest {
 		}
 		if (isCreatePage || getBaseProducer().trueOrFalse()) {
 			getDriver().findElement(By.name("celular")).clear();
-			getDriver().findElement(By.name("celular")).sendKeys(CelularValidator.formatCelular(getCelular()));
+			getDriver().findElement(By.name("celular")).sendKeys(getCelular());
 			sleep();
 		}
 		if (isCreatePage) {
@@ -195,7 +193,7 @@ public class FuncionarioTest extends AbstractTest {
 
 		if (isCreatePage || getBaseProducer().trueOrFalse()) {
 			getDriver().findElement(By.name("cpf")).clear();
-			getDriver().findElement(By.name("cpf")).sendKeys(CpfValidator.formatCpf(getCpf()));
+			getDriver().findElement(By.name("cpf")).sendKeys(getCpf());
 			sleep();
 		}
 		if (isCreatePage || getBaseProducer().trueOrFalse()) {
