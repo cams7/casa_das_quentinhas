@@ -261,9 +261,9 @@
 					<family>Linux</family>
 				</os>
 				<property>
-					<name>!heroku</name>
+					<name>phantomjs</name>
 				</property>
-				<activeByDefault>true</activeByDefault>
+				<!--activeByDefault>true</activeByDefault-->
 			</activation>
 			<build>
 				<plugins>
@@ -296,8 +296,8 @@
 						<artifactId>maven-surefire-plugin</artifactId>
 						<configuration>
 							<systemPropertyVariables>
-								<phantomjs.binary.path>phantomjs</phantomjs.binary.path>
 								<base.url>http://casa-das-quentinhas.herokuapp.com</base.url>
+								<phantomjs.binary.path>phantomjs</phantomjs.binary.path>
 							</systemPropertyVariables>
 						</configuration>
 					</plugin>
@@ -335,7 +335,7 @@
 					<family>Windows</family>
 				</os>
 				<property>
-					<name>!phantomjs</name>
+					<name>chrome</name>
 				</property>
 			</activation>
 			<build>
@@ -346,6 +346,54 @@
 						<configuration>
 							<systemPropertyVariables>
 								<webdriver.chrome.driver>chromedriver.exe</webdriver.chrome.driver>
+							</systemPropertyVariables>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>selenium-firefox-windows</id>
+			<activation>
+				<os>
+					<family>Windows</family>
+				</os>
+				<property>
+					<name>gecko</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<systemPropertyVariables>
+								<webdriver.gecko.driver>geckodriver.exe</webdriver.gecko.driver>
+							</systemPropertyVariables>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>selenium-ie-windows</id>
+			<activation>
+				<os>
+					<family>Windows</family>
+				</os>
+				<property>
+					<name>ie</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<systemPropertyVariables>
+								<webdriver.ie.driver>MicrosoftWebDriver.exe</webdriver.ie.driver>
 							</systemPropertyVariables>
 						</configuration>
 					</plugin>

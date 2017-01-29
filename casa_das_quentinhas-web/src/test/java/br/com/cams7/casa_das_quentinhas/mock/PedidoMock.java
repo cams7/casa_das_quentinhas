@@ -3,7 +3,6 @@
  */
 package br.com.cams7.casa_das_quentinhas.mock;
 
-import static br.com.cams7.casa_das_quentinhas.entity.Pedido.FormaPagamento.OUTROS;
 import static br.com.cams7.casa_das_quentinhas.entity.Pedido.FormaPagamento.PAGAMENTO_A_PRAZO;
 import static br.com.cams7.casa_das_quentinhas.entity.Pedido.FormaPagamento.PAGAMENTO_A_VISTA;
 import static br.com.cams7.casa_das_quentinhas.entity.Pedido.Situacao.CANCELADO;
@@ -13,9 +12,11 @@ import static br.com.cams7.casa_das_quentinhas.entity.Pedido.Situacao.PENDENTE;
 import static br.com.cams7.casa_das_quentinhas.entity.Pedido.TipoAtendimento.NAO_SE_APLICA;
 import static br.com.cams7.casa_das_quentinhas.entity.Pedido.TipoAtendimento.OPERACAO_NAO_PRESENCIAL;
 import static br.com.cams7.casa_das_quentinhas.entity.Pedido.TipoAtendimento.OPERACAO_PRESENCIAL;
+import static br.com.cams7.casa_das_quentinhas.entity.Pedido.TipoAtendimento.TELEATENDIMENTO;
 import static br.com.cams7.casa_das_quentinhas.entity.Pedido.TipoCliente.PESSOA_FISICA;
 import static br.com.cams7.casa_das_quentinhas.entity.Pedido.TipoCliente.PESSOA_JURIDICA;
 
+import br.com.cams7.casa_das_quentinhas.entity.Pedido.FormaPagamento;
 import br.com.cams7.casa_das_quentinhas.entity.Pedido.TipoAtendimento;
 
 /**
@@ -41,7 +42,8 @@ public class PedidoMock extends AbstractMock {
 	 * @return Forma de pagamento
 	 */
 	public static String getFormaPagamento() {
-		return getBaseProducer().randomElement(PAGAMENTO_A_VISTA.name(), PAGAMENTO_A_PRAZO.name(), OUTROS.name());
+		return getBaseProducer().randomElement(PAGAMENTO_A_VISTA.name(), PAGAMENTO_A_PRAZO.name(),
+				FormaPagamento.OUTROS.name());
 	}
 
 	/**
@@ -62,7 +64,7 @@ public class PedidoMock extends AbstractMock {
 	 */
 	public static String getTipoAtendimento() {
 		return getBaseProducer().randomElement(NAO_SE_APLICA.name(), OPERACAO_PRESENCIAL.name(),
-				OPERACAO_NAO_PRESENCIAL.name(), TipoAtendimento.OUTROS.name());
+				OPERACAO_NAO_PRESENCIAL.name(), TELEATENDIMENTO.name(), TipoAtendimento.OUTROS.name());
 	}
 
 }

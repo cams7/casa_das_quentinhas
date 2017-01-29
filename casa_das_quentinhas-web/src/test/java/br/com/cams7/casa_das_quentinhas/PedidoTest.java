@@ -7,9 +7,10 @@ import static br.com.cams7.casa_das_quentinhas.mock.PedidoMock.getFormaPagamento
 import static br.com.cams7.casa_das_quentinhas.mock.PedidoMock.getSituacao;
 import static br.com.cams7.casa_das_quentinhas.mock.PedidoMock.getTipoAtendimento;
 import static br.com.cams7.casa_das_quentinhas.mock.PedidoMock.getTipoCliente;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.fail;
+import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.AssertJUnit.assertFalse;
+import static org.testng.AssertJUnit.assertTrue;
+import static org.testng.AssertJUnit.fail;
 
 import java.util.List;
 
@@ -19,7 +20,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Function;
@@ -69,24 +69,21 @@ public class PedidoTest extends AbstractTest {
 		goToCreatePage();
 		assertEquals("Adicionar Pedido", getDriver().getTitle());
 
-		WebDriverWait wait = getWait();
-		wait.until((ExpectedCondition<Boolean>) driver -> (Boolean) getJS(driver)
-				.executeScript("return document.readyState === 'complete' && jQuery.active === 0"));
-
 		Select tipoCliente = new Select(getDriver().findElement(By.name("tipoCliente")));
 		tipoCliente.deselectAll();
 		tipoCliente.selectByValue(getTipoCliente());
+		sleep();
 
 		getDriver().findElement(By.name("cliente.nome")).clear();
 		getDriver().findElement(By.name("cliente.nome")).sendKeys("a");
 
 		final By CLIENTE_ID = By.name("cliente.id");
 
-		assertEquals(getDriver().findElement(CLIENTE_ID).getAttribute("value"), "");
+		assertTrue(getDriver().findElement(CLIENTE_ID).getAttribute("value").isEmpty());
 
 		final By AUTOCOMPLETE = By.cssSelector("ul.ui-autocomplete");
 
-		if (!wait.until(new ExpectedCondition<Boolean>() {
+		if (!getWait().until(new ExpectedCondition<Boolean>() {
 			public Boolean apply(WebDriver driver) {
 				WebElement autocomplete = driver.findElements(AUTOCOMPLETE).get(0);
 				if (autocomplete.isDisplayed()) {
@@ -100,30 +97,30 @@ public class PedidoTest extends AbstractTest {
 		}))
 			fail("O ID do cliente não foi informado");
 
-		wait.until(ExpectedConditions.invisibilityOfElementLocated(AUTOCOMPLETE));
+		getWait().until(ExpectedConditions.invisibilityOfElementLocated(AUTOCOMPLETE));
 
-		assertNotEquals(getDriver().findElement(CLIENTE_ID).getAttribute("value"), "");
+		assertFalse(getDriver().findElement(CLIENTE_ID).getAttribute("value").isEmpty());
 
 		Select formaPagamento = new Select(getDriver().findElement(By.name("formaPagamento")));
 		formaPagamento.deselectAll();
 		formaPagamento.selectByValue(getFormaPagamento());
-
+		sleep();
 		Select situacao = new Select(getDriver().findElement(By.name("situacao")));
 		situacao.deselectAll();
 		situacao.selectByValue(getSituacao());
-
+		sleep();
 		Select tipoAtendimento = new Select(getDriver().findElement(By.name("tipoAtendimento")));
 		tipoAtendimento.deselectAll();
 		tipoAtendimento.selectByValue(getTipoAtendimento());
-
+		sleep();
 		do {
 			final By ITEM_ADD = By.id("item_add");
-			wait.until(ExpectedConditions.elementToBeClickable(ITEM_ADD));
+			getWait().until(ExpectedConditions.elementToBeClickable(ITEM_ADD));
 			getDriver().findElement(ITEM_ADD).click();
 
 			final By ITEM_MODAL = By.id("item_modal");
 
-			WebElement itemModal = wait.until(new Function<WebDriver, WebElement>() {
+			WebElement itemModal = getWait().until(new Function<WebDriver, WebElement>() {
 				public WebElement apply(WebDriver driver) {
 					WebElement itemModal = driver.findElement(ITEM_MODAL);
 					if (itemModal.isDisplayed())
@@ -140,9 +137,9 @@ public class PedidoTest extends AbstractTest {
 
 			final By PRODUTO_ID = By.name("produto_id");
 
-			assertEquals(itemModal.findElement(PRODUTO_ID).getAttribute("value"), "");
+			assertTrue(itemModal.findElement(PRODUTO_ID).getAttribute("value").isEmpty());
 
-			if (!wait.until(new ExpectedCondition<Boolean>() {
+			if (!getWait().until(new ExpectedCondition<Boolean>() {
 				public Boolean apply(WebDriver driver) {
 					WebElement autocomplete = driver.findElements(AUTOCOMPLETE).get(1);
 					if (autocomplete.isDisplayed()) {
@@ -156,16 +153,17 @@ public class PedidoTest extends AbstractTest {
 			}))
 				fail("O ID do produto não foi informado");
 
-			wait.until(ExpectedConditions.invisibilityOfElementLocated(AUTOCOMPLETE));
+			getWait().until(ExpectedConditions.invisibilityOfElementLocated(AUTOCOMPLETE));
 
-			assertNotEquals(itemModal.findElement(PRODUTO_ID).getAttribute("value"), "");
+			assertFalse(itemModal.findElement(PRODUTO_ID).getAttribute("value").isEmpty());
 
 			itemModal.findElement(By.name("quantidade")).clear();
 			itemModal.findElement(By.name("quantidade"))
 					.sendKeys(String.valueOf(getBaseProducer().randomBetween(1, 20)));
+			sleep();
 
 			WebElement modalSave = itemModal.findElement(By.cssSelector("div.modal-footer > input.btn.btn-primary"));
-			wait.until(ExpectedConditions.elementToBeClickable(modalSave));
+			getWait().until(ExpectedConditions.elementToBeClickable(modalSave));
 			modalSave.click();
 
 			// WebElement modalClose =
@@ -174,7 +172,7 @@ public class PedidoTest extends AbstractTest {
 			// wait.until(ExpectedConditions.elementToBeClickable(modalClose));
 			// modalClose.click();
 
-			wait.until(ExpectedConditions.invisibilityOfElementLocated(ITEM_MODAL));
+			getWait().until(ExpectedConditions.invisibilityOfElementLocated(ITEM_MODAL));
 
 			try {
 				Thread.sleep(500);

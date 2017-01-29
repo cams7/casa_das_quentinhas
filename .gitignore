@@ -29,9 +29,11 @@ bin/
 #JasperReports
 *_report.jasper
 
-#Selenium
-chromedriver*
+#Selenium driver
 phantomjs*
+chromedriver*
+geckodriver*
+MicrosoftWebDriver*
 
 #TestNG
 test-output/

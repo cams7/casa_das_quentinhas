@@ -11,9 +11,10 @@ import static br.com.cams7.casa_das_quentinhas.mock.EnderecoMock.getQualquerBair
 import static br.com.cams7.casa_das_quentinhas.mock.EnderecoMock.getQualquerCep;
 import static br.com.cams7.casa_das_quentinhas.mock.EnderecoMock.getQualquerCodigoIBGE;
 import static br.com.cams7.casa_das_quentinhas.mock.UsuarioMock.getSenhaAcesso;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.fail;
+import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.AssertJUnit.assertFalse;
+import static org.testng.AssertJUnit.assertTrue;
+import static org.testng.AssertJUnit.fail;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -21,7 +22,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Test;
 
 import io.codearte.jfairy.producer.company.Company;
@@ -81,16 +81,23 @@ public class EmpresaTest extends AbstractTest {
 
 		getDriver().findElement(By.name("razaoSocial")).clear();
 		getDriver().findElement(By.name("razaoSocial")).sendKeys(company.getName());
+		sleep();
 		getDriver().findElement(By.name("nomeFantasia")).clear();
 		getDriver().findElement(By.name("nomeFantasia")).sendKeys(company.getName());
+		sleep();
 		getDriver().findElement(By.name("cnpj")).clear();
 		getDriver().findElement(By.name("cnpj")).sendKeys(getCnpj());
+		sleep();
 		new Select(getDriver().findElement(By.name("tipo"))).selectByValue(getTipo());
+		sleep();
 		getDriver().findElement(By.name("contato.email")).clear();
 		getDriver().findElement(By.name("contato.email")).sendKeys(company.getEmail());
+		sleep();
 		getDriver().findElement(By.name("contato.telefone")).clear();
 		getDriver().findElement(By.name("contato.telefone")).sendKeys(getTelefone());
+		sleep();
 		new Select(getDriver().findElement(By.name("regimeTributario"))).selectByValue(getRegimeTributario());
+		sleep();
 		// getDriver().findElement(By.name("inscricaoEstadual")).clear();
 		// getDriver().findElement(By.name("inscricaoEstadual")).sendKeys("0142315578483");
 		// getDriver().findElement(By.name("inscricaoEstadualST")).clear();
@@ -104,13 +111,11 @@ public class EmpresaTest extends AbstractTest {
 
 		final By CIDADE_ID = By.name("cidade.id");
 
-		assertEquals(getDriver().findElement(CIDADE_ID).getAttribute("value"), "");
+		assertTrue(getDriver().findElement(CIDADE_ID).getAttribute("value").isEmpty());
 
-		WebDriverWait wait = getWait();
-		
 		final By AUTOCOMPLETE = By.cssSelector("ul.ui-autocomplete");
 
-		if (!wait.until(new ExpectedCondition<Boolean>() {
+		if (!getWait().until(new ExpectedCondition<Boolean>() {
 			public Boolean apply(WebDriver driver) {
 				WebElement autocomplete = driver.findElement(AUTOCOMPLETE);
 				if (autocomplete.isDisplayed()) {
@@ -121,27 +126,33 @@ public class EmpresaTest extends AbstractTest {
 			}
 		}))
 			fail("O ID da cidade não foi informado");
-		
-		wait.until(ExpectedConditions.invisibilityOfElementLocated(AUTOCOMPLETE));
 
-		assertNotEquals(getDriver().findElement(CIDADE_ID).getAttribute("value"), "");
+		getWait().until(ExpectedConditions.invisibilityOfElementLocated(AUTOCOMPLETE));
+
+		assertFalse(getDriver().findElement(CIDADE_ID).getAttribute("value").isEmpty());
 
 		getDriver().findElement(By.name("endereco.cep")).clear();
 		getDriver().findElement(By.name("endereco.cep")).sendKeys(getQualquerCep(codigoIBGE));
+		sleep();
 		getDriver().findElement(By.name("endereco.bairro")).clear();
 		getDriver().findElement(By.name("endereco.bairro")).sendKeys(getQualquerBairro(codigoIBGE));
+		sleep();
 		getDriver().findElement(By.name("endereco.logradouro")).clear();
 		getDriver().findElement(By.name("endereco.logradouro")).sendKeys(address.getStreet());
+		sleep();
 		getDriver().findElement(By.name("endereco.numeroImovel")).clear();
 		getDriver().findElement(By.name("endereco.numeroImovel")).sendKeys(address.getStreetNumber());
+		sleep();
 		// getDriver().findElement(By.name("endereco.complemento")).clear();
 		// getDriver().findElement(By.name("endereco.complemento")).sendKeys("");
 		// getDriver().findElement(By.name("endereco.pontoReferencia")).clear();
 		// getDriver().findElement(By.name("endereco.pontoReferencia")).sendKeys("");
 		getDriver().findElement(By.name("usuarioAcesso.senha")).clear();
 		getDriver().findElement(By.name("usuarioAcesso.senha")).sendKeys(getSenhaAcesso());
+		sleep();
 		getDriver().findElement(By.name("usuarioAcesso.confirmacaoSenha")).clear();
 		getDriver().findElement(By.name("usuarioAcesso.confirmacaoSenha")).sendKeys(getSenhaAcesso());
+		sleep();
 		// Tenta salvar os dados da empresa
 		saveCreateAndEditPage();
 
@@ -224,22 +235,22 @@ public class EmpresaTest extends AbstractTest {
 	private void sortFields() {
 		if (getBaseProducer().trueOrFalse())
 			clickSortField("id");
-		
+
 		if (getBaseProducer().trueOrFalse())
 			clickSortField("razaoSocial");
-		
+
 		if (getBaseProducer().trueOrFalse())
 			clickSortField("cnpj");
-		
+
 		if (getBaseProducer().trueOrFalse())
 			clickSortField("contato.email");
-		
+
 		if (getBaseProducer().trueOrFalse())
 			clickSortField("contato.telefone");
-		
+
 		if (getBaseProducer().trueOrFalse())
 			clickSortField("tipo");
-		
+
 		if (getBaseProducer().trueOrFalse())
 			clickSortField("cidade.nome");
 	}

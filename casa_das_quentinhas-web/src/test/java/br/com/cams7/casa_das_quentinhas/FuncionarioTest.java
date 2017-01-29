@@ -8,7 +8,7 @@ import static br.com.cams7.casa_das_quentinhas.mock.FuncionarioMock.getFuncao;
 import static br.com.cams7.casa_das_quentinhas.mock.PessoaMock.getCpf;
 import static br.com.cams7.casa_das_quentinhas.mock.PessoaMock.getRg;
 import static br.com.cams7.casa_das_quentinhas.mock.UsuarioMock.getSenhaAcesso;
-import static org.junit.Assert.assertEquals;
+import static org.testng.AssertJUnit.assertEquals;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.Select;
@@ -65,19 +65,27 @@ public class FuncionarioTest extends AbstractTest {
 
 		getDriver().findElement(By.name("nome")).clear();
 		getDriver().findElement(By.name("nome")).sendKeys(person.getFullName());
+		sleep();
 		getDriver().findElement(By.name("celular")).clear();
 		getDriver().findElement(By.name("celular")).sendKeys(getCelular());
+		sleep();
 		new Select(getDriver().findElement(By.name("funcao"))).selectByValue(getFuncao());
+		sleep();
 		getDriver().findElement(By.name("usuario.email")).clear();
 		getDriver().findElement(By.name("usuario.email")).sendKeys(person.getEmail());
+		sleep();
 		getDriver().findElement(By.name("cpf")).clear();
 		getDriver().findElement(By.name("cpf")).sendKeys(getCpf());
+		sleep();
 		getDriver().findElement(By.name("rg")).clear();
 		getDriver().findElement(By.name("rg")).sendKeys(getRg());
+		sleep();
 		getDriver().findElement(By.name("usuario.senha")).clear();
 		getDriver().findElement(By.name("usuario.senha")).sendKeys(getSenhaAcesso());
+		sleep();
 		getDriver().findElement(By.name("usuario.confirmacaoSenha")).clear();
 		getDriver().findElement(By.name("usuario.confirmacaoSenha")).sendKeys(getSenhaAcesso());
+		sleep();
 
 		// Tenta salvar os dados do funcionário
 		saveCreateAndEditPage();

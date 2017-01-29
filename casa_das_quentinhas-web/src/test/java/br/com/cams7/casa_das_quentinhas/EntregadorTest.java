@@ -7,9 +7,10 @@ import static br.com.cams7.casa_das_quentinhas.mock.ContatoMock.getCelular;
 import static br.com.cams7.casa_das_quentinhas.mock.PessoaMock.getCpf;
 import static br.com.cams7.casa_das_quentinhas.mock.PessoaMock.getRg;
 import static br.com.cams7.casa_das_quentinhas.mock.UsuarioMock.getSenhaAcesso;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.fail;
+import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.AssertJUnit.assertFalse;
+import static org.testng.AssertJUnit.assertTrue;
+import static org.testng.AssertJUnit.fail;
 
 import java.util.List;
 
@@ -18,7 +19,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Test;
 
 import io.codearte.jfairy.producer.person.Person;
@@ -72,20 +72,20 @@ public class EntregadorTest extends AbstractTest {
 
 		getDriver().findElement(By.name("nome")).clear();
 		getDriver().findElement(By.name("nome")).sendKeys(person.getFullName());
+		sleep();
 		getDriver().findElement(By.name("celular")).clear();
 		getDriver().findElement(By.name("celular")).sendKeys(getCelular());
+		sleep();
 		getDriver().findElement(By.name("empresa.razaoSocial")).clear();
 		getDriver().findElement(By.name("empresa.razaoSocial")).sendKeys("a");
 
 		final By EMPRESA_ID = By.name("empresa.id");
 
-		assertEquals(getDriver().findElement(EMPRESA_ID).getAttribute("value"), "");
-
-		WebDriverWait wait = getWait();
+		assertTrue(getDriver().findElement(EMPRESA_ID).getAttribute("value").isEmpty());
 
 		final By AUTOCOMPLETE = By.cssSelector("ul.ui-autocomplete");
 
-		if (!wait.until(new ExpectedCondition<Boolean>() {
+		if (!getWait().until(new ExpectedCondition<Boolean>() {
 			public Boolean apply(WebDriver driver) {
 				WebElement autocomplete = driver.findElement(AUTOCOMPLETE);
 				if (autocomplete.isDisplayed()) {
@@ -99,20 +99,25 @@ public class EntregadorTest extends AbstractTest {
 		}))
 			fail("O ID da empresa não foi informado");
 
-		wait.until(ExpectedConditions.invisibilityOfElementLocated(AUTOCOMPLETE));
+		getWait().until(ExpectedConditions.invisibilityOfElementLocated(AUTOCOMPLETE));
 
-		assertNotEquals(getDriver().findElement(EMPRESA_ID).getAttribute("value"), "");
+		assertFalse(getDriver().findElement(EMPRESA_ID).getAttribute("value").isEmpty());
 
 		getDriver().findElement(By.name("usuario.email")).clear();
 		getDriver().findElement(By.name("usuario.email")).sendKeys(person.getEmail());
+		sleep();
 		getDriver().findElement(By.name("cpf")).clear();
 		getDriver().findElement(By.name("cpf")).sendKeys(getCpf());
+		sleep();
 		getDriver().findElement(By.name("rg")).clear();
 		getDriver().findElement(By.name("rg")).sendKeys(getRg());
+		sleep();
 		getDriver().findElement(By.name("usuario.senha")).clear();
 		getDriver().findElement(By.name("usuario.senha")).sendKeys(getSenhaAcesso());
+		sleep();
 		getDriver().findElement(By.name("usuario.confirmacaoSenha")).clear();
 		getDriver().findElement(By.name("usuario.confirmacaoSenha")).sendKeys(getSenhaAcesso());
+		sleep();
 
 		// Tenta salvar os dados do entregador
 		saveCreateAndEditPage();
