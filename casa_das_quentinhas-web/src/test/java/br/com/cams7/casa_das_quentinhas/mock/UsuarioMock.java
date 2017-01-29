@@ -12,9 +12,9 @@ public class UsuarioMock extends AbstractMock {
 	private static final String SENHA_ACESSO = "12345";
 
 	static {
-		emails = new String[] { "gerente@casa-das-quentinhas.com"/*, "atendente@casa-das-quentinhas.com",
+		emails = new String[] { "gerente@casa-das-quentinhas.com", "atendente@casa-das-quentinhas.com",
 				"entregador@casa-das-quentinhas.com", "empresa@casa-das-quentinhas.com",
-				"cliente@casa-das-quentinhas.com"*/ };
+				"cliente@casa-das-quentinhas.com" };
 	}
 
 	/**

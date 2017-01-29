@@ -3,17 +3,22 @@
  */
 package br.com.cams7.casa_das_quentinhas;
 
+import static br.com.cams7.casa_das_quentinhas.entity.Funcionario.Funcao.ATENDENTE;
 import static br.com.cams7.casa_das_quentinhas.mock.ContatoMock.getCelular;
 import static br.com.cams7.casa_das_quentinhas.mock.FuncionarioMock.getFuncao;
 import static br.com.cams7.casa_das_quentinhas.mock.PessoaMock.getCpf;
 import static br.com.cams7.casa_das_quentinhas.mock.PessoaMock.getRg;
 import static br.com.cams7.casa_das_quentinhas.mock.UsuarioMock.getSenhaAcesso;
 import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.AssertJUnit.assertFalse;
+import static org.testng.AssertJUnit.assertTrue;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.annotations.Test;
 
+import br.com.cams7.app.validator.CelularValidator;
+import br.com.cams7.app.validator.CpfValidator;
 import io.codearte.jfairy.producer.person.Person;
 
 /**
@@ -61,31 +66,8 @@ public class FuncionarioTest extends AbstractTest {
 		goToCreatePage();
 		assertEquals("Adicionar Funcionário", getDriver().getTitle());
 
-		Person person = getFairy().person();
-
-		getDriver().findElement(By.name("nome")).clear();
-		getDriver().findElement(By.name("nome")).sendKeys(person.getFullName());
-		sleep();
-		getDriver().findElement(By.name("celular")).clear();
-		getDriver().findElement(By.name("celular")).sendKeys(getCelular());
-		sleep();
-		new Select(getDriver().findElement(By.name("funcao"))).selectByValue(getFuncao());
-		sleep();
-		getDriver().findElement(By.name("usuario.email")).clear();
-		getDriver().findElement(By.name("usuario.email")).sendKeys(person.getEmail());
-		sleep();
-		getDriver().findElement(By.name("cpf")).clear();
-		getDriver().findElement(By.name("cpf")).sendKeys(getCpf());
-		sleep();
-		getDriver().findElement(By.name("rg")).clear();
-		getDriver().findElement(By.name("rg")).sendKeys(getRg());
-		sleep();
-		getDriver().findElement(By.name("usuario.senha")).clear();
-		getDriver().findElement(By.name("usuario.senha")).sendKeys(getSenhaAcesso());
-		sleep();
-		getDriver().findElement(By.name("usuario.confirmacaoSenha")).clear();
-		getDriver().findElement(By.name("usuario.confirmacaoSenha")).sendKeys(getSenhaAcesso());
-		sleep();
+		// Preenche o fomulário
+		createFuncionario();
 
 		// Tenta salva os dados do funcionário ou cancela o cadastro
 		saveOrCancel();
@@ -124,6 +106,9 @@ public class FuncionarioTest extends AbstractTest {
 		// Carrega um formulário para a alteração dos dados do funcionário
 		goToEditPage();
 		assertEquals("Editar Funcionário", getDriver().getTitle());
+
+		// Preenche o fomulário
+		editFuncionario();
 
 		// Tenta salva os dados do funcionário ou cancela a edição
 		saveOrCancel();
@@ -170,6 +155,62 @@ public class FuncionarioTest extends AbstractTest {
 		clickSortField("usuario.email");
 		clickSortField("celular");
 		clickSortField("funcao");
+	}
+
+	private void createFuncionario() {
+		createOrEditFuncionario(true);
+	}
+
+	private void editFuncionario() {
+		createOrEditFuncionario(false);
+	}
+
+	private void createOrEditFuncionario(boolean isCreatePage) {
+		Person person = getFairy().person();
+
+		if (isCreatePage || getBaseProducer().trueOrFalse()) {
+			getDriver().findElement(By.name("nome")).clear();
+			getDriver().findElement(By.name("nome")).sendKeys(person.getFullName());
+			sleep();
+		}
+		if (isCreatePage || getBaseProducer().trueOrFalse()) {
+			getDriver().findElement(By.name("celular")).clear();
+			getDriver().findElement(By.name("celular")).sendKeys(CelularValidator.formatCelular(getCelular()));
+			sleep();
+		}
+		if (isCreatePage) {
+			Select funcao = new Select(getDriver().findElement(By.name("funcao")));
+			funcao.deselectAll();
+			funcao.selectByValue(getFuncao());
+			sleep();
+		} else if (ATENDENTE.equals(getAcesso()))
+			assertFalse(getDriver().findElement(By.name("funcao")).isDisplayed());
+
+		if (isCreatePage) {
+			getDriver().findElement(By.name("usuario.email")).clear();
+			getDriver().findElement(By.name("usuario.email")).sendKeys(person.getEmail());
+			sleep();
+		} else if (ATENDENTE.equals(getAcesso()))
+			assertTrue((Boolean) getJS().executeScript("return  $('#email').is('[readonly]');"));
+
+		if (isCreatePage || getBaseProducer().trueOrFalse()) {
+			getDriver().findElement(By.name("cpf")).clear();
+			getDriver().findElement(By.name("cpf")).sendKeys(CpfValidator.formatCpf(getCpf()));
+			sleep();
+		}
+		if (isCreatePage || getBaseProducer().trueOrFalse()) {
+			getDriver().findElement(By.name("rg")).clear();
+			getDriver().findElement(By.name("rg")).sendKeys(getRg());
+			sleep();
+		}
+		if (isCreatePage) {
+			getDriver().findElement(By.name("usuario.senha")).clear();
+			getDriver().findElement(By.name("usuario.senha")).sendKeys(getSenhaAcesso());
+			sleep();
+			getDriver().findElement(By.name("usuario.confirmacaoSenha")).clear();
+			getDriver().findElement(By.name("usuario.confirmacaoSenha")).sendKeys(getSenhaAcesso());
+			sleep();
+		}
 	}
 
 }

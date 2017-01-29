@@ -2,7 +2,7 @@ package br.com.cams7.casa_das_quentinhas.mock;
 
 public class ContatoMock extends AbstractMock {
 
-	private static final Byte DDD = 31;
+	private static final String DDD = "31";
 
 	/**
 	 * Gera um número de telefone aletório
@@ -10,7 +10,8 @@ public class ContatoMock extends AbstractMock {
 	 * @return Número de telefone
 	 */
 	public static String getTelefone() {
-		return DDD + "3" + getBaseProducer().randomBetween(6410000l, 6430000l);
+		String telefone = String.format("%s3%s", DDD, getBaseProducer().randomBetween(6410000l, 6430000l));
+		return telefone;
 	}
 
 	/**
@@ -31,6 +32,7 @@ public class ContatoMock extends AbstractMock {
 		final long OI = getBaseProducer().randomElement(getBaseProducer().randomBetween(85000000l, 89999999l));
 		final long CLARO = getBaseProducer().randomElement(getBaseProducer().randomBetween(81000000l, 84999999l));
 
-		return DDD + "9" + getBaseProducer().randomElement(TIM, VIVO, OI, CLARO);
+		String celular = String.format("%s9%s", DDD, getBaseProducer().randomElement(TIM, VIVO, OI, CLARO));
+		return celular;
 	}
 }

@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 //import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
-//import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.JavascriptExecutor;
 //import org.openqa.selenium.NoAlertPresentException;
 //import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -47,7 +47,7 @@ public abstract class AbstractTest implements BaseTest {
 	private static String baseUrl;
 
 	private static WebDriver driver;
-	// private static JavascriptExecutor js;
+	private static JavascriptExecutor js;
 	private static WebDriverWait wait;
 
 	private static boolean sleep = true;
@@ -73,6 +73,7 @@ public abstract class AbstractTest implements BaseTest {
 	public void setUp() {
 		setDriverAndUrl();
 		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		js = getJS(driver);
 		wait = new WebDriverWait(driver, 5);
 	}
 
@@ -413,20 +414,23 @@ public abstract class AbstractTest implements BaseTest {
 		return driver;
 	}
 
-	// private JavascriptExecutor getJS(WebDriver driver) {
-	// if (!(driver instanceof JavascriptExecutor))
-	// throw new IllegalStateException("This driver does not support
-	// JavaScript!");
-	//
-	// return (JavascriptExecutor) driver;
-	// }
+	private JavascriptExecutor getJS(WebDriver driver) {
+		if (!(driver instanceof JavascriptExecutor))
+			throw new IllegalStateException("This driver does not support JavaScript!");
 
-	// protected static JavascriptExecutor getJS() {
-	// return js;
-	// }
+		return (JavascriptExecutor) driver;
+	}
+
+	protected static JavascriptExecutor getJS() {
+		return js;
+	}
 
 	protected static WebDriverWait getWait() {
 		return wait;
+	}
+
+	protected final Object getAcesso() {
+		return acesso;
 	}
 
 	protected abstract String getMainPage();
