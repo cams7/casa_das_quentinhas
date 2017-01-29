@@ -51,11 +51,8 @@ public class ProdutoTest extends AbstractTest {
 		goToCreatePage();
 		assertEquals("Adicionar Produto", getDriver().getTitle());
 
-		// Tenta salvar os dados do produto
-		saveCreateAndEditPage();
-
-		// Volta à página anterior
-		cancelCreateAndEditPage();
+		// Tenta salva os dados do produto ou cancela o cadastro
+		saveOrCancel();
 	}
 
 	/*
@@ -92,8 +89,8 @@ public class ProdutoTest extends AbstractTest {
 		goToEditPage();
 		assertEquals("Editar Produto", getDriver().getTitle());
 
-		// Tenta salvar os dados do produto
-		saveCreateAndEditPage();
+		// Tenta salva os dados do produto ou cancela a edição
+		saveOrCancel();
 	}
 
 	/*

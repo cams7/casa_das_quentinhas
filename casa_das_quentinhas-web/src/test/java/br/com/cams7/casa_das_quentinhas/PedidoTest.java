@@ -174,10 +174,7 @@ public class PedidoTest extends AbstractTest {
 		} while (!itemCadastrado || getBaseProducer().trueOrFalse());
 
 		// Tenta salvar os dados do pedido
-		saveCreateAndEditPage();
-
-		// Volta à página anterior
-		// cancelCreateAndEditPage();
+		saveCreateOrEditPage();
 	}
 
 	/*
@@ -214,8 +211,8 @@ public class PedidoTest extends AbstractTest {
 		goToEditPage();
 		assertEquals("Editar Pedido", getDriver().getTitle());
 
-		// Tenta salvar os dados do pedido
-		saveCreateAndEditPage();
+		// Tenta salva os dados do pedido ou cancela a edição
+		saveOrCancel();
 	}
 
 	/*

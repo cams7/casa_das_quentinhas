@@ -151,11 +151,9 @@ public class EmpresaTest extends AbstractTest {
 		getDriver().findElement(By.name("usuarioAcesso.confirmacaoSenha")).clear();
 		getDriver().findElement(By.name("usuarioAcesso.confirmacaoSenha")).sendKeys(getSenhaAcesso());
 		sleep();
-		// Tenta salvar os dados da empresa
-		saveCreateAndEditPage();
 
-		// Volta à página anterior
-		// cancelCreateAndEditPage();
+		// Tenta salva os dados da empresa ou cancela o cadastro
+		saveOrCancel();
 	}
 
 	/*
@@ -192,8 +190,8 @@ public class EmpresaTest extends AbstractTest {
 		goToEditPage();
 		assertEquals("Editar Empresa", getDriver().getTitle());
 
-		// Tenta salvar os dados da empresa
-		saveCreateAndEditPage();
+		// Tenta salva os dados da empresa ou cancela a edição
+		saveOrCancel();
 	}
 
 	/*

@@ -87,11 +87,8 @@ public class FuncionarioTest extends AbstractTest {
 		getDriver().findElement(By.name("usuario.confirmacaoSenha")).sendKeys(getSenhaAcesso());
 		sleep();
 
-		// Tenta salvar os dados do funcionário
-		saveCreateAndEditPage();
-
-		// Volta à página anterior
-		// cancelCreateAndEditPage();
+		// Tenta salva os dados do funcionário ou cancela o cadastro
+		saveOrCancel();
 	}
 
 	/*
@@ -128,8 +125,8 @@ public class FuncionarioTest extends AbstractTest {
 		goToEditPage();
 		assertEquals("Editar Funcionário", getDriver().getTitle());
 
-		// Tenta salvar os dados do funcionário
-		saveCreateAndEditPage();
+		// Tenta salva os dados do funcionário ou cancela a edição
+		saveOrCancel();
 	}
 
 	/*

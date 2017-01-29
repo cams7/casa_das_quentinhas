@@ -30,10 +30,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.SkipException;
 import org.testng.annotations.AfterClass;
-//import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeClass;
-//import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeSuite;
 
 import io.codearte.jfairy.Fairy;
@@ -71,25 +69,20 @@ public abstract class AbstractTest implements BaseTest {
 		LOGGER = LoggerFactory.getLogger(this.getClass());
 	}
 
-	@BeforeSuite
-	public void setUp() throws Exception {
-		// LOGGER.info("@BeforeSuite");
+	@BeforeSuite(alwaysRun = true)
+	public void setUp() {
 		setDriverAndUrl();
 		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-
-		// js = getJS(driver);
 		wait = new WebDriverWait(driver, 5);
 	}
 
-	@AfterSuite
-	public void tearDown() throws Exception {
-		// LOGGER.info("@AfterSuite");
+	@AfterSuite(alwaysRun = true)
+	public void tearDown() {
 		driver.quit();
 	}
 
 	@BeforeClass(alwaysRun = true)
 	public void begin() {
-		// LOGGER.info("@BeforeClass");
 		final String EMAIL_ACESSO = getQualquerEmailAcesso();
 		login(EMAIL_ACESSO, getSenhaAcesso());
 
@@ -100,7 +93,6 @@ public abstract class AbstractTest implements BaseTest {
 
 	@AfterClass(alwaysRun = true)
 	public void end() {
-		// LOGGER.info("@AfterClass");
 		logout();
 	}
 
@@ -116,8 +108,11 @@ public abstract class AbstractTest implements BaseTest {
 			final By MENU = By.linkText(menu);
 			wait.until(ExpectedConditions.elementToBeClickable(MENU));
 			driver.findElement(MENU).click();
-		} else
-			driver.get(baseUrl + "/" + getMainPage());
+		} else {
+			final String URL = baseUrl + "/" + getMainPage();
+			LOGGER.info("create -> got to {}", URL);
+			driver.get(URL);
+		}
 
 		sleep();
 	}
@@ -183,13 +178,11 @@ public abstract class AbstractTest implements BaseTest {
 	}
 
 	/**
-	 * Ordena todos os campos da tabela
+	 * Ordena todos o campo informado
 	 * 
-	 * @param fields
-	 *            Campos da tabela
+	 * @param field
+	 *            Campo da tabela
 	 */
-	// protected void sortFields(String... fields) {
-	// }
 	protected void clickSortField(String field) {
 		if (baseProducer.trueOrFalse()) {
 			String firstOrder = getSortOrder(driver, field);
@@ -284,9 +277,9 @@ public abstract class AbstractTest implements BaseTest {
 			edit.click();
 		} else {
 			assertFalse(totalButtons > 0);
-			String url = baseUrl + "/" + getMainPage() + "/" + getId() + "/edit";
-			LOGGER.info("edit -> got to {}", url);
-			driver.get(url);
+			final String URL = baseUrl + "/" + getMainPage() + "/" + getId() + "/edit";
+			LOGGER.info("edit -> got to {}", URL);
+			driver.get(URL);
 		}
 		sleep();
 
@@ -364,9 +357,21 @@ public abstract class AbstractTest implements BaseTest {
 	}
 
 	/**
+	 * Salva os dados ou cancela
+	 */
+	protected void saveOrCancel() {
+		if (baseProducer.trueOrFalse())
+			// Tenta salvar os dados do cliente
+			saveCreateOrEditPage();
+		else
+			// Volta à página anterior
+			cancelCreateOrEditPage();
+	}
+
+	/**
 	 * Tenta salva dos dados do formulário
 	 */
-	protected void saveCreateAndEditPage() {
+	protected void saveCreateOrEditPage() {
 		final By SAVE = By.cssSelector("div#actions > div > input.btn.btn-primary");
 		wait.until(ExpectedConditions.elementToBeClickable(SAVE));
 		driver.findElement(SAVE).click();
@@ -376,7 +381,7 @@ public abstract class AbstractTest implements BaseTest {
 	/**
 	 * Vai para a página anterior
 	 */
-	protected void cancelCreateAndEditPage() {
+	protected void cancelCreateOrEditPage() {
 		final By CANCEL = By.cssSelector("div#actions > div > button.btn.btn-default");
 		wait.until(ExpectedConditions.elementToBeClickable(CANCEL));
 		driver.findElement(CANCEL).click();
@@ -418,10 +423,6 @@ public abstract class AbstractTest implements BaseTest {
 
 	// protected static JavascriptExecutor getJS() {
 	// return js;
-	// }
-
-	// private WebDriverWait getWait(WebDriver driver) {
-	// return new WebDriverWait(driver, 5);
 	// }
 
 	protected static WebDriverWait getWait() {
@@ -469,7 +470,7 @@ public abstract class AbstractTest implements BaseTest {
 		driver.findElement(By.id("email")).sendKeys(username);
 		driver.findElement(By.id("senha")).clear();
 		driver.findElement(By.id("senha")).sendKeys(password);
-		// driver.findElement(By.id("lembre_me")).click();
+		driver.findElement(By.id("lembre_me")).click();
 		final By LOGIN = By.xpath("//input[@value='Entrar']");
 		wait.until(ExpectedConditions.elementToBeClickable(LOGIN));
 		driver.findElement(LOGIN).click();

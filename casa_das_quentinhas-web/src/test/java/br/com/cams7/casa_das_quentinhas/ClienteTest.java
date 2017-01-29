@@ -75,11 +75,8 @@ public class ClienteTest extends AbstractTest {
 		// Preenche o fomulário
 		createCliente();
 
-		// Tenta salvar os dados do cliente
-		saveCreateAndEditPage();
-
-		// Volta à página anterior
-		// cancelCreatePage();
+		// Tenta salva os dados do cliente ou cancela o cadastro
+		saveOrCancel();
 	}
 
 	/*
@@ -119,8 +116,8 @@ public class ClienteTest extends AbstractTest {
 		// Preenche o fomulário
 		editCliente();
 
-		// Tenta salvar os dados do cliente
-		saveCreateAndEditPage();
+		// Tenta salva os dados do cliente ou cancela a edição
+		saveOrCancel();
 	}
 
 	/*

@@ -117,11 +117,8 @@ public class EntregadorTest extends AbstractTest {
 		getDriver().findElement(By.name("usuario.confirmacaoSenha")).sendKeys(getSenhaAcesso());
 		sleep();
 
-		// Tenta salvar os dados do entregador
-		saveCreateAndEditPage();
-
-		// Volta à página anterior
-		// cancelCreateAndEditPage();
+		// Tenta salva os dados do entregador ou cancela o cadastro
+		saveOrCancel();
 	}
 
 	/*
@@ -158,8 +155,8 @@ public class EntregadorTest extends AbstractTest {
 		goToEditPage();
 		assertEquals("Editar Entregador", getDriver().getTitle());
 
-		// Tenta salvar os dados do entregador
-		saveCreateAndEditPage();
+		// Tenta salva os dados do entregador ou cancela a edição
+		saveOrCancel();
 	}
 
 	/*
