@@ -10,7 +10,6 @@ import static br.com.cams7.casa_das_quentinhas.mock.UsuarioMock.getSenhaAcesso;
 import static org.testng.AssertJUnit.assertEquals;
 import static org.testng.AssertJUnit.assertFalse;
 import static org.testng.AssertJUnit.assertTrue;
-import static org.testng.AssertJUnit.fail;
 
 import java.util.List;
 
@@ -85,7 +84,7 @@ public class EntregadorTest extends AbstractTest {
 
 		final By AUTOCOMPLETE = By.cssSelector("ul.ui-autocomplete");
 
-		if (!getWait().until(new ExpectedCondition<Boolean>() {
+		getWait().until(new ExpectedCondition<Boolean>() {
 			public Boolean apply(WebDriver driver) {
 				WebElement autocomplete = driver.findElement(AUTOCOMPLETE);
 				if (autocomplete.isDisplayed()) {
@@ -96,8 +95,7 @@ public class EntregadorTest extends AbstractTest {
 				}
 				return false;
 			}
-		}))
-			fail("O ID da empresa não foi informado");
+		});
 
 		getWait().until(ExpectedConditions.invisibilityOfElementLocated(AUTOCOMPLETE));
 
@@ -199,23 +197,12 @@ public class EntregadorTest extends AbstractTest {
 	 * Ordena, aletoriamente, os campos da tabela entregador
 	 */
 	private void sortFields() {
-		if (getBaseProducer().trueOrFalse())
-			clickSortField("id");
-
-		if (getBaseProducer().trueOrFalse())
-			clickSortField("nome");
-
-		if (getBaseProducer().trueOrFalse())
-			clickSortField("cpf");
-
-		if (getBaseProducer().trueOrFalse())
-			clickSortField("usuario.email");
-
-		if (getBaseProducer().trueOrFalse())
-			clickSortField("celular");
-
-		if (getBaseProducer().trueOrFalse())
-			clickSortField("empresa.razaoSocial");
+		clickSortField("id");
+		clickSortField("nome");
+		clickSortField("cpf");
+		clickSortField("usuario.email");
+		clickSortField("celular");
+		clickSortField("empresa.razaoSocial");
 	}
 
 }

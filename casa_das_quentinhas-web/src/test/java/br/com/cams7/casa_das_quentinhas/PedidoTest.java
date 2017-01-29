@@ -22,8 +22,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.annotations.Test;
 
-import com.google.common.base.Function;
-
 /**
  * @author César Magalhães
  *
@@ -83,7 +81,7 @@ public class PedidoTest extends AbstractTest {
 
 		final By AUTOCOMPLETE = By.cssSelector("ul.ui-autocomplete");
 
-		if (!getWait().until(new ExpectedCondition<Boolean>() {
+		getWait().until(new ExpectedCondition<Boolean>() {
 			public Boolean apply(WebDriver driver) {
 				WebElement autocomplete = driver.findElements(AUTOCOMPLETE).get(0);
 				if (autocomplete.isDisplayed()) {
@@ -94,8 +92,7 @@ public class PedidoTest extends AbstractTest {
 				}
 				return false;
 			}
-		}))
-			fail("O ID do cliente não foi informado");
+		});
 
 		getWait().until(ExpectedConditions.invisibilityOfElementLocated(AUTOCOMPLETE));
 
@@ -113,6 +110,8 @@ public class PedidoTest extends AbstractTest {
 		tipoAtendimento.deselectAll();
 		tipoAtendimento.selectByValue(getTipoAtendimento());
 		sleep();
+
+		boolean itemCadastrado = false;
 		do {
 			final By ITEM_ADD = By.id("item_add");
 			getWait().until(ExpectedConditions.elementToBeClickable(ITEM_ADD));
@@ -120,17 +119,8 @@ public class PedidoTest extends AbstractTest {
 
 			final By ITEM_MODAL = By.id("item_modal");
 
-			WebElement itemModal = getWait().until(new Function<WebDriver, WebElement>() {
-				public WebElement apply(WebDriver driver) {
-					WebElement itemModal = driver.findElement(ITEM_MODAL);
-					if (itemModal.isDisplayed())
-						return itemModal;
-					return null;
-				}
-			});
-
-			if (itemModal == null)
-				fail("A tela de cadastro do item de pedido não foi carregada");
+			getWait().until(ExpectedConditions.visibilityOfElementLocated(ITEM_MODAL));
+			WebElement itemModal = getDriver().findElement(ITEM_MODAL);
 
 			itemModal.findElement(By.name("produto")).clear();
 			itemModal.findElement(By.name("produto")).sendKeys("a");
@@ -139,7 +129,7 @@ public class PedidoTest extends AbstractTest {
 
 			assertTrue(itemModal.findElement(PRODUTO_ID).getAttribute("value").isEmpty());
 
-			if (!getWait().until(new ExpectedCondition<Boolean>() {
+			getWait().until(new ExpectedCondition<Boolean>() {
 				public Boolean apply(WebDriver driver) {
 					WebElement autocomplete = driver.findElements(AUTOCOMPLETE).get(1);
 					if (autocomplete.isDisplayed()) {
@@ -150,8 +140,7 @@ public class PedidoTest extends AbstractTest {
 					}
 					return false;
 				}
-			}))
-				fail("O ID do produto não foi informado");
+			});
 
 			getWait().until(ExpectedConditions.invisibilityOfElementLocated(AUTOCOMPLETE));
 
@@ -162,15 +151,18 @@ public class PedidoTest extends AbstractTest {
 					.sendKeys(String.valueOf(getBaseProducer().randomBetween(1, 20)));
 			sleep();
 
-			WebElement modalSave = itemModal.findElement(By.cssSelector("div.modal-footer > input.btn.btn-primary"));
-			getWait().until(ExpectedConditions.elementToBeClickable(modalSave));
-			modalSave.click();
+			if (getBaseProducer().trueOrFalse()) {
+				WebElement modalSave = itemModal
+						.findElement(By.cssSelector("div.modal-footer > input.btn.btn-primary"));
+				getWait().until(ExpectedConditions.elementToBeClickable(modalSave));
+				modalSave.submit();
 
-			// WebElement modalClose =
-			// itemModal.findElement(By.cssSelector("div.modal-header >
-			// button.close"));
-			// wait.until(ExpectedConditions.elementToBeClickable(modalClose));
-			// modalClose.click();
+				itemCadastrado = true;
+			} else {
+				WebElement modalClose = itemModal.findElement(By.cssSelector("div.modal-header > button.close"));
+				getWait().until(ExpectedConditions.elementToBeClickable(modalClose));
+				modalClose.click();
+			}
 
 			getWait().until(ExpectedConditions.invisibilityOfElementLocated(ITEM_MODAL));
 
@@ -179,7 +171,7 @@ public class PedidoTest extends AbstractTest {
 			} catch (InterruptedException e) {
 				fail(e.getMessage());
 			}
-		} while (getBaseProducer().trueOrFalse());
+		} while (!itemCadastrado || getBaseProducer().trueOrFalse());
 
 		// Tenta salvar os dados do pedido
 		saveCreateAndEditPage();
@@ -261,21 +253,11 @@ public class PedidoTest extends AbstractTest {
 	 * Ordena, aletoriamente, os campos da tabela pedido
 	 */
 	private void sortFields() {
-		if (getBaseProducer().trueOrFalse())
-			clickSortField("id");
-
-		if (getBaseProducer().trueOrFalse())
-			clickSortField("tipoCliente");
-
-		if (getBaseProducer().trueOrFalse())
-			clickSortField("quantidade");
-
-		if (getBaseProducer().trueOrFalse())
-			clickSortField("custo");
-
-		if (getBaseProducer().trueOrFalse())
-			clickSortField("manutencao.cadastro");
-
+		clickSortField("id");
+		clickSortField("tipoCliente");
+		clickSortField("quantidade");
+		clickSortField("custo");
+		clickSortField("manutencao.cadastro");
 	}
 
 }

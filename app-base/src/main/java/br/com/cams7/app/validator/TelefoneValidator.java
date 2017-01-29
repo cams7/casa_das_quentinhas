@@ -48,12 +48,12 @@ public class TelefoneValidator implements ConstraintValidator<Telefone, String> 
 		return telefone.matches("[0-9]{10}");
 	}
 
-	public static String unformatTelefone(String celular) {
-		return celular.replaceAll(REGEX_FORMATTED_TELEFONE, "$1$2$3");
+	public static String unformatTelefone(String telefone) {
+		return telefone.replaceAll(REGEX_FORMATTED_TELEFONE, "$1$2$3");
 	}
 
-	public static String formatTelefone(String celular) {
-		return celular.replaceAll(REGEX_UNFORMATTED_TELEFONE, "($1) $2-$3");
+	public static String formatTelefone(String telefone) {
+		return telefone.replaceAll(REGEX_UNFORMATTED_TELEFONE, "($1) $2-$3");
 	}
 
 }

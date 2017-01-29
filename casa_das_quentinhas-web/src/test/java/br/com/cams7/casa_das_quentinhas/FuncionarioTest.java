@@ -167,23 +167,12 @@ public class FuncionarioTest extends AbstractTest {
 	 * Ordena, aletoriamente, os campos da tabela funcionário
 	 */
 	private void sortFields() {
-		if (getBaseProducer().trueOrFalse())
-			clickSortField("id");
-		
-		if (getBaseProducer().trueOrFalse())
-			clickSortField("nome");
-		
-		if (getBaseProducer().trueOrFalse())
-			clickSortField("cpf");
-		
-		if (getBaseProducer().trueOrFalse())
-			clickSortField("usuario.email");
-		
-		if (getBaseProducer().trueOrFalse())
-			clickSortField("celular");
-		
-		if (getBaseProducer().trueOrFalse())
-			clickSortField("funcao");
+		clickSortField("id");
+		clickSortField("nome");
+		clickSortField("cpf");
+		clickSortField("usuario.email");
+		clickSortField("celular");
+		clickSortField("funcao");
 	}
 
 }

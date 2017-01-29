@@ -12,7 +12,6 @@ import static br.com.cams7.casa_das_quentinhas.mock.UsuarioMock.getSenhaAcesso;
 import static org.testng.AssertJUnit.assertEquals;
 import static org.testng.AssertJUnit.assertFalse;
 import static org.testng.AssertJUnit.assertTrue;
-import static org.testng.AssertJUnit.fail;
 
 import org.joda.time.format.DateTimeFormat;
 import org.openqa.selenium.By;
@@ -22,6 +21,9 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.annotations.Test;
 
+import br.com.cams7.app.validator.CepValidator;
+import br.com.cams7.app.validator.CpfValidator;
+import br.com.cams7.app.validator.TelefoneValidator;
 import io.codearte.jfairy.producer.person.Address;
 import io.codearte.jfairy.producer.person.Person;
 
@@ -70,73 +72,8 @@ public class ClienteTest extends AbstractTest {
 		goToCreatePage();
 		assertEquals("Adicionar Cliente", getDriver().getTitle());
 
-		Person person = getFairy().person();
-		Address address = person.getAddress();
-		Long codigoIBGE = getQualquerCodigoIBGE();
-
-		getDriver().findElement(By.name("nome")).clear();
-		getDriver().findElement(By.name("nome")).sendKeys(person.getFullName());
-		sleep();
-		getDriver().findElement(By.name("cpf")).clear();
-		getDriver().findElement(By.name("cpf")).sendKeys(getCpf());
-		sleep();
-		getDriver().findElement(By.name("nascimento")).clear();
-		getDriver().findElement(By.name("nascimento"))
-				.sendKeys(DateTimeFormat.forPattern("dd/MM/yyyy").print(person.getDateOfBirth()));
-		sleep();
-		getDriver().findElement(By.name("contato.email")).clear();
-		getDriver().findElement(By.name("contato.email")).sendKeys(person.getEmail());
-		sleep();
-		getDriver().findElement(By.name("contato.telefone")).clear();
-		getDriver().findElement(By.name("contato.telefone")).sendKeys(getTelefone());
-		sleep();
-		getDriver().findElement(By.name("cidade.nome")).clear();
-		getDriver().findElement(By.name("cidade.nome")).sendKeys(String.valueOf(codigoIBGE));
-
-		final By CIDADE_ID = By.name("cidade.id");
-
-		assertTrue(getDriver().findElement(CIDADE_ID).getAttribute("value").isEmpty());
-
-		final By AUTOCOMPLETE = By.cssSelector("ul.ui-autocomplete");
-
-		if (!getWait().until(new ExpectedCondition<Boolean>() {
-			public Boolean apply(WebDriver driver) {
-				WebElement autocomplete = driver.findElement(AUTOCOMPLETE);
-				if (autocomplete.isDisplayed()) {
-					autocomplete.findElements(By.cssSelector("li.ui-menu-item")).get(0).click();
-					return true;
-				}
-				return false;
-			}
-		}))
-			fail("O ID da cidade não foi informado");
-
-		getWait().until(ExpectedConditions.invisibilityOfElementLocated(AUTOCOMPLETE));
-
-		assertFalse(getDriver().findElement(CIDADE_ID).getAttribute("value").isEmpty());
-
-		getDriver().findElement(By.name("endereco.cep")).clear();
-		getDriver().findElement(By.name("endereco.cep")).sendKeys(getQualquerCep(codigoIBGE));
-		sleep();
-		getDriver().findElement(By.name("endereco.bairro")).clear();
-		getDriver().findElement(By.name("endereco.bairro")).sendKeys(getQualquerBairro(codigoIBGE));
-		sleep();
-		getDriver().findElement(By.name("endereco.logradouro")).clear();
-		getDriver().findElement(By.name("endereco.logradouro")).sendKeys(address.getStreet());
-		sleep();
-		getDriver().findElement(By.name("endereco.numeroImovel")).clear();
-		getDriver().findElement(By.name("endereco.numeroImovel")).sendKeys(address.getStreetNumber());
-		sleep();
-		// getDriver().findElement(By.name("endereco.complemento")).clear();
-		// getDriver().findElement(By.name("endereco.complemento")).sendKeys("");
-		// getDriver().findElement(By.name("endereco.pontoReferencia")).clear();
-		// getDriver().findElement(By.name("endereco.pontoReferencia")).sendKeys("");
-		getDriver().findElement(By.name("usuarioAcesso.senha")).clear();
-		getDriver().findElement(By.name("usuarioAcesso.senha")).sendKeys(getSenhaAcesso());
-		sleep();
-		getDriver().findElement(By.name("usuarioAcesso.confirmacaoSenha")).clear();
-		getDriver().findElement(By.name("usuarioAcesso.confirmacaoSenha")).sendKeys(getSenhaAcesso());
-		sleep();
+		// Preenche o fomulário
+		createCliente();
 
 		// Tenta salvar os dados do cliente
 		saveCreateAndEditPage();
@@ -179,6 +116,9 @@ public class ClienteTest extends AbstractTest {
 		goToEditPage();
 		assertEquals("Editar Cliente", getDriver().getTitle());
 
+		// Preenche o fomulário
+		editCliente();
+
 		// Tenta salvar os dados do cliente
 		saveCreateAndEditPage();
 	}
@@ -218,23 +158,118 @@ public class ClienteTest extends AbstractTest {
 	 * Ordena, aletoriamente, os campos da tabela cliente
 	 */
 	private void sortFields() {
-		if (getBaseProducer().trueOrFalse())
-			clickSortField("id");
+		clickSortField("id");
+		clickSortField("nome");
+		clickSortField("cpf");
+		clickSortField("contato.email");
+		clickSortField("contato.telefone");
+		clickSortField("cidade.nome");
+	}
 
-		if (getBaseProducer().trueOrFalse())
-			clickSortField("nome");
+	private void createCliente() {
+		createOrEditCliente(true);
+	}
 
-		if (getBaseProducer().trueOrFalse())
-			clickSortField("cpf");
+	private void editCliente() {
+		createOrEditCliente(false);
+	}
 
-		if (getBaseProducer().trueOrFalse())
-			clickSortField("contato.email");
+	private void createOrEditCliente(boolean isCreatePage) {
+		Person person = getFairy().person();
+		Address address = person.getAddress();
+		Long codigoIBGE = getQualquerCodigoIBGE();
 
-		if (getBaseProducer().trueOrFalse())
-			clickSortField("contato.telefone");
+		if (isCreatePage || getBaseProducer().trueOrFalse()) {
+			getDriver().findElement(By.name("nome")).clear();
+			getDriver().findElement(By.name("nome")).sendKeys(person.getFullName());
+			sleep();
+		}
+		if (isCreatePage || getBaseProducer().trueOrFalse()) {
+			getDriver().findElement(By.name("cpf")).clear();
+			getDriver().findElement(By.name("cpf")).sendKeys(CpfValidator.formatCpf(getCpf()));
+			sleep();
+		}
+		if (isCreatePage || getBaseProducer().trueOrFalse()) {
+			getDriver().findElement(By.name("nascimento")).clear();
+			getDriver().findElement(By.name("nascimento"))
+					.sendKeys(DateTimeFormat.forPattern("dd/MM/yyyy").print(person.getDateOfBirth()));
+			sleep();
+		}
+		if (isCreatePage || getBaseProducer().trueOrFalse()) {
+			getDriver().findElement(By.name("contato.email")).clear();
+			getDriver().findElement(By.name("contato.email")).sendKeys(person.getEmail());
+			sleep();
+		}
+		if (isCreatePage || getBaseProducer().trueOrFalse()) {
+			getDriver().findElement(By.name("contato.telefone")).clear();
+			getDriver().findElement(By.name("contato.telefone"))
+					.sendKeys(TelefoneValidator.formatTelefone(getTelefone()));
+			sleep();
+		}
 
-		if (getBaseProducer().trueOrFalse())
-			clickSortField("cidade.nome");
+		boolean cidadeAlterada = false;
+
+		if (isCreatePage || getBaseProducer().trueOrFalse()) {
+			getDriver().findElement(By.name("cidade.nome")).clear();
+			getDriver().findElement(By.name("cidade.nome")).sendKeys(String.valueOf(codigoIBGE));
+
+			final By CIDADE_ID = By.name("cidade.id");
+
+			if (isCreatePage)
+				assertTrue(getDriver().findElement(CIDADE_ID).getAttribute("value").isEmpty());
+
+			final By AUTOCOMPLETE = By.cssSelector("ul.ui-autocomplete");
+
+			getWait().until(new ExpectedCondition<Boolean>() {
+				public Boolean apply(WebDriver driver) {
+					WebElement autocomplete = driver.findElement(AUTOCOMPLETE);
+					if (autocomplete.isDisplayed()) {
+						autocomplete.findElements(By.cssSelector("li.ui-menu-item")).get(0).click();
+						return true;
+					}
+					return false;
+				}
+			});
+
+			getWait().until(ExpectedConditions.invisibilityOfElementLocated(AUTOCOMPLETE));
+
+			assertFalse(getDriver().findElement(CIDADE_ID).getAttribute("value").isEmpty());
+
+			cidadeAlterada = true;
+		}
+		if (isCreatePage || (cidadeAlterada && getBaseProducer().trueOrFalse())) {
+			getDriver().findElement(By.name("endereco.cep")).clear();
+			getDriver().findElement(By.name("endereco.cep"))
+					.sendKeys(CepValidator.formatCep(getQualquerCep(codigoIBGE)));
+			sleep();
+		}
+		if (isCreatePage || (cidadeAlterada && getBaseProducer().trueOrFalse())) {
+			getDriver().findElement(By.name("endereco.bairro")).clear();
+			getDriver().findElement(By.name("endereco.bairro")).sendKeys(getQualquerBairro(codigoIBGE));
+			sleep();
+		}
+		if (isCreatePage || getBaseProducer().trueOrFalse()) {
+			getDriver().findElement(By.name("endereco.logradouro")).clear();
+			getDriver().findElement(By.name("endereco.logradouro")).sendKeys(address.getStreet());
+			sleep();
+		}
+		if (isCreatePage || getBaseProducer().trueOrFalse()) {
+			getDriver().findElement(By.name("endereco.numeroImovel")).clear();
+			getDriver().findElement(By.name("endereco.numeroImovel")).sendKeys(address.getStreetNumber());
+			sleep();
+		}
+		// getDriver().findElement(By.name("endereco.complemento")).clear();
+		// getDriver().findElement(By.name("endereco.complemento")).sendKeys("");
+		// getDriver().findElement(By.name("endereco.pontoReferencia")).clear();
+		// getDriver().findElement(By.name("endereco.pontoReferencia")).sendKeys("");
+		if (isCreatePage) {
+			getDriver().findElement(By.name("usuarioAcesso.senha")).clear();
+			getDriver().findElement(By.name("usuarioAcesso.senha")).sendKeys(getSenhaAcesso());
+			sleep();
+			getDriver().findElement(By.name("usuarioAcesso.confirmacaoSenha")).clear();
+			getDriver().findElement(By.name("usuarioAcesso.confirmacaoSenha")).sendKeys(getSenhaAcesso());
+			sleep();
+		}
 	}
 
 }

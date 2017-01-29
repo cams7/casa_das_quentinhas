@@ -191,23 +191,26 @@ public abstract class AbstractTest implements BaseTest {
 	// protected void sortFields(String... fields) {
 	// }
 	protected void clickSortField(String field) {
-		String firstOrder = getSortOrder(driver, field);
+		if (baseProducer.trueOrFalse()) {
+			String firstOrder = getSortOrder(driver, field);
 
-		final By CELL = By.cssSelector("table.dataTable > thead > tr:first-child > th[id='" + field + "']");
-		wait.until(ExpectedConditions.elementToBeClickable(CELL));
-		driver.findElement(CELL).click();
+			final By CELL = By.cssSelector("table.dataTable > thead > tr:first-child > th[id='" + field + "']");
+			wait.until(ExpectedConditions.elementToBeClickable(CELL));
+			driver.findElement(CELL).click();
 
-		wait.until(new ExpectedCondition<Boolean>() {
-			public Boolean apply(WebDriver driver) {
-				String currentOrder = getSortOrder(driver, field);
-				return !(currentOrder.isEmpty() || firstOrder.equals(currentOrder));
+			wait.until(new ExpectedCondition<Boolean>() {
+				public Boolean apply(WebDriver driver) {
+					String currentOrder = getSortOrder(driver, field);
+					return !(currentOrder.isEmpty() || firstOrder.equals(currentOrder));
 
-			}
-		});
+				}
+			});
 
-		LOGGER.info("sort '{}' -> first order: {}, current order: {}", field, firstOrder, getSortOrder(driver, field));
+			LOGGER.info("sort '{}' -> first order: {}, current order: {}", field, firstOrder,
+					getSortOrder(driver, field));
 
-		sleep();
+			sleep();
+		}
 	}
 
 	/**
@@ -316,11 +319,7 @@ public abstract class AbstractTest implements BaseTest {
 		wait.until(ExpectedConditions.elementToBeClickable(delete));
 		delete.click();
 
-		wait.until(new ExpectedCondition<Boolean>() {
-			public Boolean apply(WebDriver driver) {
-				return driver.findElement(By.id("delete_modal")).isDisplayed();
-			}
-		});
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("delete_modal")));
 
 		LOGGER.info("showDelete -> foi aberto, o modal panel de exclusão");
 
@@ -333,14 +332,33 @@ public abstract class AbstractTest implements BaseTest {
 	protected void closeDeleteModal() {
 		By DELETE_MODAL = By.id("delete_modal");
 
-		WebElement cancel = driver.findElement(DELETE_MODAL)
-				.findElement(By.cssSelector("div.modal-footer > button.btn.btn-default"));
-		wait.until(ExpectedConditions.elementToBeClickable(cancel));
-		cancel.click();
+		WebElement modal = driver.findElement(DELETE_MODAL);
+		boolean deleted = false;
+		if (baseProducer.trueOrFalse()) {
+			WebElement delete = modal.findElement(By.cssSelector("div.modal-footer > input.btn.btn-primary"));
+			wait.until(ExpectedConditions.elementToBeClickable(delete));
+			delete.submit();
+
+			deleted = true;
+		} else {
+			WebElement cancel = modal.findElement(By.cssSelector("div.modal-footer > button.btn.btn-default"));
+			wait.until(ExpectedConditions.elementToBeClickable(cancel));
+			cancel.click();
+		}
 
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(DELETE_MODAL));
 
 		LOGGER.info("closeDelete -> foi fechado, o modal panel de exclusão");
+
+		if (deleted) {
+			final By ALERT = By.cssSelector("div.alert");
+			wait.until(ExpectedConditions.visibilityOfElementLocated(ALERT));
+
+			String message = driver.findElement(ALERT).findElement(By.tagName("span")).getText();
+			assertFalse(message.isEmpty());
+
+			LOGGER.info("closeDelete -> message: {}", message);
+		}
 
 		sleep();
 	}
@@ -418,23 +436,24 @@ public abstract class AbstractTest implements BaseTest {
 		final String WEBDRIVER_GECKO_DRIVER = "webdriver.gecko.driver";
 		final String WEBDRIVER_IE_DRIVER = "webdriver.ie.driver";
 
-		if (System.getProperty(WEBDRIVER_CHROME_DRIVER) != null) {
+		if (System.getProperty(PHANTOMJS_BINARY_PATH) != null) {
+			driver = new PhantomJSDriver();
+			LOGGER.info("{}: {}", PHANTOMJS_BINARY_PATH, System.getProperty(PHANTOMJS_BINARY_PATH));
+
+			sleep = false;
+		} else if (System.getProperty(WEBDRIVER_CHROME_DRIVER) != null) {
 			driver = new ChromeDriver();
 			LOGGER.info("{}: {}", WEBDRIVER_CHROME_DRIVER, System.getProperty(WEBDRIVER_CHROME_DRIVER));
 		} else if (System.getProperty(WEBDRIVER_GECKO_DRIVER) != null) {
 			driver = new FirefoxDriver();
 			LOGGER.info("{}: {}", WEBDRIVER_GECKO_DRIVER, System.getProperty(WEBDRIVER_GECKO_DRIVER));
-		} else if (System.getProperty(WEBDRIVER_IE_DRIVER) != null) {
-			driver = new InternetExplorerDriver();
-			LOGGER.info("{}: {}", WEBDRIVER_IE_DRIVER, System.getProperty(WEBDRIVER_IE_DRIVER));
-		} else if (System.getProperty(PHANTOMJS_BINARY_PATH) != null) {
-			driver = new PhantomJSDriver();
-			LOGGER.info("{}: {}", PHANTOMJS_BINARY_PATH, System.getProperty(PHANTOMJS_BINARY_PATH));
-
-			sleep = false;
 		} else {
-			System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
-			driver = new ChromeDriver();
+			if (System.getProperty(WEBDRIVER_IE_DRIVER) == null)
+				System.setProperty(WEBDRIVER_IE_DRIVER, "MicrosoftWebDriver.exe");
+
+			driver = new InternetExplorerDriver();
+
+			LOGGER.info("{}: {}", WEBDRIVER_IE_DRIVER, System.getProperty(WEBDRIVER_IE_DRIVER));
 		}
 
 		driver.manage().window().maximize();
