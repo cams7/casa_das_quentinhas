@@ -141,7 +141,7 @@ public abstract class AbstractTest implements BaseTest {
 		// {}", maxResults, count, totalPages);
 
 		final By PAGES = By.cssSelector("ul.pagination > li > a");
-		wait.until(ExpectedConditions.presenceOfElementLocated(PAGES));
+		// wait.until(ExpectedConditions.presenceOfElementLocated(PAGES));
 		String[] pages = driver.findElements(PAGES).stream().filter(link -> {
 			try {
 				Integer.parseInt(link.getText());
@@ -522,7 +522,7 @@ public abstract class AbstractTest implements BaseTest {
 	private String getId() {
 		final By ROW = By.cssSelector("table.dataTable > tbody > tr");
 		final List<WebElement> buttons = driver.findElements(ROW);
-		wait.until(ExpectedConditions.presenceOfElementLocated(ROW));
+		// wait.until(ExpectedConditions.presenceOfElementLocated(ROW));
 		int rowIndex = getBaseProducer().randomBetween(1, buttons.size());
 
 		return getId(driver, rowIndex);
@@ -530,7 +530,7 @@ public abstract class AbstractTest implements BaseTest {
 
 	private String getId(WebDriver driver, int rowIndex) {
 		final By CELL = By.cssSelector("table.dataTable > tbody > tr:nth-child(" + rowIndex + ") > td:first-child");
-		wait.until(ExpectedConditions.presenceOfElementLocated(CELL));
+		// wait.until(ExpectedConditions.presenceOfElementLocated(CELL));
 		return driver.findElement(CELL).getText();
 	}
 
@@ -542,11 +542,11 @@ public abstract class AbstractTest implements BaseTest {
 
 	private String getCurrentPage() {
 		final By OFFSET = By.xpath("//input[@id='dataTable_offset']");
-		wait.until(ExpectedConditions.presenceOfElementLocated(OFFSET));
+		// wait.until(ExpectedConditions.presenceOfElementLocated(OFFSET));
 		String offset = driver.findElement(OFFSET).getAttribute("value");
 
 		final By MAX_RESULTS = By.xpath("//input[@id='dataTable_maxResults']");
-		wait.until(ExpectedConditions.presenceOfElementLocated(MAX_RESULTS));
+		// wait.until(ExpectedConditions.presenceOfElementLocated(MAX_RESULTS));
 		String maxResults = driver.findElement(MAX_RESULTS).getAttribute("value");
 
 		int currentPage = Integer.valueOf(offset) / Integer.valueOf(maxResults) + 1;
@@ -556,13 +556,13 @@ public abstract class AbstractTest implements BaseTest {
 
 	private String getCount(WebDriver driver) {
 		final By COUNT = By.xpath("//input[@id='dataTable_count']");
-		wait.until(ExpectedConditions.presenceOfElementLocated(COUNT));
+		// wait.until(ExpectedConditions.presenceOfElementLocated(COUNT));
 		return driver.findElement(COUNT).getAttribute("value");
 	}
 
 	private String getSortOrder(WebDriver driver, String field) {
 		final By CELL = By.cssSelector("table.dataTable > thead > tr:first-child > th[id='" + field + "']");
-		wait.until(ExpectedConditions.presenceOfElementLocated(CELL));
+		// wait.until(ExpectedConditions.presenceOfElementLocated(CELL));
 		return driver.findElement(CELL).getAttribute("class");
 	}
 
