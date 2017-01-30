@@ -119,10 +119,7 @@ public class PedidoTest extends AbstractTest {
 		goToIndexPage();
 
 		// Exibe o pop-pop de exclusão
-		showDeleteModal();
-
-		// Fecha o pop-pop de exclusão
-		closeDeleteModal();
+		showAndCloseDeleteModal();
 	}
 
 	@Override
@@ -133,6 +130,11 @@ public class PedidoTest extends AbstractTest {
 	@Override
 	protected String[] getFields() {
 		return new String[] { "id", "tipoCliente", "quantidade", "custo", "manutencao.cadastro" };
+	}
+
+	@Override
+	protected boolean canBeDeleted(int rowIndex) {
+		return true;
 	}
 
 	/**

@@ -99,10 +99,7 @@ public class ProdutoTest extends AbstractTest {
 		goToIndexPage();
 
 		// Exibe o pop-pop de exclusão
-		showDeleteModal();
-
-		// Fecha o pop-pop de exclusão
-		closeDeleteModal();
+		showAndCloseDeleteModal();
 	}
 
 	@Override
@@ -113,6 +110,11 @@ public class ProdutoTest extends AbstractTest {
 	@Override
 	protected String[] getFields() {
 		return new String[] { "id", "nome", "tamanho", "custo" };
+	}
+	
+	@Override
+	protected boolean canBeDeleted(int rowIndex) {
+		return true;
 	}
 
 	/**

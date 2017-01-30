@@ -8,14 +8,11 @@ import static br.com.cams7.casa_das_quentinhas.entity.Usuario.Tipo.EMPRESA;
 
 public class UsuarioMock extends AbstractMock {
 
-	private static final String[] emails;
-	private static final String SENHA_ACESSO = "12345";
+	private static final String[] emails = new String[] { "gerente@casa-das-quentinhas.com",
+			"atendente@casa-das-quentinhas.com", "entregador@casa-das-quentinhas.com",
+			"empresa@casa-das-quentinhas.com", "cliente@casa-das-quentinhas.com" };
 
-	static {
-		emails = new String[] { "gerente@casa-das-quentinhas.com", "atendente@casa-das-quentinhas.com"/*,
-				"entregador@casa-das-quentinhas.com", "empresa@casa-das-quentinhas.com",
-				"cliente@casa-das-quentinhas.com"*/ };
-	}
+	private static final String SENHA_ACESSO = "12345";
 
 	/**
 	 * Gera um e-mail de acesso aletório
@@ -23,7 +20,7 @@ public class UsuarioMock extends AbstractMock {
 	 * @return E-mail de acesso
 	 */
 	public static String getQualquerEmailAcesso() {
-		return emails[getBaseProducer().randomBetween(0, emails.length - 1)];
+		return getBaseProducer().randomElement(emails);
 	}
 
 	/**
@@ -50,6 +47,10 @@ public class UsuarioMock extends AbstractMock {
 		}
 
 		return null;
+	}
+
+	public static String[] getEmails() {
+		return emails;
 	}
 
 }

@@ -123,10 +123,7 @@ public class ClienteTest extends AbstractTest {
 		goToIndexPage();
 
 		// Exibe o pop-pop de exclusão
-		showDeleteModal();
-
-		// Fecha o pop-pop de exclusão
-		closeDeleteModal();
+		showAndCloseDeleteModal();
 	}
 
 	@Override
@@ -176,9 +173,12 @@ public class ClienteTest extends AbstractTest {
 					.sendKeys(DateTimeFormat.forPattern("dd/MM/yyyy").print(person.getDateOfBirth()));
 			sleep();
 		}
-		if (isCreatePage || getBaseProducer().trueOrFalse()) {
-			getDriver().findElement(By.name("contato.email")).clear();
-			getDriver().findElement(By.name("contato.email")).sendKeys(person.getEmail());
+		final By EMAIL = By.name("contato.email");
+		getWait().until(ExpectedConditions.presenceOfElementLocated(EMAIL));
+		if (isCreatePage || (getBaseProducer().trueOrFalse()
+				&& canBeChanged(getDriver().findElement(EMAIL).getAttribute("value")))) {
+			getDriver().findElement(EMAIL).clear();
+			getDriver().findElement(EMAIL).sendKeys(person.getEmail());
 			sleep();
 		}
 		if (isCreatePage || getBaseProducer().trueOrFalse()) {

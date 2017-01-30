@@ -123,10 +123,7 @@ public class EntregadorTest extends AbstractTest {
 		goToIndexPage();
 
 		// Exibe o pop-pop de exclusão
-		showDeleteModal();
-
-		// Fecha o pop-pop de exclusão
-		closeDeleteModal();
+		showAndCloseDeleteModal();
 	}
 
 	@Override
@@ -196,9 +193,12 @@ public class EntregadorTest extends AbstractTest {
 
 			assertFalse(getDriver().findElement(EMPRESA_ID).getAttribute("value").isEmpty());
 		}
-		if (isCreatePage || (GERENTE.equals(getAcesso()) && getBaseProducer().trueOrFalse())) {
-			getDriver().findElement(By.name("usuario.email")).clear();
-			getDriver().findElement(By.name("usuario.email")).sendKeys(person.getEmail());
+		final By EMAIL = By.name("usuario.email");
+		getWait().until(ExpectedConditions.presenceOfElementLocated(EMAIL));
+		if (isCreatePage || (GERENTE.equals(getAcesso()) && getBaseProducer().trueOrFalse()
+				&& canBeChanged(getDriver().findElement(EMAIL).getAttribute("value")))) {
+			getDriver().findElement(EMAIL).clear();
+			getDriver().findElement(EMAIL).sendKeys(person.getEmail());
 			sleep();
 		} else if (ATENDENTE.equals(getAcesso()))
 			assertTrue((Boolean) getJS().executeScript("return  $('#email').is('[readonly]');"));
