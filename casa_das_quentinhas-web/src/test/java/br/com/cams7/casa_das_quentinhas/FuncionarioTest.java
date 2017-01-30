@@ -4,6 +4,7 @@
 package br.com.cams7.casa_das_quentinhas;
 
 import static br.com.cams7.casa_das_quentinhas.entity.Funcionario.Funcao.ATENDENTE;
+import static br.com.cams7.casa_das_quentinhas.entity.Funcionario.Funcao.GERENTE;
 import static br.com.cams7.casa_das_quentinhas.mock.ContatoMock.getCelular;
 import static br.com.cams7.casa_das_quentinhas.mock.FuncionarioMock.getFuncao;
 import static br.com.cams7.casa_das_quentinhas.mock.PessoaMock.getCpf;
@@ -163,7 +164,7 @@ public class FuncionarioTest extends AbstractTest {
 			getDriver().findElement(By.name("celular")).sendKeys(getCelular());
 			sleep();
 		}
-		if (isCreatePage) {
+		if (isCreatePage || (GERENTE.equals(getAcesso()) && getBaseProducer().trueOrFalse())) {
 			Select funcao = new Select(getDriver().findElement(By.name("funcao")));
 			funcao.deselectAll();
 			funcao.selectByValue(getFuncao());
@@ -171,7 +172,7 @@ public class FuncionarioTest extends AbstractTest {
 		} else if (ATENDENTE.equals(getAcesso()))
 			assertFalse(getDriver().findElement(By.name("funcao")).isDisplayed());
 
-		if (isCreatePage) {
+		if (isCreatePage || (GERENTE.equals(getAcesso()) && getBaseProducer().trueOrFalse())) {
 			getDriver().findElement(By.name("usuario.email")).clear();
 			getDriver().findElement(By.name("usuario.email")).sendKeys(person.getEmail());
 			sleep();

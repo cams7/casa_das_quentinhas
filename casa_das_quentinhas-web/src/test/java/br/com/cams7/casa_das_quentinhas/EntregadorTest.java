@@ -4,6 +4,7 @@
 package br.com.cams7.casa_das_quentinhas;
 
 import static br.com.cams7.casa_das_quentinhas.entity.Funcionario.Funcao.ATENDENTE;
+import static br.com.cams7.casa_das_quentinhas.entity.Funcionario.Funcao.GERENTE;
 import static br.com.cams7.casa_das_quentinhas.mock.ContatoMock.getCelular;
 import static br.com.cams7.casa_das_quentinhas.mock.PessoaMock.getCpf;
 import static br.com.cams7.casa_das_quentinhas.mock.PessoaMock.getRg;
@@ -195,7 +196,7 @@ public class EntregadorTest extends AbstractTest {
 
 			assertFalse(getDriver().findElement(EMPRESA_ID).getAttribute("value").isEmpty());
 		}
-		if (isCreatePage) {
+		if (isCreatePage || (GERENTE.equals(getAcesso()) && getBaseProducer().trueOrFalse())) {
 			getDriver().findElement(By.name("usuario.email")).clear();
 			getDriver().findElement(By.name("usuario.email")).sendKeys(person.getEmail());
 			sleep();
