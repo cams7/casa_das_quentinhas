@@ -3,6 +3,7 @@
  */
 package br.com.cams7.casa_das_quentinhas;
 
+import static br.com.cams7.casa_das_quentinhas.entity.Funcionario.Funcao.ATENDENTE;
 import static br.com.cams7.casa_das_quentinhas.mock.ContatoMock.getCelular;
 import static br.com.cams7.casa_das_quentinhas.mock.PessoaMock.getCpf;
 import static br.com.cams7.casa_das_quentinhas.mock.PessoaMock.getRg;
@@ -61,55 +62,8 @@ public class EntregadorTest extends AbstractTest {
 		goToCreatePage();
 		assertEquals("Adicionar Entregador", getDriver().getTitle());
 
-		Person person = getFairy().person();
-
-		getDriver().findElement(By.name("nome")).clear();
-		getDriver().findElement(By.name("nome")).sendKeys(person.getFullName());
-		sleep();
-		getDriver().findElement(By.name("celular")).clear();
-		getDriver().findElement(By.name("celular")).sendKeys(getCelular());
-		sleep();
-		getDriver().findElement(By.name("empresa.razaoSocial")).clear();
-		getDriver().findElement(By.name("empresa.razaoSocial")).sendKeys("a");
-
-		final By EMPRESA_ID = By.name("empresa.id");
-
-		assertTrue(getDriver().findElement(EMPRESA_ID).getAttribute("value").isEmpty());
-
-		final By AUTOCOMPLETE = By.cssSelector("ul.ui-autocomplete");
-
-		getWait().until(new ExpectedCondition<Boolean>() {
-			public Boolean apply(WebDriver driver) {
-				WebElement autocomplete = driver.findElement(AUTOCOMPLETE);
-				if (autocomplete.isDisplayed()) {
-					List<WebElement> itens = autocomplete.findElements(By.cssSelector("li.ui-menu-item"));
-					int index = getBaseProducer().randomBetween(0, itens.size() - 1);
-					itens.get(index).click();
-					return true;
-				}
-				return false;
-			}
-		});
-
-		getWait().until(ExpectedConditions.invisibilityOfElementLocated(AUTOCOMPLETE));
-
-		assertFalse(getDriver().findElement(EMPRESA_ID).getAttribute("value").isEmpty());
-
-		getDriver().findElement(By.name("usuario.email")).clear();
-		getDriver().findElement(By.name("usuario.email")).sendKeys(person.getEmail());
-		sleep();
-		getDriver().findElement(By.name("cpf")).clear();
-		getDriver().findElement(By.name("cpf")).sendKeys(getCpf());
-		sleep();
-		getDriver().findElement(By.name("rg")).clear();
-		getDriver().findElement(By.name("rg")).sendKeys(getRg());
-		sleep();
-		getDriver().findElement(By.name("usuario.senha")).clear();
-		getDriver().findElement(By.name("usuario.senha")).sendKeys(getSenhaAcesso());
-		sleep();
-		getDriver().findElement(By.name("usuario.confirmacaoSenha")).clear();
-		getDriver().findElement(By.name("usuario.confirmacaoSenha")).sendKeys(getSenhaAcesso());
-		sleep();
+		// Preenche o fomulário
+		createEntregador();
 
 		// Tenta salva os dados do entregador ou cancela o cadastro
 		saveOrCancel();
@@ -148,6 +102,9 @@ public class EntregadorTest extends AbstractTest {
 		// Carrega um formulário para a alteração dos dados do entregador
 		goToEditPage();
 		assertEquals("Editar Entregador", getDriver().getTitle());
+
+		// Preenche o fomulário
+		editEntregador();
 
 		// Tenta salva os dados do entregador ou cancela a edição
 		saveOrCancel();
@@ -189,4 +146,79 @@ public class EntregadorTest extends AbstractTest {
 		assertEquals("Lista de Entregadores", getDriver().getTitle());
 	}
 
+	private void createEntregador() {
+		createOrEditEntregador(true);
+	}
+
+	private void editEntregador() {
+		createOrEditEntregador(false);
+	}
+
+	private void createOrEditEntregador(boolean isCreatePage) {
+		Person person = getFairy().person();
+
+		if (isCreatePage || getBaseProducer().trueOrFalse()) {
+			getDriver().findElement(By.name("nome")).clear();
+			getDriver().findElement(By.name("nome")).sendKeys(person.getFullName());
+			sleep();
+		}
+		if (isCreatePage || getBaseProducer().trueOrFalse()) {
+			getDriver().findElement(By.name("celular")).clear();
+			getDriver().findElement(By.name("celular")).sendKeys(getCelular());
+			sleep();
+		}
+		if (isCreatePage || getBaseProducer().trueOrFalse()) {
+			getDriver().findElement(By.name("empresa.razaoSocial")).clear();
+			getDriver().findElement(By.name("empresa.razaoSocial")).sendKeys("a");
+
+			final By EMPRESA_ID = By.name("empresa.id");
+
+			if (isCreatePage)
+				assertTrue(getDriver().findElement(EMPRESA_ID).getAttribute("value").isEmpty());
+
+			final By AUTOCOMPLETE = By.cssSelector("ul.ui-autocomplete");
+
+			getWait().until(new ExpectedCondition<Boolean>() {
+				public Boolean apply(WebDriver driver) {
+					WebElement autocomplete = driver.findElement(AUTOCOMPLETE);
+					if (autocomplete.isDisplayed()) {
+						List<WebElement> itens = autocomplete.findElements(By.cssSelector("li.ui-menu-item"));
+						int index = getBaseProducer().randomBetween(0, itens.size() - 1);
+						itens.get(index).click();
+						return true;
+					}
+					return false;
+				}
+			});
+
+			getWait().until(ExpectedConditions.invisibilityOfElementLocated(AUTOCOMPLETE));
+
+			assertFalse(getDriver().findElement(EMPRESA_ID).getAttribute("value").isEmpty());
+		}
+		if (isCreatePage) {
+			getDriver().findElement(By.name("usuario.email")).clear();
+			getDriver().findElement(By.name("usuario.email")).sendKeys(person.getEmail());
+			sleep();
+		} else if (ATENDENTE.equals(getAcesso()))
+			assertTrue((Boolean) getJS().executeScript("return  $('#email').is('[readonly]');"));
+
+		if (isCreatePage || getBaseProducer().trueOrFalse()) {
+			getDriver().findElement(By.name("cpf")).clear();
+			getDriver().findElement(By.name("cpf")).sendKeys(getCpf());
+			sleep();
+		}
+		if (isCreatePage || getBaseProducer().trueOrFalse()) {
+			getDriver().findElement(By.name("rg")).clear();
+			getDriver().findElement(By.name("rg")).sendKeys(getRg());
+			sleep();
+		}
+		if (isCreatePage) {
+			getDriver().findElement(By.name("usuario.senha")).clear();
+			getDriver().findElement(By.name("usuario.senha")).sendKeys(getSenhaAcesso());
+			sleep();
+			getDriver().findElement(By.name("usuario.confirmacaoSenha")).clear();
+			getDriver().findElement(By.name("usuario.confirmacaoSenha")).sendKeys(getSenhaAcesso());
+			sleep();
+		}
+	}
 }
