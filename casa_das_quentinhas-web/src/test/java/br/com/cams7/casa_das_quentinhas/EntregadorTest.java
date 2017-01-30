@@ -41,12 +41,6 @@ public class EntregadorTest extends AbstractTest {
 		// Carrega a lista de entregadores
 		goToIndexPage();
 
-		// Ordena todos os campos da tabela de entregadores
-		sortFields();
-
-		// Pagina a lista de entregadores
-		paginate();
-
 		// Pesquisa os entregadores que tenha os caracteres "an" no nome, cpf,
 		// e-mail, celular, nome da empresa ou cnpj da empresa
 		search("an");
@@ -182,24 +176,17 @@ public class EntregadorTest extends AbstractTest {
 		return MAIN_PAGE;
 	}
 
+	@Override
+	protected String[] getFields() {
+		return new String[] { "id", "nome", "cpf", "usuario.email", "celular", "empresa.razaoSocial" };
+	}
+
 	/**
 	 * Vai para a página de listagem de entregadores
 	 */
 	private void goToIndexPage() {
 		goToIndexPage("Entregador(es)");
 		assertEquals("Lista de Entregadores", getDriver().getTitle());
-	}
-
-	/**
-	 * Ordena, aletoriamente, os campos da tabela entregador
-	 */
-	private void sortFields() {
-		clickSortField("id");
-		clickSortField("nome");
-		clickSortField("cpf");
-		clickSortField("usuario.email");
-		clickSortField("celular");
-		clickSortField("empresa.razaoSocial");
 	}
 
 }

@@ -116,25 +116,53 @@ public abstract class AbstractTest implements BaseTest {
 		}
 
 		sleep();
+
+		// Ordena, aleatoriamente, um campo da tabela
+		sortField(baseProducer.randomElement(getFields()));
+
+		// Vai para um pagina aleatória da tabela
+		paginate();
 	}
 
 	/**
 	 * Pagina a tabela
 	 */
 	protected void paginate() {
-		short maxResults = Short.valueOf(getMaxResults(driver));
-		long count = Long.valueOf(getCount(driver));
+		// short maxResults = Short.valueOf(getMaxResults(driver));
+		// long count = Long.valueOf(getCount(driver));
 
 		String firstId = getId(driver, 1);
 
-		int totalPages = (int) (count / maxResults);
-		if (count % maxResults > 0)
-			totalPages++;
+		// int totalPages = (int) (count / maxResults);
+		// if (count % maxResults > 0)
+		// totalPages++;
 
-		LOGGER.info("paginate -> max results: {}, count: {}, total pages: {}", maxResults, count, totalPages);
+		// LOGGER.info("paginate -> max results: {}, count: {}, total pages:
+		// {}", maxResults, count, totalPages);
+
+		final By PAGES = By.cssSelector("ul.pagination > li > a");
+		wait.until(ExpectedConditions.presenceOfElementLocated(PAGES));
+		String[] pages = driver.findElements(PAGES).stream().filter(link -> {
+			try {
+				Integer.parseInt(link.getText());
+				return true;
+			} catch (NumberFormatException e) {
+			}
+			return false;
+		}).map(link -> link.getText()).toArray(size -> new String[size]);
+
+		// LOGGER.info("paginate -> pages: {}",
+		// Arrays.asList(pages).stream().collect(Collectors.joining(", ")));
+
+		String currentPage = getCurrentPage();
+		String page = baseProducer.randomElement(pages);
+		if (currentPage.equals(page))
+			return;
+
+		LOGGER.info("paginate -> current page: {}, page: {}", currentPage, page);
 
 		WebElement selectPage = driver.findElement(By.cssSelector("ul.pagination > li"))
-				.findElement(By.xpath("//a[text()='" + totalPages + "']"));
+				.findElement(By.xpath("//a[text()='" + page + "']"));
 		wait.until(ExpectedConditions.elementToBeClickable(selectPage));
 		selectPage.click();
 
@@ -184,27 +212,26 @@ public abstract class AbstractTest implements BaseTest {
 	 * @param field
 	 *            Campo da tabela
 	 */
-	protected void clickSortField(String field) {
-		if (baseProducer.trueOrFalse()) {
-			String firstOrder = getSortOrder(driver, field);
+	protected void sortField(String field) {
+		// if (baseProducer.trueOrFalse()) {
+		String firstOrder = getSortOrder(driver, field);
 
-			final By CELL = By.cssSelector("table.dataTable > thead > tr:first-child > th[id='" + field + "']");
-			wait.until(ExpectedConditions.elementToBeClickable(CELL));
-			driver.findElement(CELL).click();
+		final By CELL = By.cssSelector("table.dataTable > thead > tr:first-child > th[id='" + field + "']");
+		wait.until(ExpectedConditions.elementToBeClickable(CELL));
+		driver.findElement(CELL).click();
 
-			wait.until(new ExpectedCondition<Boolean>() {
-				public Boolean apply(WebDriver driver) {
-					String currentOrder = getSortOrder(driver, field);
-					return !(currentOrder.isEmpty() || firstOrder.equals(currentOrder));
+		wait.until(new ExpectedCondition<Boolean>() {
+			public Boolean apply(WebDriver driver) {
+				String currentOrder = getSortOrder(driver, field);
+				return !(currentOrder.isEmpty() || firstOrder.equals(currentOrder));
 
-				}
-			});
+			}
+		});
 
-			LOGGER.info("sort '{}' -> first order: {}, current order: {}", field, firstOrder,
-					getSortOrder(driver, field));
+		LOGGER.info("sort '{}' -> first order: {}, current order: {}", field, firstOrder, getSortOrder(driver, field));
 
-			sleep();
-		}
+		sleep();
+		// }
 	}
 
 	/**
@@ -435,6 +462,8 @@ public abstract class AbstractTest implements BaseTest {
 
 	protected abstract String getMainPage();
 
+	protected abstract String[] getFields();
+
 	private void setDriverAndUrl() {
 		final String PHANTOMJS_BINARY_PATH = "phantomjs.binary.path";
 		final String WEBDRIVER_CHROME_DRIVER = "webdriver.chrome.driver";
@@ -505,10 +534,24 @@ public abstract class AbstractTest implements BaseTest {
 		return driver.findElement(CELL).getText();
 	}
 
-	private String getMaxResults(WebDriver driver) {
+	// private String getMaxResults(WebDriver driver) {
+	// final By MAX_RESULTS = By.xpath("//input[@id='dataTable_maxResults']");
+	// wait.until(ExpectedConditions.presenceOfElementLocated(MAX_RESULTS));
+	// return driver.findElement(MAX_RESULTS).getAttribute("value");
+	// }
+
+	private String getCurrentPage() {
+		final By OFFSET = By.xpath("//input[@id='dataTable_offset']");
+		wait.until(ExpectedConditions.presenceOfElementLocated(OFFSET));
+		String offset = driver.findElement(OFFSET).getAttribute("value");
+
 		final By MAX_RESULTS = By.xpath("//input[@id='dataTable_maxResults']");
 		wait.until(ExpectedConditions.presenceOfElementLocated(MAX_RESULTS));
-		return driver.findElement(MAX_RESULTS).getAttribute("value");
+		String maxResults = driver.findElement(MAX_RESULTS).getAttribute("value");
+
+		int currentPage = Integer.valueOf(offset) / Integer.valueOf(maxResults) + 1;
+		return String.valueOf(currentPage);
+
 	}
 
 	private String getCount(WebDriver driver) {

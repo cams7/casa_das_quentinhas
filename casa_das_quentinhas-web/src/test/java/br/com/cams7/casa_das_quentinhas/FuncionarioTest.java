@@ -38,12 +38,6 @@ public class FuncionarioTest extends AbstractTest {
 		// Carrega a lista de funcionários
 		goToIndexPage();
 
-		// Ordena todos os campos da tabela de funcionários
-		sortFields();
-
-		// Pagina a lista de funcionários
-		paginate();
-
 		// Pesquisa os funcionários que tenha os caracteres "an" no nome, cpf,
 		// e-mail ou celular
 		search("an");
@@ -135,24 +129,17 @@ public class FuncionarioTest extends AbstractTest {
 		return MAIN_PAGE;
 	}
 
+	@Override
+	protected String[] getFields() {
+		return new String[] { "id", "nome", "cpf", "usuario.email", "celular", "funcao" };
+	}
+
 	/**
 	 * Vai para a página de listagem de funcionários
 	 */
 	private void goToIndexPage() {
 		goToIndexPage("Funcionário(s)");
 		assertEquals("Lista de Funcionários", getDriver().getTitle());
-	}
-
-	/**
-	 * Ordena, aletoriamente, os campos da tabela funcionário
-	 */
-	private void sortFields() {
-		clickSortField("id");
-		clickSortField("nome");
-		clickSortField("cpf");
-		clickSortField("usuario.email");
-		clickSortField("celular");
-		clickSortField("funcao");
 	}
 
 	private void createFuncionario() {

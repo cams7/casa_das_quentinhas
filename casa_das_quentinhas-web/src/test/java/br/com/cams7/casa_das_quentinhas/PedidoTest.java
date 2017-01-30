@@ -41,12 +41,6 @@ public class PedidoTest extends AbstractTest {
 		// Carrega a lista de pedidos
 		goToIndexPage();
 
-		// Ordena todos os campos da tabela de pedidos
-		sortFields();
-
-		// Pagina a lista de pedidos
-		paginate();
-
 		// Pesquisa os pedidos que tenha os caracteres "an" no cliente, empresa,
 		// quantidade ou custo
 		search("an");
@@ -123,7 +117,8 @@ public class PedidoTest extends AbstractTest {
 			WebElement itemModal = getDriver().findElement(ITEM_MODAL);
 
 			itemModal.findElement(By.name("produto")).clear();
-			itemModal.findElement(By.name("produto")).sendKeys("a");
+			itemModal.findElement(By.name("produto"))
+					.sendKeys(getBaseProducer().randomElement("bife", "frango", "ovo", "salada", "creme"));
 
 			final By PRODUTO_ID = By.name("produto_id");
 
@@ -238,23 +233,17 @@ public class PedidoTest extends AbstractTest {
 		return MAIN_PAGE;
 	}
 
+	@Override
+	protected String[] getFields() {
+		return new String[] { "id", "tipoCliente", "quantidade", "custo", "manutencao.cadastro" };
+	}
+
 	/**
 	 * Vai para a página de listagem de pedidos
 	 */
 	private void goToIndexPage() {
 		goToIndexPage("Pedido(s)");
 		assertEquals("Lista de Pedidos", getDriver().getTitle());
-	}
-
-	/**
-	 * Ordena, aletoriamente, os campos da tabela pedido
-	 */
-	private void sortFields() {
-		clickSortField("id");
-		clickSortField("tipoCliente");
-		clickSortField("quantidade");
-		clickSortField("custo");
-		clickSortField("manutencao.cadastro");
 	}
 
 }

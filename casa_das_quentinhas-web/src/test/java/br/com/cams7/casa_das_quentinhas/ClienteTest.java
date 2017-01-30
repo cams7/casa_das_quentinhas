@@ -43,12 +43,6 @@ public class ClienteTest extends AbstractTest {
 		// Carrega a lista de clientes
 		goToIndexPage();
 
-		// Ordena todos os campos da tabela de clientes
-		sortFields();
-
-		// Pagina a lista de clientes
-		paginate();
-
 		// Pesquisa os clientes que tenha os caracteres "an" no nome, cpf,
 		// e-mail, telefone ou cidade
 		search("an");
@@ -140,24 +134,17 @@ public class ClienteTest extends AbstractTest {
 		return MAIN_PAGE;
 	}
 
+	@Override
+	protected String[] getFields() {
+		return new String[] { "id", "nome", "cpf", "contato.email", "contato.telefone", "cidade.nome" };
+	}
+
 	/**
 	 * Vai para a página de listagem de clientes
 	 */
 	private void goToIndexPage() {
 		goToIndexPage("Cliente(s)");
 		assertEquals("Lista de Clientes", getDriver().getTitle());
-	}
-
-	/**
-	 * Ordena, aletoriamente, os campos da tabela cliente
-	 */
-	private void sortFields() {
-		clickSortField("id");
-		clickSortField("nome");
-		clickSortField("cpf");
-		clickSortField("contato.email");
-		clickSortField("contato.telefone");
-		clickSortField("cidade.nome");
 	}
 
 	private void createCliente() {

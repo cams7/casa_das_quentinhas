@@ -46,12 +46,6 @@ public class EmpresaTest extends AbstractTest {
 		// Carrega a lista de empresas
 		goToIndexPage();
 
-		// Ordena todos os campos da tabela de empresas
-		sortFields();
-
-		// Pagina a lista de clientes
-		paginate();
-
 		// Pesquisa as empresas que tenha os caracteres "an" na razão social,
 		// cnpj, e-mail ou cidade
 		search("an");
@@ -217,25 +211,17 @@ public class EmpresaTest extends AbstractTest {
 		return MAIN_PAGE;
 	}
 
+	@Override
+	protected String[] getFields() {
+		return new String[] { "id", "razaoSocial", "cnpj", "contato.email", "contato.telefone", "tipo", "cidade.nome" };
+	}
+
 	/**
 	 * Vai para a página de listagem de empresas
 	 */
 	private void goToIndexPage() {
 		goToIndexPage("Empresa(s)");
 		assertEquals("Lista de Empresas", getDriver().getTitle());
-	}
-
-	/**
-	 * Ordena, aletoriamente, os campos da tabela empresa
-	 */
-	private void sortFields() {
-		clickSortField("id");
-		clickSortField("razaoSocial");
-		clickSortField("cnpj");
-		clickSortField("contato.email");
-		clickSortField("contato.telefone");
-		clickSortField("tipo");
-		clickSortField("cidade.nome");
 	}
 
 }

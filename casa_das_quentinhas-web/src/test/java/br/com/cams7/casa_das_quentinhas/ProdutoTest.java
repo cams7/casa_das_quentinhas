@@ -26,12 +26,6 @@ public class ProdutoTest extends AbstractTest {
 		// Carrega a lista de produtos
 		goToIndexPage();
 
-		// Ordena todos os campos da tabela de produtos
-		sortFields();
-
-		// Pagina a lista de produtos
-		paginate();
-
 		// Pesquisa os produtos que tenha os caracteres "an" no nome ou custo
 		search("an");
 	}
@@ -116,22 +110,17 @@ public class ProdutoTest extends AbstractTest {
 		return MAIN_PAGE;
 	}
 
+	@Override
+	protected String[] getFields() {
+		return new String[] { "id", "nome", "tamanho", "custo" };
+	}
+
 	/**
 	 * Vai para a página de listagem de produtos
 	 */
 	private void goToIndexPage() {
 		goToIndexPage("Produto(s)");
 		assertEquals("Lista de Produtos", getDriver().getTitle());
-	}
-
-	/**
-	 * Ordena, aletoriamente, os campos da tabela produto
-	 */
-	private void sortFields() {
-		clickSortField("id");
-		clickSortField("nome");
-		clickSortField("tamanho");
-		clickSortField("custo");
 	}
 
 }
