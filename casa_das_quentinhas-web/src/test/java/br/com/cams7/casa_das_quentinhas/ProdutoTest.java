@@ -65,7 +65,7 @@ public class ProdutoTest extends AbstractTest {
 		assertEquals("Visualizar Produto", getDriver().getTitle());
 
 		// Volta à página anterior
-		cancelViewPage();
+		cancelOrDeleteViewPage();
 	}
 
 	/*

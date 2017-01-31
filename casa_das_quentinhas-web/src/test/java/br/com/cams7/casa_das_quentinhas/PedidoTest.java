@@ -83,7 +83,7 @@ public class PedidoTest extends AbstractTest {
 		assertEquals("Visualizar Pedido", getDriver().getTitle());
 
 		// Volta à página anterior
-		cancelViewPage();
+		cancelOrDeleteViewPage();
 	}
 
 	/*

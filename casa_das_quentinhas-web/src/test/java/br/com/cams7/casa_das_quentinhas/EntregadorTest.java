@@ -86,7 +86,7 @@ public class EntregadorTest extends AbstractTest {
 		assertEquals("Visualizar Entregador", getDriver().getTitle());
 
 		// Volta à página anterior
-		cancelViewPage();
+		cancelOrDeleteViewPage();
 	}
 
 	/*

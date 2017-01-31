@@ -86,7 +86,7 @@ public class ClienteTest extends AbstractTest {
 		assertEquals("Visualizar Cliente", getDriver().getTitle());
 
 		// Volta à página anterior
-		cancelViewPage();
+		cancelOrDeleteViewPage();
 	}
 
 	/*

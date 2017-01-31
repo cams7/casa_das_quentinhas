@@ -90,7 +90,7 @@ public class EmpresaTest extends AbstractTest {
 		assertEquals("Visualizar Empresa", getDriver().getTitle());
 
 		// Volta à página anterior
-		cancelViewPage();
+		cancelOrDeleteViewPage();
 	}
 
 	/*

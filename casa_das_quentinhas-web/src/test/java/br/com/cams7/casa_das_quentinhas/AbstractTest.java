@@ -8,6 +8,7 @@ import static br.com.cams7.casa_das_quentinhas.mock.UsuarioMock.getQualquerEmail
 import static br.com.cams7.casa_das_quentinhas.mock.UsuarioMock.getSenhaAcesso;
 import static org.testng.AssertJUnit.assertEquals;
 import static org.testng.AssertJUnit.assertFalse;
+import static org.testng.AssertJUnit.assertTrue;
 import static org.testng.AssertJUnit.fail;
 
 import java.util.Arrays;
@@ -130,17 +131,7 @@ public abstract class AbstractTest implements BaseTest {
 	 * Pagina a tabela
 	 */
 	protected void paginate() {
-		// short maxResults = Short.valueOf(getMaxResults(driver));
-		// long count = Long.valueOf(getCount(driver));
-
 		String firstId = getId(1);
-
-		// int totalPages = (int) (count / maxResults);
-		// if (count % maxResults > 0)
-		// totalPages++;
-
-		// LOGGER.info("paginate -> max results: {}, count: {}, total pages:
-		// {}", maxResults, count, totalPages);
 
 		final By PAGES = By.cssSelector("ul.pagination > li > a");
 		// wait.until(ExpectedConditions.presenceOfElementLocated(PAGES));
@@ -153,15 +144,13 @@ public abstract class AbstractTest implements BaseTest {
 			return false;
 		}).map(link -> link.getText()).toArray(size -> new String[size]);
 
-		// LOGGER.info("paginate -> pages: {}",
-		// Arrays.asList(pages).stream().collect(Collectors.joining(", ")));
-
 		String currentPage = getCurrentPage();
 		String page = baseProducer.randomElement(pages);
 		if (currentPage.equals(page))
 			return;
 
-		LOGGER.info("paginate -> current page: {}, page: {}", currentPage, page);
+		// LOGGER.info("paginate -> current page: {}, page: {}", currentPage,
+		// page);
 
 		WebElement selectPage = driver.findElement(By.cssSelector("ul.pagination > li"))
 				.findElement(By.xpath("//a[text()='" + page + "']"));
@@ -170,7 +159,8 @@ public abstract class AbstractTest implements BaseTest {
 
 		wait.until(new ExpectedCondition<Boolean>() {
 			public Boolean apply(WebDriver driver) {
-				String currentId = getId(driver, 1);
+				String currentId = getId(driver,
+						By.cssSelector("table.dataTable > tbody > tr:nth-child(1) > td:first-child"));
 				return !(currentId.isEmpty() || firstId.equals(currentId));
 			}
 		});
@@ -198,7 +188,7 @@ public abstract class AbstractTest implements BaseTest {
 
 		wait.until(new ExpectedCondition<Boolean>() {
 			public Boolean apply(WebDriver driver) {
-				String currentCount = getCount(driver);
+				String currentCount = getCount(driver, By.xpath("//input[@id='dataTable_count']"));
 				return !currentCount.isEmpty() && firstCount > Long.valueOf(currentCount);
 			}
 		});
@@ -215,7 +205,6 @@ public abstract class AbstractTest implements BaseTest {
 	 *            Campo da tabela
 	 */
 	protected void sortField(String field) {
-		// if (baseProducer.trueOrFalse()) {
 		String firstOrder = getSortOrder(field);
 
 		final By CELL = By.cssSelector("table.dataTable > thead > tr:first-child > th[id='" + field + "']");
@@ -224,7 +213,8 @@ public abstract class AbstractTest implements BaseTest {
 
 		wait.until(new ExpectedCondition<Boolean>() {
 			public Boolean apply(WebDriver driver) {
-				String currentOrder = getSortOrder(driver, field);
+				String currentOrder = getSortOrder(driver,
+						By.cssSelector("table.dataTable > thead > tr:first-child > th[id='" + field + "']"));
 				return !(currentOrder.isEmpty() || firstOrder.equals(currentOrder));
 
 			}
@@ -233,7 +223,6 @@ public abstract class AbstractTest implements BaseTest {
 		LOGGER.info("sort '{}' -> first order: {}, current order: {}", field, firstOrder, getSortOrder(field));
 
 		sleep();
-		// }
 	}
 
 	/**
@@ -257,8 +246,6 @@ public abstract class AbstractTest implements BaseTest {
 		sleep();
 
 		if (!isGerente) {
-			// wait.until(ExpectedConditions.textToBePresentInElementLocated(By.tagName("title"),
-			// UNAUTHORIZED_MESSAGE));
 			assertEquals(UNAUTHORIZED_MESSAGE, driver.getTitle());
 			throw new SkipException(UNAUTHORIZED_MESSAGE);
 		}
@@ -279,13 +266,39 @@ public abstract class AbstractTest implements BaseTest {
 		sleep();
 	}
 
+	boolean canBeDeleted = true;
+
 	/**
 	 * Vai para a página anterior
 	 */
-	protected void cancelViewPage() {
-		final By CANCEL = By.cssSelector("div#actions > div > a.btn.btn-default");
-		wait.until(ExpectedConditions.elementToBeClickable(CANCEL));
-		driver.findElement(CANCEL).click();
+	protected void cancelOrDeleteViewPage() {
+		final By DELETE = By.cssSelector("div#actions > div > button.btn.btn-danger");
+
+		if (GERENTE.equals(acesso) /* && baseProducer.trueOrFalse() */) {
+			wait.until(ExpectedConditions.elementToBeClickable(DELETE));
+			driver.findElement(DELETE).click();
+
+			// Exibe o pop-pop de exclusão
+			showDeleteModal();
+
+			driver.findElements(By.cssSelector("div.row > div > p > strong")).stream()
+					.filter(label -> "E-mail".equals(label.getText())).findFirst().ifPresent(label -> {
+						String email = label.findElement(By.xpath("parent::*")).findElement(By.xpath("parent::*"))
+								.findElement(By.cssSelector("p:nth-child(2)")).getText();
+						LOGGER.info("cancelOrDeleteViewPage -> email: {}", email);
+						canBeDeleted = canBeChanged(email);
+					});
+
+			// Fecha o pop-pop de exclusão
+			closeDeleteModal(false, canBeDeleted);
+		} else {
+			if (!GERENTE.equals(acesso))
+				assertTrue(driver.findElements(DELETE).isEmpty());
+
+			final By CANCEL = By.cssSelector("div#actions > div > a.btn.btn-default");
+			wait.until(ExpectedConditions.elementToBeClickable(CANCEL));
+			driver.findElement(CANCEL).click();
+		}
 
 		sleep();
 	}
@@ -314,15 +327,13 @@ public abstract class AbstractTest implements BaseTest {
 		sleep();
 
 		if (!isGerenteOrAtendente) {
-			// wait.until(ExpectedConditions.textToBePresentInElementLocated(By.tagName("title"),
-			// UNAUTHORIZED_MESSAGE));
 			assertEquals(UNAUTHORIZED_MESSAGE, driver.getTitle());
 			throw new SkipException(UNAUTHORIZED_MESSAGE);
 		}
 	}
 
 	/**
-	 * Exibe o pop-pop de exclusão
+	 * Exibe e fecha pop-pop de exclusão
 	 */
 	protected void showAndCloseDeleteModal() {
 		boolean isGerente = GERENTE.equals(acesso);
@@ -342,25 +353,30 @@ public abstract class AbstractTest implements BaseTest {
 		wait.until(ExpectedConditions.elementToBeClickable(delete));
 		delete.click();
 
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("delete_modal")));
-
-		LOGGER.info("showDelete -> foi aberto, o modal panel de exclusão");
-
-		sleep();
+		// Exibe o pop-pop de exclusão
+		showDeleteModal();
 
 		// Fecha o pop-pop de exclusão
-		closeDeleteModal(index + 1);
+		closeDeleteModal(true, canBeDeleted(index + 1));
+	}
+
+	private void showDeleteModal() {
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("delete_modal")));
+
+		LOGGER.info("showDeleteModal -> foi aberto, o modal panel de exclusão");
+
+		sleep();
 	}
 
 	/**
 	 * Fecha o pop-up
 	 */
-	private void closeDeleteModal(int rowIndex) {
+	private void closeDeleteModal(boolean isListPage, boolean canBeDeleted) {
 		By DELETE_MODAL = By.id("delete_modal");
 
 		WebElement modal = driver.findElement(DELETE_MODAL);
 		boolean deleted = false;
-		if (baseProducer.trueOrFalse() && canBeDeleted(rowIndex)) {
+		if (canBeDeleted && baseProducer.trueOrFalse()) {
 			WebElement delete = modal.findElement(By.cssSelector("div.modal-footer > input.btn.btn-primary"));
 			wait.until(ExpectedConditions.elementToBeClickable(delete));
 			delete.submit();
@@ -374,16 +390,19 @@ public abstract class AbstractTest implements BaseTest {
 
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(DELETE_MODAL));
 
-		LOGGER.info("closeDelete -> foi fechado, o modal panel de exclusão");
+		LOGGER.info("closeDeleteModal -> foi fechado, o modal panel de exclusão");
 
 		if (deleted) {
-			final By ALERT = By.cssSelector("div.alert");
-			wait.until(ExpectedConditions.visibilityOfElementLocated(ALERT));
+			if (isListPage) {
+				final By ALERT = By.cssSelector("div.alert");
+				wait.until(ExpectedConditions.visibilityOfElementLocated(ALERT));
 
-			String message = driver.findElement(ALERT).findElement(By.tagName("span")).getText();
-			assertFalse(message.isEmpty());
+				String message = driver.findElement(ALERT).findElement(By.tagName("span")).getText();
+				assertFalse(message.isEmpty());
 
-			LOGGER.info("closeDelete -> message: {}", message);
+				LOGGER.info("closeDeleteModal -> message: {}", message);
+			} //else wait.until(ExpectedConditions.titleContains("Lista de"));
+
 		}
 
 		sleep();
@@ -536,19 +555,12 @@ public abstract class AbstractTest implements BaseTest {
 	private String getId(int rowIndex) {
 		final By CELL = By.cssSelector("table.dataTable > tbody > tr:nth-child(" + rowIndex + ") > td:first-child");
 		wait.until(ExpectedConditions.presenceOfElementLocated(CELL));
-		return getId(driver, rowIndex);
+		return getId(driver, CELL);
 	}
 
-	private String getId(WebDriver driver, int rowIndex) {
-		final By CELL = By.cssSelector("table.dataTable > tbody > tr:nth-child(" + rowIndex + ") > td:first-child");
-		return driver.findElement(CELL).getText();
+	private String getId(WebDriver driver, By cell) {
+		return driver.findElement(cell).getText();
 	}
-
-	// private String getMaxResults(WebDriver driver) {
-	// final By MAX_RESULTS = By.xpath("//input[@id='dataTable_maxResults']");
-	// wait.until(ExpectedConditions.presenceOfElementLocated(MAX_RESULTS));
-	// return driver.findElement(MAX_RESULTS).getAttribute("value");
-	// }
 
 	private String getCurrentPage() {
 		final By OFFSET = By.xpath("//input[@id='dataTable_offset']");
@@ -567,23 +579,21 @@ public abstract class AbstractTest implements BaseTest {
 	private String getCount() {
 		final By COUNT = By.xpath("//input[@id='dataTable_count']");
 		wait.until(ExpectedConditions.presenceOfElementLocated(COUNT));
-		return getCount(driver);
+		return getCount(driver, COUNT);
 	}
 
-	private String getCount(WebDriver driver) {
-		final By COUNT = By.xpath("//input[@id='dataTable_count']");
-		return driver.findElement(COUNT).getAttribute("value");
+	private String getCount(WebDriver driver, By count) {
+		return driver.findElement(count).getAttribute("value");
 	}
 
 	private String getSortOrder(String field) {
 		final By CELL = By.cssSelector("table.dataTable > thead > tr:first-child > th[id='" + field + "']");
 		wait.until(ExpectedConditions.presenceOfElementLocated(CELL));
-		return getSortOrder(driver, field);
+		return getSortOrder(driver, CELL);
 	}
 
-	private String getSortOrder(WebDriver driver, String field) {
-		final By CELL = By.cssSelector("table.dataTable > thead > tr:first-child > th[id='" + field + "']");
-		return driver.findElement(CELL).getAttribute("class");
+	private String getSortOrder(WebDriver driver, By cell) {
+		return driver.findElement(cell).getAttribute("class");
 	}
 
 	protected boolean canBeDeleted(int rowIndex) {

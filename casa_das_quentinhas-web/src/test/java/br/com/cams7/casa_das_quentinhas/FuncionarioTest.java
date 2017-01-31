@@ -83,7 +83,7 @@ public class FuncionarioTest extends AbstractTest {
 		assertEquals("Visualizar Funcionário", getDriver().getTitle());
 
 		// Volta à página anterior
-		cancelViewPage();
+		cancelOrDeleteViewPage();
 	}
 
 	/*
