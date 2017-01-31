@@ -28,6 +28,7 @@ import io.codearte.jfairy.producer.person.Person;
 public class FuncionarioTest extends AbstractTest {
 
 	private final String MAIN_PAGE = "funcionario";
+	private final String VIEW_TITLE = "Visualizar Funcionário";
 
 	/*
 	 * (non-Javadoc)
@@ -80,10 +81,10 @@ public class FuncionarioTest extends AbstractTest {
 
 		// Visualiza os dados do funcionário
 		goToViewPage();
-		assertEquals("Visualizar Funcionário", getDriver().getTitle());
+		assertEquals(VIEW_TITLE, getDriver().getTitle());
 
 		// Volta à página anterior
-		cancelOrDeleteViewPage();
+		cancelOrDeleteViewPage(false);
 	}
 
 	/*
@@ -126,6 +127,11 @@ public class FuncionarioTest extends AbstractTest {
 	@Override
 	protected String getMainPage() {
 		return MAIN_PAGE;
+	}
+
+	@Override
+	protected String getViewTitle() {
+		return VIEW_TITLE;
 	}
 
 	@Override

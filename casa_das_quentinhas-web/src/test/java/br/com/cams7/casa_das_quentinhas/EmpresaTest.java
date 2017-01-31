@@ -17,6 +17,8 @@ import static org.testng.AssertJUnit.assertEquals;
 import static org.testng.AssertJUnit.assertFalse;
 import static org.testng.AssertJUnit.assertTrue;
 
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -36,6 +38,7 @@ import io.codearte.jfairy.producer.person.Person;
 public class EmpresaTest extends AbstractTest {
 
 	private final String MAIN_PAGE = "empresa";
+	private final String VIEW_TITLE = "Visualizar Empresa";
 
 	/*
 	 * (non-Javadoc)
@@ -87,10 +90,16 @@ public class EmpresaTest extends AbstractTest {
 
 		// Visualiza os dados da empresa
 		goToViewPage();
-		assertEquals("Visualizar Empresa", getDriver().getTitle());
+		assertEquals(VIEW_TITLE, getDriver().getTitle());
+
+		List<WebElement> headers = getDriver().findElements(By.xpath("//h3[@class='page-header']"));
+		if (headers.stream().anyMatch(e -> "Pedidos".equals(e.getText())))
+			testPedidos();
+		else if (headers.stream().anyMatch(e -> "Entregadores".equals(e.getText())))
+			testEntregadores();
 
 		// Volta à página anterior
-		cancelOrDeleteViewPage();
+		cancelOrDeleteViewPage(false);
 	}
 
 	/*
@@ -132,6 +141,11 @@ public class EmpresaTest extends AbstractTest {
 	@Override
 	protected String getMainPage() {
 		return MAIN_PAGE;
+	}
+
+	@Override
+	protected String getViewTitle() {
+		return VIEW_TITLE;
 	}
 
 	@Override
@@ -275,6 +289,16 @@ public class EmpresaTest extends AbstractTest {
 			getDriver().findElement(By.name("usuarioAcesso.confirmacaoSenha")).sendKeys(getSenhaAcesso());
 			sleep();
 		}
+	}
+
+	private void testPedidos() {
+		testList(new String[] { "id", "tipoCliente", "quantidade", "custo", "manutencao.cadastro" },
+				"Visualizar Pedido", "Editar Pedido");
+	}
+
+	private void testEntregadores() {
+		testList(new String[] { "id", "nome", "cpf", "usuario.email", "celular" }, "Visualizar Entregador",
+				"Editar Entregador");
 	}
 
 }

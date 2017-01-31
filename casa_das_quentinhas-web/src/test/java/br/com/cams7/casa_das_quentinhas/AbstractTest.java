@@ -134,7 +134,7 @@ public abstract class AbstractTest implements BaseTest {
 		String firstId = getId(1);
 
 		final By PAGES = By.cssSelector("ul.pagination > li > a");
-		// wait.until(ExpectedConditions.presenceOfElementLocated(PAGES));
+		wait.until(ExpectedConditions.presenceOfElementLocated(PAGES));
 		String[] pages = driver.findElements(PAGES).stream().filter(link -> {
 			try {
 				Integer.parseInt(link.getText());
@@ -231,7 +231,7 @@ public abstract class AbstractTest implements BaseTest {
 	protected void goToCreatePage() {
 		boolean isGerente = GERENTE.equals(acesso);
 
-		final List<WebElement> buttons = driver.findElements(By.cssSelector("div#top > div.h2 > a.btn.btn-primary"));
+		final List<WebElement> buttons = driver.findElements(getCreateLink());
 
 		if (isGerente) {
 			WebElement create = buttons.get(0);
@@ -255,8 +255,7 @@ public abstract class AbstractTest implements BaseTest {
 	 * Vai para a página de visualização dos dados
 	 */
 	protected void goToViewPage() {
-		final List<WebElement> buttons = driver
-				.findElements(By.cssSelector("table.dataTable > tbody > tr > td > a.btn.btn-success.btn-xs"));
+		final List<WebElement> buttons = driver.findElements(getTableViewLink());
 		int index = getBaseProducer().randomBetween(0, buttons.size() - 1);
 
 		WebElement view = buttons.get(index);
@@ -271,10 +270,10 @@ public abstract class AbstractTest implements BaseTest {
 	/**
 	 * Vai para a página anterior
 	 */
-	protected void cancelOrDeleteViewPage() {
-		final By DELETE = By.cssSelector("div#actions > div > button.btn.btn-danger");
+	protected void cancelOrDeleteViewPage(final boolean onlyCancel) {
+		final By DELETE = getViewDeleteButton();
 
-		if (GERENTE.equals(acesso) /* && baseProducer.trueOrFalse() */) {
+		if (!onlyCancel && GERENTE.equals(acesso) /* && baseProducer.trueOrFalse() */) {
 			wait.until(ExpectedConditions.elementToBeClickable(DELETE));
 			driver.findElement(DELETE).click();
 
@@ -295,7 +294,7 @@ public abstract class AbstractTest implements BaseTest {
 			if (!GERENTE.equals(acesso))
 				assertTrue(driver.findElements(DELETE).isEmpty());
 
-			final By CANCEL = By.cssSelector("div#actions > div > a.btn.btn-default");
+			final By CANCEL = getViewCancelLink();
 			wait.until(ExpectedConditions.elementToBeClickable(CANCEL));
 			driver.findElement(CANCEL).click();
 		}
@@ -309,8 +308,7 @@ public abstract class AbstractTest implements BaseTest {
 	protected void goToEditPage() {
 		boolean isGerenteOrAtendente = GERENTE.equals(acesso) || ATENDENTE.equals(acesso);
 
-		final List<WebElement> buttons = driver
-				.findElements(By.cssSelector("table.dataTable > tbody > tr > td > a.btn.btn-warning.btn-xs"));
+		final List<WebElement> buttons = driver.findElements(getTableEditLink());
 		final int totalButtons = buttons.size();
 
 		if (isGerenteOrAtendente) {
@@ -338,8 +336,7 @@ public abstract class AbstractTest implements BaseTest {
 	protected void showAndCloseDeleteModal() {
 		boolean isGerente = GERENTE.equals(acesso);
 
-		final List<WebElement> buttons = driver.findElements(
-				By.cssSelector("table.dataTable > tbody > tr > td > button.btn.btn-danger.btn-xs.delete"));
+		final List<WebElement> buttons = driver.findElements(getTableDeleteButton());
 		final int totalButtons = buttons.size();
 
 		if (!isGerente) {
@@ -377,13 +374,13 @@ public abstract class AbstractTest implements BaseTest {
 		WebElement modal = driver.findElement(DELETE_MODAL);
 		boolean deleted = false;
 		if (canBeDeleted && baseProducer.trueOrFalse()) {
-			WebElement delete = modal.findElement(By.cssSelector("div.modal-footer > input.btn.btn-primary"));
+			WebElement delete = modal.findElement(getModalDeleteSubmit());
 			wait.until(ExpectedConditions.elementToBeClickable(delete));
 			delete.submit();
 
 			deleted = true;
 		} else {
-			WebElement cancel = modal.findElement(By.cssSelector("div.modal-footer > button.btn.btn-default"));
+			WebElement cancel = modal.findElement(getModalDeleteCancelButton());
 			wait.until(ExpectedConditions.elementToBeClickable(cancel));
 			cancel.click();
 		}
@@ -401,7 +398,7 @@ public abstract class AbstractTest implements BaseTest {
 				assertFalse(message.isEmpty());
 
 				LOGGER.info("closeDeleteModal -> message: {}", message);
-			} //else wait.until(ExpectedConditions.titleContains("Lista de"));
+			} // else wait.until(ExpectedConditions.titleContains("Lista de"));
 
 		}
 
@@ -424,7 +421,7 @@ public abstract class AbstractTest implements BaseTest {
 	 * Tenta salva dos dados do formulário
 	 */
 	protected void saveCreateOrEditPage() {
-		final By SAVE = By.cssSelector("div#actions > div > input.btn.btn-primary");
+		final By SAVE = getCreateOrEditSubmit();
 		wait.until(ExpectedConditions.elementToBeClickable(SAVE));
 		driver.findElement(SAVE).click();
 		sleep();
@@ -434,10 +431,91 @@ public abstract class AbstractTest implements BaseTest {
 	 * Vai para a página anterior
 	 */
 	protected void cancelCreateOrEditPage() {
-		final By CANCEL = By.cssSelector("div#actions > div > button.btn.btn-default");
+		final By CANCEL = getCreateOrEditCancelButton();
 		wait.until(ExpectedConditions.elementToBeClickable(CANCEL));
 		driver.findElement(CANCEL).click();
 		sleep();
+	}
+	
+	protected void testList(String[] fields, String viewTitle, String editTitle) {
+		// Ordena, aleatoriamente, um campo da tabela
+		sortField(getBaseProducer().randomElement(fields));
+
+		// Vai para um pagina aleatória da tabela
+		paginate();
+
+		goToViewPage();
+		assertEquals(viewTitle, getDriver().getTitle());
+
+		cancelOrDeleteViewPage(true);
+		assertEquals(getViewTitle(), getDriver().getTitle());
+
+		if (GERENTE.equals(getAcesso()) || ATENDENTE.equals(getAcesso())) {
+			goToEditPage();
+			assertEquals(editTitle, getDriver().getTitle());
+
+			cancelCreateOrEditPage();
+			assertEquals(getViewTitle(), getDriver().getTitle());
+		} else
+			assertTrue(getDriver().findElements(getTableEditLink()).isEmpty());
+
+		if (GERENTE.equals(getAcesso()))
+			showAndCloseDeleteModal();
+		else
+			assertTrue(getDriver().findElements(getTableDeleteButton()).isEmpty());
+
+	}
+
+	protected boolean canBeDeleted(int rowIndex) {
+		final By CELL = By.cssSelector("table.dataTable > tbody > tr:nth-child(" + rowIndex + ") > td:nth-child(4)");
+		wait.until(ExpectedConditions.presenceOfElementLocated(CELL));
+		String email = driver.findElement(CELL).getText();
+
+		return canBeChanged(email);
+	}
+
+	protected boolean canBeChanged(String email) {
+		return !Arrays.asList(getEmails()).contains(email);
+	}
+
+	protected final By getCreateLink() {
+		return By.cssSelector("div#top > div.h2 > a.btn.btn-primary");
+	}
+
+	protected final By getTableViewLink() {
+		return By.cssSelector("table.dataTable > tbody > tr > td > a.btn.btn-success.btn-xs");
+	}
+
+	protected final By getTableEditLink() {
+		return By.cssSelector("table.dataTable > tbody > tr > td > a.btn.btn-warning.btn-xs");
+	}
+
+	protected final By getTableDeleteButton() {
+		return By.cssSelector("table.dataTable > tbody > tr > td > button.btn.btn-danger.btn-xs.delete");
+	}
+
+	protected final By getViewDeleteButton() {
+		return By.cssSelector("div#actions > div > button.btn.btn-danger");
+	}
+
+	protected final By getViewCancelLink() {
+		return By.cssSelector("div#actions > div > a.btn.btn-default");
+	}
+
+	protected final By getCreateOrEditSubmit() {
+		return By.cssSelector("div#actions > div > input.btn.btn-primary");
+	}
+
+	protected final By getCreateOrEditCancelButton() {
+		return By.cssSelector("div#actions > div > button.btn.btn-default");
+	}
+
+	protected final By getModalDeleteSubmit() {
+		return By.cssSelector("div.modal-footer > input.btn.btn-primary");
+	}
+
+	protected final By getModalDeleteCancelButton() {
+		return By.cssSelector("div.modal-footer > button.btn.btn-default");
 	}
 
 	protected void sleep() {
@@ -485,6 +563,8 @@ public abstract class AbstractTest implements BaseTest {
 	}
 
 	protected abstract String getMainPage();
+	
+	protected abstract String getViewTitle();
 
 	protected abstract String[] getFields();
 
@@ -594,18 +674,6 @@ public abstract class AbstractTest implements BaseTest {
 
 	private String getSortOrder(WebDriver driver, By cell) {
 		return driver.findElement(cell).getAttribute("class");
-	}
-
-	protected boolean canBeDeleted(int rowIndex) {
-		final By CELL = By.cssSelector("table.dataTable > tbody > tr:nth-child(" + rowIndex + ") > td:nth-child(4)");
-		wait.until(ExpectedConditions.presenceOfElementLocated(CELL));
-		String email = driver.findElement(CELL).getText();
-
-		return canBeChanged(email);
-	}
-
-	protected boolean canBeChanged(String email) {
-		return !Arrays.asList(getEmails()).contains(email);
 	}
 
 }

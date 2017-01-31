@@ -31,6 +31,7 @@ import io.codearte.jfairy.producer.person.Person;
 public class EntregadorTest extends AbstractTest {
 
 	private final String MAIN_PAGE = "entregador";
+	private final String VIEW_TITLE = "Visualizar Entregador";
 
 	/*
 	 * (non-Javadoc)
@@ -83,10 +84,10 @@ public class EntregadorTest extends AbstractTest {
 
 		// Visualiza os dados do entregador
 		goToViewPage();
-		assertEquals("Visualizar Entregador", getDriver().getTitle());
+		assertEquals(VIEW_TITLE, getDriver().getTitle());
 
 		// Volta à página anterior
-		cancelOrDeleteViewPage();
+		cancelOrDeleteViewPage(false);
 	}
 
 	/*
@@ -129,6 +130,11 @@ public class EntregadorTest extends AbstractTest {
 	@Override
 	protected String getMainPage() {
 		return MAIN_PAGE;
+	}
+	
+	@Override
+	protected String getViewTitle() {
+		return VIEW_TITLE;
 	}
 
 	@Override

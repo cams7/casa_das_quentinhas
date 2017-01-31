@@ -29,6 +29,7 @@ import org.testng.annotations.Test;
 public class PedidoTest extends AbstractTest {
 
 	private final String MAIN_PAGE = "pedido";
+	private final String VIEW_TITLE = "Visualizar Pedido";
 
 	/*
 	 * (non-Javadoc)
@@ -80,10 +81,10 @@ public class PedidoTest extends AbstractTest {
 
 		// Visualiza os dados do pedido
 		goToViewPage();
-		assertEquals("Visualizar Pedido", getDriver().getTitle());
+		assertEquals(VIEW_TITLE, getDriver().getTitle());
 
 		// Volta à página anterior
-		cancelOrDeleteViewPage();
+		cancelOrDeleteViewPage(false);
 	}
 
 	/*
@@ -125,6 +126,11 @@ public class PedidoTest extends AbstractTest {
 	@Override
 	protected String getMainPage() {
 		return MAIN_PAGE;
+	}
+
+	@Override
+	protected String getViewTitle() {
+		return VIEW_TITLE;
 	}
 
 	@Override

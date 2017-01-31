@@ -20,7 +20,7 @@ public class UsuarioMock extends AbstractMock {
 	 * @return E-mail de acesso
 	 */
 	public static String getQualquerEmailAcesso() {
-		return /*getBaseProducer().randomElement(emails)*/"gerente@casa-das-quentinhas.com";
+		return getBaseProducer().randomElement(emails);
 	}
 
 	/**

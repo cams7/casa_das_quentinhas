@@ -14,6 +14,7 @@ import org.testng.annotations.Test;
 public class ProdutoTest extends AbstractTest {
 
 	private final String MAIN_PAGE = "produto";
+	private final String VIEW_TITLE = "Visualizar Produto";
 
 	/*
 	 * (non-Javadoc)
@@ -62,10 +63,10 @@ public class ProdutoTest extends AbstractTest {
 
 		// Visualiza os dados do produto
 		goToViewPage();
-		assertEquals("Visualizar Produto", getDriver().getTitle());
+		assertEquals(VIEW_TITLE, getDriver().getTitle());
 
 		// Volta à página anterior
-		cancelOrDeleteViewPage();
+		cancelOrDeleteViewPage(false);
 	}
 
 	/*
@@ -108,10 +109,15 @@ public class ProdutoTest extends AbstractTest {
 	}
 
 	@Override
+	protected String getViewTitle() {
+		return VIEW_TITLE;
+	}
+
+	@Override
 	protected String[] getFields() {
 		return new String[] { "id", "nome", "tamanho", "custo" };
 	}
-	
+
 	@Override
 	protected boolean canBeDeleted(int rowIndex) {
 		return true;
