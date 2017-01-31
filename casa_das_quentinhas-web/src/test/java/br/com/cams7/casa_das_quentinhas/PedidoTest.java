@@ -83,6 +83,10 @@ public class PedidoTest extends AbstractTest {
 		goToViewPage();
 		assertEquals(VIEW_TITLE, getDriver().getTitle());
 
+		if (getDriver().findElements(By.xpath("//h3[@class='page-header']")).stream()
+				.anyMatch(e -> "Itens".equals(e.getText())))
+			testItens();
+
 		// Volta à página anterior
 		cancelOrDeleteViewPage(false);
 	}
@@ -273,6 +277,10 @@ public class PedidoTest extends AbstractTest {
 				fail(e.getMessage());
 			}
 		} while (!itemCadastrado || getBaseProducer().trueOrFalse());
+	}
+
+	private void testItens() {
+		testList("quantidade", "produto.custo", "produto.nome", "produto.tamanho");
 	}
 
 }

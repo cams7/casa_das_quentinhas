@@ -273,7 +273,8 @@ public abstract class AbstractTest implements BaseTest {
 	protected void cancelOrDeleteViewPage(final boolean onlyCancel) {
 		final By DELETE = getViewDeleteButton();
 
-		if (!onlyCancel && GERENTE.equals(acesso) /* && baseProducer.trueOrFalse() */) {
+		if (!onlyCancel
+				&& GERENTE.equals(acesso) /* && baseProducer.trueOrFalse() */) {
 			wait.until(ExpectedConditions.elementToBeClickable(DELETE));
 			driver.findElement(DELETE).click();
 
@@ -436,13 +437,17 @@ public abstract class AbstractTest implements BaseTest {
 		driver.findElement(CANCEL).click();
 		sleep();
 	}
-	
-	protected void testList(String[] fields, String viewTitle, String editTitle) {
+
+	protected final void testList(String... fields) {
 		// Ordena, aleatoriamente, um campo da tabela
 		sortField(getBaseProducer().randomElement(fields));
 
 		// Vai para um pagina aleatória da tabela
 		paginate();
+	}
+
+	protected final void testList(String[] fields, String viewTitle, String editTitle) {
+		testList(fields);
 
 		goToViewPage();
 		assertEquals(viewTitle, getDriver().getTitle());
@@ -563,7 +568,7 @@ public abstract class AbstractTest implements BaseTest {
 	}
 
 	protected abstract String getMainPage();
-	
+
 	protected abstract String getViewTitle();
 
 	protected abstract String[] getFields();
