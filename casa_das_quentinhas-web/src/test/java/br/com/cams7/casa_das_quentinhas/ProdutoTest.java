@@ -5,6 +5,7 @@ package br.com.cams7.casa_das_quentinhas;
 
 import static org.junit.Assert.assertEquals;
 
+import org.openqa.selenium.By;
 import org.testng.annotations.Test;
 
 /**
@@ -64,6 +65,10 @@ public class ProdutoTest extends AbstractTest {
 		// Visualiza os dados do produto
 		goToViewPage();
 		assertEquals(VIEW_TITLE, getDriver().getTitle());
+
+		if (getDriver().findElements(By.xpath("//h3[@class='page-header']")).stream()
+				.anyMatch(e -> "Pedidos".equals(e.getText())))
+			testPedidos();
 
 		// Volta à página anterior
 		cancelOrDeleteViewPage(false);
@@ -129,6 +134,11 @@ public class ProdutoTest extends AbstractTest {
 	private void goToIndexPage() {
 		goToIndexPage("Produto(s)");
 		assertEquals("Lista de Produtos", getDriver().getTitle());
+	}
+
+	private void testPedidos() {
+		testList(new String[] { "id.pedidoId", "pedido.manutencao.cadastro", "quantidade" }, "Visualizar Pedido",
+				"Editar Pedido");
 	}
 
 }
