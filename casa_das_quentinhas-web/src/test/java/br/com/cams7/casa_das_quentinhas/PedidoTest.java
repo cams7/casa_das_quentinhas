@@ -10,7 +10,6 @@ import static br.com.cams7.casa_das_quentinhas.mock.PedidoMock.getTipoCliente;
 import static org.testng.AssertJUnit.assertEquals;
 import static org.testng.AssertJUnit.assertFalse;
 import static org.testng.AssertJUnit.assertTrue;
-import static org.testng.AssertJUnit.fail;
 
 import java.util.List;
 
@@ -123,7 +122,7 @@ public class PedidoTest extends AbstractTest {
 		// Carrega a lista de pedidos
 		goToIndexPage();
 
-		// Exibe o pop-pop de exclusão
+		// Exibe e fecha o modal panel de exclusão
 		showAndCloseDeleteModal();
 	}
 
@@ -215,22 +214,67 @@ public class PedidoTest extends AbstractTest {
 			tipoAtendimento.selectByValue(getTipoAtendimento());
 			sleep();
 		}
-		boolean itemCadastrado = !isCreatePage;
+		boolean itemIncluido = !isCreatePage;
+		int countItens = 0;
 		do {
 			final By ITEM_ADD = By.id("item_add");
 			getWait().until(ExpectedConditions.elementToBeClickable(ITEM_ADD));
 			getDriver().findElement(ITEM_ADD).click();
 
-			final By ITEM_MODAL = By.id("item_modal");
+			if (showItemModal(AUTOCOMPLETE, true)) {
+				sleep();
+				itemIncluido = true;
+			}
 
-			getWait().until(ExpectedConditions.visibilityOfElementLocated(ITEM_MODAL));
-			WebElement itemModal = getDriver().findElement(ITEM_MODAL);
+			if (itemIncluido && getBaseProducer().trueOrFalse()) {
+				testItens();
 
+				long count = Long.valueOf(getCount());
+
+				if (count > 1 && getBaseProducer().trueOrFalse()) {
+					WebElement delete = getDriver().findElements(getTableDeleteButton()).get(getRandomTableRowIndex());
+					getWait().until(ExpectedConditions.elementToBeClickable(delete));
+					delete.click();
+
+					getWait().until(new ExpectedCondition<Boolean>() {
+						public Boolean apply(WebDriver driver) {
+							String currentCount = getCount(driver);
+							return !currentCount.isEmpty() && count > Long.valueOf(currentCount);
+						}
+					});
+
+					LOGGER.info("item removed -> first count: {}, current count: {}", count, getCount());
+				}
+
+				if (getBaseProducer().trueOrFalse()) {
+					WebElement edit = getDriver()
+							.findElements(
+									By.cssSelector("table.dataTable > tbody > tr > td > button.btn.btn-warning.btn-xs"))
+							.get(getRandomTableRowIndex());
+					getWait().until(ExpectedConditions.elementToBeClickable(edit));
+					edit.click();
+
+					if (showItemModal(AUTOCOMPLETE, false))
+						sleep();
+				}
+			}
+
+			countItens++;
+		} while (countItens <= 10 || !itemIncluido || getBaseProducer().trueOrFalse());
+	}
+
+	private boolean showItemModal(final By AUTOCOMPLETE, boolean newItem) {
+		final By ITEM_MODAL = By.id("item_modal");
+
+		getWait().until(ExpectedConditions.visibilityOfElementLocated(ITEM_MODAL));
+		WebElement itemModal = getDriver().findElement(ITEM_MODAL);
+
+		final By PRODUTO_ID = By.name("produto_id");
+
+		if (newItem) {
 			itemModal.findElement(By.name("produto")).clear();
 			itemModal.findElement(By.name("produto"))
 					.sendKeys(getBaseProducer().randomElement("bife", "frango", "ovo", "salada", "creme"));
-
-			final By PRODUTO_ID = By.name("produto_id");
 
 			assertTrue(itemModal.findElement(PRODUTO_ID).getAttribute("value").isEmpty());
 
@@ -248,39 +292,36 @@ public class PedidoTest extends AbstractTest {
 			});
 
 			getWait().until(ExpectedConditions.invisibilityOfElementLocated(AUTOCOMPLETE));
+		}
 
-			assertFalse(itemModal.findElement(PRODUTO_ID).getAttribute("value").isEmpty());
+		assertFalse(itemModal.findElement(PRODUTO_ID).getAttribute("value").isEmpty());
+		sleep();
 
-			itemModal.findElement(By.name("quantidade")).clear();
-			itemModal.findElement(By.name("quantidade"))
-					.sendKeys(String.valueOf(getBaseProducer().randomBetween(1, 20)));
-			sleep();
+		itemModal.findElement(By.name("quantidade")).clear();
+		itemModal.findElement(By.name("quantidade")).sendKeys(String.valueOf(getBaseProducer().randomBetween(1, 20)));
+		sleep();
 
-			if (getBaseProducer().trueOrFalse()) {
-				WebElement modalSave = itemModal
-						.findElement(By.cssSelector("div.modal-footer > input.btn.btn-primary"));
-				getWait().until(ExpectedConditions.elementToBeClickable(modalSave));
-				modalSave.submit();
+		boolean itemCadastrado = false;
 
-				itemCadastrado = true;
-			} else {
-				WebElement modalClose = itemModal.findElement(By.cssSelector("div.modal-header > button.close"));
-				getWait().until(ExpectedConditions.elementToBeClickable(modalClose));
-				modalClose.click();
-			}
+		if (getBaseProducer().trueOrFalse()) {
+			WebElement modalSave = itemModal.findElement(By.cssSelector("div.modal-footer > input.btn.btn-primary"));
+			getWait().until(ExpectedConditions.elementToBeClickable(modalSave));
+			modalSave.submit();
 
-			getWait().until(ExpectedConditions.invisibilityOfElementLocated(ITEM_MODAL));
+			itemCadastrado = true;
+		} else {
+			WebElement modalClose = itemModal.findElement(By.cssSelector("div.modal-header > button.close"));
+			getWait().until(ExpectedConditions.elementToBeClickable(modalClose));
+			modalClose.click();
+		}
 
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-				fail(e.getMessage());
-			}
-		} while (!itemCadastrado || getBaseProducer().trueOrFalse());
+		getWait().until(ExpectedConditions.invisibilityOfElementLocated(ITEM_MODAL));
+
+		return itemCadastrado;
 	}
 
 	private void testItens() {
-		testList("quantidade", "produto.custo", "produto.nome", "produto.tamanho");
+		testList(new String[] { "quantidade", "produto.custo", "produto.nome", "produto.tamanho" }, 4, 5);
 	}
 
 }

@@ -123,7 +123,7 @@ public class EntregadorTest extends AbstractTest {
 		// Carrega a lista de clientes
 		goToIndexPage();
 
-		// Exibe o pop-pop de exclusão
+		// Exibe e fecha o modal panel de exclusão
 		showAndCloseDeleteModal();
 	}
 

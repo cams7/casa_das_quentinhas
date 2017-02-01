@@ -104,7 +104,7 @@ public class ProdutoTest extends AbstractTest {
 		// Carrega a lista de produtos
 		goToIndexPage();
 
-		// Exibe o pop-pop de exclusão
+		// Exibe e fecha o modal panel de exclusão
 		showAndCloseDeleteModal();
 	}
 
