@@ -173,7 +173,7 @@ public class EntregadorTest extends AbstractTest {
 		}
 		if (isCreatePage || getBaseProducer().trueOrFalse()) {
 			getDriver().findElement(By.name("empresa.razaoSocial")).clear();
-			getDriver().findElement(By.name("empresa.razaoSocial")).sendKeys("a");
+			getDriver().findElement(By.name("empresa.razaoSocial")).sendKeys(getRandomLetter());
 
 			final By EMPRESA_ID = By.name("empresa.id");
 

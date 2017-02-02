@@ -11,11 +11,9 @@ import static org.testng.AssertJUnit.assertFalse;
 import static org.testng.AssertJUnit.assertTrue;
 import static org.testng.AssertJUnit.fail;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 //import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
@@ -55,7 +53,7 @@ public abstract class AbstractTest implements BaseTest {
 	private static JavascriptExecutor js;
 	private static WebDriverWait wait;
 
-	private static boolean sleep = true;
+	private static boolean isPhantomjs = false;
 
 	private Object acesso;
 
@@ -81,7 +79,7 @@ public abstract class AbstractTest implements BaseTest {
 		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 
 		js = getJS(driver);
-		wait = getWait(driver, true);
+		wait = new WebDriverWait(driver, 5);
 	}
 
 	@AfterSuite(alwaysRun = true)
@@ -110,7 +108,7 @@ public abstract class AbstractTest implements BaseTest {
 	 * @param menu
 	 *            Titulo do menu
 	 */
-	protected void goToIndexPage(String menu) {
+	protected final void goToIndexPage(final String menu) {
 		boolean isGerente = GERENTE.equals(acesso);
 		if (isGerente) {
 			final By MENU = By.linkText(menu);
@@ -118,7 +116,7 @@ public abstract class AbstractTest implements BaseTest {
 			driver.findElement(MENU).click();
 		} else {
 			final String URL = baseUrl + "/" + getMainPage();
-			LOGGER.info("got to index page '{}'", URL);
+			LOGGER.info("got to index page {}", URL);
 			driver.get(URL);
 		}
 
@@ -128,13 +126,13 @@ public abstract class AbstractTest implements BaseTest {
 		sortField(baseProducer.randomElement(getFields()));
 
 		// Vai para um pagina aleatória da tabela
-		paginate(1);
+		paginate(new byte[] { 1 });
 	}
 
 	/**
 	 * Pagina a tabela
 	 */
-	protected void paginate(Integer... cellsIndex) {
+	protected final void paginate(final byte[] cells) {
 		final By PAGES = By.cssSelector("ul.pagination > li > a");
 		wait.until(ExpectedConditions.presenceOfElementLocated(PAGES));
 		String[] pages = driver.findElements(PAGES).stream().filter(link -> {
@@ -151,7 +149,7 @@ public abstract class AbstractTest implements BaseTest {
 		if (currentPage.equals(page))
 			return;
 
-		String firstValue = getValueByCellAndRow(1, cellsIndex);
+		String firstValue = getValueByCellAndRow((short) 1, cells);
 
 		WebElement selectPage = driver.findElement(By.cssSelector("ul.pagination > li"))
 				.findElement(By.xpath("//a[text()='" + page + "']"));
@@ -160,12 +158,13 @@ public abstract class AbstractTest implements BaseTest {
 
 		wait.until(new ExpectedCondition<Boolean>() {
 			public Boolean apply(WebDriver driver) {
-				String currentValue = getValueByCellAndRow(driver, 1, cellsIndex);
+				String currentValue = getValueByCellAndRow(driver, (short) 1, cells);
 				return !(currentValue.isEmpty() || firstValue.equals(currentValue));
 			}
 		});
 
-		LOGGER.info("paginate -> first value: {}, current value: {}", firstValue, getValueByCellAndRow(1, cellsIndex));
+		LOGGER.info("paginate -> first value: {}, current value: {}", firstValue,
+				getValueByCellAndRow((short) 1, cells));
 
 		sleep();
 	}
@@ -175,7 +174,7 @@ public abstract class AbstractTest implements BaseTest {
 	 * 
 	 * @param query
 	 */
-	protected void search(String query) {
+	protected final void search(final String query) {
 		long firstCount = Long.valueOf(getCount());
 
 		final By SEARCH_INPUT = By.id("search_query");
@@ -204,7 +203,7 @@ public abstract class AbstractTest implements BaseTest {
 	 * @param field
 	 *            Campo da tabela
 	 */
-	protected void sortField(String field) {
+	protected final void sortField(final String field) {
 		String firstOrder = getSortOrder(field);
 
 		final By CELL = getCellByField(field);
@@ -226,7 +225,7 @@ public abstract class AbstractTest implements BaseTest {
 	/**
 	 * Vai para página de cadastro
 	 */
-	protected void goToCreatePage() {
+	protected final void goToCreatePage() {
 		boolean isGerente = GERENTE.equals(acesso);
 
 		final List<WebElement> buttons = driver.findElements(getCreateLink());
@@ -238,9 +237,9 @@ public abstract class AbstractTest implements BaseTest {
 		} else {
 			assertTrue(buttons.isEmpty());
 
-			String url = baseUrl + "/" + getMainPage() + "/create";
-			LOGGER.info("got to create page '{}'", url);
-			driver.get(url);
+			final String URL = baseUrl + "/" + getMainPage() + "/create";
+			LOGGER.info("got to create page {}", URL);
+			driver.get(URL);
 		}
 		sleep();
 
@@ -253,7 +252,7 @@ public abstract class AbstractTest implements BaseTest {
 	/**
 	 * Vai para a página de visualização dos dados
 	 */
-	protected void goToViewPage() {
+	protected final void goToViewPage() {
 		final List<WebElement> buttons = driver.findElements(getTableViewLink());
 		int index = getBaseProducer().randomBetween(0, buttons.size() - 1);
 
@@ -269,7 +268,7 @@ public abstract class AbstractTest implements BaseTest {
 	/**
 	 * Vai para a página anterior
 	 */
-	protected void cancelOrDeleteViewPage(final boolean onlyCancel) {
+	protected final void cancelOrDeleteViewPage(final boolean onlyCancel) {
 		final By DELETE = getViewDeleteButton();
 
 		if (!onlyCancel && GERENTE.equals(acesso) && baseProducer.trueOrFalse()) {
@@ -303,7 +302,7 @@ public abstract class AbstractTest implements BaseTest {
 	/**
 	 * Vai para a página de edição dos dados
 	 */
-	protected void goToEditPage() {
+	protected final void goToEditPage() {
 		boolean isGerenteOrAtendente = GERENTE.equals(acesso) || ATENDENTE.equals(acesso);
 
 		final List<WebElement> buttons = driver.findElements(getTableEditLink());
@@ -318,7 +317,7 @@ public abstract class AbstractTest implements BaseTest {
 			assertTrue(buttons.isEmpty());
 
 			final String URL = baseUrl + "/" + getMainPage() + "/" + getId() + "/edit";
-			LOGGER.info("got to edit page '{}'", URL);
+			LOGGER.info("got to edit page {}", URL);
 			driver.get(URL);
 		}
 		sleep();
@@ -332,7 +331,7 @@ public abstract class AbstractTest implements BaseTest {
 	/**
 	 * Exibe e fecha pop-pop de exclusão
 	 */
-	protected void showAndCloseDeleteModal() {
+	protected final void showAndCloseDeleteModal() {
 		boolean isGerente = GERENTE.equals(acesso);
 
 		final List<WebElement> buttons = driver.findElements(getTableDeleteButton());
@@ -359,7 +358,7 @@ public abstract class AbstractTest implements BaseTest {
 	/**
 	 * Salva os dados ou cancela
 	 */
-	protected void saveOrCancel() {
+	protected final void saveOrCancel() {
 		if (baseProducer.trueOrFalse())
 			// Tenta salvar os dados do cliente
 			saveCreateOrEditPage();
@@ -371,7 +370,7 @@ public abstract class AbstractTest implements BaseTest {
 	/**
 	 * Tenta salva dos dados do formulário
 	 */
-	protected void saveCreateOrEditPage() {
+	protected final void saveCreateOrEditPage() {
 		final By SAVE = getCreateOrEditSubmit();
 		wait.until(ExpectedConditions.elementToBeClickable(SAVE));
 		driver.findElement(SAVE).click();
@@ -381,23 +380,23 @@ public abstract class AbstractTest implements BaseTest {
 	/**
 	 * Vai para a página anterior
 	 */
-	protected void cancelCreateOrEditPage() {
+	protected final void cancelCreateOrEditPage() {
 		final By CANCEL = getCreateOrEditCancelButton();
 		wait.until(ExpectedConditions.elementToBeClickable(CANCEL));
 		driver.findElement(CANCEL).click();
 		sleep();
 	}
 
-	protected final void testList(String[] fields, Integer... cellsIndex) {
+	protected final void testList(final String[] fields, final byte[] cells) {
 		// Ordena, aleatoriamente, um campo da tabela
 		sortField(getBaseProducer().randomElement(fields));
 
 		// Vai para um pagina aleatória da tabela
-		paginate(cellsIndex);
+		paginate(cells);
 	}
 
-	protected final void testList(String[] fields, String viewTitle, String editTitle) {
-		testList(fields, 1);
+	protected final void testList(final String[] fields, final String viewTitle, final String editTitle) {
+		testList(fields, new byte[] { 1 });
 
 		goToViewPage();
 		assertEquals(viewTitle, getDriver().getTitle());
@@ -421,16 +420,20 @@ public abstract class AbstractTest implements BaseTest {
 
 	}
 
-	protected boolean canBeDeleted(int rowIndex) {
-		final By CELL = By.cssSelector("table.dataTable > tbody > tr:nth-child(" + rowIndex + ") > td:nth-child(4)");
+	protected boolean canBeDeleted(final int row) {
+		final By CELL = By.cssSelector("table.dataTable > tbody > tr:nth-child(" + row + ") > td:nth-child(4)");
 		wait.until(ExpectedConditions.presenceOfElementLocated(CELL));
 		String email = driver.findElement(CELL).getText();
 
 		return canBeChanged(email);
 	}
 
-	protected boolean canBeChanged(String email) {
+	protected final boolean canBeChanged(String email) {
 		return !Arrays.asList(getEmails()).contains(email);
+	}
+
+	protected final String getRandomLetter() {
+		return baseProducer.randomElement("a", "e", "o", "A", "E", "O");
 	}
 
 	protected final By getCreateLink() {
@@ -474,22 +477,25 @@ public abstract class AbstractTest implements BaseTest {
 	}
 
 	protected final String getCount() {
-		return getCount(driver, false);
+		return getCount(driver);
 	}
 
 	protected final String getCount(WebDriver driver) {
-		return getCount(driver, true);
+		final By COUNT = By.xpath("//input[@id='dataTable_count']");
+		if (isPhantomjs)
+			getWait().until(ExpectedConditions.presenceOfElementLocated(COUNT));
+		return driver.findElement(COUNT).getAttribute("value");
 	}
 
-	protected final int getRandomTableRowIndex() {
+	protected final short getRandomTableRowIndex() {
 		final By ROWS = By.cssSelector("table.dataTable > tbody > tr");
 		getWait().until(ExpectedConditions.presenceOfElementLocated(ROWS));
 		int totalRows = getDriver().findElements(ROWS).size();
-		return getBaseProducer().randomBetween(0, totalRows - 1);
+		return (short) getBaseProducer().randomBetween(0, totalRows - 1);
 	}
 
-	protected void sleep() {
-		if (sleep)
+	protected final void sleep() {
+		if (!isPhantomjs)
 			try {
 				Thread.sleep(Short.valueOf(System.getProperty("sleep.millisecounds")));
 			} catch (InterruptedException e) {
@@ -528,10 +534,6 @@ public abstract class AbstractTest implements BaseTest {
 		return wait;
 	}
 
-	protected final WebDriverWait getWait(WebDriver driver, boolean newWait) {
-		return newWait ? new WebDriverWait(driver, 5) : getWait();
-	}
-
 	protected final Object getAcesso() {
 		return acesso;
 	}
@@ -552,7 +554,7 @@ public abstract class AbstractTest implements BaseTest {
 			driver = new PhantomJSDriver();
 			LOGGER.info("{}: {}", PHANTOMJS_BINARY_PATH, System.getProperty(PHANTOMJS_BINARY_PATH));
 
-			sleep = false;
+			isPhantomjs = true;
 		} else if (System.getProperty(WEBDRIVER_CHROME_DRIVER) != null) {
 			driver = new ChromeDriver();
 			LOGGER.info("{}: {}", WEBDRIVER_CHROME_DRIVER, System.getProperty(WEBDRIVER_CHROME_DRIVER));
@@ -611,7 +613,7 @@ public abstract class AbstractTest implements BaseTest {
 	/**
 	 * Fecha o modal panel de exclusão
 	 */
-	private void closeDeleteModal(boolean isListPage, boolean canBeDeleted) {
+	private void closeDeleteModal(final boolean isListPage, final boolean canBeDeleted) {
 		By DELETE_MODAL = By.id("delete_modal");
 
 		WebElement modal = driver.findElement(DELETE_MODAL);
@@ -649,27 +651,30 @@ public abstract class AbstractTest implements BaseTest {
 	}
 
 	private String getId() {
-		return getValueByCellAndRow(getRandomTableRowIndex(), 1);
+		return getValueByCellAndRow(getRandomTableRowIndex(), new byte[] { 1 });
 	}
 
-	private String getValueByCellAndRow(int rowIndex, Integer... cellsIndex) {
-		return getValueByCellAndRow(driver, false, rowIndex, cellsIndex);
+	private String getValueByCellAndRow(final short row, final byte[] cells) {
+		return getValueByCellAndRow(driver, row, cells);
 	}
 
-	private String getValueByCellAndRow(WebDriver driver, int rowIndex, Integer... cellsIndex) {
-		return getValueByCellAndRow(driver, true, rowIndex, cellsIndex);
+	private String getValueByCellAndRow(WebDriver driver, final short row, final byte[] cells) {
+		return getValueByCellAndRow(driver, row, cells, (byte) 0);
 	}
 
-	private String getValueByCellAndRow(WebDriver driver, boolean newWait, int rowIndex, Integer... cellsIndex) {
-		List<String> values = new ArrayList<>();
-		for (Integer cellIndex : cellsIndex) {
-			final By CELL = By.cssSelector(
-					"table.dataTable > tbody > tr:nth-child(" + rowIndex + ") > td:nth-child(" + cellIndex + ")");
-			getWait(driver, newWait).until(ExpectedConditions.presenceOfElementLocated(CELL));
-			values.add(driver.findElement(CELL).getText());
-		}
+	private String getValueByCellAndRow(WebDriver driver, final short row, final byte[] cells, final byte cellIndex) {
+		final By CELL = By.cssSelector(
+				"table.dataTable > tbody > tr:nth-child(" + row + ") > td:nth-child(" + cells[cellIndex] + ")");
+		if (isPhantomjs)
+			getWait().until(ExpectedConditions.presenceOfElementLocated(CELL));
 
-		return values.stream().collect(Collectors.joining("_"));
+		String value = driver.findElement(CELL).getText();
+
+		if (cellIndex + 1 == cells.length)
+			return value;
+
+		return value + "_" + getValueByCellAndRow(driver, row, cells, (byte) (cellIndex + 1));
+
 	}
 
 	private String getCurrentPage() {
@@ -686,27 +691,18 @@ public abstract class AbstractTest implements BaseTest {
 
 	}
 
-	private String getCount(WebDriver driver, boolean newWait) {
-		final By COUNT = By.xpath("//input[@id='dataTable_count']");
-		getWait(driver, newWait).until(ExpectedConditions.presenceOfElementLocated(COUNT));
-		return driver.findElement(COUNT).getAttribute("value");
+	private String getSortOrder(final String field) {
+		return getSortOrder(driver, field);
 	}
 
-	private String getSortOrder(String field) {
-		return getSortOrder(driver, false, field);
-	}
-
-	private String getSortOrder(WebDriver driver, String field) {
-		return getSortOrder(driver, true, field);
-	}
-
-	private String getSortOrder(WebDriver driver, boolean newWait, String field) {
+	private String getSortOrder(WebDriver driver, final String field) {
 		final By CELL = getCellByField(field);
-		getWait(driver, newWait).until(ExpectedConditions.presenceOfElementLocated(CELL));
+		if (isPhantomjs)
+			getWait().until(ExpectedConditions.presenceOfElementLocated(CELL));
 		return driver.findElement(CELL).getAttribute("class");
 	}
 
-	private By getCellByField(String field) {
+	private By getCellByField(final String field) {
 		return By.cssSelector("table.dataTable > thead > tr:first-child > th[id='" + field + "']");
 	}
 

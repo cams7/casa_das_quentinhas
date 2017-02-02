@@ -73,8 +73,8 @@ public class EmpresaTest extends AbstractTest {
 
 		createEmpresa();
 
-		// Tenta salva os dados da empresa ou cancela o cadastro
-		saveOrCancel();
+		// Tenta salvar os dados da empresa
+		saveCreateOrEditPage();
 	}
 
 	/*

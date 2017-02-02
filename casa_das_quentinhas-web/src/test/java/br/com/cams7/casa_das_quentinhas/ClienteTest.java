@@ -67,8 +67,8 @@ public class ClienteTest extends AbstractTest {
 		// Preenche o fomulário
 		createCliente();
 
-		// Tenta salva os dados do cliente ou cancela o cadastro
-		saveOrCancel();
+		// Tenta salvar os dados do cliente
+		saveCreateOrEditPage();
 	}
 
 	/*
