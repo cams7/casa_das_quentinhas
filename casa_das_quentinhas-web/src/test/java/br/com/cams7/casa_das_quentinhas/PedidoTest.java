@@ -44,7 +44,7 @@ public class PedidoTest extends AbstractTest {
 
 		// Pesquisa os pedidos que tenha os caracteres "an" no cliente, empresa,
 		// quantidade ou custo
-		search("an");
+		search();
 	}
 
 	/*
@@ -215,56 +215,78 @@ public class PedidoTest extends AbstractTest {
 			tipoAtendimento.selectByValue(getTipoAtendimento());
 			sleep();
 		}
-		boolean itemIncluido = !isCreatePage;
-		int countItens = 0;
-		do {
-			final By ITEM_ADD = By.id("item_add");
-			getWait().until(ExpectedConditions.elementToBeClickable(ITEM_ADD));
-			getDriver().findElement(ITEM_ADD).click();
 
-			if (showItemModal(AUTOCOMPLETE, true)) {
-				sleep();
-				itemIncluido = true;
+		mantemItem(AUTOCOMPLETE, !isCreatePage, 0);
+	}
+
+	private void mantemItem(final By AUTOCOMPLETE, boolean itemIncluido, final int countItens) {
+		final By ITEM_ADD = By.id("item_add");
+		getWait().until(ExpectedConditions.elementToBeClickable(ITEM_ADD));
+		getDriver().findElement(ITEM_ADD).click();
+
+		if (showItemModal(AUTOCOMPLETE, true)) {
+			sleep();
+			itemIncluido = true;
+		}
+
+		if (itemIncluido && getBaseProducer().trueOrFalse()) {
+			sleep();
+
+			testItens();
+
+			if (GERENTE.equals(getAcesso())) {
+				final long COUNT = Long.valueOf(getCount());
+
+				if (COUNT > 1 && getBaseProducer().trueOrFalse()) {
+					final int TOTAL_ROWS = getTotalTableRows();
+					final int ROW = getRandomRow(TOTAL_ROWS);
+
+					LOGGER.info("delete item -> total rows: {}, row: {}", TOTAL_ROWS, ROW);
+
+					final By DELETE_BUTTON = getTableDeleteButton(ROW);
+					getWait().until(ExpectedConditions.elementToBeClickable(DELETE_BUTTON));
+					getDriver().findElement(DELETE_BUTTON).click();
+					// getJS().executeScript("$('table.dataTable tbody
+					// tr:nth-child(" + INDEX + ") td
+					// button.btn-danger').click();");
+
+					// sleep();
+
+					getWait().until(new ExpectedCondition<Boolean>() {
+						public Boolean apply(WebDriver driver) {
+							final String CURRENT_COUNT = getCount(driver);
+							return !CURRENT_COUNT.isEmpty() && COUNT > Long.valueOf(CURRENT_COUNT);
+						}
+					});
+
+					final String CURRENT_COUNT = getCount();
+
+					assertFalse(CURRENT_COUNT.isEmpty());
+					assertTrue(COUNT - 1 == Long.valueOf(CURRENT_COUNT));
+
+					LOGGER.info("item removed -> first count: {}, current count: {}", COUNT, CURRENT_COUNT);
+				}
 			}
 
-			if (itemIncluido && getBaseProducer().trueOrFalse()) {
-				testItens();
+			if (getBaseProducer().trueOrFalse()) {
+				final int TOTAL_ROWS = getTotalTableRows();
+				final int ROW = getRandomRow(TOTAL_ROWS);
 
-				if (GERENTE.equals(getAcesso())) {
-					long count = Long.valueOf(getCount());
+				LOGGER.info("edit item -> total rows: {}, row: {}", TOTAL_ROWS, ROW);
 
-					if (count > 1 && getBaseProducer().trueOrFalse()) {
-						WebElement delete = getDriver().findElements(getTableDeleteButton())
-								.get(getRandomTableRowIndex());
-						getWait().until(ExpectedConditions.elementToBeClickable(delete));
-						delete.click();
+				final By EDIT_BUTTON = By.cssSelector(
+						"table.dataTable > tbody > tr:nth-child(" + ROW + ") > td > button.btn.btn-warning.btn-xs");
+				getWait().until(ExpectedConditions.elementToBeClickable(EDIT_BUTTON));
+				getDriver().findElement(EDIT_BUTTON).click();
 
-						getWait().until(new ExpectedCondition<Boolean>() {
-							public Boolean apply(WebDriver driver) {
-								String currentCount = getCount(driver);
-								return !currentCount.isEmpty() && count > Long.valueOf(currentCount);
-							}
-						});
-
-						LOGGER.info("item removed -> first count: {}, current count: {}", count, getCount());
-					}
-				}
-
-				if (getBaseProducer().trueOrFalse()) {
-					WebElement edit = getDriver()
-							.findElements(
-									By.cssSelector("table.dataTable > tbody > tr > td > button.btn.btn-warning.btn-xs"))
-							.get(getRandomTableRowIndex());
-					getWait().until(ExpectedConditions.elementToBeClickable(edit));
-					edit.click();
-
-					if (showItemModal(AUTOCOMPLETE, false))
-						sleep();
-				}
+				if (showItemModal(AUTOCOMPLETE, false))
+					sleep();
 			}
+		}
 
-			countItens++;
-		} while (countItens <= 15 || !itemIncluido || getBaseProducer().trueOrFalse());
+		if (countItens < 10 || !itemIncluido || getBaseProducer().trueOrFalse())
+			mantemItem(AUTOCOMPLETE, itemIncluido, countItens + 1);
+
 	}
 
 	private boolean showItemModal(final By AUTOCOMPLETE, boolean newItem) {
@@ -325,8 +347,7 @@ public class PedidoTest extends AbstractTest {
 	}
 
 	private void testItens() {
-		testList(new String[] { "quantidade", "produto.custo", "produto.nome", "produto.tamanho" },
-				new byte[] { 4, 5 });
+		testList("quantidade", "produto.custo", "produto.nome", "produto.tamanho");
 	}
 
 }

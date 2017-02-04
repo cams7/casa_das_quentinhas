@@ -29,7 +29,7 @@ public class ProdutoTest extends AbstractTest {
 		goToIndexPage();
 
 		// Pesquisa os produtos que tenha os caracteres "an" no nome ou custo
-		search("an");
+		search();
 	}
 
 	/*

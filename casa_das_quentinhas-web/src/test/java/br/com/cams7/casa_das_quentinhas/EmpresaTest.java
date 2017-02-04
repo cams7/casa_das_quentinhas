@@ -53,7 +53,7 @@ public class EmpresaTest extends AbstractTest {
 
 		// Pesquisa as empresas que tenha os caracteres "an" na razão social,
 		// cnpj, e-mail ou cidade
-		search("an");
+		search();
 	}
 
 	/*

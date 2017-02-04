@@ -43,7 +43,7 @@ public class FuncionarioTest extends AbstractTest {
 
 		// Pesquisa os funcionários que tenha os caracteres "an" no nome, cpf,
 		// e-mail ou celular
-		search("an");
+		search();
 	}
 
 	/*

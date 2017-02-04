@@ -46,7 +46,7 @@ public class ClienteTest extends AbstractTest {
 
 		// Pesquisa os clientes que tenha os caracteres "an" no nome, cpf,
 		// e-mail, telefone ou cidade
-		search("an");
+		search();
 	}
 
 	/*

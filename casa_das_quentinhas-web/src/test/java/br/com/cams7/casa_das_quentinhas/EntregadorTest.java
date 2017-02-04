@@ -46,7 +46,7 @@ public class EntregadorTest extends AbstractTest {
 
 		// Pesquisa os entregadores que tenha os caracteres "an" no nome, cpf,
 		// e-mail, celular, nome da empresa ou cnpj da empresa
-		search("an");
+		search();
 	}
 
 	/*

@@ -8,18 +8,17 @@ import static br.com.cams7.casa_das_quentinhas.mock.UsuarioMock.getQualquerEmail
 import static br.com.cams7.casa_das_quentinhas.mock.UsuarioMock.getSenhaAcesso;
 import static org.testng.AssertJUnit.assertEquals;
 import static org.testng.AssertJUnit.assertFalse;
+import static org.testng.AssertJUnit.assertNotSame;
 import static org.testng.AssertJUnit.assertTrue;
 import static org.testng.AssertJUnit.fail;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
-//import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
-//import org.openqa.selenium.NoAlertPresentException;
-//import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -28,6 +27,7 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,15 +51,17 @@ public abstract class AbstractTest implements BaseTest {
 
 	private static WebDriver driver;
 	private static JavascriptExecutor js;
-	private static WebDriverWait wait;
+	private static Wait<WebDriver> wait;
 
-	private static boolean isPhantomjs = false;
+	private static boolean sleep;
 
 	private Object acesso;
 
 	private final String UNAUTHORIZED_MESSAGE = "Não autorizado";
 
 	static {
+		sleep = true;
+
 		fairy = Fairy.create();
 		baseProducer = fairy.baseProducer();
 	}
@@ -109,8 +111,7 @@ public abstract class AbstractTest implements BaseTest {
 	 *            Titulo do menu
 	 */
 	protected final void goToIndexPage(final String menu) {
-		boolean isGerente = GERENTE.equals(acesso);
-		if (isGerente) {
+		if (GERENTE.equals(acesso)) {
 			final By MENU = By.linkText(menu);
 			wait.until(ExpectedConditions.elementToBeClickable(MENU));
 			driver.findElement(MENU).click();
@@ -126,47 +127,50 @@ public abstract class AbstractTest implements BaseTest {
 		sortField(baseProducer.randomElement(getFields()));
 
 		// Vai para um pagina aleatória da tabela
-		paginate(new byte[] { 1 });
+		paginate();
 	}
 
 	/**
 	 * Pagina a tabela
 	 */
-	protected final void paginate(final byte[] cells) {
+	protected final void paginate() {
+		final String ACTIVE_PAGE = getActivePage();
+
 		final By PAGES = By.cssSelector("ul.pagination > li > a");
 		wait.until(ExpectedConditions.presenceOfElementLocated(PAGES));
-		String[] pages = driver.findElements(PAGES).stream().filter(link -> {
+		final String SELECTED_PAGE = baseProducer.randomElement(driver.findElements(PAGES).stream().filter(link -> {
 			try {
 				Integer.parseInt(link.getText());
 				return true;
 			} catch (NumberFormatException e) {
 			}
 			return false;
-		}).map(link -> link.getText()).toArray(size -> new String[size]);
+		}).map(link -> link.getText()).toArray(size -> new String[size]));
 
-		String currentPage = getCurrentPage();
-		String page = baseProducer.randomElement(pages);
-		if (currentPage.equals(page))
-			return;
+		LOGGER.info("paginate -> active page: {}, selected page: {}", ACTIVE_PAGE, SELECTED_PAGE);
 
-		String firstValue = getValueByCellAndRow((short) 1, cells);
+		if (!ACTIVE_PAGE.equals(SELECTED_PAGE)) {
+			WebElement selectPage = driver.findElement(By.cssSelector("ul.pagination > li"))
+					.findElement(By.xpath("//a[text()='" + SELECTED_PAGE + "']"));
+			wait.until(ExpectedConditions.elementToBeClickable(selectPage));
+			selectPage.click();
 
-		WebElement selectPage = driver.findElement(By.cssSelector("ul.pagination > li"))
-				.findElement(By.xpath("//a[text()='" + page + "']"));
-		wait.until(ExpectedConditions.elementToBeClickable(selectPage));
-		selectPage.click();
+			wait.until(new ExpectedCondition<Boolean>() {
+				public Boolean apply(WebDriver driver) {
+					final String CURRENT_PAGE = getActivePage(driver);
+					return !(CURRENT_PAGE.isEmpty() || ACTIVE_PAGE.equals(CURRENT_PAGE));
+				}
+			});
 
-		wait.until(new ExpectedCondition<Boolean>() {
-			public Boolean apply(WebDriver driver) {
-				String currentValue = getValueByCellAndRow(driver, (short) 1, cells);
-				return !(currentValue.isEmpty() || firstValue.equals(currentValue));
-			}
-		});
+			final String CURRENT_PAGE = getActivePage();
 
-		LOGGER.info("paginate -> first value: {}, current value: {}", firstValue,
-				getValueByCellAndRow((short) 1, cells));
+			assertFalse(CURRENT_PAGE.isEmpty());
+			assertNotSame(ACTIVE_PAGE, CURRENT_PAGE);
 
-		sleep();
+			LOGGER.info("paginate -> first page: {}, current page: {}", ACTIVE_PAGE, CURRENT_PAGE);
+
+			sleep();
+		}
 	}
 
 	/**
@@ -174,12 +178,14 @@ public abstract class AbstractTest implements BaseTest {
 	 * 
 	 * @param query
 	 */
-	protected final void search(final String query) {
-		long firstCount = Long.valueOf(getCount());
+	protected final void search() {
+		final long FIRST_COUNT = Long.valueOf(getCount());
+
+		final String QUERY = "an";
 
 		final By SEARCH_INPUT = By.id("search_query");
 		wait.until(ExpectedConditions.presenceOfElementLocated(SEARCH_INPUT));
-		driver.findElement(SEARCH_INPUT).sendKeys(query);
+		driver.findElement(SEARCH_INPUT).sendKeys(QUERY);
 
 		final By SEARCH_BUTTON = By.id("search_btn");
 		wait.until(ExpectedConditions.elementToBeClickable(SEARCH_BUTTON));
@@ -187,12 +193,17 @@ public abstract class AbstractTest implements BaseTest {
 
 		wait.until(new ExpectedCondition<Boolean>() {
 			public Boolean apply(WebDriver driver) {
-				String currentCount = getCount(driver);
-				return !currentCount.isEmpty() && firstCount > Long.valueOf(currentCount);
+				final String CURRENT_COUNT = getCount(driver);
+				return !CURRENT_COUNT.isEmpty() && FIRST_COUNT > Long.valueOf(CURRENT_COUNT);
 			}
 		});
 
-		LOGGER.info("search '{}' -> first count: {}, current count: {}", query, firstCount, getCount());
+		final String CURRENT_COUNT = getCount();
+
+		assertFalse(CURRENT_COUNT.isEmpty());
+		assertTrue(FIRST_COUNT > Long.valueOf(CURRENT_COUNT));
+
+		LOGGER.info("search '{}' -> first count: {}, current count: {}", QUERY, FIRST_COUNT, CURRENT_COUNT);
 
 		sleep();
 	}
@@ -204,7 +215,7 @@ public abstract class AbstractTest implements BaseTest {
 	 *            Campo da tabela
 	 */
 	protected final void sortField(final String field) {
-		String firstOrder = getSortOrder(field);
+		final String FIRST_ORDER = getSortOrder(field);
 
 		final By CELL = getCellByField(field);
 		wait.until(ExpectedConditions.elementToBeClickable(CELL));
@@ -212,12 +223,17 @@ public abstract class AbstractTest implements BaseTest {
 
 		wait.until(new ExpectedCondition<Boolean>() {
 			public Boolean apply(WebDriver driver) {
-				String currentOrder = getSortOrder(driver, field);
-				return !(currentOrder.isEmpty() || firstOrder.equals(currentOrder));
+				final String CURRENT_ORDER = getSortOrder(driver, field);
+				return !(CURRENT_ORDER.isEmpty() || FIRST_ORDER.equals(CURRENT_ORDER));
 			}
 		});
 
-		LOGGER.info("sort field '{}' -> first order: {}, current order: {}", field, firstOrder, getSortOrder(field));
+		final String CURRENT_ORDER = getSortOrder(field);
+
+		assertFalse(CURRENT_ORDER.isEmpty());
+		assertNotSame(FIRST_ORDER, CURRENT_ORDER);
+
+		LOGGER.info("sort field '{}' -> first order: {}, current order: {}", field, FIRST_ORDER, CURRENT_ORDER);
 
 		sleep();
 	}
@@ -226,16 +242,14 @@ public abstract class AbstractTest implements BaseTest {
 	 * Vai para página de cadastro
 	 */
 	protected final void goToCreatePage() {
-		boolean isGerente = GERENTE.equals(acesso);
+		final boolean IS_GERENTE = GERENTE.equals(acesso);
 
-		final List<WebElement> buttons = driver.findElements(getCreateLink());
-
-		if (isGerente) {
-			WebElement create = buttons.get(0);
-			wait.until(ExpectedConditions.elementToBeClickable(create));
-			create.click();
+		if (IS_GERENTE) {
+			final By CREATE_LINK = getCreateLink();
+			wait.until(ExpectedConditions.elementToBeClickable(CREATE_LINK));
+			driver.findElement(CREATE_LINK).click();
 		} else {
-			assertTrue(buttons.isEmpty());
+			assertFalse(isVisibleCreateLink());
 
 			final String URL = baseUrl + "/" + getMainPage() + "/create";
 			LOGGER.info("got to create page {}", URL);
@@ -243,7 +257,7 @@ public abstract class AbstractTest implements BaseTest {
 		}
 		sleep();
 
-		if (!isGerente) {
+		if (!IS_GERENTE) {
 			assertEquals(UNAUTHORIZED_MESSAGE, driver.getTitle());
 			throw new SkipException(UNAUTHORIZED_MESSAGE);
 		}
@@ -253,12 +267,13 @@ public abstract class AbstractTest implements BaseTest {
 	 * Vai para a página de visualização dos dados
 	 */
 	protected final void goToViewPage() {
-		final List<WebElement> buttons = driver.findElements(getTableViewLink());
-		int index = getBaseProducer().randomBetween(0, buttons.size() - 1);
+		final int TOTAL_ROWS = getTotalTableViewRows();
+		final int ROW = getRandomRow(TOTAL_ROWS);
+		LOGGER.info("go to view page -> total rows: {}, row: {}", TOTAL_ROWS, ROW);
 
-		WebElement view = buttons.get(index);
-		wait.until(ExpectedConditions.elementToBeClickable(view));
-		view.click();
+		By VIEW_LINK = getTableViewLink(ROW);
+		wait.until(ExpectedConditions.elementToBeClickable(VIEW_LINK));
+		driver.findElement(VIEW_LINK).click();
 
 		sleep();
 	}
@@ -269,9 +284,8 @@ public abstract class AbstractTest implements BaseTest {
 	 * Vai para a página anterior
 	 */
 	protected final void cancelOrDeleteViewPage(final boolean onlyCancel) {
-		final By DELETE = getViewDeleteButton();
-
 		if (!onlyCancel && GERENTE.equals(acesso) && baseProducer.trueOrFalse()) {
+			final By DELETE = getViewDeleteButton();
 			wait.until(ExpectedConditions.elementToBeClickable(DELETE));
 			driver.findElement(DELETE).click();
 
@@ -289,7 +303,7 @@ public abstract class AbstractTest implements BaseTest {
 			closeDeleteModal(false, canBeDeleted);
 		} else {
 			if (!GERENTE.equals(acesso))
-				assertTrue(driver.findElements(DELETE).isEmpty());
+				assertFalse(isVisibleDeleteButton());
 
 			final By CANCEL = getViewCancelLink();
 			wait.until(ExpectedConditions.elementToBeClickable(CANCEL));
@@ -303,18 +317,19 @@ public abstract class AbstractTest implements BaseTest {
 	 * Vai para a página de edição dos dados
 	 */
 	protected final void goToEditPage() {
-		boolean isGerenteOrAtendente = GERENTE.equals(acesso) || ATENDENTE.equals(acesso);
+		final boolean IS_GERENTE_OR_ATENDENTE = GERENTE.equals(acesso) || ATENDENTE.equals(acesso);
 
-		final List<WebElement> buttons = driver.findElements(getTableEditLink());
-		final int totalButtons = buttons.size();
+		final int TOTAL_ROWS = getTotalTableEditRows();
 
-		if (isGerenteOrAtendente) {
-			int index = getBaseProducer().randomBetween(0, totalButtons - 1);
-			WebElement edit = buttons.get(index);
-			wait.until(ExpectedConditions.elementToBeClickable(edit));
-			edit.click();
+		if (IS_GERENTE_OR_ATENDENTE) {
+			final int ROW = getRandomRow(TOTAL_ROWS);
+			LOGGER.info("go to edit page -> total rows: {}, row: {}", TOTAL_ROWS, ROW);
+
+			final By EDIT_LINK = getTableEditLink(ROW);
+			wait.until(ExpectedConditions.elementToBeClickable(EDIT_LINK));
+			driver.findElement(EDIT_LINK).click();
 		} else {
-			assertTrue(buttons.isEmpty());
+			assertFalse(TOTAL_ROWS > 0);
 
 			final String URL = baseUrl + "/" + getMainPage() + "/" + getId() + "/edit";
 			LOGGER.info("got to edit page {}", URL);
@@ -322,7 +337,7 @@ public abstract class AbstractTest implements BaseTest {
 		}
 		sleep();
 
-		if (!isGerenteOrAtendente) {
+		if (!IS_GERENTE_OR_ATENDENTE) {
 			assertEquals(UNAUTHORIZED_MESSAGE, driver.getTitle());
 			throw new SkipException(UNAUTHORIZED_MESSAGE);
 		}
@@ -332,27 +347,25 @@ public abstract class AbstractTest implements BaseTest {
 	 * Exibe e fecha pop-pop de exclusão
 	 */
 	protected final void showAndCloseDeleteModal() {
-		boolean isGerente = GERENTE.equals(acesso);
+		final int TOTAL_ROWS = getTotalTableDeleteRows();
 
-		final List<WebElement> buttons = driver.findElements(getTableDeleteButton());
-		final int totalButtons = buttons.size();
-
-		if (!isGerente) {
-			assertTrue(buttons.isEmpty());
+		if (!GERENTE.equals(acesso)) {
+			assertFalse(TOTAL_ROWS > 0);
 			throw new SkipException(UNAUTHORIZED_MESSAGE);
 		}
 
-		int index = getBaseProducer().randomBetween(0, totalButtons - 1);
+		final int ROW = getRandomRow(TOTAL_ROWS);
+		LOGGER.info("show and close delete modal -> total rows: {}, row: {}", TOTAL_ROWS, ROW);
 
-		WebElement delete = buttons.get(index);
-		wait.until(ExpectedConditions.elementToBeClickable(delete));
-		delete.click();
+		final By DELETE_BUTTON = getTableDeleteButton(ROW);
+		wait.until(ExpectedConditions.elementToBeClickable(DELETE_BUTTON));
+		driver.findElement(DELETE_BUTTON).click();
 
 		// Exibe o modal panel de exclusão
 		showDeleteModal();
 
 		// Fecha o modal panel de exclusão
-		closeDeleteModal(true, canBeDeleted(index + 1));
+		closeDeleteModal(true, canBeDeleted(ROW));
 	}
 
 	/**
@@ -387,16 +400,16 @@ public abstract class AbstractTest implements BaseTest {
 		sleep();
 	}
 
-	protected final void testList(final String[] fields, final byte[] cells) {
+	protected final void testList(String... fields) {
 		// Ordena, aleatoriamente, um campo da tabela
-		sortField(getBaseProducer().randomElement(fields));
+		sortField(baseProducer.randomElement(fields));
 
 		// Vai para um pagina aleatória da tabela
-		paginate(cells);
+		paginate();
 	}
 
 	protected final void testList(final String[] fields, final String viewTitle, final String editTitle) {
-		testList(fields, new byte[] { 1 });
+		testList(fields);
 
 		goToViewPage();
 		assertEquals(viewTitle, getDriver().getTitle());
@@ -410,13 +423,14 @@ public abstract class AbstractTest implements BaseTest {
 
 			cancelCreateOrEditPage();
 			assertEquals(getViewTitle(), getDriver().getTitle());
-		} else
-			assertTrue(getDriver().findElements(getTableEditLink()).isEmpty());
+		} else {
+			assertFalse(getTotalTableEditRows() > 0);
+		}
 
 		if (GERENTE.equals(getAcesso()))
 			showAndCloseDeleteModal();
 		else
-			assertTrue(getDriver().findElements(getTableDeleteButton()).isEmpty());
+			assertFalse(getTotalTableDeleteRows() > 0);
 
 	}
 
@@ -436,24 +450,55 @@ public abstract class AbstractTest implements BaseTest {
 		return baseProducer.randomElement("a", "e", "o", "A", "E", "O");
 	}
 
+	protected final int getRandomRow(final int totalRows) {
+		return baseProducer.randomBetween(1, totalRows);
+	}
+
 	protected final By getCreateLink() {
 		return By.cssSelector("div#top > div.h2 > a.btn.btn-primary");
 	}
 
-	protected final By getTableViewLink() {
-		return By.cssSelector("table.dataTable > tbody > tr > td > a.btn.btn-success.btn-xs");
+	protected final boolean isVisibleCreateLink() {
+		return (Boolean) getJS().executeScript("return $('div#top > div.h2 > a.btn.btn-primary').length > 0;");
 	}
 
-	protected final By getTableEditLink() {
-		return By.cssSelector("table.dataTable > tbody > tr > td > a.btn.btn-warning.btn-xs");
+	protected final By getTableViewLink(int row) {
+		return By.cssSelector("table.dataTable > tbody > tr:nth-child(" + row + ") > td > a.btn.btn-success.btn-xs");
 	}
 
-	protected final By getTableDeleteButton() {
-		return By.cssSelector("table.dataTable > tbody > tr > td > button.btn.btn-danger.btn-xs");
+	protected final int getTotalTableViewRows() {
+		return ((Long) getJS()
+				.executeScript("return $('table.dataTable > tbody > tr > td > a.btn.btn-success.btn-xs').length;"))
+						.intValue();
+	}
+
+	protected final By getTableEditLink(int row) {
+		return By.cssSelector("table.dataTable > tbody > tr:nth-child(" + row + ") > td > a.btn.btn-warning.btn-xs");
+	}
+
+	protected final int getTotalTableEditRows() {
+		return ((Long) getJS()
+				.executeScript("return $('table.dataTable > tbody > tr > td > a.btn.btn-warning.btn-xs').length;"))
+						.intValue();
+	}
+
+	protected final By getTableDeleteButton(int row) {
+		return By
+				.cssSelector("table.dataTable > tbody > tr:nth-child(" + row + ") > td > button.btn.btn-danger.btn-xs");
+	}
+
+	protected final int getTotalTableDeleteRows() {
+		return ((Long) getJS()
+				.executeScript("return $('table.dataTable > tbody > tr > td > button.btn.btn-danger.btn-xs').length;"))
+						.intValue();
 	}
 
 	protected final By getViewDeleteButton() {
 		return By.cssSelector("div#actions > div > button.btn.btn-danger");
+	}
+
+	protected final boolean isVisibleDeleteButton() {
+		return (Boolean) getJS().executeScript("return $('div#actions > div > button.btn.btn-danger').length > 0;");
 	}
 
 	protected final By getViewCancelLink() {
@@ -477,25 +522,19 @@ public abstract class AbstractTest implements BaseTest {
 	}
 
 	protected final String getCount() {
-		return getCount(driver);
+		return getCount(driver, true);
 	}
 
 	protected final String getCount(WebDriver driver) {
-		final By COUNT = By.xpath("//input[@id='dataTable_count']");
-		if (isPhantomjs)
-			getWait().until(ExpectedConditions.presenceOfElementLocated(COUNT));
-		return driver.findElement(COUNT).getAttribute("value");
+		return getCount(driver, false);
 	}
 
-	protected final short getRandomTableRowIndex() {
-		final By ROWS = By.cssSelector("table.dataTable > tbody > tr");
-		getWait().until(ExpectedConditions.presenceOfElementLocated(ROWS));
-		int totalRows = getDriver().findElements(ROWS).size();
-		return (short) getBaseProducer().randomBetween(0, totalRows - 1);
+	protected final int getTotalTableRows() {
+		return ((Long) getJS().executeScript("return $('table.dataTable > tbody > tr').length;")).intValue();
 	}
 
 	protected final void sleep() {
-		if (!isPhantomjs)
+		if (sleep)
 			try {
 				Thread.sleep(Short.valueOf(System.getProperty("sleep.millisecounds")));
 			} catch (InterruptedException e) {
@@ -530,7 +569,7 @@ public abstract class AbstractTest implements BaseTest {
 		return js;
 	}
 
-	protected static WebDriverWait getWait() {
+	protected static Wait<WebDriver> getWait() {
 		return wait;
 	}
 
@@ -554,7 +593,7 @@ public abstract class AbstractTest implements BaseTest {
 			driver = new PhantomJSDriver();
 			LOGGER.info("{}: {}", PHANTOMJS_BINARY_PATH, System.getProperty(PHANTOMJS_BINARY_PATH));
 
-			isPhantomjs = true;
+			sleep = false;
 		} else if (System.getProperty(WEBDRIVER_CHROME_DRIVER) != null) {
 			driver = new ChromeDriver();
 			LOGGER.info("{}: {}", WEBDRIVER_CHROME_DRIVER, System.getProperty(WEBDRIVER_CHROME_DRIVER));
@@ -584,6 +623,7 @@ public abstract class AbstractTest implements BaseTest {
 		driver.findElement(By.id("senha")).clear();
 		driver.findElement(By.id("senha")).sendKeys(password);
 		driver.findElement(By.id("lembre_me")).click();
+
 		final By LOGIN = By.xpath("//input[@value='Entrar']");
 		wait.until(ExpectedConditions.elementToBeClickable(LOGIN));
 		driver.findElement(LOGIN).click();
@@ -614,7 +654,7 @@ public abstract class AbstractTest implements BaseTest {
 	 * Fecha o modal panel de exclusão
 	 */
 	private void closeDeleteModal(final boolean isListPage, final boolean canBeDeleted) {
-		By DELETE_MODAL = By.id("delete_modal");
+		final By DELETE_MODAL = By.id("delete_modal");
 
 		WebElement modal = driver.findElement(DELETE_MODAL);
 		boolean deleted = false;
@@ -643,7 +683,7 @@ public abstract class AbstractTest implements BaseTest {
 				assertFalse(message.isEmpty());
 
 				LOGGER.info("close delete modal -> message: {}", message);
-			} // else wait.until(ExpectedConditions.titleContains("Lista de"));
+			}
 
 		}
 
@@ -651,59 +691,68 @@ public abstract class AbstractTest implements BaseTest {
 	}
 
 	private String getId() {
-		return getValueByCellAndRow(getRandomTableRowIndex(), new byte[] { 1 });
+		final int TOTAL_ROWS = getTotalTableRows();
+		final int ROW = getRandomRow(TOTAL_ROWS);
+
+		LOGGER.info("id -> total rows: {}, row: {}", TOTAL_ROWS, ROW);
+
+		final By CELL = By.cssSelector("table.dataTable > tbody > tr:nth-child(" + ROW + ") > td:first-child");
+		getWait().until(ExpectedConditions.textMatches(CELL, Pattern.compile("\\d+")));
+		return driver.findElement(CELL).getText();
 	}
 
-	private String getValueByCellAndRow(final short row, final byte[] cells) {
-		return getValueByCellAndRow(driver, row, cells);
-	}
+	private String getCount(WebDriver driver, boolean wait) {
+		if (wait)
+			getWait().until(new ExpectedCondition<Boolean>() {
+				public Boolean apply(WebDriver driver) {
+					return getCount(driver).matches("\\d+");
+				}
+			});
 
-	private String getValueByCellAndRow(WebDriver driver, final short row, final byte[] cells) {
-		return getValueByCellAndRow(driver, row, cells, (byte) 0);
-	}
-
-	private String getValueByCellAndRow(WebDriver driver, final short row, final byte[] cells, final byte cellIndex) {
-		final By CELL = By.cssSelector(
-				"table.dataTable > tbody > tr:nth-child(" + row + ") > td:nth-child(" + cells[cellIndex] + ")");
-		if (isPhantomjs)
-			getWait().until(ExpectedConditions.presenceOfElementLocated(CELL));
-
-		String value = driver.findElement(CELL).getText();
-
-		if (cellIndex + 1 == cells.length)
-			return value;
-
-		return value + "_" + getValueByCellAndRow(driver, row, cells, (byte) (cellIndex + 1));
-
-	}
-
-	private String getCurrentPage() {
-		final By OFFSET = By.xpath("//input[@id='dataTable_offset']");
-		wait.until(ExpectedConditions.presenceOfElementLocated(OFFSET));
-		String offset = driver.findElement(OFFSET).getAttribute("value");
-
-		final By MAX_RESULTS = By.xpath("//input[@id='dataTable_maxResults']");
-		wait.until(ExpectedConditions.presenceOfElementLocated(MAX_RESULTS));
-		String maxResults = driver.findElement(MAX_RESULTS).getAttribute("value");
-
-		int currentPage = Integer.valueOf(offset) / Integer.valueOf(maxResults) + 1;
-		return String.valueOf(currentPage);
-
+		return driver.findElement(By.xpath("//input[@id='dataTable_count']")).getAttribute("value");
 	}
 
 	private String getSortOrder(final String field) {
-		return getSortOrder(driver, field);
+		return getSortOrder(driver, true, field);
 	}
 
 	private String getSortOrder(WebDriver driver, final String field) {
-		final By CELL = getCellByField(field);
-		if (isPhantomjs)
-			getWait().until(ExpectedConditions.presenceOfElementLocated(CELL));
-		return driver.findElement(CELL).getAttribute("class");
+		return getSortOrder(driver, false, field);
+	}
+
+	private final List<String> SORTING_CLASSES = Arrays.asList("sorting", "sorting_asc", "sorting_desc");
+
+	private String getSortOrder(WebDriver driver, boolean wait, final String field) {
+		if (wait) {
+			getWait().until(new ExpectedCondition<Boolean>() {
+				public Boolean apply(WebDriver driver) {
+					final String CURRENT_ORDER = getSortOrder(driver, field);
+					return !CURRENT_ORDER.isEmpty() && SORTING_CLASSES.contains(CURRENT_ORDER);
+				}
+			});
+		}
+
+		return driver.findElement(getCellByField(field)).getAttribute("class");
 	}
 
 	private By getCellByField(final String field) {
 		return By.cssSelector("table.dataTable > thead > tr:first-child > th[id='" + field + "']");
+	}
+
+	private String getActivePage() {
+		return getActivePage(driver, true);
+	}
+
+	private String getActivePage(WebDriver driver) {
+		return getActivePage(driver, false);
+	}
+
+	private String getActivePage(WebDriver driver, boolean wait) {
+		final By ACTIVE_PAGE = By.cssSelector("ul.pagination > li.active > a");
+		if (wait)
+			getWait().until(ExpectedConditions.textMatches(ACTIVE_PAGE, Pattern.compile("\\d+")));
+
+		return driver.findElement(ACTIVE_PAGE).getText();
 	}
 
 }
