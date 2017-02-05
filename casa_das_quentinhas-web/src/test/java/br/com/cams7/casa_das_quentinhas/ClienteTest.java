@@ -185,8 +185,9 @@ public class ClienteTest extends AbstractTest {
 		}
 		final By EMAIL = By.name("contato.email");
 		getWait().until(ExpectedConditions.presenceOfElementLocated(EMAIL));
-		if (isCreatePage || (getBaseProducer().trueOrFalse()
-				&& canBeChanged(getDriver().findElement(EMAIL).getAttribute("value")))) {
+		final String CLIENTE_EMAIL = getDriver().findElement(EMAIL).getAttribute("value");
+
+		if (isCreatePage || (getBaseProducer().trueOrFalse() && canBeChanged(CLIENTE_EMAIL))) {
 			getDriver().findElement(EMAIL).clear();
 			getDriver().findElement(EMAIL).sendKeys(person.getEmail());
 			sleep();
@@ -205,8 +206,7 @@ public class ClienteTest extends AbstractTest {
 
 			final By CIDADE_ID = By.name("cidade.id");
 
-			if (isCreatePage)
-				assertTrue(getDriver().findElement(CIDADE_ID).getAttribute("value").isEmpty());
+			validateIdCidade(isCreatePage, CIDADE_ID);
 
 			final By AUTOCOMPLETE = By.cssSelector("ul.ui-autocomplete");
 
@@ -222,7 +222,7 @@ public class ClienteTest extends AbstractTest {
 			});
 
 			getWait().until(ExpectedConditions.invisibilityOfElementLocated(AUTOCOMPLETE));
-
+			getWait().until(ExpectedConditions.presenceOfElementLocated(CIDADE_ID));
 			assertFalse(getDriver().findElement(CIDADE_ID).getAttribute("value").isEmpty());
 
 			cidadeAlterada = true;
@@ -259,6 +259,15 @@ public class ClienteTest extends AbstractTest {
 			getDriver().findElement(By.name("usuarioAcesso.confirmacaoSenha")).sendKeys(getSenhaAcesso());
 			sleep();
 		}
+	}
+
+	private void validateIdCidade(boolean isCreatePage, final By CIDADE_ID) {
+		getWait().until(ExpectedConditions.presenceOfElementLocated(CIDADE_ID));
+		final String ID = getDriver().findElement(CIDADE_ID).getAttribute("value");
+		if (isCreatePage)
+			assertTrue(ID.isEmpty());
+		else
+			assertFalse(ID.isEmpty());
 	}
 
 	private void testPedidos() {

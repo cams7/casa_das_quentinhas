@@ -16,6 +16,7 @@ import static org.testng.AssertJUnit.assertTrue;
 import java.util.List;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -131,7 +132,7 @@ public class EntregadorTest extends AbstractTest {
 	protected String getMainPage() {
 		return MAIN_PAGE;
 	}
-	
+
 	@Override
 	protected String getViewTitle() {
 		return VIEW_TITLE;
@@ -172,37 +173,47 @@ public class EntregadorTest extends AbstractTest {
 			sleep();
 		}
 		if (isCreatePage || getBaseProducer().trueOrFalse()) {
+			final String RAZAO_SOCIAL = getRandomLetter();
+
 			getDriver().findElement(By.name("empresa.razaoSocial")).clear();
-			getDriver().findElement(By.name("empresa.razaoSocial")).sendKeys(getRandomLetter());
+			getDriver().findElement(By.name("empresa.razaoSocial")).sendKeys(RAZAO_SOCIAL);
 
 			final By EMPRESA_ID = By.name("empresa.id");
 
-			if (isCreatePage)
-				assertTrue(getDriver().findElement(EMPRESA_ID).getAttribute("value").isEmpty());
+			validateIdEmpresa(isCreatePage, EMPRESA_ID);
 
 			final By AUTOCOMPLETE = By.cssSelector("ul.ui-autocomplete");
 
-			getWait().until(new ExpectedCondition<Boolean>() {
-				public Boolean apply(WebDriver driver) {
-					WebElement autocomplete = driver.findElement(AUTOCOMPLETE);
-					if (autocomplete.isDisplayed()) {
-						List<WebElement> itens = autocomplete.findElements(By.cssSelector("li.ui-menu-item"));
-						int index = getBaseProducer().randomBetween(0, itens.size() - 1);
-						itens.get(index).click();
-						return true;
+			try {
+				getWait().until(new ExpectedCondition<Boolean>() {
+					public Boolean apply(WebDriver driver) {
+						WebElement autocomplete = driver.findElement(AUTOCOMPLETE);
+						if (autocomplete.isDisplayed()) {
+							List<WebElement> itens = autocomplete.findElements(By.cssSelector("li.ui-menu-item"));
+							int index = getBaseProducer().randomBetween(0, itens.size() - 1);
+							itens.get(index).click();
+							return true;
+						}
+						return false;
 					}
-					return false;
-				}
-			});
+				});
 
-			getWait().until(ExpectedConditions.invisibilityOfElementLocated(AUTOCOMPLETE));
-
-			assertFalse(getDriver().findElement(EMPRESA_ID).getAttribute("value").isEmpty());
+				getWait().until(ExpectedConditions.invisibilityOfElementLocated(AUTOCOMPLETE));
+				getWait().until(ExpectedConditions.presenceOfElementLocated(EMPRESA_ID));
+				assertFalse(getDriver().findElement(EMPRESA_ID).getAttribute("value").isEmpty());
+			} catch (TimeoutException e) {
+				LOGGER.warn("create or edit entregador -> razaoSocial: '{}', message: {}", RAZAO_SOCIAL,
+						e.getMessage());
+				validateIdEmpresa(isCreatePage, EMPRESA_ID);
+			}
 		}
+
 		final By EMAIL = By.name("usuario.email");
 		getWait().until(ExpectedConditions.presenceOfElementLocated(EMAIL));
-		if (isCreatePage || (GERENTE.equals(getAcesso()) && getBaseProducer().trueOrFalse()
-				&& canBeChanged(getDriver().findElement(EMAIL).getAttribute("value")))) {
+		final String ENTREGADOR_EMAIL = getDriver().findElement(EMAIL).getAttribute("value");
+
+		if (isCreatePage
+				|| (GERENTE.equals(getAcesso()) && getBaseProducer().trueOrFalse() && canBeChanged(ENTREGADOR_EMAIL))) {
 			getDriver().findElement(EMAIL).clear();
 			getDriver().findElement(EMAIL).sendKeys(person.getEmail());
 			sleep();
@@ -227,5 +238,14 @@ public class EntregadorTest extends AbstractTest {
 			getDriver().findElement(By.name("usuario.confirmacaoSenha")).sendKeys(getSenhaAcesso());
 			sleep();
 		}
+	}
+
+	private void validateIdEmpresa(final boolean isCreatePage, final By EMPRESA_ID) {
+		getWait().until(ExpectedConditions.presenceOfElementLocated(EMPRESA_ID));
+		final String ID = getDriver().findElement(EMPRESA_ID).getAttribute("value");
+		if (isCreatePage)
+			assertTrue(ID.isEmpty());
+		else
+			assertFalse(ID.isEmpty());
 	}
 }

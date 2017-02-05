@@ -168,7 +168,13 @@ public class FuncionarioTest extends AbstractTest {
 			getDriver().findElement(By.name("celular")).sendKeys(getCelular());
 			sleep();
 		}
-		if (isCreatePage || (GERENTE.equals(getAcesso()) && getBaseProducer().trueOrFalse())) {
+
+		final By EMAIL = By.name("usuario.email");
+		getWait().until(ExpectedConditions.presenceOfElementLocated(EMAIL));
+		final String FUNCIONARIO_EMAIL = getDriver().findElement(EMAIL).getAttribute("value");
+
+		if (isCreatePage || (GERENTE.equals(getAcesso()) && getBaseProducer().trueOrFalse()
+				&& canBeChanged(FUNCIONARIO_EMAIL))) {
 			Select funcao = new Select(getDriver().findElement(By.name("funcao")));
 			funcao.deselectAll();
 			funcao.selectByValue(getFuncao());
@@ -176,10 +182,8 @@ public class FuncionarioTest extends AbstractTest {
 		} else if (ATENDENTE.equals(getAcesso()))
 			assertFalse(getDriver().findElement(By.name("funcao")).isDisplayed());
 
-		final By EMAIL = By.name("usuario.email");
-		getWait().until(ExpectedConditions.presenceOfElementLocated(EMAIL));
 		if (isCreatePage || (GERENTE.equals(getAcesso()) && getBaseProducer().trueOrFalse()
-				&& canBeChanged(getDriver().findElement(EMAIL).getAttribute("value")))) {
+				&& canBeChanged(FUNCIONARIO_EMAIL))) {
 			getDriver().findElement(EMAIL).clear();
 			getDriver().findElement(EMAIL).sendKeys(person.getEmail());
 			sleep();

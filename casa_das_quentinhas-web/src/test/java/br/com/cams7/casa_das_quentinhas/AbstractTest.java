@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -78,10 +79,10 @@ public abstract class AbstractTest implements BaseTest {
 	public void setUp() {
 		setDriverAndUrl();
 
-		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
 		js = getJS(driver);
-		wait = new WebDriverWait(driver, 5);
+		wait = new WebDriverWait(driver, 10).ignoring(StaleElementReferenceException.class);
 	}
 
 	@AfterSuite(alwaysRun = true)
@@ -245,6 +246,8 @@ public abstract class AbstractTest implements BaseTest {
 		final boolean IS_GERENTE = GERENTE.equals(acesso);
 
 		if (IS_GERENTE) {
+			LOGGER.info("got to create page");
+
 			final By CREATE_LINK = getCreateLink();
 			wait.until(ExpectedConditions.elementToBeClickable(CREATE_LINK));
 			driver.findElement(CREATE_LINK).click();
@@ -423,9 +426,8 @@ public abstract class AbstractTest implements BaseTest {
 
 			cancelCreateOrEditPage();
 			assertEquals(getViewTitle(), getDriver().getTitle());
-		} else {
+		} else
 			assertFalse(getTotalTableEditRows() > 0);
-		}
 
 		if (GERENTE.equals(getAcesso()))
 			showAndCloseDeleteModal();
@@ -447,7 +449,7 @@ public abstract class AbstractTest implements BaseTest {
 	}
 
 	protected final String getRandomLetter() {
-		return baseProducer.randomElement("a", "e", "o", "A", "E", "O");
+		return String.valueOf(baseProducer.randomBetween('a', 'Z'));
 	}
 
 	protected final int getRandomRow(final int totalRows) {
@@ -594,19 +596,18 @@ public abstract class AbstractTest implements BaseTest {
 			LOGGER.info("{}: {}", PHANTOMJS_BINARY_PATH, System.getProperty(PHANTOMJS_BINARY_PATH));
 
 			sleep = false;
-		} else if (System.getProperty(WEBDRIVER_CHROME_DRIVER) != null) {
-			driver = new ChromeDriver();
-			LOGGER.info("{}: {}", WEBDRIVER_CHROME_DRIVER, System.getProperty(WEBDRIVER_CHROME_DRIVER));
+		} else if (System.getProperty(WEBDRIVER_IE_DRIVER) != null) {
+			driver = new InternetExplorerDriver();
+			LOGGER.info("{}: {}", WEBDRIVER_IE_DRIVER, System.getProperty(WEBDRIVER_IE_DRIVER));
 		} else if (System.getProperty(WEBDRIVER_GECKO_DRIVER) != null) {
 			driver = new FirefoxDriver();
 			LOGGER.info("{}: {}", WEBDRIVER_GECKO_DRIVER, System.getProperty(WEBDRIVER_GECKO_DRIVER));
 		} else {
-			if (System.getProperty(WEBDRIVER_IE_DRIVER) == null)
-				System.setProperty(WEBDRIVER_IE_DRIVER, "MicrosoftWebDriver.exe");
+			if (System.getProperty(WEBDRIVER_CHROME_DRIVER) == null)
+				System.setProperty(WEBDRIVER_CHROME_DRIVER, "chromedriver.exe");
 
-			driver = new InternetExplorerDriver();
-
-			LOGGER.info("{}: {}", WEBDRIVER_IE_DRIVER, System.getProperty(WEBDRIVER_IE_DRIVER));
+			driver = new ChromeDriver();
+			LOGGER.info("{}: {}", WEBDRIVER_CHROME_DRIVER, System.getProperty(WEBDRIVER_CHROME_DRIVER));
 		}
 
 		driver.manage().window().maximize();
@@ -622,7 +623,10 @@ public abstract class AbstractTest implements BaseTest {
 		driver.findElement(By.id("email")).sendKeys(username);
 		driver.findElement(By.id("senha")).clear();
 		driver.findElement(By.id("senha")).sendKeys(password);
-		driver.findElement(By.id("lembre_me")).click();
+
+		final By LEMBRE_ME = By.id("lembre_me");
+		wait.until(ExpectedConditions.elementToBeClickable(LEMBRE_ME));
+		driver.findElement(LEMBRE_ME).click();
 
 		final By LOGIN = By.xpath("//input[@value='Entrar']");
 		wait.until(ExpectedConditions.elementToBeClickable(LOGIN));
@@ -694,7 +698,7 @@ public abstract class AbstractTest implements BaseTest {
 		final int TOTAL_ROWS = getTotalTableRows();
 		final int ROW = getRandomRow(TOTAL_ROWS);
 
-		LOGGER.info("id -> total rows: {}, row: {}", TOTAL_ROWS, ROW);
+		LOGGER.info("get id -> total rows: {}, row: {}", TOTAL_ROWS, ROW);
 
 		final By CELL = By.cssSelector("table.dataTable > tbody > tr:nth-child(" + ROW + ") > td:first-child");
 		getWait().until(ExpectedConditions.textMatches(CELL, Pattern.compile("\\d+")));

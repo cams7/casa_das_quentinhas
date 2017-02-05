@@ -15,6 +15,7 @@ import static org.testng.AssertJUnit.assertTrue;
 import java.util.List;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -172,30 +173,36 @@ public class PedidoTest extends AbstractTest {
 			tipoCliente.selectByValue(getTipoCliente());
 			sleep();
 
+			final String NOME = getRandomLetter();
+
 			getDriver().findElement(By.name("cliente.nome")).clear();
-			getDriver().findElement(By.name("cliente.nome")).sendKeys(getRandomLetter());
+			getDriver().findElement(By.name("cliente.nome")).sendKeys(NOME);
 
 			final By CLIENTE_ID = By.name("cliente.id");
 
-			if (isCreatePage)
-				assertTrue(getDriver().findElement(CLIENTE_ID).getAttribute("value").isEmpty());
+			validateIdCliente(isCreatePage, CLIENTE_ID);
 
-			getWait().until(new ExpectedCondition<Boolean>() {
-				public Boolean apply(WebDriver driver) {
-					WebElement autocomplete = driver.findElements(AUTOCOMPLETE).get(0);
-					if (autocomplete.isDisplayed()) {
-						List<WebElement> itens = autocomplete.findElements(By.cssSelector("li.ui-menu-item"));
-						int index = getBaseProducer().randomBetween(0, itens.size() - 1);
-						itens.get(index).click();
-						return true;
+			try {
+				getWait().until(new ExpectedCondition<Boolean>() {
+					public Boolean apply(WebDriver driver) {
+						WebElement autocomplete = driver.findElements(AUTOCOMPLETE).get(0);
+						if (autocomplete.isDisplayed()) {
+							List<WebElement> itens = autocomplete.findElements(By.cssSelector("li.ui-menu-item"));
+							int index = getBaseProducer().randomBetween(0, itens.size() - 1);
+							itens.get(index).click();
+							return true;
+						}
+						return false;
 					}
-					return false;
-				}
-			});
+				});
 
-			getWait().until(ExpectedConditions.invisibilityOfElementLocated(AUTOCOMPLETE));
-
-			assertFalse(getDriver().findElement(CLIENTE_ID).getAttribute("value").isEmpty());
+				getWait().until(ExpectedConditions.invisibilityOfElementLocated(AUTOCOMPLETE));
+				getWait().until(ExpectedConditions.presenceOfElementLocated(CLIENTE_ID));
+				assertFalse(getDriver().findElement(CLIENTE_ID).getAttribute("value").isEmpty());
+			} catch (TimeoutException e) {
+				LOGGER.warn("create or edit pedido -> nome: '{}', message: {}", NOME, e.getMessage());
+				validateIdCliente(isCreatePage, CLIENTE_ID);
+			}
 		}
 		if (isCreatePage || getBaseProducer().trueOrFalse()) {
 			Select formaPagamento = new Select(getDriver().findElement(By.name("formaPagamento")));
@@ -217,6 +224,15 @@ public class PedidoTest extends AbstractTest {
 		}
 
 		mantemItem(AUTOCOMPLETE, !isCreatePage, 0);
+	}
+
+	private void validateIdCliente(final boolean isCreatePage, final By CLIENTE_ID) {
+		getWait().until(ExpectedConditions.presenceOfElementLocated(CLIENTE_ID));
+		final String ID = getDriver().findElement(CLIENTE_ID).getAttribute("value");
+		if (isCreatePage)
+			assertTrue(ID.isEmpty());
+		else
+			assertFalse(ID.isEmpty());
 	}
 
 	private void mantemItem(final By AUTOCOMPLETE, boolean itemIncluido, final int countItens) {
@@ -246,11 +262,8 @@ public class PedidoTest extends AbstractTest {
 					final By DELETE_BUTTON = getTableDeleteButton(ROW);
 					getWait().until(ExpectedConditions.elementToBeClickable(DELETE_BUTTON));
 					getDriver().findElement(DELETE_BUTTON).click();
-					// getJS().executeScript("$('table.dataTable tbody
-					// tr:nth-child(" + INDEX + ") td
-					// button.btn-danger').click();");
 
-					// sleep();
+					sleep();
 
 					getWait().until(new ExpectedCondition<Boolean>() {
 						public Boolean apply(WebDriver driver) {
@@ -320,6 +333,7 @@ public class PedidoTest extends AbstractTest {
 			getWait().until(ExpectedConditions.invisibilityOfElementLocated(AUTOCOMPLETE));
 		}
 
+		getWait().until(ExpectedConditions.presenceOfElementLocated(PRODUTO_ID));
 		assertFalse(itemModal.findElement(PRODUTO_ID).getAttribute("value").isEmpty());
 		sleep();
 
