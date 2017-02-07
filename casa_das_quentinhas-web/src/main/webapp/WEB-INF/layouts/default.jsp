@@ -24,13 +24,13 @@
 <link rel="stylesheet" type="text/css"
 	href="<c:url value='/static/css/casa_das_quentinhas.css' />">
 
-<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="<c:url value='/static/js/jquery-3.1.1.min.js' />"></script>
+<script src="<c:url value='/static/js/jquery-ui.js' />"></script>
 <script src="<c:url value='/static/js/jquery.maskedinput.min.js' />"></script>
 <script src="<c:url value='/static/js/jquery.maskMoney.js' />"></script>
 
 <script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	src="<c:url value='/static/js/bootstrap.min.js' />"></script>
 
 <script src="<c:url value='/static/js/casa_das_quentinhas.js' />"></script>
 </head>

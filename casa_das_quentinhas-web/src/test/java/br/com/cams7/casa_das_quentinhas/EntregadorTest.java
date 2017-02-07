@@ -10,7 +10,6 @@ import static br.com.cams7.casa_das_quentinhas.mock.PessoaMock.getCpf;
 import static br.com.cams7.casa_das_quentinhas.mock.PessoaMock.getRg;
 import static br.com.cams7.casa_das_quentinhas.mock.UsuarioMock.getSenhaAcesso;
 import static org.testng.AssertJUnit.assertEquals;
-import static org.testng.AssertJUnit.assertFalse;
 import static org.testng.AssertJUnit.assertTrue;
 
 import java.util.List;
@@ -163,24 +162,31 @@ public class EntregadorTest extends AbstractTest {
 		Person person = getFairy().person();
 
 		if (isCreatePage || getBaseProducer().trueOrFalse()) {
-			getDriver().findElement(By.name("nome")).clear();
-			getDriver().findElement(By.name("nome")).sendKeys(person.getFullName());
+			WebElement nome = getDriver().findElement(By.name("nome"));
+			nome.clear();
+			nome.sendKeys(person.getFullName());
 			sleep();
 		}
 		if (isCreatePage || getBaseProducer().trueOrFalse()) {
-			getDriver().findElement(By.name("celular")).clear();
-			getDriver().findElement(By.name("celular")).sendKeys(getCelular());
+			WebElement celular = getDriver().findElement(By.name("celular"));
+			celular.clear();
+			celular.sendKeys(getCelular());
 			sleep();
 		}
 		if (isCreatePage || getBaseProducer().trueOrFalse()) {
-			final String RAZAO_SOCIAL = getRandomLetter();
+			final String LETRA_ALEATORIA = getRandomLetter();
 
-			getDriver().findElement(By.name("empresa.razaoSocial")).clear();
-			getDriver().findElement(By.name("empresa.razaoSocial")).sendKeys(RAZAO_SOCIAL);
+			final By EMPRESA_RAZAOSOCIAL = By.name("empresa.razaoSocial");
+			getWait().until(ExpectedConditions.presenceOfElementLocated(EMPRESA_RAZAOSOCIAL));
+			WebElement empresaRazaosocial = getDriver().findElement(EMPRESA_RAZAOSOCIAL);
+			empresaRazaosocial.clear();
+			empresaRazaosocial.sendKeys(LETRA_ALEATORIA);
+
+			LOGGER.warn("create or edit entregador -> empresa: '{}'", LETRA_ALEATORIA);
 
 			final By EMPRESA_ID = By.name("empresa.id");
 
-			validateIdEmpresa(isCreatePage, EMPRESA_ID);
+			validateIdEmpresa(EMPRESA_ID, isCreatePage);
 
 			final By AUTOCOMPLETE = By.cssSelector("ul.ui-autocomplete");
 
@@ -190,8 +196,13 @@ public class EntregadorTest extends AbstractTest {
 						WebElement autocomplete = driver.findElement(AUTOCOMPLETE);
 						if (autocomplete.isDisplayed()) {
 							List<WebElement> itens = autocomplete.findElements(By.cssSelector("li.ui-menu-item"));
-							int index = getBaseProducer().randomBetween(0, itens.size() - 1);
-							itens.get(index).click();
+							final int TOTAL_ITENS = itens.size();
+							final int INDEX = getBaseProducer().randomBetween(0, TOTAL_ITENS - 1);
+							itens.get(INDEX).click();
+
+							LOGGER.warn(
+									"create or edit entregador (autocomplete - empresa) -> total itens: {}, index selected: {}",
+									TOTAL_ITENS, INDEX);
 							return true;
 						}
 						return false;
@@ -200,11 +211,9 @@ public class EntregadorTest extends AbstractTest {
 
 				getWait().until(ExpectedConditions.invisibilityOfElementLocated(AUTOCOMPLETE));
 				getWait().until(ExpectedConditions.presenceOfElementLocated(EMPRESA_ID));
-				assertFalse(getDriver().findElement(EMPRESA_ID).getAttribute("value").isEmpty());
+				assertTrue(getDriver().findElement(EMPRESA_ID).getAttribute("value").matches(NUMBER_REGEX));
 			} catch (TimeoutException e) {
-				LOGGER.warn("create or edit entregador -> razaoSocial: '{}', message: {}", RAZAO_SOCIAL,
-						e.getMessage());
-				validateIdEmpresa(isCreatePage, EMPRESA_ID);
+				validateIdEmpresa(EMPRESA_ID, isCreatePage);
 			}
 		}
 
@@ -214,38 +223,43 @@ public class EntregadorTest extends AbstractTest {
 
 		if (isCreatePage
 				|| (GERENTE.equals(getAcesso()) && getBaseProducer().trueOrFalse() && canBeChanged(ENTREGADOR_EMAIL))) {
-			getDriver().findElement(EMAIL).clear();
-			getDriver().findElement(EMAIL).sendKeys(person.getEmail());
+			WebElement email = getDriver().findElement(EMAIL);
+			email.clear();
+			email.sendKeys(person.getEmail());
 			sleep();
 		} else if (ATENDENTE.equals(getAcesso()))
 			assertTrue((Boolean) getJS().executeScript("return  $('#email').is('[readonly]');"));
 
 		if (isCreatePage || getBaseProducer().trueOrFalse()) {
-			getDriver().findElement(By.name("cpf")).clear();
-			getDriver().findElement(By.name("cpf")).sendKeys(getCpf());
+			WebElement cpf = getDriver().findElement(By.name("cpf"));
+			cpf.clear();
+			cpf.sendKeys(getCpf());
 			sleep();
 		}
 		if (isCreatePage || getBaseProducer().trueOrFalse()) {
-			getDriver().findElement(By.name("rg")).clear();
-			getDriver().findElement(By.name("rg")).sendKeys(getRg());
+			WebElement rg = getDriver().findElement(By.name("rg"));
+			rg.clear();
+			rg.sendKeys(getRg());
 			sleep();
 		}
 		if (isCreatePage) {
-			getDriver().findElement(By.name("usuario.senha")).clear();
-			getDriver().findElement(By.name("usuario.senha")).sendKeys(getSenhaAcesso());
+			WebElement senha = getDriver().findElement(By.name("usuario.senha"));
+			senha.clear();
+			senha.sendKeys(getSenhaAcesso());
 			sleep();
-			getDriver().findElement(By.name("usuario.confirmacaoSenha")).clear();
-			getDriver().findElement(By.name("usuario.confirmacaoSenha")).sendKeys(getSenhaAcesso());
+			WebElement confirmacao = getDriver().findElement(By.name("usuario.confirmacaoSenha"));
+			confirmacao.clear();
+			confirmacao.sendKeys(getSenhaAcesso());
 			sleep();
 		}
 	}
 
-	private void validateIdEmpresa(final boolean isCreatePage, final By EMPRESA_ID) {
+	private void validateIdEmpresa(final By EMPRESA_ID, final boolean isCreatePage) {
 		getWait().until(ExpectedConditions.presenceOfElementLocated(EMPRESA_ID));
 		final String ID = getDriver().findElement(EMPRESA_ID).getAttribute("value");
 		if (isCreatePage)
 			assertTrue(ID.isEmpty());
 		else
-			assertFalse(ID.isEmpty());
+			assertTrue(ID.matches(NUMBER_REGEX));
 	}
 }

@@ -216,7 +216,7 @@
 					<version>2.19.1</version>
 					<configuration>
 						<systemPropertyVariables>
-							<base.url>http://localhost:8090</base.url>
+							<base.url>http://localhost:8080/casa-das-quentinhas</base.url>
 							<sleep.millisecounds>1000</sleep.millisecounds>
 						</systemPropertyVariables>
 					</configuration>
@@ -255,7 +255,7 @@
 
 	<profiles>
 		<profile>
-			<id>selenium-phantomjs-linux</id>
+			<id>homologacao</id>
 			<activation>
 				<os>
 					<family>Linux</family>
@@ -263,7 +263,7 @@
 				<property>
 					<name>phantomjs</name>
 				</property>
-				<!--activeByDefault>true</activeByDefault-->
+				<!--activeByDefault>true</activeByDefault -->
 			</activation>
 			<build>
 				<plugins>
@@ -272,6 +272,7 @@
 						<artifactId>maven-surefire-plugin</artifactId>
 						<configuration>
 							<systemPropertyVariables>
+								<base.url>http://localhost:8090</base.url>
 								<phantomjs.binary.path>phantomjs</phantomjs.binary.path>
 							</systemPropertyVariables>
 						</configuration>
@@ -280,7 +281,7 @@
 			</build>
 		</profile>
 		<profile>
-			<id>selenium-phantomjs-heroku</id>
+			<id>producao</id>
 			<activation>
 				<os>
 					<family>Linux</family>
@@ -305,7 +306,7 @@
 			</build>
 		</profile>
 		<profile>
-			<id>selenium-phantomjs-windows</id>
+			<id>desenv-phantomjs</id>
 			<activation>
 				<os>
 					<family>Windows</family>
@@ -329,7 +330,7 @@
 			</build>
 		</profile>
 		<profile>
-			<id>selenium-chrome-windows</id>
+			<id>desenv-chrome</id>
 			<activation>
 				<os>
 					<family>Windows</family>
@@ -353,7 +354,7 @@
 			</build>
 		</profile>
 		<profile>
-			<id>selenium-firefox-windows</id>
+			<id>desenv-firefox</id>
 			<activation>
 				<os>
 					<family>Windows</family>
@@ -377,7 +378,7 @@
 			</build>
 		</profile>
 		<profile>
-			<id>selenium-ie-windows</id>
+			<id>desenv-ie</id>
 			<activation>
 				<os>
 					<family>Windows</family>

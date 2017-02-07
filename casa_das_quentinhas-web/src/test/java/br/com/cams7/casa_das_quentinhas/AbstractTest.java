@@ -43,10 +43,11 @@ import io.codearte.jfairy.producer.BaseProducer;
 
 public abstract class AbstractTest implements BaseTest {
 
+	protected final Logger LOGGER;
+	protected final static String NUMBER_REGEX = "\\d+";
+
 	private final static Fairy fairy;
 	private final static BaseProducer baseProducer;
-
-	protected final Logger LOGGER;
 
 	private static String baseUrl;
 
@@ -79,10 +80,10 @@ public abstract class AbstractTest implements BaseTest {
 	public void setUp() {
 		setDriverAndUrl();
 
-		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 
 		js = getJS(driver);
-		wait = new WebDriverWait(driver, 10).ignoring(StaleElementReferenceException.class);
+		wait = new WebDriverWait(driver, 5).ignoring(StaleElementReferenceException.class);
 	}
 
 	@AfterSuite(alwaysRun = true)
@@ -449,7 +450,7 @@ public abstract class AbstractTest implements BaseTest {
 	}
 
 	protected final String getRandomLetter() {
-		return String.valueOf(baseProducer.randomBetween('a', 'Z'));
+		return String.valueOf(baseProducer.randomBetween('a', 'z'));
 	}
 
 	protected final int getRandomRow(final int totalRows) {
@@ -701,7 +702,7 @@ public abstract class AbstractTest implements BaseTest {
 		LOGGER.info("get id -> total rows: {}, row: {}", TOTAL_ROWS, ROW);
 
 		final By CELL = By.cssSelector("table.dataTable > tbody > tr:nth-child(" + ROW + ") > td:first-child");
-		getWait().until(ExpectedConditions.textMatches(CELL, Pattern.compile("\\d+")));
+		getWait().until(ExpectedConditions.textMatches(CELL, Pattern.compile(NUMBER_REGEX)));
 		return driver.findElement(CELL).getText();
 	}
 
@@ -709,7 +710,7 @@ public abstract class AbstractTest implements BaseTest {
 		if (wait)
 			getWait().until(new ExpectedCondition<Boolean>() {
 				public Boolean apply(WebDriver driver) {
-					return getCount(driver).matches("\\d+");
+					return getCount(driver).matches(NUMBER_REGEX);
 				}
 			});
 
@@ -754,7 +755,7 @@ public abstract class AbstractTest implements BaseTest {
 	private String getActivePage(WebDriver driver, boolean wait) {
 		final By ACTIVE_PAGE = By.cssSelector("ul.pagination > li.active > a");
 		if (wait)
-			getWait().until(ExpectedConditions.textMatches(ACTIVE_PAGE, Pattern.compile("\\d+")));
+			getWait().until(ExpectedConditions.textMatches(ACTIVE_PAGE, Pattern.compile(NUMBER_REGEX)));
 
 		return driver.findElement(ACTIVE_PAGE).getText();
 	}

@@ -177,17 +177,20 @@ public class EmpresaTest extends AbstractTest {
 		Long codigoIBGE = getQualquerCodigoIBGE();
 
 		if (isCreatePage || getBaseProducer().trueOrFalse()) {
-			getDriver().findElement(By.name("razaoSocial")).clear();
-			getDriver().findElement(By.name("razaoSocial")).sendKeys(company.getName());
+			WebElement razaoSocial = getDriver().findElement(By.name("razaoSocial"));
+			razaoSocial.clear();
+			razaoSocial.sendKeys(company.getName());
 			sleep();
 
-			getDriver().findElement(By.name("nomeFantasia")).clear();
-			getDriver().findElement(By.name("nomeFantasia")).sendKeys(company.getName());
+			WebElement nomeFantasia = getDriver().findElement(By.name("nomeFantasia"));
+			nomeFantasia.clear();
+			nomeFantasia.sendKeys(company.getName());
 			sleep();
 		}
 		if (isCreatePage || getBaseProducer().trueOrFalse()) {
-			getDriver().findElement(By.name("cnpj")).clear();
-			getDriver().findElement(By.name("cnpj")).sendKeys(getCnpj());
+			WebElement cnpj = getDriver().findElement(By.name("cnpj"));
+			cnpj.clear();
+			cnpj.sendKeys(getCnpj());
 			sleep();
 		}
 		if (isCreatePage || (GERENTE.equals(getAcesso()) && getBaseProducer().trueOrFalse())) {
@@ -203,13 +206,15 @@ public class EmpresaTest extends AbstractTest {
 		final String EMPRESA_EMAIL = getDriver().findElement(EMAIL).getAttribute("value");
 
 		if (isCreatePage || (getBaseProducer().trueOrFalse() && canBeChanged(EMPRESA_EMAIL))) {
-			getDriver().findElement(EMAIL).clear();
-			getDriver().findElement(EMAIL).sendKeys(company.getEmail());
+			WebElement email = getDriver().findElement(EMAIL);
+			email.clear();
+			email.sendKeys(company.getEmail());
 			sleep();
 		}
 		if (isCreatePage || getBaseProducer().trueOrFalse()) {
-			getDriver().findElement(By.name("contato.telefone")).clear();
-			getDriver().findElement(By.name("contato.telefone")).sendKeys(getTelefone());
+			WebElement telefone = getDriver().findElement(By.name("contato.telefone"));
+			telefone.clear();
+			telefone.sendKeys(getTelefone());
 			sleep();
 		}
 		if (isCreatePage || getBaseProducer().trueOrFalse()) {
@@ -230,12 +235,19 @@ public class EmpresaTest extends AbstractTest {
 		boolean cidadeAlterada = false;
 
 		if (isCreatePage || getBaseProducer().trueOrFalse()) {
-			getDriver().findElement(By.name("cidade.nome")).clear();
-			getDriver().findElement(By.name("cidade.nome")).sendKeys(String.valueOf(codigoIBGE));
+			final String CODIGO_IBGE = String.valueOf(codigoIBGE);
+
+			final By CIDADE_NOME = By.name("cidade.nome");
+			getWait().until(ExpectedConditions.presenceOfElementLocated(CIDADE_NOME));
+			WebElement cidadeNome = getDriver().findElement(CIDADE_NOME);
+			cidadeNome.clear();
+			cidadeNome.sendKeys(CODIGO_IBGE);
+
+			LOGGER.info("create or edit empresa -> cidade: '{}'", CODIGO_IBGE);
 
 			final By CIDADE_ID = By.name("cidade.id");
 
-			validateIdCidade(isCreatePage, CIDADE_ID);
+			validateIdCidade(CIDADE_ID, isCreatePage);
 
 			final By AUTOCOMPLETE = By.cssSelector("ul.ui-autocomplete");
 
@@ -252,29 +264,33 @@ public class EmpresaTest extends AbstractTest {
 
 			getWait().until(ExpectedConditions.invisibilityOfElementLocated(AUTOCOMPLETE));
 			getWait().until(ExpectedConditions.presenceOfElementLocated(CIDADE_ID));
-			assertFalse(getDriver().findElement(CIDADE_ID).getAttribute("value").isEmpty());
+			assertTrue(getDriver().findElement(CIDADE_ID).getAttribute("value").matches(NUMBER_REGEX));
 
 			cidadeAlterada = true;
 		}
 
 		if (isCreatePage || (cidadeAlterada && getBaseProducer().trueOrFalse())) {
-			getDriver().findElement(By.name("endereco.cep")).clear();
-			getDriver().findElement(By.name("endereco.cep")).sendKeys(getQualquerCep(codigoIBGE));
+			WebElement cep = getDriver().findElement(By.name("endereco.cep"));
+			cep.clear();
+			cep.sendKeys(getQualquerCep(codigoIBGE));
 			sleep();
 		}
 		if (isCreatePage || (cidadeAlterada && getBaseProducer().trueOrFalse())) {
-			getDriver().findElement(By.name("endereco.bairro")).clear();
-			getDriver().findElement(By.name("endereco.bairro")).sendKeys(getQualquerBairro(codigoIBGE));
+			WebElement bairro = getDriver().findElement(By.name("endereco.bairro"));
+			bairro.clear();
+			bairro.sendKeys(getQualquerBairro(codigoIBGE));
 			sleep();
 		}
 		if (isCreatePage || getBaseProducer().trueOrFalse()) {
-			getDriver().findElement(By.name("endereco.logradouro")).clear();
-			getDriver().findElement(By.name("endereco.logradouro")).sendKeys(address.getStreet());
+			WebElement logradouro = getDriver().findElement(By.name("endereco.logradouro"));
+			logradouro.clear();
+			logradouro.sendKeys(address.getStreet());
 			sleep();
 		}
 		if (isCreatePage || getBaseProducer().trueOrFalse()) {
-			getDriver().findElement(By.name("endereco.numeroImovel")).clear();
-			getDriver().findElement(By.name("endereco.numeroImovel")).sendKeys(address.getStreetNumber());
+			WebElement numeroImovel = getDriver().findElement(By.name("endereco.numeroImovel"));
+			numeroImovel.clear();
+			numeroImovel.sendKeys(address.getStreetNumber());
 			sleep();
 		}
 		// getDriver().findElement(By.name("endereco.complemento")).clear();
@@ -282,22 +298,24 @@ public class EmpresaTest extends AbstractTest {
 		// getDriver().findElement(By.name("endereco.pontoReferencia")).clear();
 		// getDriver().findElement(By.name("endereco.pontoReferencia")).sendKeys("");
 		if (isCreatePage) {
-			getDriver().findElement(By.name("usuarioAcesso.senha")).clear();
-			getDriver().findElement(By.name("usuarioAcesso.senha")).sendKeys(getSenhaAcesso());
+			WebElement senha = getDriver().findElement(By.name("usuarioAcesso.senha"));
+			senha.clear();
+			senha.sendKeys(getSenhaAcesso());
 			sleep();
-			getDriver().findElement(By.name("usuarioAcesso.confirmacaoSenha")).clear();
-			getDriver().findElement(By.name("usuarioAcesso.confirmacaoSenha")).sendKeys(getSenhaAcesso());
+			WebElement confirmacaoSenha = getDriver().findElement(By.name("usuarioAcesso.confirmacaoSenha"));
+			confirmacaoSenha.clear();
+			confirmacaoSenha.sendKeys(getSenhaAcesso());
 			sleep();
 		}
 	}
 
-	private void validateIdCidade(boolean isCreatePage, final By CIDADE_ID) {
+	private void validateIdCidade(final By CIDADE_ID, boolean isCreatePage) {
 		getWait().until(ExpectedConditions.presenceOfElementLocated(CIDADE_ID));
 		final String ID = getDriver().findElement(CIDADE_ID).getAttribute("value");
 		if (isCreatePage)
 			assertTrue(ID.isEmpty());
 		else
-			assertFalse(ID.isEmpty());
+			assertTrue(ID.matches(NUMBER_REGEX));
 	}
 
 	private void testPedidos() {

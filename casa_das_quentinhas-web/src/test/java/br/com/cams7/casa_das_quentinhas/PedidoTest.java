@@ -168,19 +168,41 @@ public class PedidoTest extends AbstractTest {
 		final By AUTOCOMPLETE = By.cssSelector("ul.ui-autocomplete");
 
 		if (isCreatePage || getBaseProducer().trueOrFalse()) {
-			Select tipoCliente = new Select(getDriver().findElement(By.name("tipoCliente")));
-			tipoCliente.deselectAll();
-			tipoCliente.selectByValue(getTipoCliente());
-			sleep();
-
-			final String NOME = getRandomLetter();
-
-			getDriver().findElement(By.name("cliente.nome")).clear();
-			getDriver().findElement(By.name("cliente.nome")).sendKeys(NOME);
+			final String TIPO_CLIENTE_ANTERIOR = (String) getJS()
+					.executeScript("return $( 'select#tipoCliente option:selected' ).val();");
+			final String TIPO_CLIENTE_ATUAL = getTipoCliente();
 
 			final By CLIENTE_ID = By.name("cliente.id");
 
-			validateIdCliente(isCreatePage, CLIENTE_ID);
+			boolean tipoClienteAlterado = !TIPO_CLIENTE_ANTERIOR.equals(TIPO_CLIENTE_ATUAL);
+			if (tipoClienteAlterado) {
+				getJS().executeScript("$('select#tipoCliente').val('" + TIPO_CLIENTE_ATUAL + "').change();");
+
+				if (!isCreatePage) {
+					getWait().until(new ExpectedCondition<Boolean>() {
+						public Boolean apply(WebDriver driver) {
+							return driver.findElement(CLIENTE_ID).getAttribute("value").isEmpty();
+						}
+					});
+				}
+
+				LOGGER.info("create or edit pedido -> tipo anterior: {}, tipo atual: {}", TIPO_CLIENTE_ANTERIOR,
+						TIPO_CLIENTE_ATUAL);
+
+				sleep();
+			}
+
+			validateIdCliente(CLIENTE_ID, isCreatePage || tipoClienteAlterado);
+
+			final String LETRA_ALEATORIA = getRandomLetter();
+
+			final By CLIENTE_NOME = By.name("cliente.nome");
+			getWait().until(ExpectedConditions.presenceOfElementLocated(CLIENTE_NOME));
+			WebElement clienteNome = getDriver().findElement(CLIENTE_NOME);
+			clienteNome.clear();
+			clienteNome.sendKeys(LETRA_ALEATORIA);
+
+			LOGGER.warn("create or edit pedido -> cliente: '{}'", LETRA_ALEATORIA);
 
 			try {
 				getWait().until(new ExpectedCondition<Boolean>() {
@@ -188,8 +210,13 @@ public class PedidoTest extends AbstractTest {
 						WebElement autocomplete = driver.findElements(AUTOCOMPLETE).get(0);
 						if (autocomplete.isDisplayed()) {
 							List<WebElement> itens = autocomplete.findElements(By.cssSelector("li.ui-menu-item"));
-							int index = getBaseProducer().randomBetween(0, itens.size() - 1);
-							itens.get(index).click();
+							final int TOTAL_ITENS = itens.size();
+							final int INDEX = getBaseProducer().randomBetween(0, TOTAL_ITENS - 1);
+							itens.get(INDEX).click();
+
+							LOGGER.warn(
+									"create or edit pedido (autocomplete - cliente) -> total itens: {}, index selected: {}",
+									TOTAL_ITENS, INDEX);
 							return true;
 						}
 						return false;
@@ -198,10 +225,9 @@ public class PedidoTest extends AbstractTest {
 
 				getWait().until(ExpectedConditions.invisibilityOfElementLocated(AUTOCOMPLETE));
 				getWait().until(ExpectedConditions.presenceOfElementLocated(CLIENTE_ID));
-				assertFalse(getDriver().findElement(CLIENTE_ID).getAttribute("value").isEmpty());
+				assertTrue(getDriver().findElement(CLIENTE_ID).getAttribute("value").matches(NUMBER_REGEX));
 			} catch (TimeoutException e) {
-				LOGGER.warn("create or edit pedido -> nome: '{}', message: {}", NOME, e.getMessage());
-				validateIdCliente(isCreatePage, CLIENTE_ID);
+				validateIdCliente(CLIENTE_ID, isCreatePage || tipoClienteAlterado);
 			}
 		}
 		if (isCreatePage || getBaseProducer().trueOrFalse()) {
@@ -226,13 +252,13 @@ public class PedidoTest extends AbstractTest {
 		mantemItem(AUTOCOMPLETE, !isCreatePage, 0);
 	}
 
-	private void validateIdCliente(final boolean isCreatePage, final By CLIENTE_ID) {
+	private void validateIdCliente(final By CLIENTE_ID, final boolean tipoClienteAlterado) {
 		getWait().until(ExpectedConditions.presenceOfElementLocated(CLIENTE_ID));
 		final String ID = getDriver().findElement(CLIENTE_ID).getAttribute("value");
-		if (isCreatePage)
+		if (tipoClienteAlterado)
 			assertTrue(ID.isEmpty());
 		else
-			assertFalse(ID.isEmpty());
+			assertTrue(ID.matches(NUMBER_REGEX));
 	}
 
 	private void mantemItem(final By AUTOCOMPLETE, boolean itemIncluido, final int countItens) {
@@ -257,7 +283,7 @@ public class PedidoTest extends AbstractTest {
 					final int TOTAL_ROWS = getTotalTableRows();
 					final int ROW = getRandomRow(TOTAL_ROWS);
 
-					LOGGER.info("delete item -> total rows: {}, row: {}", TOTAL_ROWS, ROW);
+					LOGGER.info("mantem item (delete item) -> total rows: {}, row: {}", TOTAL_ROWS, ROW);
 
 					final By DELETE_BUTTON = getTableDeleteButton(ROW);
 					getWait().until(ExpectedConditions.elementToBeClickable(DELETE_BUTTON));
@@ -277,7 +303,8 @@ public class PedidoTest extends AbstractTest {
 					assertFalse(CURRENT_COUNT.isEmpty());
 					assertTrue(COUNT - 1 == Long.valueOf(CURRENT_COUNT));
 
-					LOGGER.info("item removed -> first count: {}, current count: {}", COUNT, CURRENT_COUNT);
+					LOGGER.info("mantem item (item removed) -> first count: {}, current count: {}", COUNT,
+							CURRENT_COUNT);
 				}
 			}
 
@@ -285,7 +312,7 @@ public class PedidoTest extends AbstractTest {
 				final int TOTAL_ROWS = getTotalTableRows();
 				final int ROW = getRandomRow(TOTAL_ROWS);
 
-				LOGGER.info("edit item -> total rows: {}, row: {}", TOTAL_ROWS, ROW);
+				LOGGER.info("mantem item (edit item) -> total rows: {}, row: {}", TOTAL_ROWS, ROW);
 
 				final By EDIT_BUTTON = By.cssSelector(
 						"table.dataTable > tbody > tr:nth-child(" + ROW + ") > td > button.btn.btn-warning.btn-xs");
@@ -310,46 +337,59 @@ public class PedidoTest extends AbstractTest {
 
 		final By PRODUTO_ID = By.name("produto_id");
 
+		boolean produtoSelecionado = true;
 		if (newItem) {
-			itemModal.findElement(By.name("produto")).clear();
-			itemModal.findElement(By.name("produto"))
-					.sendKeys(getBaseProducer().randomElement("bife", "frango", "ovo", "salada", "creme"));
+			final String LETRA_ALEATORIA = getRandomLetter();
 
+			final By PRODUTO = By.name("produto");
+			getWait().until(ExpectedConditions.presenceOfElementLocated(PRODUTO));
+			WebElement produto = itemModal.findElement(PRODUTO);
+			produto.clear();
+			produto.sendKeys(LETRA_ALEATORIA);
+
+			LOGGER.warn("show item modal -> produto: '{}'", LETRA_ALEATORIA);
+
+			getWait().until(ExpectedConditions.presenceOfElementLocated(PRODUTO_ID));
 			assertTrue(itemModal.findElement(PRODUTO_ID).getAttribute("value").isEmpty());
 
-			getWait().until(new ExpectedCondition<Boolean>() {
-				public Boolean apply(WebDriver driver) {
-					WebElement autocomplete = driver.findElements(AUTOCOMPLETE).get(1);
-					if (autocomplete.isDisplayed()) {
-						List<WebElement> itens = autocomplete.findElements(By.cssSelector("li.ui-menu-item"));
-						int index = getBaseProducer().randomBetween(0, itens.size() - 1);
-						itens.get(index).click();
-						return true;
-					}
-					return false;
-				}
-			});
+			try {
+				getWait().until(new ExpectedCondition<Boolean>() {
+					public Boolean apply(WebDriver driver) {
+						WebElement autocomplete = driver.findElements(AUTOCOMPLETE).get(1);
+						if (autocomplete.isDisplayed()) {
+							List<WebElement> itens = autocomplete.findElements(By.cssSelector("li.ui-menu-item"));
+							final int TOTAL_ITENS = itens.size();
+							final int INDEX = getBaseProducer().randomBetween(0, TOTAL_ITENS - 1);
+							itens.get(INDEX).click();
 
-			getWait().until(ExpectedConditions.invisibilityOfElementLocated(AUTOCOMPLETE));
+							LOGGER.warn(
+									"show item modal (autocomplete - produto) -> total itens: {}, index selected: {}",
+									TOTAL_ITENS, INDEX);
+							return true;
+						}
+						return false;
+					}
+				});
+				getWait().until(ExpectedConditions.invisibilityOfElementLocated(AUTOCOMPLETE));
+			} catch (TimeoutException e) {
+				produtoSelecionado = false;
+			}
 		}
 
-		getWait().until(ExpectedConditions.presenceOfElementLocated(PRODUTO_ID));
-		assertFalse(itemModal.findElement(PRODUTO_ID).getAttribute("value").isEmpty());
+		validateIdProduto(itemModal, PRODUTO_ID, produtoSelecionado);
+
+		WebElement quantidade = itemModal.findElement(By.name("quantidade"));
+		quantidade.clear();
+		quantidade.sendKeys(String.valueOf(getBaseProducer().randomBetween(1, 20)));
 		sleep();
 
-		itemModal.findElement(By.name("quantidade")).clear();
-		itemModal.findElement(By.name("quantidade")).sendKeys(String.valueOf(getBaseProducer().randomBetween(1, 20)));
-		sleep();
+		WebElement modalSave = itemModal.findElement(By.cssSelector("div.modal-footer > input.btn.btn-primary"));
+		getWait().until(ExpectedConditions.elementToBeClickable(modalSave));
+		modalSave.submit();
 
-		boolean itemCadastrado = false;
+		if (!produtoSelecionado) {
+			sleep();
 
-		if (getBaseProducer().trueOrFalse()) {
-			WebElement modalSave = itemModal.findElement(By.cssSelector("div.modal-footer > input.btn.btn-primary"));
-			getWait().until(ExpectedConditions.elementToBeClickable(modalSave));
-			modalSave.submit();
-
-			itemCadastrado = true;
-		} else {
 			WebElement modalClose = itemModal.findElement(By.cssSelector("div.modal-header > button.close"));
 			getWait().until(ExpectedConditions.elementToBeClickable(modalClose));
 			modalClose.click();
@@ -357,7 +397,16 @@ public class PedidoTest extends AbstractTest {
 
 		getWait().until(ExpectedConditions.invisibilityOfElementLocated(ITEM_MODAL));
 
-		return itemCadastrado;
+		return produtoSelecionado;
+	}
+
+	private void validateIdProduto(WebElement itemModal, final By PRODUTO_ID, boolean produtoSelecionado) {
+		getWait().until(ExpectedConditions.presenceOfElementLocated(PRODUTO_ID));
+		final String ID = itemModal.findElement(PRODUTO_ID).getAttribute("value");
+		if (produtoSelecionado)
+			assertTrue(ID.matches(NUMBER_REGEX));
+		else
+			assertTrue(ID.isEmpty());
 	}
 
 	private void testItens() {

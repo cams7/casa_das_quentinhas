@@ -15,6 +15,7 @@ import static org.testng.AssertJUnit.assertFalse;
 import static org.testng.AssertJUnit.assertTrue;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.annotations.Test;
@@ -159,13 +160,15 @@ public class FuncionarioTest extends AbstractTest {
 		Person person = getFairy().person();
 
 		if (isCreatePage || getBaseProducer().trueOrFalse()) {
-			getDriver().findElement(By.name("nome")).clear();
-			getDriver().findElement(By.name("nome")).sendKeys(person.getFullName());
+			WebElement nome = getDriver().findElement(By.name("nome"));
+			nome.clear();
+			nome.sendKeys(person.getFullName());
 			sleep();
 		}
 		if (isCreatePage || getBaseProducer().trueOrFalse()) {
-			getDriver().findElement(By.name("celular")).clear();
-			getDriver().findElement(By.name("celular")).sendKeys(getCelular());
+			WebElement celular = getDriver().findElement(By.name("celular"));
+			celular.clear();
+			celular.sendKeys(getCelular());
 			sleep();
 		}
 
@@ -184,28 +187,33 @@ public class FuncionarioTest extends AbstractTest {
 
 		if (isCreatePage || (GERENTE.equals(getAcesso()) && getBaseProducer().trueOrFalse()
 				&& canBeChanged(FUNCIONARIO_EMAIL))) {
-			getDriver().findElement(EMAIL).clear();
-			getDriver().findElement(EMAIL).sendKeys(person.getEmail());
+			WebElement email = getDriver().findElement(EMAIL);
+			email.clear();
+			email.sendKeys(person.getEmail());
 			sleep();
 		} else if (ATENDENTE.equals(getAcesso()))
 			assertTrue((Boolean) getJS().executeScript("return  $('#email').is('[readonly]');"));
 
 		if (isCreatePage || getBaseProducer().trueOrFalse()) {
-			getDriver().findElement(By.name("cpf")).clear();
-			getDriver().findElement(By.name("cpf")).sendKeys(getCpf());
+			WebElement cpf = getDriver().findElement(By.name("cpf"));
+			cpf.clear();
+			cpf.sendKeys(getCpf());
 			sleep();
 		}
 		if (isCreatePage || getBaseProducer().trueOrFalse()) {
-			getDriver().findElement(By.name("rg")).clear();
-			getDriver().findElement(By.name("rg")).sendKeys(getRg());
+			WebElement rg = getDriver().findElement(By.name("rg"));
+			rg.clear();
+			rg.sendKeys(getRg());
 			sleep();
 		}
 		if (isCreatePage) {
-			getDriver().findElement(By.name("usuario.senha")).clear();
-			getDriver().findElement(By.name("usuario.senha")).sendKeys(getSenhaAcesso());
+			WebElement senha = getDriver().findElement(By.name("usuario.senha"));
+			senha.clear();
+			senha.sendKeys(getSenhaAcesso());
 			sleep();
-			getDriver().findElement(By.name("usuario.confirmacaoSenha")).clear();
-			getDriver().findElement(By.name("usuario.confirmacaoSenha")).sendKeys(getSenhaAcesso());
+			WebElement confirmacaoSenha = getDriver().findElement(By.name("usuario.confirmacaoSenha"));
+			confirmacaoSenha.clear();
+			confirmacaoSenha.sendKeys(getSenhaAcesso());
 			sleep();
 		}
 	}
