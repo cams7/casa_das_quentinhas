@@ -37,3 +37,9 @@ phantomjs*
 chromedriver*
 geckodriver*
 MicrosoftWebDriver*
+
+#Documentação
+docs/
+
+#Arquivos de apresenção
+*.mp4
