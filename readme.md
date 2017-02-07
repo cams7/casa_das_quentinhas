@@ -1,21 +1,24 @@
 ========================
 * Autor: César A. Magalhães
-* Tecnologias: **Eclipse Neon**, **Spring MVC 4**, **Spring Security 4**, **Hibernate 5**
+* Tecnologias: **Eclipse Neon**, **Maven**, **Spring MVC 4**, **Spring Security 4**, **Hibernate 5**, **Jenkins**, **TestNG**, **SeleniumHQ**
 * Banco de dados: **PostgreSQL**
 * Resumo: Aplicação CRUD (create, read, update, delete)
-* Linguagem: **Java 8**
+* Linguagem: **Java 8**, **TeX**
 * LinkedIn: <https://www.linkedin.com/in/cams7/>
 * Fonte: <https://github.com/cams7/casa_das_quentinhas/>
 * Site: <http://casa-das-quentinhas.herokuapp.com/>
 
 O que é o sistema: Casa das Quentinhas?
 -------------------
-Sistema web que utiliza, principalmente, as tecnologias **Hibernate**, **Spring MVC** e **Spring Security**. Além disso, foi desenvolvido e testado no **Tomcat 8.5** e no **Jetty** e por fim, o **Maven** é utilizado para automatizar a compilação de todos os códigos da aplicação. Para fazer os testes, foram usados o **TestNG** em conjunto com o **SeleniumHQ** e o **Jenkins** foi ultilizado para automatiza-los.
+Sistema web que utiliza, principalmente, as tecnologias **Hibernate**, **Spring MVC** e **Spring Security**. Para fazer os testes, foram usados o **TestNG** em conjunto com o **SeleniumHQ**. Além disso, essa aplicação foi desenvolvida para rodar no **Tomcat 8.5** e no **Jetty** e por fim, o **Jenkins**, com o auxilio do **Maven**, foi utilizado para automatiza os testes. 
 
 Sistemas requeridos
 -------------------
-* [Microsoft Windows 10](https://www.microsoft.com/pt-br/software-download/windows10)
 * [JDK 1.8](http://www.oracle.com/technetwork/pt/java/javase/downloads/jdk8-downloads-2133151.html)
+* [Microsoft Windows 10](https://www.microsoft.com/pt-br/software-download/windows10)
+* [MiKTeX 2.9.6069](http://miktex.org/)
+* [TeXstudio 2.11.0](http://www.texstudio.org/)
+* [Astah Community](http://astah.net/editions/community) 
 * [SQL Power Architect Data Modeling & Profiling Tool](http://www.sqlpower.ca/page/resources)
 * [VirtualBox](https://www.virtualbox.org/)
 * [Vagrant](https://www.vagrantup.com/)
@@ -39,10 +42,13 @@ Sistemas requeridos
 
 Para rodar o programa
 -------------------
+* No **Windows**, instale o **JDK 8**
+* No **Windows**, instale o **MiKTeX 2.9.6069**
+* No **Windows**, instale o **TeXstudio 2.11.0**
+* No **Windows**, instale o **Astah Community**
+* No **Windows**, instale o **SQL Power Architect**
 * No **Windows**, instale o **VirtualBox**
 * No **Windows**, instale o **Vagrant**
-* No **Windows**, instale o **SQL Power Architect**
-* No **Windows**, instale o **JDK 8**
 * No **Windows**, faça o download e descompacte o **apache-maven-3.3.9**, em seguida, configure a *variável de ambiente* do *Maven* e reinicie o PC. 
 * No **Windows**, para verificar se o *Maven* esta funcionando corretamente, execute no *Prompt de Comando*, a linha abaixo:
 ```	
@@ -232,6 +238,7 @@ heroku pg:psql DATABASE_URL --app <Nome da aplicação>
 * No seu *banco de dados* do *Heroku*, execute os comandos SQL dos arquivos **ddl-casa_das_quentinhas-required.sql**, **dml-uf-required.sql**, **dml-cidade-ddd31-required.sql**, **dml-usuario.sql**, **dml-empresa.sql**, **dml-funcionario.sql**, **dml-cliente.sql**, **dml-produto.sql** e **dml-pedido.sql** na ordem que foram informados. Esses arquivos estão localizados no diretório *database*.
 * Em seguida, feche o *banco de dados* e execute a linha abaixo:	 
 ```sh
+git checkout producao
 git push heroku -u master
 ```
 
