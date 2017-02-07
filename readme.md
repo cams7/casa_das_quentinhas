@@ -10,7 +10,7 @@
 
 O que é o sistema: Casa das Quentinhas?
 -------------------
-Sistema web que utiliza, principalmente, as tecnologias **Hibernate**, **Spring MVC** e **Spring Security**. Além disso, foi desenvolvido e testado no **Tomcat 8.5** e no **Jetty** e por fim, o **Maven** é utilizado para automatizar a compilação de todos os códigos da aplicação. 
+Sistema web que utiliza, principalmente, as tecnologias **Hibernate**, **Spring MVC** e **Spring Security**. Além disso, foi desenvolvido e testado no **Tomcat 8.5** e no **Jetty** e por fim, o **Maven** é utilizado para automatizar a compilação de todos os códigos da aplicação. Para fazer os testes, foram usados o **TestNG** em conjunto com o **SeleniumHQ** e o **Jenkins** foi ultilizado para automatiza-los.
 
 Sistemas requeridos
 -------------------
@@ -29,6 +29,13 @@ Sistemas requeridos
 * [Spring](https://spring.io/)
 * [Hibernate](http://hibernate.org/)
 * [Heroku](https://www.heroku.com/)
+* [Jenkins](https://jenkins.io/)
+* [TestNG](http://testng.org/doc/index.html)
+* [SeleniumHQ](http://www.seleniumhq.org/)
+* [PhantomJS](http://phantomjs.org/)
+* [ChromeDriver - WebDriver for Chrome](https://sites.google.com/a/chromium.org/chromedriver/)
+* [Mozilla GeckoDriver](https://github.com/mozilla/geckodriver/releases)
+* [Microsoft Edge Driver](https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/)
 
 Para rodar o programa
 -------------------
