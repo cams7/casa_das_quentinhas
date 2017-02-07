@@ -1,2 +1,0 @@
---Funcionário 1 = Gerente
-INSERT INTO funcionario (id_funcionario, funcao, id_empresa, data_cadastro, data_alteracao, id_usuario_cadastro, nome, cpf, rg, celular) VALUES (1, 0, 1,'2016-12-26 18:45:00.0','2016-12-26 18:45:00.0', 1, 'César Antônio de Magalhães', '05948755678', '12345678', '31991012345');

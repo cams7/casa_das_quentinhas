@@ -41,5 +41,8 @@ MicrosoftWebDriver*
 #Documentação
 docs/
 
+#Banco de dados
+database/
+
 #Arquivos de apresenção
 *.mp4
