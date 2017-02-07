@@ -31,3 +31,9 @@ bin/
 
 #TestNG
 test-output/
+
+#Selenium driver
+phantomjs*
+chromedriver*
+geckodriver*
+MicrosoftWebDriver*
