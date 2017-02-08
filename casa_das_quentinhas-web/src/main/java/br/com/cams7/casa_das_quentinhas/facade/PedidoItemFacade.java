@@ -81,7 +81,10 @@ public class PedidoItemFacade {
 		Predicate<PedidoItem> predicate = i -> item.getId().getProdutoId().equals(i.getId().getProdutoId());
 
 		if (itens.stream().anyMatch(predicate))
-			itens.stream().filter(predicate).findFirst().ifPresent(i -> i.setQuantidade(item.getQuantidade()));
+			itens.stream().filter(predicate).findFirst().ifPresent(i -> {
+				i.setQuantidade(item.getQuantidade());
+				i.setCusto(item.getCusto());
+			});
 		else
 			itens.add(item);
 
@@ -210,6 +213,18 @@ public class PedidoItemFacade {
 					break;
 				case DESCENDING:
 					compareTo = item2.getQuantidade().compareTo(item1.getQuantidade());
+					break;
+				default:
+					break;
+				}
+				break;
+			case "custo":
+				switch (params.getSortOrder()) {
+				case ASCENDING:
+					compareTo = item1.getCusto().compareTo(item2.getCusto());
+					break;
+				case DESCENDING:
+					compareTo = item2.getCusto().compareTo(item1.getCusto());
 					break;
 				default:
 					break;

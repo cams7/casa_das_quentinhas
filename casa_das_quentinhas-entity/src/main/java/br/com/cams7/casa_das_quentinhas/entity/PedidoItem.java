@@ -40,6 +40,9 @@ public class PedidoItem extends AbstractEntity<PedidoItemPK> {
 	@Column
 	private Short quantidade;
 
+	@Column(nullable = false)
+	private Float custo;
+
 	@Column(name = "codigo_cfop", length = 5)
 	private String codigoCfop;
 
@@ -146,6 +149,21 @@ public class PedidoItem extends AbstractEntity<PedidoItemPK> {
 	}
 
 	/**
+	 * @return Custo do item de pedido (Quantidade x Custo do produto)
+	 */
+	public Float getCusto() {
+		return custo;
+	}
+
+	/**
+	 * @param custo
+	 *            Custo do item de pedido (Quantidade x Custo do produto)
+	 */
+	public void setCusto(Float custo) {
+		this.custo = custo;
+	}
+
+	/**
 	 * @return Código Fiscal de Operações e Prestação - CFOP
 	 */
 	public String getCodigoCfop() {
@@ -239,10 +257,10 @@ public class PedidoItem extends AbstractEntity<PedidoItemPK> {
 	}
 
 	public String getFormattedCusto() {
-		if (quantidade == null || produto == null)
+		if (custo == null)
 			return null;
 
-		return NUMBER_FORMAT.format(produto.getCusto() * quantidade);
+		return NUMBER_FORMAT.format(custo);
 	}
 
 }
