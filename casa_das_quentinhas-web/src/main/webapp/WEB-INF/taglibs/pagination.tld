@@ -10,17 +10,7 @@
 		<name>paginate</name>
 		<tag-class>br.com.cams7.app.taglib.PaginationTaglib</tag-class>
 		<body-content>empty</body-content>
-
-		<attribute>
-			<name>next</name>
-			<rtexprvalue>true</rtexprvalue>
-			<type>java.lang.String</type>
-		</attribute>
-		<attribute>
-			<name>previous</name>
-			<rtexprvalue>true</rtexprvalue>
-			<type>java.lang.String</type>
-		</attribute>
+		
 		<attribute>
 			<name>uri</name>
 			<required>true</required>
