@@ -146,6 +146,7 @@ CREATE TABLE public.pedido_item (
                 id_pedido BIGINT NOT NULL,
                 id_produto INTEGER NOT NULL,
                 quantidade SMALLINT NOT NULL,
+				custo REAL NOT NULL,
                 codigo_cfop CHAR(5),
                 codigo_icms CHAR(6),
                 codigo_icms_origem CHAR(1),

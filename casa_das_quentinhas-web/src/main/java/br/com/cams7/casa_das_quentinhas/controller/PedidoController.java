@@ -212,6 +212,7 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 			Produto produto = produtoService.getById(produtoId);
 
 			item.setProduto(produto);
+			item.setCusto(produto.getCusto() * quantidade);
 
 			Pedido pedido = itemFacade.addItem(item);
 			response = getSucessResponse(pedido);

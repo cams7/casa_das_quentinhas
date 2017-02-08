@@ -21,7 +21,8 @@
 						<th
 							class="${sortField eq 'produto.custo' ? sortOrder : 'sorting' }"
 							id="produto.custo">Custo unitário</th>
-						<th>Custo total</th>
+						<th class="${sortField eq 'custo' ? sortOrder : 'sorting' }"
+							id="custo">Custo total</th>
 						<th
 							class="${sortField eq 'produto.nome' ? sortOrder : 'sorting' }"
 							id="produto.nome">Produto</th>
@@ -41,8 +42,9 @@
 					<c:forEach items="${itens}" var="item">
 						<tr>
 							<td>${item.quantidade}</td>
-							<td><fmt:formatNumber value="${item.produto.custo}" type="currency"/></td>
-							<td><fmt:formatNumber value="${item.quantidade * item.produto.custo}" type="currency"/></td>
+							<td><fmt:formatNumber value="${item.produto.custo}"
+									type="currency" /></td>
+							<td><fmt:formatNumber value="${item.custo}" type="currency" /></td>
 							<td><a
 								href="<c:url value='/produto/${item.id.produtoId}' />">${item.produto.nome}</a></td>
 							<td>${item.produto.tamanho.descricao}</td>
@@ -88,7 +90,8 @@
 <input type="hidden" id="dataTable_offset" value="${offset}">
 <input type="hidden" id="dataTable_sortField" value="${sortField}">
 <input type="hidden" id="dataTable_sortOrder" value="${sortOrder}">
-<input type="hidden" id="dataTable_globalFilters" value="${globalFilters}">
+<input type="hidden" id="dataTable_globalFilters"
+	value="${globalFilters}">
 <input type="hidden" id="dataTable_query" value="${query}">
 
 <input type="hidden" id="dataTable_maxResults" value="${maxResults}">

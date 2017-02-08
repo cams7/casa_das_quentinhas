@@ -410,7 +410,7 @@ public class PedidoTest extends AbstractTest {
 	}
 
 	private void testItens() {
-		testList("quantidade", "produto.custo", "produto.nome", "produto.tamanho");
+		testList("quantidade", "produto.custo", "custo", "produto.nome", "produto.tamanho");
 	}
 
 }

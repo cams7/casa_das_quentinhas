@@ -218,7 +218,7 @@ public class PedidoServiceImpl extends AbstractService<Long, Pedido, PedidoDAO> 
 	 *         respectiva quantidade
 	 */
 	public static float getCustoTotal(List<PedidoItem> itens) {
-		return (float) itens.stream().mapToDouble(i -> i.getQuantidade() * i.getProduto().getCusto()).sum();
+		return (float) itens.stream().mapToDouble(i -> i.getCusto()).sum();
 	}
 
 }

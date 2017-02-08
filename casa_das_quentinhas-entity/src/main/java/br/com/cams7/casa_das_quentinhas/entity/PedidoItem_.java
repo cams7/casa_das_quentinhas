@@ -16,6 +16,7 @@ public class PedidoItem_ {
 	public static volatile SingularAttribute<PedidoItem, Pedido> pedido;
 	public static volatile SingularAttribute<PedidoItem, Produto> produto;
 	public static volatile SingularAttribute<PedidoItem, Short> quantidade;
+	public static volatile SingularAttribute<PedidoItem, Float> custo;
 	public static volatile SingularAttribute<PedidoItem, String> codigoCfop;
 	public static volatile SingularAttribute<PedidoItem, String> codigoIcms;
 	public static volatile SingularAttribute<PedidoItem, Character> codigoIcmsOrigem;
