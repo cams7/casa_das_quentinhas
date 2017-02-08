@@ -211,7 +211,7 @@ public class ProdutoDAOImpl extends AbstractDAO<Integer, Produto> implements Pro
 		Join<Pedido, Empresa> joinEmpresa = (Join<Pedido, Empresa>) joinPedido.join(Pedido_.empresa, JoinType.LEFT);
 		Join<Empresa, Cidade> joinECidade = (Join<Empresa, Cidade>) joinEmpresa.join(Empresa_.cidade, JoinType.LEFT);
 
-		cq.select(cb.array(joinItens.get(PedidoItem_.quantidade), from.get(Produto_.custo),
+		cq.select(cb.array(joinItens.get(PedidoItem_.custo),
 				joinPedido.get(Pedido_.manutencao).get(Manutencao_.cadastro), joinCliente.get(Cliente_.cpf),
 				joinCCidade.get(Cidade_.nome), joinEmpresa.get(Empresa_.cnpj), joinECidade.get(Cidade_.nome)));
 		cq.where(cb.equal(from.get(Produto_.id), produtoId));
@@ -220,17 +220,13 @@ public class ProdutoDAOImpl extends AbstractDAO<Integer, Produto> implements Pro
 
 		List<PedidoItem> itens = tq.getResultList().stream().map(array -> {
 			PedidoItem item = new PedidoItem();
-			item.setQuantidade((Short) array[0]);
-
-			Produto produto = new Produto();
-			produto.setCusto((Float) array[1]);
-			item.setProduto(produto);
+			item.setCusto((Float) array[0]);
 
 			Pedido pedido = new Pedido();
-			pedido.setManutencao(new Manutencao((Date) array[2], null));
+			pedido.setManutencao(new Manutencao((Date) array[1], null));
 
-			String clienteCpf = (String) (array[5] != null ? array[5] : array[3]);
-			String cidadeNome = (String) (array[6] != null ? array[6] : array[4]);
+			String clienteCpf = (String) (array[4] != null ? array[4] : array[2]);
+			String cidadeNome = (String) (array[5] != null ? array[5] : array[3]);
 
 			Cliente cliente = new Cliente();
 			cliente.setCpf(clienteCpf);
