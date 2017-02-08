@@ -75,8 +75,7 @@
 		<div class="col-sm-7">
 			<div class="dataTables_paginate paging_simple_numbers">
 				<p:paginate max="15" steps="${maxResults}" offset="${offset}"
-					count="${count}" uri="${paginateUri}" next="&raquo;"
-					previous="&laquo;" />
+					count="${count}" uri="${paginateUri}" />
 			</div>
 		</div>
 	</div>
