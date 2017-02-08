@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2017-01-18T13:11:58 -->
+<!-- 2017-02-08T18:03:12 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="produtos" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="812" leftMargin="15" rightMargin="15" topMargin="10" bottomMargin="10" uuid="ca58b80a-78a6-4c6f-a122-7c5150f24c74">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Casas das Quentinhas"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Casa das Quentinhas"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<style name="SansSerif_Normal" isDefault="true" fontSize="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false"/>
 	<style name="SansSerif_Bold" fill="Solid" fontSize="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false"/>
@@ -14,9 +14,8 @@
 		<queryString>
 			<![CDATA[select * from (
 select
-i.quantidade,
+i.custo,
 pdt.id_produto as "produto.id",
-pdt.custo as "produto.custo",
 pdd.data_cadastro as "pedido.manutencao.cadastro",
 c.cpf as "pedido.cliente.cpf",
 cc.nome as "pedido.cliente.cidade.nome"
@@ -28,9 +27,8 @@ inner join cliente c on c.id_cliente=cp.id_cliente
 inner join cidade cc on cc.Id_cidade=c.id_cidade
 union
 select
-i.quantidade,
+i.custo,
 pdt.id_produto as "produto.id",
-pdt.custo as "produto.custo",
 pdd.data_cadastro as "pedido.manutencao.cadastro",
 e.cnpj as "pedido.cliente.cpf",
 ec.nome as "pedido.cliente.cidade.nome"
@@ -44,8 +42,7 @@ inner join cidade ec on ec.Id_cidade=e.id_cidade) p where "produto.id" = $P{prod
 		<field name="pedido.manutencao.cadastro" class="java.sql.Timestamp"/>
 		<field name="pedido.cliente.cidade.nome" class="java.lang.String"/>
 		<field name="pedido.cliente.cpf" class="java.lang.String"/>
-		<field name="produto.custo" class="java.lang.Float"/>
-		<field name="quantidade" class="java.lang.Short"/>
+		<field name="custo" class="java.lang.Float"/>
 	</subDataset>
 	<queryString>
 		<![CDATA[SELECT
@@ -251,7 +248,7 @@ FROM produto]]>
 					</crosstabTotalColumnHeader>
 				</columnGroup>
 				<measure name="PedidoCusto" class="java.lang.Float" calculation="Sum">
-					<measureExpression><![CDATA[$F{produto.custo} * $F{quantidade}]]></measureExpression>
+					<measureExpression><![CDATA[$F{custo}]]></measureExpression>
 				</measure>
 				<crosstabCell width="45" height="25">
 					<cellContents backcolor="#FFFFFF" mode="Opaque">

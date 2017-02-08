@@ -238,7 +238,6 @@ heroku pg:psql DATABASE_URL --app <Nome da aplicação>
 * No seu *banco de dados* do *Heroku*, execute os comandos SQL dos arquivos **ddl-casa_das_quentinhas-required.sql**, **dml-uf-required.sql**, **dml-cidade-ddd31-required.sql**, **dml-usuario.sql**, **dml-empresa.sql**, **dml-funcionario.sql**, **dml-cliente.sql**, **dml-produto.sql** e **dml-pedido.sql** na ordem que foram informados. Esses arquivos estão localizados no diretório *database*.
 * Em seguida, feche o *banco de dados* e execute a linha abaixo:	 
 ```sh
-git checkout producao
 git push heroku -u master
 ```
 
