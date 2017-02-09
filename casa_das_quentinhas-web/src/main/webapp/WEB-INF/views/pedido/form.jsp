@@ -52,11 +52,19 @@
 	<div
 		class="form-group col-md-2 ${not empty situacaoError?'has-error':''}">
 		<label class="control-label" for="situacao">Situação</label>
-
-		<form:select path="situacao" id="situacao" items="${pedidoSituacoes}"
-			multiple="true" itemValue="situacao" itemLabel="descricao"
-			class="form-control" />
-		<div class="help-block with-errors">${situacaoError}</div>
+		<c:choose>
+			<c:when test="${edit}">
+				<form:select path="situacao" id="situacao"
+					items="${pedidoSituacoes}" multiple="true" itemValue="situacao"
+					itemLabel="descricao" class="form-control" />
+				<div class="help-block with-errors">${situacaoError}</div>
+			</c:when>
+			<c:otherwise>
+				<input type="text" value="${pedidoSituacao}" class="form-control"
+					readonly="readonly" id="situacao" />
+				<form:input type="hidden" path="situacao" />
+			</c:otherwise>
+		</c:choose>
 	</div>
 </div>
 

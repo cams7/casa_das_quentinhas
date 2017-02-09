@@ -33,7 +33,7 @@
 				<tbody>
 					<c:forEach items="${clientes}" var="cliente">
 						<tr>
-							<td>${cliente.id}</td>
+							<th scope="row">${cliente.id}</th>
 							<td>${cliente.nome}</td>
 							<td>${cliente.formattedCpf}</td>
 							<td>${cliente.contato.email}</td>

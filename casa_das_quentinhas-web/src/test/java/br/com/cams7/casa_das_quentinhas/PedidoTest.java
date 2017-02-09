@@ -236,7 +236,7 @@ public class PedidoTest extends AbstractTest {
 			formaPagamento.selectByValue(getFormaPagamento());
 			sleep();
 		}
-		if (isCreatePage || getBaseProducer().trueOrFalse()) {
+		if (!isCreatePage && getBaseProducer().trueOrFalse()) {
 			Select situacao = new Select(getDriver().findElement(By.name("situacao")));
 			situacao.deselectAll();
 			situacao.selectByValue(getSituacao());

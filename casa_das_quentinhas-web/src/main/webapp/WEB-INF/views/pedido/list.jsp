@@ -11,7 +11,7 @@
 <c:if test="${count > 0}">
 	<div id="list" class="row">
 		<div class="table-responsive col-md-12">
-			<table class="table table-striped table-bordered dataTable">
+			<table class="table table-bordered dataTable">
 				<thead>
 					<tr>
 						<th class="${sortField eq 'id' ? sortOrder : 'sorting' }" id="id">#</th>
@@ -35,8 +35,8 @@
 				</thead>
 				<tbody>
 					<c:forEach items="${pedidos}" var="pedido">
-						<tr>
-							<td>${pedido.id}</td>
+						<tr class="${pedido.situacao eq 'PENDENTE' ? 'bg-warning' : pedido.situacao eq 'EM_TRANSITO' ? 'bg-info' : pedido.situacao eq 'ENTREGUE' ? 'bg-success' : 'bg-danger'}">
+							<th scope="row">${pedido.id}</th>
 							<c:if test="${not escondeCliente}">
 								<td><c:choose>
 										<c:when test="${pedido.empresa != null}">

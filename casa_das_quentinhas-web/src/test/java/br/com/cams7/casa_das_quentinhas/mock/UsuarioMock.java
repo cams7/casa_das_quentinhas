@@ -8,7 +8,7 @@ import static br.com.cams7.casa_das_quentinhas.entity.Usuario.Tipo.EMPRESA;
 
 public class UsuarioMock extends AbstractMock {
 
-	private static final String[] emails = new String[] { "gerente@casa-das-quentinhas.com",
+	private static final String[] EMAILS = new String[] { "gerente@casa-das-quentinhas.com",
 			"atendente@casa-das-quentinhas.com", "entregador@casa-das-quentinhas.com",
 			"empresa@casa-das-quentinhas.com", "cliente@casa-das-quentinhas.com" };
 
@@ -20,7 +20,7 @@ public class UsuarioMock extends AbstractMock {
 	 * @return E-mail de acesso
 	 */
 	public static String getQualquerEmailAcesso() {
-		return getBaseProducer().randomElement(emails);
+		return getBaseProducer().randomElement(EMAILS);
 	}
 
 	/**
@@ -50,7 +50,7 @@ public class UsuarioMock extends AbstractMock {
 	}
 
 	public static String[] getEmails() {
-		return emails;
+		return EMAILS;
 	}
 
 }

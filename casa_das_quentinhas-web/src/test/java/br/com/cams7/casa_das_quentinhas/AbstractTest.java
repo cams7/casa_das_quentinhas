@@ -139,7 +139,7 @@ public abstract class AbstractTest implements BaseTest {
 		final String ACTIVE_PAGE = getActivePage();
 
 		final By PAGES = By.cssSelector("ul.pagination > li > a");
-		wait.until(ExpectedConditions.presenceOfElementLocated(PAGES));
+		wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(PAGES));
 		final String SELECTED_PAGE = baseProducer.randomElement(driver.findElements(PAGES).stream().filter(link -> {
 			try {
 				Integer.parseInt(link.getText());
@@ -416,17 +416,17 @@ public abstract class AbstractTest implements BaseTest {
 		testList(fields);
 
 		goToViewPage();
-		assertEquals(viewTitle, getDriver().getTitle());
+		assertEquals(viewTitle, driver.getTitle());
 
 		cancelOrDeleteViewPage(true);
-		assertEquals(getViewTitle(), getDriver().getTitle());
+		assertEquals(getViewTitle(), driver.getTitle());
 
 		if (GERENTE.equals(getAcesso()) || ATENDENTE.equals(getAcesso())) {
 			goToEditPage();
-			assertEquals(editTitle, getDriver().getTitle());
+			assertEquals(editTitle, driver.getTitle());
 
 			cancelCreateOrEditPage();
-			assertEquals(getViewTitle(), getDriver().getTitle());
+			assertEquals(getViewTitle(), driver.getTitle());
 		} else
 			assertFalse(getTotalTableEditRows() > 0);
 
@@ -462,7 +462,10 @@ public abstract class AbstractTest implements BaseTest {
 	}
 
 	protected final boolean isVisibleCreateLink() {
-		return (Boolean) getJS().executeScript("return $('div#top > div.h2 > a.btn.btn-primary').length > 0;");
+		// return (Boolean) js.executeScript("return $('div#top > div.h2 >
+		// a.btn.btn-primary').length > 0;");
+		final By CREATE_LINK = getCreateLink();
+		return !driver.findElements(CREATE_LINK).isEmpty();
 	}
 
 	protected final By getTableViewLink(int row) {
@@ -470,9 +473,14 @@ public abstract class AbstractTest implements BaseTest {
 	}
 
 	protected final int getTotalTableViewRows() {
-		return ((Long) getJS()
-				.executeScript("return $('table.dataTable > tbody > tr > td > a.btn.btn-success.btn-xs').length;"))
-						.intValue();
+		// return ((Long) js
+		// .executeScript("return $('table.dataTable > tbody > tr > td >
+		// a.btn.btn-success.btn-xs').length;"))
+		// .intValue();
+		final By VIEW_LINK = By.cssSelector("table.dataTable > tbody > tr > td > a.btn.btn-success.btn-xs");
+		wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(VIEW_LINK));
+		return driver.findElements(VIEW_LINK).size();
+
 	}
 
 	protected final By getTableEditLink(int row) {
@@ -480,9 +488,12 @@ public abstract class AbstractTest implements BaseTest {
 	}
 
 	protected final int getTotalTableEditRows() {
-		return ((Long) getJS()
-				.executeScript("return $('table.dataTable > tbody > tr > td > a.btn.btn-warning.btn-xs').length;"))
-						.intValue();
+		// return ((Long) js
+		// .executeScript("return $('table.dataTable > tbody > tr > td >
+		// a.btn.btn-warning.btn-xs').length;"))
+		// .intValue();
+		final By EDIT_LINK = By.cssSelector("table.dataTable > tbody > tr > td > a.btn.btn-warning.btn-xs");
+		return driver.findElements(EDIT_LINK).size();
 	}
 
 	protected final By getTableDeleteButton(int row) {
@@ -491,9 +502,12 @@ public abstract class AbstractTest implements BaseTest {
 	}
 
 	protected final int getTotalTableDeleteRows() {
-		return ((Long) getJS()
-				.executeScript("return $('table.dataTable > tbody > tr > td > button.btn.btn-danger.btn-xs').length;"))
-						.intValue();
+		// return ((Long) js
+		// .executeScript("return $('table.dataTable > tbody > tr > td >
+		// button.btn.btn-danger.btn-xs').length;"))
+		// .intValue();
+		final By DELETE_BUTTON = By.cssSelector("table.dataTable > tbody > tr > td > button.btn.btn-danger.btn-xs");
+		return driver.findElements(DELETE_BUTTON).size();
 	}
 
 	protected final By getViewDeleteButton() {
@@ -501,7 +515,10 @@ public abstract class AbstractTest implements BaseTest {
 	}
 
 	protected final boolean isVisibleDeleteButton() {
-		return (Boolean) getJS().executeScript("return $('div#actions > div > button.btn.btn-danger').length > 0;");
+		// return (Boolean) js.executeScript("return $('div#actions > div >
+		// button.btn.btn-danger').length > 0;");
+		final By DELETE_BUTTON = getViewDeleteButton();
+		return !driver.findElements(DELETE_BUTTON).isEmpty();
 	}
 
 	protected final By getViewCancelLink() {
@@ -533,7 +550,11 @@ public abstract class AbstractTest implements BaseTest {
 	}
 
 	protected final int getTotalTableRows() {
-		return ((Long) getJS().executeScript("return $('table.dataTable > tbody > tr').length;")).intValue();
+		// return ((Long) js.executeScript("return $('table.dataTable >
+		// tbody > tr').length;")).intValue();
+		final By ROWS = By.cssSelector("table.dataTable > tbody > tr");
+		wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(ROWS));
+		return driver.findElements(ROWS).size();
 	}
 
 	protected final void sleep() {
@@ -701,8 +722,8 @@ public abstract class AbstractTest implements BaseTest {
 
 		LOGGER.info("get id -> total rows: {}, row: {}", TOTAL_ROWS, ROW);
 
-		final By CELL = By.cssSelector("table.dataTable > tbody > tr:nth-child(" + ROW + ") > td:first-child");
-		getWait().until(ExpectedConditions.textMatches(CELL, Pattern.compile(NUMBER_REGEX)));
+		final By CELL = By.cssSelector("table.dataTable > tbody > tr:nth-child(" + ROW + ") > th:first-child");
+		wait.until(ExpectedConditions.textMatches(CELL, Pattern.compile(NUMBER_REGEX)));
 		return driver.findElement(CELL).getText();
 	}
 
