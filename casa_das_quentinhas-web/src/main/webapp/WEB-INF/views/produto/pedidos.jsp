@@ -13,7 +13,7 @@
 
 	<div id="list" class="row">
 		<div class="table-responsive col-md-12">
-			<table class="table table-striped table-bordered dataTable">
+			<table class="table table-bordered dataTable">
 				<thead>
 					<tr>
 						<th class="${sortField eq 'id.pedidoId' ? sortOrder : 'sorting' }"
@@ -32,8 +32,9 @@
 				</thead>
 				<tbody>
 					<c:forEach items="${itens}" var="item">
-						<tr>
-							<td>${item.id.pedidoId}</td>
+						<tr
+							class="${item.pedido.situacao eq 'PENDENTE' ? 'bg-warning' : item.pedido.situacao eq 'EM_TRANSITO' ? 'bg-info' : item.pedido.situacao eq 'ENTREGUE' ? 'bg-success' : 'bg-danger'}">
+							<th scope="row">${item.id.pedidoId}</th>
 							<td><fmt:formatDate type="both" dateStyle="short"
 									timeStyle="short" value="${item.pedido.manutencao.cadastro}" /></td>
 							<td><c:choose>
@@ -67,7 +68,8 @@
 	<input type="hidden" id="dataTable_offset" value="${offset}">
 	<input type="hidden" id="dataTable_sortField" value="${sortField}">
 	<input type="hidden" id="dataTable_sortOrder" value="${sortOrder}">
-	<input type="hidden" id="dataTable_globalFilters" value="${globalFilters}">
+	<input type="hidden" id="dataTable_globalFilters"
+		value="${globalFilters}">
 	<input type="hidden" id="dataTable_query" value="${query}">
 
 	<input type="hidden" id="dataTable_maxResults" value="${maxResults}">

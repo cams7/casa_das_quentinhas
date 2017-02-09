@@ -30,7 +30,7 @@
 				<tbody>
 					<c:forEach items="${produtos}" var="produto">
 						<tr>
-							<td>${produto.id}</td>
+							<th scope="row">${produto.id}</th>
 							<td>${produto.nome}</td>
 							<td>${produto.tamanho.descricao}</td>
 							<td><fmt:formatNumber value="${produto.custo}" type="currency"/></td>

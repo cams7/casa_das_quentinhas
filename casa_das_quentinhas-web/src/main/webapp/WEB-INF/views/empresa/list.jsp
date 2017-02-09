@@ -35,7 +35,7 @@
 				<tbody>
 					<c:forEach items="${empresas}" var="empresa">
 						<tr>
-							<td>${empresa.id}</td>
+							<th scope="row">${empresa.id}</th>
 							<td>${empresa.razaoSocial}</td>
 							<td>${empresa.formattedCnpj}</td>
 							<td>${empresa.contato.email}</td>

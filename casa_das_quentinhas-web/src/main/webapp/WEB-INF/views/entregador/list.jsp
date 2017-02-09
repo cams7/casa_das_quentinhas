@@ -34,7 +34,7 @@
 				<tbody>
 					<c:forEach items="${entregadores}" var="entregador">
 						<tr>
-							<td>${entregador.id}</td>
+							<th scope="row">${entregador.id}</th>
 							<td>${entregador.nome}</td>
 							<td>${entregador.formattedCpf}</td>
 							<td>${entregador.usuario.email}</td>

@@ -4,6 +4,7 @@
 package br.com.cams7.casa_das_quentinhas.service;
 
 import static br.com.cams7.casa_das_quentinhas.entity.Empresa.Tipo.CLIENTE;
+import static br.com.cams7.casa_das_quentinhas.entity.Pedido.Situacao.PENDENTE;
 import static br.com.cams7.casa_das_quentinhas.entity.Pedido.TipoCliente.PESSOA_JURIDICA;
 
 import java.util.Date;
@@ -20,6 +21,7 @@ import br.com.cams7.casa_das_quentinhas.dao.PedidoDAO;
 import br.com.cams7.casa_das_quentinhas.entity.Empresa;
 import br.com.cams7.casa_das_quentinhas.entity.Manutencao;
 import br.com.cams7.casa_das_quentinhas.entity.Pedido;
+import br.com.cams7.casa_das_quentinhas.entity.Pedido.Situacao;
 import br.com.cams7.casa_das_quentinhas.entity.PedidoItem;
 import br.com.cams7.casa_das_quentinhas.entity.PedidoItemPK;
 import br.com.cams7.casa_das_quentinhas.entity.Usuario;
@@ -32,6 +34,8 @@ import br.com.cams7.casa_das_quentinhas.entity.Empresa.Tipo;
 @Service
 @Transactional
 public class PedidoServiceImpl extends AbstractService<Long, Pedido, PedidoDAO> implements PedidoService {
+
+	public static final Situacao CADASTRO_SITUACAO = PENDENTE;
 
 	@Autowired
 	private UsuarioService usuarioService;
@@ -51,6 +55,7 @@ public class PedidoServiceImpl extends AbstractService<Long, Pedido, PedidoDAO> 
 	 */
 	@Override
 	public void persist(Pedido pedido, List<PedidoItem> itens) {
+		verificaSituacao(pedido.getSituacao());
 		verificaQuantidadeAndCusto(pedido.getQuantidade(), pedido.getCusto(), itens);
 
 		setEmpresa(pedido);
@@ -202,6 +207,16 @@ public class PedidoServiceImpl extends AbstractService<Long, Pedido, PedidoDAO> 
 
 		if (custo != getCustoTotal(itens))
 			throw new AppInvalidDataException("O custo total não é valido");
+	}
+
+	/**
+	 * Verifica, no cadastro, se a situação do pedido esta PENDENTE
+	 * 
+	 * @param situacao
+	 */
+	private void verificaSituacao(Situacao situacao) {
+		if (!CADASTRO_SITUACAO.equals(situacao))
+			throw new AppInvalidDataException("A situação do pedido não é valida");
 	}
 
 	/**

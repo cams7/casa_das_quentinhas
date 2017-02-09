@@ -3,6 +3,9 @@
  */
 package br.com.cams7.casa_das_quentinhas.controller;
 
+import static br.com.cams7.casa_das_quentinhas.entity.Pedido.FormaPagamento.PAGAMENTO_A_PRAZO;
+import static br.com.cams7.casa_das_quentinhas.entity.Pedido.TipoAtendimento.TELEATENDIMENTO;
+import static br.com.cams7.casa_das_quentinhas.entity.Pedido.TipoCliente.PESSOA_FISICA;
 import static br.com.cams7.casa_das_quentinhas.entity.Pedido.TipoCliente.PESSOA_JURIDICA;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -51,6 +54,7 @@ import br.com.cams7.casa_das_quentinhas.facade.PedidoItemFacade;
 import br.com.cams7.casa_das_quentinhas.service.ClienteService;
 import br.com.cams7.casa_das_quentinhas.service.EmpresaService;
 import br.com.cams7.casa_das_quentinhas.service.PedidoService;
+import br.com.cams7.casa_das_quentinhas.service.PedidoServiceImpl;
 import br.com.cams7.casa_das_quentinhas.service.ProdutoService;
 
 /**
@@ -65,6 +69,11 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 
 	public static final String MODEL_NAME = "pedido";
 	public static final String LIST_NAME = "pedidos";
+
+	private final TipoCliente CADASTRO_TIPOCLIENTE = PESSOA_FISICA;
+	private final FormaPagamento CADASTRO_FORMAPAGAMENTO = PAGAMENTO_A_PRAZO;
+	private final TipoAtendimento CADASTRO_TIPOATENDIMENTO = TELEATENDIMENTO;
+	private final Situacao CADASTRO_SITUACAO = PedidoServiceImpl.CADASTRO_SITUACAO;
 
 	@Autowired
 	private ClienteService clienteService;
@@ -90,6 +99,7 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 	 */
 	@Override
 	public String create(ModelMap model) {
+		setSituacao(model);
 		itemFacade.initCreate();
 		loadItens(0L, model);
 
@@ -100,6 +110,7 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 	public String store(@Valid Pedido pedido, BindingResult result, ModelMap model,
 			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
 
+		setSituacao(model);
 		setCommonAttributes(model);
 		incrementLastLoadedPage(model, lastLoadedPage);
 
@@ -334,10 +345,10 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 	protected Pedido getNewEntity() {
 		Pedido pedido = new Pedido();
 		pedido.setCliente(new Cliente());
-		pedido.setTipoCliente(TipoCliente.PESSOA_FISICA);
-		pedido.setFormaPagamento(FormaPagamento.PAGAMENTO_A_PRAZO);
-		pedido.setTipoAtendimento(TipoAtendimento.TELEATENDIMENTO);
-		pedido.setSituacao(Situacao.PENDENTE);
+		pedido.setTipoCliente(CADASTRO_TIPOCLIENTE);
+		pedido.setFormaPagamento(CADASTRO_FORMAPAGAMENTO);
+		pedido.setTipoAtendimento(CADASTRO_TIPOATENDIMENTO);
+		pedido.setSituacao(CADASTRO_SITUACAO);
 		return pedido;
 	}
 
@@ -412,6 +423,15 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 			model.addAttribute("escondeAcoes", true);
 
 		setPaginationAttribute(model, offset, sortField, sortOrder, null, count, MAX_RESULTS);
+	}
+
+	/**
+	 * Define a situação como Pendente no cadastro do pedido
+	 * 
+	 * @param model
+	 */
+	private final void setSituacao(ModelMap model) {
+		model.addAttribute("pedidoSituacao", CADASTRO_SITUACAO.getDescricao());
 	}
 
 }
