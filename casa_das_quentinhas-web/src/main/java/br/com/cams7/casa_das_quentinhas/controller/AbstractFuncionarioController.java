@@ -1,6 +1,9 @@
 package br.com.cams7.casa_das_quentinhas.controller;
 
+import static org.springframework.http.HttpStatus.OK;
+
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,14 +12,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
+import br.com.cams7.app.SearchParams;
+import br.com.cams7.app.SearchParams.SortOrder;
 import br.com.cams7.app.controller.AbstractBeanController;
 import br.com.cams7.casa_das_quentinhas.entity.Funcionario;
+import br.com.cams7.casa_das_quentinhas.entity.Pedido;
 import br.com.cams7.casa_das_quentinhas.entity.Usuario;
 import br.com.cams7.casa_das_quentinhas.entity.Funcionario.Funcao;
 import br.com.cams7.casa_das_quentinhas.service.EmpresaService;
 import br.com.cams7.casa_das_quentinhas.service.FuncionarioService;
+import br.com.cams7.casa_das_quentinhas.service.PedidoService;
 import br.com.cams7.casa_das_quentinhas.service.UsuarioService;
 
 /**
@@ -33,7 +43,37 @@ public abstract class AbstractFuncionarioController
 	private EmpresaService empresaService;
 
 	@Autowired
+	private PedidoService pedidoService;
+
+	@Autowired
 	private MessageSource messageSource;
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.app.controller.AbstractBeanController#show(java.io.
+	 * Serializable, org.springframework.ui.ModelMap)
+	 */
+	@Override
+	public String show(@PathVariable Integer id, ModelMap model) {
+
+		loadPedidos(id, model, 0, "id", SortOrder.DESCENDING);
+
+		return super.show(id, model);
+	}
+
+	@GetMapping(value = "/{funcionarioId}/pedidos")
+	@ResponseStatus(OK)
+	public String pedidos(@PathVariable Integer funcionarioId, ModelMap model,
+			@RequestParam(value = "offset", required = true) Integer offset,
+			@RequestParam(value = "f", required = true) String sortField,
+			@RequestParam(value = "s", required = true) String sortOrder,
+			@RequestParam(value = "q", required = true) String query) {
+
+		loadPedidos(funcionarioId, model, offset, sortField, SortOrder.get(sortOrder));
+
+		return "pedido_list";
+	}
 
 	protected String storeFuncionario(Funcionario funcionario, BindingResult result, ModelMap model,
 			Integer lastLoadedPage) {
@@ -138,6 +178,8 @@ public abstract class AbstractFuncionarioController
 
 	protected abstract Funcao[] getPossiveisFuncoes();
 
+	protected abstract void setFilterPedidos(Map<String, Object> filters, Integer entregadorId);
+
 	protected UsuarioService getUsuarioService() {
 		return usuarioService;
 	}
@@ -232,6 +274,25 @@ public abstract class AbstractFuncionarioController
 					.getMessage("NonUnique." + getModelName() + ".cpf", new String[] { funcionario.getCpf() }, LOCALE));
 			result.addError(cpfError);
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private void loadPedidos(Integer funcionarioId, ModelMap model, Integer offset, String sortField,
+			SortOrder sortOrder) {
+		final short MAX_RESULTS = 5;
+
+		Map<String, Object> filters = new HashMap<>();
+		setFilterPedidos(filters, funcionarioId);
+
+		SearchParams params = new SearchParams(offset, MAX_RESULTS, sortField, sortOrder, filters);
+
+		pedidoService.setIgnoredJoins();
+		List<Pedido> pedidos = pedidoService.search(params);
+		long count = pedidoService.getTotalElements(filters);
+
+		model.addAttribute("pedidos", pedidos);
+
+		setPaginationAttribute(model, offset, sortField, sortOrder, null, count, MAX_RESULTS);
 	}
 
 }

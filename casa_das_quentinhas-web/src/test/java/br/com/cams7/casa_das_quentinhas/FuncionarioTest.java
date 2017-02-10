@@ -84,6 +84,10 @@ public class FuncionarioTest extends AbstractTest {
 		goToViewPage();
 		assertEquals(VIEW_TITLE, getDriver().getTitle());
 
+		if (getDriver().findElements(By.xpath("//h3[@class='page-header']")).stream()
+				.anyMatch(e -> "Pedidos".equals(e.getText())))
+			testPedidos();
+
 		// Volta à página anterior
 		cancelOrDeleteViewPage(false);
 	}
@@ -216,6 +220,11 @@ public class FuncionarioTest extends AbstractTest {
 			confirmacaoSenha.sendKeys(getSenhaAcesso());
 			sleep();
 		}
+	}
+
+	private void testPedidos() {
+		testList(new String[] { "id", "tipoCliente", "quantidade", "custo", "manutencao.cadastro" },
+				"Visualizar Pedido", "Editar Pedido");
 	}
 
 }

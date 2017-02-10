@@ -6,6 +6,8 @@ package br.com.cams7.casa_das_quentinhas.controller;
 import static br.com.cams7.casa_das_quentinhas.entity.Funcionario.Funcao.ATENDENTE;
 import static br.com.cams7.casa_das_quentinhas.entity.Funcionario.Funcao.GERENTE;
 
+import java.util.Map;
+
 import javax.validation.Valid;
 
 import org.springframework.stereotype.Controller;
@@ -123,4 +125,8 @@ public class FuncionarioController extends AbstractFuncionarioController {
 		return "O funcionário foi removido com sucesso.";
 	}
 
+	@Override
+	protected void setFilterPedidos(Map<String, Object> filters, Integer funcionarioId) {
+		filters.put("usuarioCadastro.id", funcionarioId);
+	}
 }
