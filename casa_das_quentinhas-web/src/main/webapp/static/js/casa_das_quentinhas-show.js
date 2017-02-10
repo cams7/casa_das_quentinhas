@@ -15,7 +15,7 @@ $(document).on('submit', 'div.delete_from_show_page form', function(event) {
         url: form.action,
         type: form.method,
         success: function(data) {
-        	window.history.go(-1);
+        	window.history.go(-$('input#previousPage').val());
         },
         error: function(data) {
         	createErrorMessage(data.status, data.responseJSON.message);

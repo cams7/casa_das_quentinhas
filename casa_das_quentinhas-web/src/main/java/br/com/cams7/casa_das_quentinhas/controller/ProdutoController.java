@@ -56,7 +56,6 @@ public class ProdutoController extends AbstractBeanController<Integer, Produto, 
 	 */
 	@Override
 	public String show(@PathVariable Integer id, ModelMap model) {
-
 		// Carrega os pedidos
 		loadPedidos(id, model, 0, "id.pedidoId", SortOrder.DESCENDING);
 
@@ -70,7 +69,6 @@ public class ProdutoController extends AbstractBeanController<Integer, Produto, 
 			@RequestParam(value = "f", required = true) String sortField,
 			@RequestParam(value = "s", required = true) String sortOrder,
 			@RequestParam(value = "q", required = true) String query) {
-
 		loadPedidos(produtoId, model, offset, sortField, SortOrder.get(sortOrder));
 
 		return "produto_pedidos";
@@ -130,6 +128,16 @@ public class ProdutoController extends AbstractBeanController<Integer, Produto, 
 		model.addAttribute("itens", itens);
 
 		setPaginationAttribute(model, offset, sortField, sortOrder, null, count, MAX_RESULTS);
+	}
+
+	@Override
+	protected String getStoreSucessMessage() {
+		return "O produto foi cadastrado com sucesso!";
+	}
+
+	@Override
+	protected String getUpdateSucessMessage(Produto produto) {
+		return String.format("Os dados do produto (%s) foram atualizados com sucesso!", produto.getNomeWithTamanho());
 	}
 
 }

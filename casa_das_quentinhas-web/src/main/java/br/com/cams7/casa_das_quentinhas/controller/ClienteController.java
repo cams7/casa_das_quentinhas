@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,12 +38,12 @@ import br.com.cams7.app.common.DateEditor;
 import br.com.cams7.app.controller.AbstractBeanController;
 import br.com.cams7.casa_das_quentinhas.entity.Cidade;
 import br.com.cams7.casa_das_quentinhas.entity.Cliente;
+import br.com.cams7.casa_das_quentinhas.entity.Cliente.TipoContribuinte;
 import br.com.cams7.casa_das_quentinhas.entity.Contato;
 import br.com.cams7.casa_das_quentinhas.entity.Empresa;
 import br.com.cams7.casa_das_quentinhas.entity.Endereco;
 import br.com.cams7.casa_das_quentinhas.entity.Pedido;
 import br.com.cams7.casa_das_quentinhas.entity.Usuario;
-import br.com.cams7.casa_das_quentinhas.entity.Cliente.TipoContribuinte;
 import br.com.cams7.casa_das_quentinhas.service.CidadeService;
 import br.com.cams7.casa_das_quentinhas.service.ClienteService;
 import br.com.cams7.casa_das_quentinhas.service.PedidoService;
@@ -77,11 +78,9 @@ public class ClienteController extends AbstractBeanController<Integer, Cliente, 
 	 * org.springframework.ui.ModelMap, java.lang.Integer)
 	 */
 	@Override
-	public String store(@Valid Cliente cliente, BindingResult result, ModelMap model,
-			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
-
+	public String store(@Valid Cliente cliente, BindingResult result, ModelMap model, HttpServletRequest request) {
 		setCommonAttributes(model);
-		incrementLastLoadedPage(model, lastLoadedPage);
+		incrementPreviousPage(model, request);
 
 		Usuario usuario = cliente.getUsuarioAcesso();
 		Cidade cidade = cliente.getCidade();
@@ -116,7 +115,8 @@ public class ClienteController extends AbstractBeanController<Integer, Cliente, 
 		getService().setUsername(getUsername());
 		getService().persist(cliente);
 
-		return redirectMainPage();
+		sucessMessage(model);
+		return redirectToPreviousPage(request);
 	}
 
 	/*
@@ -128,7 +128,6 @@ public class ClienteController extends AbstractBeanController<Integer, Cliente, 
 	 */
 	@Override
 	public String show(@PathVariable Integer id, ModelMap model) {
-
 		loadPedidos(id, model, 0, "id", SortOrder.DESCENDING);
 
 		return super.show(id, model);
@@ -144,10 +143,9 @@ public class ClienteController extends AbstractBeanController<Integer, Cliente, 
 	 */
 	@Override
 	public String update(@Valid Cliente cliente, BindingResult result, ModelMap model, @PathVariable Integer id,
-			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
-
+			HttpServletRequest request) {
 		setCommonAttributes(model);
-		incrementLastLoadedPage(model, lastLoadedPage);
+		incrementPreviousPage(model, request);
 		setEditPage(model);
 
 		Usuario usuario = cliente.getUsuarioAcesso();
@@ -169,7 +167,8 @@ public class ClienteController extends AbstractBeanController<Integer, Cliente, 
 
 		getService().update(cliente);
 
-		return redirectMainPage();
+		sucessMessage(model, cliente);
+		return redirectToPreviousPage(request);
 	}
 
 	@GetMapping(value = "/{clienteId}/pedidos")
@@ -349,6 +348,16 @@ public class ClienteController extends AbstractBeanController<Integer, Cliente, 
 		model.addAttribute("escondeCliente", true);
 
 		setPaginationAttribute(model, offset, sortField, sortOrder, null, count, MAX_RESULTS);
+	}
+
+	@Override
+	protected String getStoreSucessMessage() {
+		return "O(A) cliente foi cadastrado(a) com sucesso!";
+	}
+
+	@Override
+	protected String getUpdateSucessMessage(Cliente cliente) {
+		return String.format("Os dados do(a) cliente (%s) foram atualizados com sucesso!", cliente.getNomeWithCpf());
 	}
 
 }

@@ -8,6 +8,7 @@ import static br.com.cams7.casa_das_quentinhas.entity.Funcionario.Funcao.GERENTE
 
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.stereotype.Controller;
@@ -16,7 +17,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import br.com.cams7.casa_das_quentinhas.entity.Empresa;
@@ -46,8 +46,8 @@ public class FuncionarioController extends AbstractFuncionarioController {
 	 */
 	@Override
 	public String store(@Valid Funcionario funcionario, BindingResult result, ModelMap model,
-			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
-		return storeFuncionario(funcionario, result, model, lastLoadedPage);
+			HttpServletRequest request) {
+		return storeFuncionario(funcionario, result, model, request);
 	}
 
 	/*
@@ -61,8 +61,8 @@ public class FuncionarioController extends AbstractFuncionarioController {
 	 */
 	@Override
 	public String update(@Valid Funcionario funcionario, BindingResult result, ModelMap model, @PathVariable Integer id,
-			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
-		return updateFuncionario(funcionario, result, model, id, lastLoadedPage);
+			HttpServletRequest request) {
+		return updateFuncionario(funcionario, result, model, id, request);
 	}
 
 	/**
@@ -128,5 +128,16 @@ public class FuncionarioController extends AbstractFuncionarioController {
 	@Override
 	protected void setFilterPedidos(Map<String, Object> filters, Integer funcionarioId) {
 		filters.put("usuarioCadastro.id", funcionarioId);
+	}
+
+	@Override
+	protected String getStoreSucessMessage() {
+		return "O(A) funcionária(a) foi cadastrado(a) com sucesso!";
+	}
+
+	@Override
+	protected String getUpdateSucessMessage(Funcionario funcionario) {
+		return String.format("Os dados do(a) funcionária(a) (%s) foram atualizados com sucesso!",
+				funcionario.getNomeWithCpf());
 	}
 }

@@ -309,7 +309,7 @@ public abstract class AbstractTest implements BaseTest {
 			if (!GERENTE.equals(acesso))
 				assertFalse(isVisibleDeleteButton());
 
-			final By CANCEL = getViewCancelLink();
+			final By CANCEL = getCancelButton();
 			wait.until(ExpectedConditions.elementToBeClickable(CANCEL));
 			driver.findElement(CANCEL).click();
 
@@ -398,7 +398,7 @@ public abstract class AbstractTest implements BaseTest {
 	 * Vai para a página anterior
 	 */
 	protected final void cancelCreateOrEditPage() {
-		final By CANCEL = getCreateOrEditCancelButton();
+		final By CANCEL = getCancelButton();
 		wait.until(ExpectedConditions.elementToBeClickable(CANCEL));
 		driver.findElement(CANCEL).click();
 		sleep();
@@ -530,15 +530,15 @@ public abstract class AbstractTest implements BaseTest {
 		return !driver.findElements(DELETE_BUTTON).isEmpty();
 	}
 
-	protected final By getViewCancelLink() {
-		return By.cssSelector("div#actions > div > a.btn.btn-default");
-	}
+	// protected final By getViewCancelLink() {
+	// return By.cssSelector("div#actions > div > a.btn.btn-default");
+	// }
 
 	protected final By getCreateOrEditSubmit() {
 		return By.cssSelector("div#actions > div > input.btn.btn-primary");
 	}
 
-	protected final By getCreateOrEditCancelButton() {
+	protected final By getCancelButton() {
 		return By.cssSelector("div#actions > div > button.btn.btn-default");
 	}
 

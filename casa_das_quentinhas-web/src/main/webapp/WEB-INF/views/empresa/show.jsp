@@ -146,6 +146,9 @@
 	</div>
 </div>
 
+<input type="hidden" id="previousPage" name="previousPage"
+	value="${not empty param.sucessMessage?'3':'1'}">
+
 <hr />
 <div id="actions" class="row">
 	<div class="col-md-12">
@@ -157,7 +160,7 @@
 			<button id="delete" class="btn btn-danger" value="${empresa.id}"
 				title="Deseja realmente excluir a empresa ( ${empresa.razaoSocialWithCnpj} )">Excluir</button>
 		</sec:authorize>
-		<a href="javascript:history.back()" class="btn btn-default">Cancelar</a>
+		<button id="cancelar" class="btn btn-default">Cancelar</button>
 	</div>
 </div>
 

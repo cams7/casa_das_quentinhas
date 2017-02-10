@@ -12,6 +12,7 @@ import static org.springframework.http.HttpStatus.OK;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,21 +104,19 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 	 * .ui.ModelMap)
 	 */
 	@Override
-	public String create(ModelMap model) {
+	public String create(ModelMap model, HttpServletRequest request) {
 		setSituacao(model);
 		itemFacade.initCreate();
 		loadItens(0L, model);
 
-		return super.create(model);
+		return super.create(model, request);
 	}
 
 	@Override
-	public String store(@Valid Pedido pedido, BindingResult result, ModelMap model,
-			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
-
+	public String store(@Valid Pedido pedido, BindingResult result, ModelMap model, HttpServletRequest request) {
 		setSituacao(model);
 		setCommonAttributes(model);
-		incrementLastLoadedPage(model, lastLoadedPage);
+		incrementPreviousPage(model, request);
 
 		// Carrega os intens do pedido
 		loadItens(0L, model);
@@ -133,7 +132,8 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 		getService().setUsername(getUsername());
 		getService().persist(pedido, itens);
 
-		return redirectMainPage();
+		sucessMessage(model);
+		return redirectToPreviousPage(request);
 	}
 
 	/*
@@ -153,20 +153,19 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 	}
 
 	@Override
-	public String edit(@PathVariable Long id, ModelMap model) {
+	public String edit(@PathVariable Long id, ModelMap model, HttpServletRequest request) {
 		itemFacade.initUpdate(id);
 		// Carrega os intens do pedido
 		loadItens(0L, model);
 
-		return super.edit(id, model);
+		return super.edit(id, model, request);
 	}
 
 	@Override
 	public String update(@Valid Pedido pedido, BindingResult result, ModelMap model, @PathVariable Long id,
-			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
-
+			HttpServletRequest request) {
 		setCommonAttributes(model);
-		incrementLastLoadedPage(model, lastLoadedPage);
+		incrementPreviousPage(model, request);
 		setEditPage(model);
 
 		// Carrega os intens do pedido
@@ -183,7 +182,8 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 
 		getService().update(pedido, itens, removedItens);
 
-		return redirectMainPage();
+		sucessMessage(model, pedido);
+		return redirectToPreviousPage(request);
 	}
 
 	@GetMapping(value = "/{pedidoId}/itens")
@@ -193,7 +193,6 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 			@RequestParam(value = "f", required = true) String sortField,
 			@RequestParam(value = "s", required = true) String sortOrder,
 			@RequestParam(value = "q", required = true) String query) {
-
 		loadItens(pedidoId, model, offset, sortField, SortOrder.get(sortOrder));
 
 		return "pedido_itens";
@@ -449,6 +448,16 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 	 */
 	private final void setSituacao(ModelMap model) {
 		model.addAttribute("pedidoSituacao", CADASTRO_SITUACAO.getDescricao());
+	}
+
+	@Override
+	protected String getStoreSucessMessage() {
+		return "O pedido foi cadastrado com sucesso!";
+	}
+
+	@Override
+	protected String getUpdateSucessMessage(Pedido pedido) {
+		return String.format("Os dados do pedido (%s) foram atualizados com sucesso!", pedido.getIdWithCadastro());
 	}
 
 }
