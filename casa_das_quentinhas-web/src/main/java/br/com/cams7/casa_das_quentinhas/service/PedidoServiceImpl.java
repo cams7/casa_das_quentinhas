@@ -4,6 +4,7 @@
 package br.com.cams7.casa_das_quentinhas.service;
 
 import static br.com.cams7.casa_das_quentinhas.entity.Empresa.Tipo.CLIENTE;
+import static br.com.cams7.casa_das_quentinhas.entity.Funcionario.Funcao.ENTREGADOR;
 import static br.com.cams7.casa_das_quentinhas.entity.Pedido.Situacao.PENDENTE;
 import static br.com.cams7.casa_das_quentinhas.entity.Pedido.TipoCliente.PESSOA_JURIDICA;
 
@@ -19,14 +20,15 @@ import br.com.cams7.app.AppNotFoundException;
 import br.com.cams7.app.service.AbstractService;
 import br.com.cams7.casa_das_quentinhas.dao.PedidoDAO;
 import br.com.cams7.casa_das_quentinhas.entity.Empresa;
+import br.com.cams7.casa_das_quentinhas.entity.Empresa.Tipo;
+import br.com.cams7.casa_das_quentinhas.entity.Funcionario;
+import br.com.cams7.casa_das_quentinhas.entity.Funcionario.Funcao;
 import br.com.cams7.casa_das_quentinhas.entity.Manutencao;
 import br.com.cams7.casa_das_quentinhas.entity.Pedido;
 import br.com.cams7.casa_das_quentinhas.entity.Pedido.Situacao;
 import br.com.cams7.casa_das_quentinhas.entity.PedidoItem;
 import br.com.cams7.casa_das_quentinhas.entity.PedidoItemPK;
 import br.com.cams7.casa_das_quentinhas.entity.Usuario;
-import br.com.cams7.casa_das_quentinhas.entity.Empresa.Tipo;
-import br.com.cams7.casa_das_quentinhas.entity.Funcionario;
 
 /**
  * @author César Magalhães
@@ -45,6 +47,9 @@ public class PedidoServiceImpl extends AbstractService<Long, Pedido, PedidoDAO> 
 	private EmpresaService empresaService;
 
 	@Autowired
+	private FuncionarioService funcionarioService;
+
+	@Autowired
 	private PedidoItemService itemService;
 
 	/*
@@ -59,14 +64,13 @@ public class PedidoServiceImpl extends AbstractService<Long, Pedido, PedidoDAO> 
 		verificaSituacao(pedido.getSituacao());
 		verificaQuantidadeAndCusto(pedido.getQuantidade(), pedido.getCusto(), itens);
 
+		setEntregador(pedido);
 		setEmpresa(pedido);
 
 		Integer usuarioId = usuarioService.getUsuarioIdByEmail(getUsername());
 		pedido.setUsuarioCadastro(new Usuario(usuarioId));
 
 		pedido.setManutencao(new Manutencao(new Date(), new Date()));
-
-		setEntregador(pedido);
 
 		super.persist(pedido);
 
@@ -91,6 +95,7 @@ public class PedidoServiceImpl extends AbstractService<Long, Pedido, PedidoDAO> 
 
 		verificaQuantidadeAndCusto(pedido.getQuantidade(), pedido.getCusto(), itens);
 
+		setEntregador(pedido);
 		setEmpresa(pedido);
 
 		Object[] array = getUsuarioIdAndPedidoCadastroByPedidoId(id);
@@ -100,8 +105,6 @@ public class PedidoServiceImpl extends AbstractService<Long, Pedido, PedidoDAO> 
 
 		pedido.setUsuarioCadastro(new Usuario(usuarioId));
 		pedido.setManutencao(new Manutencao(cadastro, new Date()));
-		
-		setEntregador(pedido);
 
 		super.update(pedido);
 
@@ -190,6 +193,32 @@ public class PedidoServiceImpl extends AbstractService<Long, Pedido, PedidoDAO> 
 	}
 
 	/**
+	 * Atribui NULL ao entregador caso esse não tenha sido informado
+	 * 
+	 * @param pedido
+	 */
+	private void setEntregador(Pedido pedido) {
+		Funcionario entregador = pedido.getEntregador();
+		Integer entregadorId = entregador.getId();
+
+		if (entregadorId == null)
+			pedido.setEntregador(null);
+		else
+			verificaEntregador(entregadorId);
+	}
+
+	/**
+	 * Verifica se o entregador é valido
+	 * 
+	 * @param entregadorId
+	 */
+	private void verificaEntregador(Integer entregadorId) {
+		Funcao funcao = funcionarioService.getFuncionarioFuncaoById(entregadorId);
+		if (!ENTREGADOR.equals(funcao))
+			throw new AppInvalidDataException(String.format("O entregador (id: %s) não é válido...", entregadorId));
+	}
+
+	/**
 	 * Atribui a empresa caso o cliente seja uma pessoa juridica
 	 * 
 	 * @param pedido
@@ -239,18 +268,6 @@ public class PedidoServiceImpl extends AbstractService<Long, Pedido, PedidoDAO> 
 	private void verificaSituacao(Situacao situacao) {
 		if (!CADASTRO_SITUACAO.equals(situacao))
 			throw new AppInvalidDataException("A situação do pedido não é valida");
-	}
-
-	/**
-	 * Troca o conteúdo do atributo entregador para NULL, caso o entregador não
-	 * tenha sido informado
-	 * 
-	 * @param pedido
-	 */
-	private void setEntregador(Pedido pedido) {
-		Funcionario entregador = pedido.getEntregador();
-		if (entregador.getId() == null)
-			pedido.setEntregador(null);
 	}
 
 }
