@@ -3,6 +3,7 @@
  */
 package br.com.cams7.casa_das_quentinhas.entity;
 
+import javax.persistence.metamodel.ListAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
@@ -24,4 +25,5 @@ public class Funcionario_ {
 	public static volatile SingularAttribute<Funcionario, String> rg;
 	public static volatile SingularAttribute<Funcionario, String> celular;
 	public static volatile SingularAttribute<Funcionario, Manutencao> manutencao;
+	public static volatile ListAttribute<Funcionario, Pedido> pedidos;
 }

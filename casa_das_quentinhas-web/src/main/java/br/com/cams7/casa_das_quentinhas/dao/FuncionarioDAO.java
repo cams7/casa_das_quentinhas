@@ -1,5 +1,7 @@
 package br.com.cams7.casa_das_quentinhas.dao;
 
+import java.util.Map;
+
 import br.com.cams7.app.dao.BaseDAO;
 import br.com.cams7.casa_das_quentinhas.entity.Funcionario;
 import br.com.cams7.casa_das_quentinhas.entity.Funcionario.Funcao;
@@ -47,4 +49,11 @@ public interface FuncionarioDAO extends BaseDAO<Integer, Funcionario> {
 	 *         funcionário
 	 */
 	Object[] getUsuarioIdAndFuncionarioCadastroByFuncionarioId(Integer funcionarioId);
+
+	/**
+	 * @param nomeOrCpfOrCelular
+	 *            Nome,CPF ou celular
+	 * @return Entregadores
+	 */
+	Map<Integer, String> getEntregadoresByNomeOrCpfOrCelular(String nomeOrCpfOrCelular);
 }

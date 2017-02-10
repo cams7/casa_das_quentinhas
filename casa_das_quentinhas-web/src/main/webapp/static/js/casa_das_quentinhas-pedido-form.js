@@ -13,14 +13,12 @@ $('select#tipoCliente').change(function(event) {
 $('input#cliente').autocomplete({
     source : function(request, response) {
         $.getJSON( MAIN_PAGE + ($( 'select#tipoCliente option:selected' ).val() == 'PESSOA_JURIDICA' ? '/empresas' : '/clientes') + '/' + request.term, function(data) {
-        	// console.log(data);
-        	console.log();
-            response(
-                $.map(data, function (nomeWithCpfOrCnpj, i) {
+        	response(
+                $.map(data, function (nomeOrCnpjOrCpfOrTelefone, i) {
                     return {
                         id: i,
-                        label: nomeWithCpfOrCnpj,
-                        value: nomeWithCpfOrCnpj
+                        label: nomeOrCnpjOrCpfOrTelefone,
+                        value: nomeOrCnpjOrCpfOrTelefone
                     };
                 })
             );
@@ -31,3 +29,28 @@ $('input#cliente').autocomplete({
     },
     minLength : 1
 });
+
+$('input#entregador').autocomplete({
+    source : function(request, response) {
+        $.getJSON( MAIN_PAGE + '/entregadores/' + request.term, function(data) {
+        	response(
+                $.map(data, function (nomeOrCpfOrCelular, i) {
+                    return {
+                        id: i,
+                        label: nomeOrCpfOrCelular,
+                        value: nomeOrCpfOrCelular
+                    };
+                })
+            );
+        });
+    }, 
+    select: function (event, ui) {
+        $('input#entregador_id').val(ui.item.id);
+    },   
+    minLength : 1
+});
+
+//$('form#pedido_form').submit(function( event ) {
+//	if($('form#pedido_form :input[name="entregador.nome"]').val().trim() == '')
+//		$('form#pedido_form :input[name="entregador.id"]').val('');
+//});

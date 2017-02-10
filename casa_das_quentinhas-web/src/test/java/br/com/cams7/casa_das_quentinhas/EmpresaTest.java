@@ -247,7 +247,7 @@ public class EmpresaTest extends AbstractTest {
 
 			final By CIDADE_ID = By.name("cidade.id");
 
-			validateIdCidade(CIDADE_ID, isCreatePage);
+			validateId(CIDADE_ID, isCreatePage);
 
 			final By AUTOCOMPLETE = By.cssSelector("ul.ui-autocomplete");
 
@@ -307,15 +307,6 @@ public class EmpresaTest extends AbstractTest {
 			confirmacaoSenha.sendKeys(getSenhaAcesso());
 			sleep();
 		}
-	}
-
-	private void validateIdCidade(final By CIDADE_ID, boolean isCreatePage) {
-		getWait().until(ExpectedConditions.presenceOfElementLocated(CIDADE_ID));
-		final String ID = getDriver().findElement(CIDADE_ID).getAttribute("value");
-		if (isCreatePage)
-			assertTrue(ID.isEmpty());
-		else
-			assertTrue(ID.matches(NUMBER_REGEX));
 	}
 
 	private void testPedidos() {

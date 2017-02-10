@@ -449,6 +449,15 @@ public abstract class AbstractTest implements BaseTest {
 		return !Arrays.asList(getEmails()).contains(email);
 	}
 
+	protected void validateId(final By ID, final boolean isEmpty) {
+		wait.until(ExpectedConditions.presenceOfElementLocated(ID));
+		final String VALUE = driver.findElement(ID).getAttribute("value");
+		if (isEmpty)
+			assertTrue(VALUE.isEmpty());
+		else
+			assertTrue(VALUE.matches(NUMBER_REGEX));
+	}
+
 	protected final String getRandomLetter() {
 		return String.valueOf(baseProducer.randomBetween('a', 'z'));
 	}

@@ -28,7 +28,7 @@
 		<p>
 			<strong>Empresa</strong>
 		</p>
-		<p>${entregador.empresa.razaoSocialWithCnpj}</p>
+		<p><a href="<c:url value='/empresa/${entregador.empresa.id}' />">${entregador.empresa.razaoSocialWithCnpj}</a></p>
 	</div>
 	<div class="col-md-2">
 		<p>

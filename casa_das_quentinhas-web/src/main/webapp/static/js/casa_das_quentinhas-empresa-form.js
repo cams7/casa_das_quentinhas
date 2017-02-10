@@ -5,12 +5,11 @@ $('input#cep').mask('99999-999');
 $('input#cidade').autocomplete({
 	source : function(request, response) {
 		$.getJSON(MAIN_PAGE + '/cidades/' + request.term, function(data) {
-			// console.log(data);
-			response($.map(data, function(nomeWithEstadoSigla, i) {
+			response($.map(data, function(nomeOrIbge, i) {
 				return {
 					id : i,
-					label : nomeWithEstadoSigla,
-					value : nomeWithEstadoSigla
+					label : nomeOrIbge,
+					value : nomeOrIbge
 				};
 			}));
 		});

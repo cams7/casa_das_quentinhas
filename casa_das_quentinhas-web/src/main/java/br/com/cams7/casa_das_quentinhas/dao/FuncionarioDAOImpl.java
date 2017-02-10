@@ -1,8 +1,11 @@
 package br.com.cams7.casa_das_quentinhas.dao;
 
+import static br.com.cams7.casa_das_quentinhas.entity.Funcionario.Funcao.ENTREGADOR;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.persistence.NoResultException;
@@ -21,11 +24,11 @@ import br.com.cams7.app.AppNotFoundException;
 import br.com.cams7.app.dao.AbstractDAO;
 import br.com.cams7.casa_das_quentinhas.entity.Empresa;
 import br.com.cams7.casa_das_quentinhas.entity.Funcionario;
+import br.com.cams7.casa_das_quentinhas.entity.Funcionario.Funcao;
 import br.com.cams7.casa_das_quentinhas.entity.Funcionario_;
 import br.com.cams7.casa_das_quentinhas.entity.Manutencao_;
 import br.com.cams7.casa_das_quentinhas.entity.Usuario;
 import br.com.cams7.casa_das_quentinhas.entity.Usuario_;
-import br.com.cams7.casa_das_quentinhas.entity.Funcionario.Funcao;
 
 /**
  * @author César Magalhães
@@ -231,6 +234,41 @@ public class FuncionarioDAOImpl extends AbstractDAO<Integer, Funcionario> implem
 					"Do funcionário (id: %s), o id do usuário de cadastro e a data de cadastro do funcionário não foram encontrados...",
 					funcionarioId));
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.casa_das_quentinhas.dao.FuncionarioDAO#
+	 * getEntregadoresByNomeOrCpfOrCelular(java.lang.String)
+	 */
+	@Override
+	public Map<Integer, String> getEntregadoresByNomeOrCpfOrCelular(String nomeOrCpfOrCelular) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Object[]> cq = cb.createQuery(Object[].class);
+
+		Root<Funcionario> from = cq.from(ENTITY_TYPE);
+
+		cq.select(cb.array(from.get(Funcionario_.id), from.get(Funcionario_.nome), from.get(Funcionario_.cpf)));
+
+		nomeOrCpfOrCelular = "%" + nomeOrCpfOrCelular.toLowerCase() + "%";
+
+		cq.where(cb.and(
+				cb.or(cb.like(cb.lower(from.get(Funcionario_.nome)), nomeOrCpfOrCelular),
+						cb.like(from.get(Funcionario_.cpf), nomeOrCpfOrCelular),
+						cb.like(from.get(Funcionario_.celular), nomeOrCpfOrCelular)),
+				cb.equal(from.get(Funcionario_.funcao), ENTREGADOR)));
+
+		cq.orderBy(cb.asc(from.get(Funcionario_.nome)));
+
+		TypedQuery<Object[]> tq = getEntityManager().createQuery(cq);
+		tq.setMaxResults(5);
+
+		Map<Integer, String> funcionarios = tq.getResultList().stream()
+				.collect(Collectors.toMap(funcionario -> (Integer) funcionario[0],
+						funcionario -> Funcionario.getNomeWithCpf((String) funcionario[1], (String) funcionario[2])));
+
+		return funcionarios;
 	}
 
 }

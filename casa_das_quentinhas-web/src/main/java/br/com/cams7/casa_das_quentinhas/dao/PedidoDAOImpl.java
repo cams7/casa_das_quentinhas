@@ -136,6 +136,7 @@ public class PedidoDAOImpl extends AbstractDAO<Long, Pedido> implements PedidoDA
 
 		from.fetch(Pedido_.cliente, JoinType.LEFT);
 		from.fetch(Pedido_.empresa, JoinType.LEFT);
+		from.fetch(Pedido_.entregador, JoinType.LEFT);
 
 		cq.select(from);
 

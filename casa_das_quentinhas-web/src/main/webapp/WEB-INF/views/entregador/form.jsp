@@ -39,7 +39,7 @@
 		class="form-group col-md-6 ${not empty empresaError ? 'has-error' : ''}">
 		<label class="control-label" for="empresa.razaoSocial">Empresa</label>
 		<form:input type="text" path="empresa.razaoSocial" id="empresa"
-			class="form-control" maxlength="60" placeholder="Nome / CNPJ"
+			class="form-control" maxlength="60" placeholder="Razão social / CNPJ"
 			value="${entregador.empresa.razaoSocialWithCnpj}" />
 		<form:input type="hidden" path="empresa.id" id="empresa_id" />
 		<div class="help-block with-errors">${empresaError}</div>

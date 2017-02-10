@@ -7,6 +7,7 @@ import static br.com.cams7.casa_das_quentinhas.entity.Usuario.Tipo.FUNCIONARIO;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -176,6 +177,18 @@ public class FuncionarioServiceImpl extends AbstractService<Integer, Funcionario
 	@Override
 	public Object[] getUsuarioIdAndFuncionarioCadastroByFuncionarioId(Integer funcionarioId) {
 		return getDao().getUsuarioIdAndFuncionarioCadastroByFuncionarioId(funcionarioId);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.casa_das_quentinhas.dao.FuncionarioDAO#
+	 * getEntregadoresByNomeOrCpfOrCelular(java.lang.String)
+	 */
+	@Transactional(readOnly = true)
+	@Override
+	public Map<Integer, String> getEntregadoresByNomeOrCpfOrCelular(String nomeOrCpfOrCelular) {
+		return getDao().getEntregadoresByNomeOrCpfOrCelular(nomeOrCpfOrCelular);
 	}
 
 	/*

@@ -26,6 +26,7 @@ import br.com.cams7.casa_das_quentinhas.entity.PedidoItem;
 import br.com.cams7.casa_das_quentinhas.entity.PedidoItemPK;
 import br.com.cams7.casa_das_quentinhas.entity.Usuario;
 import br.com.cams7.casa_das_quentinhas.entity.Empresa.Tipo;
+import br.com.cams7.casa_das_quentinhas.entity.Funcionario;
 
 /**
  * @author César Magalhães
@@ -65,6 +66,8 @@ public class PedidoServiceImpl extends AbstractService<Long, Pedido, PedidoDAO> 
 
 		pedido.setManutencao(new Manutencao(new Date(), new Date()));
 
+		setEntregador(pedido);
+
 		super.persist(pedido);
 
 		itens.forEach(item -> {
@@ -97,6 +100,8 @@ public class PedidoServiceImpl extends AbstractService<Long, Pedido, PedidoDAO> 
 
 		pedido.setUsuarioCadastro(new Usuario(usuarioId));
 		pedido.setManutencao(new Manutencao(cadastro, new Date()));
+		
+		setEntregador(pedido);
 
 		super.update(pedido);
 
@@ -168,6 +173,23 @@ public class PedidoServiceImpl extends AbstractService<Long, Pedido, PedidoDAO> 
 	}
 
 	/**
+	 * @param itens
+	 * @return Soma da quantidade total
+	 */
+	public static short getQuantidadeTotal(List<PedidoItem> itens) {
+		return (short) itens.stream().mapToInt(i -> i.getQuantidade()).sum();
+	}
+
+	/**
+	 * @param itens
+	 * @return Soma dos valores da multiplação do custo do produto com sua
+	 *         respectiva quantidade
+	 */
+	public static float getCustoTotal(List<PedidoItem> itens) {
+		return (float) itens.stream().mapToDouble(i -> i.getCusto()).sum();
+	}
+
+	/**
 	 * Atribui a empresa caso o cliente seja uma pessoa juridica
 	 * 
 	 * @param pedido
@@ -220,20 +242,15 @@ public class PedidoServiceImpl extends AbstractService<Long, Pedido, PedidoDAO> 
 	}
 
 	/**
-	 * @param itens
-	 * @return Soma da quantidade total
+	 * Troca o conteúdo do atributo entregador para NULL, caso o entregador não
+	 * tenha sido informado
+	 * 
+	 * @param pedido
 	 */
-	public static short getQuantidadeTotal(List<PedidoItem> itens) {
-		return (short) itens.stream().mapToInt(i -> i.getQuantidade()).sum();
-	}
-
-	/**
-	 * @param itens
-	 * @return Soma dos valores da multiplação do custo do produto com sua
-	 *         respectiva quantidade
-	 */
-	public static float getCustoTotal(List<PedidoItem> itens) {
-		return (float) itens.stream().mapToDouble(i -> i.getCusto()).sum();
+	private void setEntregador(Pedido pedido) {
+		Funcionario entregador = pedido.getEntregador();
+		if (entregador.getId() == null)
+			pedido.setEntregador(null);
 	}
 
 }

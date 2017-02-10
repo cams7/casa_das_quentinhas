@@ -186,7 +186,7 @@ public class EntregadorTest extends AbstractTest {
 
 			final By EMPRESA_ID = By.name("empresa.id");
 
-			validateIdEmpresa(EMPRESA_ID, isCreatePage);
+			validateId(EMPRESA_ID, isCreatePage);
 
 			final By AUTOCOMPLETE = By.cssSelector("ul.ui-autocomplete");
 
@@ -213,7 +213,7 @@ public class EntregadorTest extends AbstractTest {
 				getWait().until(ExpectedConditions.presenceOfElementLocated(EMPRESA_ID));
 				assertTrue(getDriver().findElement(EMPRESA_ID).getAttribute("value").matches(NUMBER_REGEX));
 			} catch (TimeoutException e) {
-				validateIdEmpresa(EMPRESA_ID, isCreatePage);
+				validateId(EMPRESA_ID, isCreatePage);
 			}
 		}
 
@@ -254,12 +254,4 @@ public class EntregadorTest extends AbstractTest {
 		}
 	}
 
-	private void validateIdEmpresa(final By EMPRESA_ID, final boolean isCreatePage) {
-		getWait().until(ExpectedConditions.presenceOfElementLocated(EMPRESA_ID));
-		final String ID = getDriver().findElement(EMPRESA_ID).getAttribute("value");
-		if (isCreatePage)
-			assertTrue(ID.isEmpty());
-		else
-			assertTrue(ID.matches(NUMBER_REGEX));
-	}
 }

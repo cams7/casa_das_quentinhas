@@ -21,6 +21,7 @@ import br.com.cams7.casa_das_quentinhas.entity.Pedido.TipoCliente;
 public class Pedido_ {
 	public static volatile SingularAttribute<Pedido, Long> id;
 	public static volatile SingularAttribute<Pedido, Usuario> usuarioCadastro;
+	public static volatile SingularAttribute<Pedido, Funcionario> entregador;
 	public static volatile SingularAttribute<Pedido, TipoCliente> tipoCliente;
 	public static volatile SingularAttribute<Pedido, Short> quantidade;
 	public static volatile SingularAttribute<Pedido, Float> custo;

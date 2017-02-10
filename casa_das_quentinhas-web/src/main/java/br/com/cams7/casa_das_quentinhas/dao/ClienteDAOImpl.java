@@ -268,7 +268,7 @@ public class ClienteDAOImpl extends AbstractDAO<Integer, Cliente> implements Cli
 
 		cq.where(cb.or(cb.like(cb.lower(from.get(Cliente_.nome)), nomeOrCpfOrTelefone),
 				cb.like(from.get(Cliente_.cpf), nomeOrCpfOrTelefone),
-				cb.like(cb.lower(from.get(Cliente_.contato).get(Contato_.telefone)), nomeOrCpfOrTelefone)));
+				cb.like(from.get(Cliente_.contato).get(Contato_.telefone), nomeOrCpfOrTelefone)));
 
 		cq.orderBy(cb.asc(from.get(Cliente_.nome)));
 
