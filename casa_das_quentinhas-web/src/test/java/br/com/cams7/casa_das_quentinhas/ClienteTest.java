@@ -277,8 +277,6 @@ public class ClienteTest extends AbstractTest {
 		}
 	}
 
-	
-
 	private void testPedidos() {
 		testList(new String[] { "id", "tipoCliente", "quantidade", "custo", "manutencao.cadastro" },
 				"Visualizar Pedido", "Editar Pedido");
