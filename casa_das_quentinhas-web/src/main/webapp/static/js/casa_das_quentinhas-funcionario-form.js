@@ -4,12 +4,11 @@ $('input#cpf').mask('999.999.999-99');
 $('input#empresa').autocomplete({
 	source : function(request, response) {
 		$.getJSON(MAIN_PAGE + '/empresas/' + request.term, function(data) {
-			// console.log(data);
-			response($.map(data, function(razaoSocialWithCnpj, i) {
+			response($.map(data, function(razaoSocialOrCnpj, i) {
 				return {
 					id : i,
-					label : razaoSocialWithCnpj,
-					value : razaoSocialWithCnpj
+					label : razaoSocialOrCnpj,
+					value : razaoSocialOrCnpj
 				};
 			}));
 		});

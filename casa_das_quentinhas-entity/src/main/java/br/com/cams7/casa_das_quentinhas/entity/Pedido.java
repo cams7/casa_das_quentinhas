@@ -47,6 +47,10 @@ public class Pedido extends AbstractEntity<Long> {
 	@JoinColumn(name = "id_usuario_cadastro", referencedColumnName = "id_usuario")
 	private Usuario usuarioCadastro;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_entregador", referencedColumnName = "id_funcionario")
+	private Funcionario entregador;
+
 	@NotNull
 	@Enumerated(EnumType.ORDINAL)
 	@Column(name = "tipo_cliente")
@@ -164,6 +168,21 @@ public class Pedido extends AbstractEntity<Long> {
 	 */
 	public void setUsuarioCadastro(Usuario usuarioCadastro) {
 		this.usuarioCadastro = usuarioCadastro;
+	}
+
+	/**
+	 * @return Entregador reponsavél pela entrega do pedido
+	 */
+	public Funcionario getEntregador() {
+		return entregador;
+	}
+
+	/**
+	 * @param entregador
+	 *            Entregador reponsavél pela entrega do pedido
+	 */
+	public void setEntregador(Funcionario entregador) {
+		this.entregador = entregador;
 	}
 
 	/**

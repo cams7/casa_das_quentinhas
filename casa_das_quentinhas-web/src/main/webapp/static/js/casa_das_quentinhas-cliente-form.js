@@ -6,12 +6,11 @@ $('input#cep').mask('99999-999');
 $('input#cidade').autocomplete({
 	source : function(request, response) {
 		$.getJSON(MAIN_PAGE + '/cidades/' + request.term, function(data) {
-			// console.log(data);
-			response($.map(data, function(nomeWithCpf, i) {
+			response($.map(data, function(nomeOrIbge, i) {
 				return {
 					id : i,
-					label : nomeWithCpf,
-					value : nomeWithCpf
+					label : nomeOrIbge,
+					value : nomeOrIbge
 				};
 			}));
 		});

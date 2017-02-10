@@ -113,6 +113,7 @@ CREATE SEQUENCE public.pedido_id_seq;
 CREATE TABLE public.pedido (
                 id_pedido BIGINT NOT NULL DEFAULT nextval('public.pedido_id_seq'),
                 id_usuario_cadastro INTEGER NOT NULL,
+				id_entregador INTEGER,
 				tipo_cliente SMALLINT NOT NULL,
                 quantidade_total SMALLINT NOT NULL,
                 total_nota REAL NOT NULL,
@@ -370,6 +371,13 @@ NOT DEFERRABLE;
 ALTER TABLE public.pedido ADD CONSTRAINT usuario_pedido_fk
 FOREIGN KEY (id_usuario_cadastro)
 REFERENCES public.usuario (id_usuario)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE public.pedido ADD CONSTRAINT entregador_pedido_fk
+FOREIGN KEY (id_entregador)
+REFERENCES public.funcionario (id_funcionario)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION
 NOT DEFERRABLE;

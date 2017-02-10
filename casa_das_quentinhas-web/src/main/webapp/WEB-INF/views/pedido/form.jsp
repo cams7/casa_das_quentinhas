@@ -23,7 +23,7 @@
 		<form:errors path="tipoCliente" />
 	</c:set>
 	<div
-		class="form-group col-md-2 ${not empty tipoClienteError?'has-error':''}">
+		class="form-group col-md-3 ${not empty tipoClienteError?'has-error':''}">
 		<label class="control-label" for="tipoCliente">Tipo de cliente</label>
 
 		<form:select path="tipoCliente" id="tipoCliente"
@@ -36,7 +36,7 @@
 		<form:errors path="formaPagamento" />
 	</c:set>
 	<div
-		class="form-group col-md-2 ${not empty formaPagamentoError?'has-error':''}">
+		class="form-group col-md-3 ${not empty formaPagamentoError?'has-error':''}">
 		<label class="control-label" for="formaPagamento">Formas de
 			pagamento</label>
 
@@ -45,12 +45,41 @@
 			itemValue="formaPagamento" itemLabel="descricao" class="form-control" />
 		<div class="help-block with-errors">${formaPagamentoError}</div>
 	</div>
+</div>
+<div class="row">
+	<c:set var="entregadorNomeError">
+		<form:errors path="entregador.id" />
+	</c:set>
+	<div
+		class="form-group col-md-6 ${not empty entregadorNomeError ? 'has-error' : ''}">
+		<label class="control-label" for="entregador.nome">Entregador(a)</label>
+		<form:input type="text" path="entregador.nome" id="entregador"
+			class="form-control" maxlength="80"
+			placeholder="Nome / CPF / Celular" />
+		<form:input type="hidden" path="entregador.id" id="entregador_id" />
+		<div class="help-block with-errors">${entregadorNomeError}</div>
+	</div>
+
+	<c:set var="tipoAtendimentoError">
+		<form:errors path="tipoAtendimento" />
+	</c:set>
+	<div
+		class="form-group col-md-3 ${not empty tipoAtendimentoError?'has-error':''}">
+		<label class="control-label" for="tipoAtendimento">Tipo de
+			atendimento</label>
+
+		<form:select path="tipoAtendimento" id="tipoAtendimento"
+			items="${pedidoTiposAtendimento}" multiple="true"
+			itemValue="tipoAtendimento" itemLabel="descricao"
+			class="form-control" />
+		<div class="help-block with-errors">${tipoAtendimentoError}</div>
+	</div>
 
 	<c:set var="situacaoError">
 		<form:errors path="situacao" />
 	</c:set>
 	<div
-		class="form-group col-md-2 ${not empty situacaoError?'has-error':''}">
+		class="form-group col-md-3 ${not empty situacaoError?'has-error':''}">
 		<label class="control-label" for="situacao">Situação</label>
 		<c:choose>
 			<c:when test="${edit}">
@@ -67,13 +96,12 @@
 		</c:choose>
 	</div>
 </div>
-
 <div class="row">
 	<c:set var="quantidadeError">
 		<form:errors path="quantidade" />
 	</c:set>
 	<div
-		class="form-group col-md-2 ${not empty quantidadeError ? 'has-error' : ''}">
+		class="form-group col-md-3 ${not empty quantidadeError ? 'has-error' : ''}">
 		<label class="control-label" for="quantidade">Quantidade total</label>
 		<form:input type="text" path="quantidade" id="quantidade"
 			class="form-control" readonly="true" />
@@ -84,7 +112,7 @@
 		<form:errors path="custo" />
 	</c:set>
 	<div
-		class="form-group col-md-2 ${not empty custoError ? 'has-error' : ''}">
+		class="form-group col-md-3 ${not empty custoError ? 'has-error' : ''}">
 		<label class="control-label" for="custo">Total</label>
 		<form:input type="text" path="custo" id="custo" class="form-control"
 			readonly="true" />
@@ -95,7 +123,7 @@
 		<form:errors path="custoIcms" />
 	</c:set>
 	<div
-		class="form-group col-md-2 ${not empty custoIcmsError ? 'has-error' : ''}">
+		class="form-group col-md-3 ${not empty custoIcmsError ? 'has-error' : ''}">
 		<label class="control-label" for="custoIcms">ICMS</label>
 		<form:input type="text" path="custoIcms" id="custoIcms"
 			class="form-control" readonly="true" />
@@ -106,26 +134,11 @@
 		<form:errors path="custoSt" />
 	</c:set>
 	<div
-		class="form-group col-md-2 ${not empty custoStError ? 'has-error' : ''}">
+		class="form-group col-md-3 ${not empty custoStError ? 'has-error' : ''}">
 		<label class="control-label" for="custoSt">Subs. tributária</label>
 		<form:input type="text" path="custoSt" id="custoSt"
 			class="form-control" readonly="true" />
 		<div class="help-block with-errors">${custoStError}</div>
-	</div>
-
-	<c:set var="tipoAtendimentoError">
-		<form:errors path="tipoAtendimento" />
-	</c:set>
-	<div
-		class="form-group col-md-4 ${not empty tipoAtendimentoError?'has-error':''}">
-		<label class="control-label" for="tipoAtendimento">Tipo de
-			atendimento</label>
-
-		<form:select path="tipoAtendimento" id="tipoAtendimento"
-			items="${pedidoTiposAtendimento}" multiple="true"
-			itemValue="tipoAtendimento" itemLabel="descricao"
-			class="form-control" />
-		<div class="help-block with-errors">${tipoAtendimentoError}</div>
 	</div>
 </div>
 

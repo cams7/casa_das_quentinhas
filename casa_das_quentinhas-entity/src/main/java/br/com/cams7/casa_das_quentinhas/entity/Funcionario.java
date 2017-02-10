@@ -5,6 +5,8 @@ import static br.com.cams7.app.validator.CelularValidator.unformatCelular;
 import static br.com.cams7.app.validator.CpfValidator.formatCpf;
 import static br.com.cams7.app.validator.CpfValidator.unformatCpf;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -14,6 +16,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
@@ -78,6 +81,9 @@ public class Funcionario extends AbstractEntity<Integer> {
 
 	@Embedded
 	private Manutencao manutencao;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "entregador")
+	private List<Pedido> pedidos;
 
 	/**
 	 * 
@@ -246,6 +252,21 @@ public class Funcionario extends AbstractEntity<Integer> {
 	 */
 	public void setManutencao(Manutencao manutencao) {
 		this.manutencao = manutencao;
+	}
+
+	/**
+	 * @return Pedidos realizados pelo entregador
+	 */
+	public List<Pedido> getPedidos() {
+		return pedidos;
+	}
+
+	/**
+	 * @param pedidos
+	 *            Pedidos realizados pelo entregador
+	 */
+	public void setPedidos(List<Pedido> pedidos) {
+		this.pedidos = pedidos;
 	}
 
 	/**

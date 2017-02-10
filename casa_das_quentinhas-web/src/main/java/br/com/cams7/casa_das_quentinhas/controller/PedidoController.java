@@ -41,6 +41,7 @@ import br.com.cams7.casa_das_quentinhas.entity.Cidade;
 import br.com.cams7.casa_das_quentinhas.entity.Cliente;
 import br.com.cams7.casa_das_quentinhas.entity.Empresa;
 import br.com.cams7.casa_das_quentinhas.entity.Empresa.Tipo;
+import br.com.cams7.casa_das_quentinhas.entity.Funcionario;
 import br.com.cams7.casa_das_quentinhas.entity.Pedido;
 import br.com.cams7.casa_das_quentinhas.entity.Pedido.DestinoOperacao;
 import br.com.cams7.casa_das_quentinhas.entity.Pedido.FormaPagamento;
@@ -53,6 +54,7 @@ import br.com.cams7.casa_das_quentinhas.entity.Produto;
 import br.com.cams7.casa_das_quentinhas.facade.PedidoItemFacade;
 import br.com.cams7.casa_das_quentinhas.service.ClienteService;
 import br.com.cams7.casa_das_quentinhas.service.EmpresaService;
+import br.com.cams7.casa_das_quentinhas.service.FuncionarioService;
 import br.com.cams7.casa_das_quentinhas.service.PedidoService;
 import br.com.cams7.casa_das_quentinhas.service.PedidoServiceImpl;
 import br.com.cams7.casa_das_quentinhas.service.ProdutoService;
@@ -80,6 +82,9 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 
 	@Autowired
 	private EmpresaService empresaService;
+
+	@Autowired
+	private FuncionarioService funcionarioService;
 
 	@Autowired
 	private ProdutoService produtoService;
@@ -265,6 +270,14 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 		return new ResponseEntity<Map<Integer, String>>(empresas, OK);
 	}
 
+	@GetMapping(value = "/entregadores/{nomeOrCpfOrCelular}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<Map<Integer, String>> getEntregadores(@PathVariable String nomeOrCpfOrCelular) {
+		Map<Integer, String> funcionarios = funcionarioService.getEntregadoresByNomeOrCpfOrCelular(nomeOrCpfOrCelular);
+
+		return new ResponseEntity<Map<Integer, String>>(funcionarios, OK);
+	}
+
 	@GetMapping(value = "/produtos/{nomeOrCusto}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<Map<Integer, String>> getProdutos(@PathVariable String nomeOrCusto) {
@@ -345,6 +358,7 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 	protected Pedido getNewEntity() {
 		Pedido pedido = new Pedido();
 		pedido.setCliente(new Cliente());
+		pedido.setEntregador(new Funcionario());
 		pedido.setTipoCliente(CADASTRO_TIPOCLIENTE);
 		pedido.setFormaPagamento(CADASTRO_FORMAPAGAMENTO);
 		pedido.setTipoAtendimento(CADASTRO_TIPOATENDIMENTO);
@@ -355,6 +369,9 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 	@Override
 	protected Pedido getEntity(Long id) {
 		Pedido pedido = getService().getPedidoById(id);
+		Funcionario entregador = pedido.getEntregador();
+		if (entregador != null)
+			entregador.setNome(entregador.getNomeWithCpf());
 
 		switch (pedido.getTipoCliente()) {
 		case PESSOA_FISICA: {

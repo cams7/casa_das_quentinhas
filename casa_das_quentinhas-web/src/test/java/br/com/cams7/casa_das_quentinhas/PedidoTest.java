@@ -192,7 +192,7 @@ public class PedidoTest extends AbstractTest {
 				sleep();
 			}
 
-			validateIdCliente(CLIENTE_ID, isCreatePage || tipoClienteAlterado);
+			validateId(CLIENTE_ID, isCreatePage || tipoClienteAlterado);
 
 			final String LETRA_ALEATORIA = getRandomLetter();
 
@@ -227,7 +227,7 @@ public class PedidoTest extends AbstractTest {
 				getWait().until(ExpectedConditions.presenceOfElementLocated(CLIENTE_ID));
 				assertTrue(getDriver().findElement(CLIENTE_ID).getAttribute("value").matches(NUMBER_REGEX));
 			} catch (TimeoutException e) {
-				validateIdCliente(CLIENTE_ID, isCreatePage || tipoClienteAlterado);
+				validateId(CLIENTE_ID, isCreatePage || tipoClienteAlterado);
 			}
 		}
 		if (isCreatePage || getBaseProducer().trueOrFalse()) {
@@ -236,29 +236,70 @@ public class PedidoTest extends AbstractTest {
 			formaPagamento.selectByValue(getFormaPagamento());
 			sleep();
 		}
-		if (!isCreatePage && getBaseProducer().trueOrFalse()) {
-			Select situacao = new Select(getDriver().findElement(By.name("situacao")));
-			situacao.deselectAll();
-			situacao.selectByValue(getSituacao());
-			sleep();
+
+		if (getBaseProducer().trueOrFalse()) {
+			final By ENTREGADOR_ID = By.name("entregador.id");
+
+			validateIdEntregador(ENTREGADOR_ID, isCreatePage);
+
+			final String LETRA_ALEATORIA = getRandomLetter();
+
+			final By ENTREGADOR_NOME = By.name("entregador.nome");
+			getWait().until(ExpectedConditions.presenceOfElementLocated(ENTREGADOR_NOME));
+			WebElement entregadorNome = getDriver().findElement(ENTREGADOR_NOME);
+			entregadorNome.clear();
+			entregadorNome.sendKeys(LETRA_ALEATORIA);
+
+			LOGGER.warn("create or edit pedido -> entregador: '{}'", LETRA_ALEATORIA);
+
+			try {
+				getWait().until(new ExpectedCondition<Boolean>() {
+					public Boolean apply(WebDriver driver) {
+						WebElement autocomplete = driver.findElements(AUTOCOMPLETE).get(1);
+						if (autocomplete.isDisplayed()) {
+							List<WebElement> itens = autocomplete.findElements(By.cssSelector("li.ui-menu-item"));
+							final int TOTAL_ITENS = itens.size();
+							final int INDEX = getBaseProducer().randomBetween(0, TOTAL_ITENS - 1);
+							itens.get(INDEX).click();
+
+							LOGGER.warn(
+									"create or edit pedido (autocomplete - entregador) -> total itens: {}, index selected: {}",
+									TOTAL_ITENS, INDEX);
+							return true;
+						}
+						return false;
+					}
+				});
+
+				getWait().until(ExpectedConditions.invisibilityOfElementLocated(AUTOCOMPLETE));
+				getWait().until(ExpectedConditions.presenceOfElementLocated(ENTREGADOR_ID));
+				assertTrue(getDriver().findElement(ENTREGADOR_ID).getAttribute("value").matches(NUMBER_REGEX));
+			} catch (TimeoutException e) {
+				validateIdEntregador(ENTREGADOR_ID, isCreatePage);
+			}
 		}
+
 		if (isCreatePage || getBaseProducer().trueOrFalse()) {
 			Select tipoAtendimento = new Select(getDriver().findElement(By.name("tipoAtendimento")));
 			tipoAtendimento.deselectAll();
 			tipoAtendimento.selectByValue(getTipoAtendimento());
 			sleep();
 		}
+		if (!isCreatePage && getBaseProducer().trueOrFalse()) {
+			Select situacao = new Select(getDriver().findElement(By.name("situacao")));
+			situacao.deselectAll();
+			situacao.selectByValue(getSituacao());
+			sleep();
+		}
 
 		mantemItem(AUTOCOMPLETE, !isCreatePage, 0);
 	}
 
-	private void validateIdCliente(final By CLIENTE_ID, final boolean tipoClienteAlterado) {
-		getWait().until(ExpectedConditions.presenceOfElementLocated(CLIENTE_ID));
-		final String ID = getDriver().findElement(CLIENTE_ID).getAttribute("value");
-		if (tipoClienteAlterado)
-			assertTrue(ID.isEmpty());
-		else
-			assertTrue(ID.matches(NUMBER_REGEX));
+	private void validateIdEntregador(final By ENTREGADOR_ID, boolean isCreatePage) {
+		if (isCreatePage) {
+			getWait().until(ExpectedConditions.presenceOfElementLocated(ENTREGADOR_ID));
+			assertTrue(getDriver().findElement(ENTREGADOR_ID).getAttribute("value").isEmpty());
+		}
 	}
 
 	private void mantemItem(final By AUTOCOMPLETE, boolean itemIncluido, final int countItens) {
@@ -335,8 +376,6 @@ public class PedidoTest extends AbstractTest {
 		getWait().until(ExpectedConditions.visibilityOfElementLocated(ITEM_MODAL));
 		WebElement itemModal = getDriver().findElement(ITEM_MODAL);
 
-		final By PRODUTO_ID = By.name("produto_id");
-
 		boolean produtoSelecionado = true;
 		if (newItem) {
 			final String LETRA_ALEATORIA = getRandomLetter();
@@ -349,13 +388,15 @@ public class PedidoTest extends AbstractTest {
 
 			LOGGER.warn("show item modal -> produto: '{}'", LETRA_ALEATORIA);
 
+			final By PRODUTO_ID = By.name("produto_id");
+
 			getWait().until(ExpectedConditions.presenceOfElementLocated(PRODUTO_ID));
 			assertTrue(itemModal.findElement(PRODUTO_ID).getAttribute("value").isEmpty());
 
 			try {
 				getWait().until(new ExpectedCondition<Boolean>() {
 					public Boolean apply(WebDriver driver) {
-						WebElement autocomplete = driver.findElements(AUTOCOMPLETE).get(1);
+						WebElement autocomplete = driver.findElements(AUTOCOMPLETE).get(2);
 						if (autocomplete.isDisplayed()) {
 							List<WebElement> itens = autocomplete.findElements(By.cssSelector("li.ui-menu-item"));
 							final int TOTAL_ITENS = itens.size();
@@ -376,7 +417,8 @@ public class PedidoTest extends AbstractTest {
 			}
 		}
 
-		validateIdProduto(itemModal, PRODUTO_ID, produtoSelecionado);
+		validateId(By.cssSelector("div#item_modal > div > div > form > div > div > div > input[name='produto_id']"),
+				!produtoSelecionado);
 
 		WebElement quantidade = itemModal.findElement(By.name("quantidade"));
 		quantidade.clear();
@@ -398,15 +440,6 @@ public class PedidoTest extends AbstractTest {
 		getWait().until(ExpectedConditions.invisibilityOfElementLocated(ITEM_MODAL));
 
 		return produtoSelecionado;
-	}
-
-	private void validateIdProduto(WebElement itemModal, final By PRODUTO_ID, boolean produtoSelecionado) {
-		getWait().until(ExpectedConditions.presenceOfElementLocated(PRODUTO_ID));
-		final String ID = itemModal.findElement(PRODUTO_ID).getAttribute("value");
-		if (produtoSelecionado)
-			assertTrue(ID.matches(NUMBER_REGEX));
-		else
-			assertTrue(ID.isEmpty());
 	}
 
 	private void testItens() {
