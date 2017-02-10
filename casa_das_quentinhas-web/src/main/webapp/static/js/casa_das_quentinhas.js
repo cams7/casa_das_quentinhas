@@ -58,4 +58,9 @@ $(document).ready(function($) {
 		// console.log('ajaxSend(token: ' + token + ', header: ' + header +
 		// ')');
 	});
+	
+	$('button#cancelar').click(function( event ) {
+		event.preventDefault();
+		window.history.go(-$('input#previousPage').val());
+	});
 });

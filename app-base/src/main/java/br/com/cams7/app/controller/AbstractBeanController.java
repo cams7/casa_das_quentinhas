@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -44,7 +45,7 @@ import br.com.cams7.app.utils.AppHelper;
 public abstract class AbstractBeanController<PK extends Serializable, E extends AbstractEntity<PK>, S extends BaseService<PK, E>>
 		extends AbstractController<PK, E, S> implements BaseBeanController<PK, E> {
 
-	protected final String LAST_LOADED_PAGE = "lastLoadedPage";
+	protected final String PREVIOUS_PAGE = "previousPage";
 	private final short MAX_RESULTS = 10;
 
 	public AbstractBeanController() {
@@ -89,9 +90,10 @@ public abstract class AbstractBeanController<PK extends Serializable, E extends 
 	 * ModelMap)
 	 */
 	@Override
-	public String create(ModelMap model) {
+	public String create(ModelMap model, HttpServletRequest request) {
+		setPreviousPage(request);
 		setCommonAttributes(model);
-		setLastLoadedPage(model, 1);
+		setPreviousPage(model, 1);
 
 		E entity = getNewEntity();
 
@@ -109,10 +111,10 @@ public abstract class AbstractBeanController<PK extends Serializable, E extends 
 	 * org.springframework.ui.ModelMap, java.lang.Integer)
 	 */
 	@Override
-	public String store(@Valid E entity, BindingResult result, ModelMap model,
-			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
+	public String store(@Valid E entity, BindingResult result, ModelMap model, HttpServletRequest request) {
 		setCommonAttributes(model);
-		incrementLastLoadedPage(model, lastLoadedPage);
+
+		incrementPreviousPage(model, request);
 
 		if (result.hasErrors())
 			return getCreateTilesPage();
@@ -120,7 +122,8 @@ public abstract class AbstractBeanController<PK extends Serializable, E extends 
 		getService().setUsername(getUsername());
 		getService().persist(entity);
 
-		return redirectMainPage();
+		sucessMessage(model);
+		return redirectToPreviousPage(request);
 	}
 
 	/*
@@ -149,9 +152,10 @@ public abstract class AbstractBeanController<PK extends Serializable, E extends 
 	 * org.springframework.ui.ModelMap)
 	 */
 	@Override
-	public String edit(@PathVariable PK id, ModelMap model) {
+	public String edit(@PathVariable PK id, ModelMap model, HttpServletRequest request) {
+		setPreviousPage(request);
 		setCommonAttributes(model);
-		setLastLoadedPage(model, 1);
+		setPreviousPage(model, 1);
 		setEditPage(model);
 
 		E entity = getEntity(id);
@@ -171,9 +175,9 @@ public abstract class AbstractBeanController<PK extends Serializable, E extends 
 	 */
 	@Override
 	public String update(@Valid E entity, BindingResult result, ModelMap model, @PathVariable PK id,
-			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
+			HttpServletRequest request) {
 		setCommonAttributes(model);
-		incrementLastLoadedPage(model, lastLoadedPage);
+		incrementPreviousPage(model, request);
 		setEditPage(model);
 
 		if (result.hasErrors())
@@ -181,7 +185,8 @@ public abstract class AbstractBeanController<PK extends Serializable, E extends 
 
 		getService().update(entity);
 
-		return redirectMainPage();
+		sucessMessage(model, entity);
+		return redirectToPreviousPage(request);
 	}
 
 	/*
@@ -241,9 +246,9 @@ public abstract class AbstractBeanController<PK extends Serializable, E extends 
 		return getListTilesPage();
 	}
 
-	protected final String redirectMainPage() {
-		return "redirect:/" + getMainPage();
-	}
+	// protected final String redirectMainPage() {
+	// return "redirect:/" + getMainPage();
+	// }
 
 	protected final void setPaginationAttribute(ModelMap model, Integer offset, String sortField, SortOrder sortOrder,
 			String query, Long count, short maxResults) {
@@ -271,12 +276,12 @@ public abstract class AbstractBeanController<PK extends Serializable, E extends 
 		model.addAttribute("edit", true);
 	}
 
-	private void setLastLoadedPage(ModelMap model, Integer lastLoadedPage) {
-		model.addAttribute(LAST_LOADED_PAGE, lastLoadedPage);
+	private void setPreviousPage(ModelMap model, Integer previousPage) {
+		model.addAttribute(PREVIOUS_PAGE, previousPage);
 	}
 
-	protected final void incrementLastLoadedPage(ModelMap model, Integer lastLoadedPage) {
-		setLastLoadedPage(model, lastLoadedPage + 1);
+	protected final void incrementPreviousPage(ModelMap model, final HttpServletRequest request) {
+		setPreviousPage(model, Integer.valueOf(request.getParameter(PREVIOUS_PAGE)) + 1);
 	}
 
 	protected E getEntity(PK id) {
@@ -390,6 +395,32 @@ public abstract class AbstractBeanController<PK extends Serializable, E extends 
 
 		return objectMessage;
 	}
+
+	private void setPreviousPage(final HttpServletRequest request) {
+		final String PAGE = request.getHeader("Referer");
+		final int INDEX = PAGE.indexOf("?");
+		request.getSession().setAttribute(PREVIOUS_PAGE, PAGE.substring(0, INDEX > 0 ? INDEX : PAGE.length()));
+	}
+
+	protected final String redirectToPreviousPage(final HttpServletRequest request) {
+		return "redirect:" + (String) request.getSession().getAttribute(PREVIOUS_PAGE);
+	}
+
+	private void sucessMessage(ModelMap model, String message) {
+		model.addAttribute("sucessMessage", message);
+	}
+
+	protected final void sucessMessage(ModelMap model) {
+		sucessMessage(model, getStoreSucessMessage());
+	}
+
+	protected final void sucessMessage(ModelMap model, E entity) {
+		sucessMessage(model, getUpdateSucessMessage(entity));
+	}
+
+	protected abstract String getStoreSucessMessage();
+
+	protected abstract String getUpdateSucessMessage(E entity);
 
 	protected final class Response {
 		private Map<String, Serializable> body;

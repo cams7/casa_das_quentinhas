@@ -8,6 +8,7 @@ import static org.springframework.http.HttpStatus.OK;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.http.MediaType;
@@ -20,7 +21,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import br.com.cams7.casa_das_quentinhas.entity.Empresa;
@@ -50,8 +50,7 @@ public class EntregadorController extends AbstractFuncionarioController {
 	 */
 	@Override
 	public String store(@Valid @ModelAttribute(MODEL_NAME) Funcionario entregador, BindingResult result, ModelMap model,
-			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
-
+			HttpServletRequest request) {
 		Empresa empresa = entregador.getEmpresa();
 
 		// 1º validação
@@ -61,7 +60,7 @@ public class EntregadorController extends AbstractFuncionarioController {
 			result.addError(empresaError);
 		}
 
-		return storeFuncionario(entregador, result, model, lastLoadedPage);
+		return storeFuncionario(entregador, result, model, request);
 	}
 
 	/*
@@ -75,9 +74,8 @@ public class EntregadorController extends AbstractFuncionarioController {
 	 */
 	@Override
 	public String update(@Valid @ModelAttribute(MODEL_NAME) Funcionario entregador, BindingResult result,
-			ModelMap model, @PathVariable Integer id,
-			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
-		return updateFuncionario(entregador, result, model, id, lastLoadedPage);
+			ModelMap model, @PathVariable Integer id, HttpServletRequest request) {
+		return updateFuncionario(entregador, result, model, id, request);
 	}
 
 	@GetMapping(value = "/empresas/{razaoSocialOrCnpj}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -132,6 +130,17 @@ public class EntregadorController extends AbstractFuncionarioController {
 	@Override
 	protected void setFilterPedidos(Map<String, Object> filters, Integer entregadorId) {
 		filters.put("entregador.id", entregadorId);
+	}
+
+	@Override
+	protected String getStoreSucessMessage() {
+		return "O(A) entregador(a) foi cadastrado(a) com sucesso!";
+	}
+
+	@Override
+	protected String getUpdateSucessMessage(Funcionario entregador) {
+		return String.format("Os dados do(a) entregador(a) (%s) foram atualizados com sucesso!",
+				entregador.getNomeWithCpf());
 	}
 
 }

@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +23,9 @@ import br.com.cams7.app.SearchParams;
 import br.com.cams7.app.SearchParams.SortOrder;
 import br.com.cams7.app.controller.AbstractBeanController;
 import br.com.cams7.casa_das_quentinhas.entity.Funcionario;
+import br.com.cams7.casa_das_quentinhas.entity.Funcionario.Funcao;
 import br.com.cams7.casa_das_quentinhas.entity.Pedido;
 import br.com.cams7.casa_das_quentinhas.entity.Usuario;
-import br.com.cams7.casa_das_quentinhas.entity.Funcionario.Funcao;
 import br.com.cams7.casa_das_quentinhas.service.EmpresaService;
 import br.com.cams7.casa_das_quentinhas.service.FuncionarioService;
 import br.com.cams7.casa_das_quentinhas.service.PedidoService;
@@ -56,7 +58,6 @@ public abstract class AbstractFuncionarioController
 	 */
 	@Override
 	public String show(@PathVariable Integer id, ModelMap model) {
-
 		loadPedidos(id, model, 0, "id", SortOrder.DESCENDING);
 
 		return super.show(id, model);
@@ -76,9 +77,9 @@ public abstract class AbstractFuncionarioController
 	}
 
 	protected String storeFuncionario(Funcionario funcionario, BindingResult result, ModelMap model,
-			Integer lastLoadedPage) {
+			HttpServletRequest request) {
 		setCommonAttributes(model);
-		incrementLastLoadedPage(model, lastLoadedPage);
+		incrementPreviousPage(model, request);
 
 		Usuario usuario = funcionario.getUsuario();
 
@@ -105,13 +106,14 @@ public abstract class AbstractFuncionarioController
 		getService().setUsername(getUsername());
 		getService().persist(funcionario, getPossiveisFuncoes());
 
-		return redirectMainPage();
+		sucessMessage(model);
+		return redirectToPreviousPage(request);
 	}
 
 	protected String updateFuncionario(Funcionario funcionario, BindingResult result, ModelMap model, Integer id,
-			Integer lastLoadedPage) {
+			HttpServletRequest request) {
 		setCommonAttributes(model);
-		incrementLastLoadedPage(model, lastLoadedPage);
+		incrementPreviousPage(model, request);
 		setEditPage(model);
 
 		Usuario usuario = funcionario.getUsuario();
@@ -133,7 +135,8 @@ public abstract class AbstractFuncionarioController
 
 		getService().update(funcionario, getPossiveisFuncoes());
 
-		return redirectMainPage();
+		sucessMessage(model, funcionario);
+		return redirectToPreviousPage(request);
 	}
 
 	/*

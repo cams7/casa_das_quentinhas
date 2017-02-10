@@ -8,6 +8,8 @@ import static org.springframework.http.HttpStatus.OK;
 import java.io.Serializable;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -45,7 +47,7 @@ public interface BaseBeanController<PK extends Serializable, E extends AbstractE
 	 */
 	@GetMapping(value = "/create")
 	@ResponseStatus(OK)
-	String create(ModelMap model);
+	String create(ModelMap model, HttpServletRequest request);
 
 	/**
 	 * Store a newly created resource in storage.
@@ -56,7 +58,7 @@ public interface BaseBeanController<PK extends Serializable, E extends AbstractE
 	 * @return
 	 */
 	@PostMapping(value = "/create")
-	String store(E entity, BindingResult result, ModelMap model, Integer lastLoadedPage);
+	String store(E entity, BindingResult result, ModelMap model, HttpServletRequest request);
 
 	/**
 	 * Display the specified resource.
@@ -78,7 +80,7 @@ public interface BaseBeanController<PK extends Serializable, E extends AbstractE
 	 */
 	@GetMapping(value = "/{id}/edit")
 	@ResponseStatus(OK)
-	String edit(PK id, ModelMap model);
+	String edit(PK id, ModelMap model, HttpServletRequest request);
 
 	/**
 	 * Update the specified resource in storage.
@@ -90,7 +92,7 @@ public interface BaseBeanController<PK extends Serializable, E extends AbstractE
 	 * @return
 	 */
 	@PostMapping(value = "/{id}/edit")
-	String update(E entity, BindingResult result, ModelMap model, PK id, Integer lastLoadedPage);
+	String update(E entity, BindingResult result, ModelMap model, PK id, HttpServletRequest request);
 
 	/**
 	 * Remove the specified resource from storage.

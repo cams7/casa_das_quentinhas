@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,11 +87,9 @@ public class EmpresaController extends AbstractBeanController<Integer, Empresa, 
 	 * org.springframework.ui.ModelMap, java.lang.Integer)
 	 */
 	@Override
-	public String store(@Valid Empresa empresa, BindingResult result, ModelMap model,
-			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
-
+	public String store(@Valid Empresa empresa, BindingResult result, ModelMap model, HttpServletRequest request) {
 		setCommonAttributes(model);
-		incrementLastLoadedPage(model, lastLoadedPage);
+		incrementPreviousPage(model, request);
 
 		Usuario usuario = empresa.getUsuarioAcesso();
 		Cidade cidade = empresa.getCidade();
@@ -125,7 +124,8 @@ public class EmpresaController extends AbstractBeanController<Integer, Empresa, 
 		getService().setUsername(getUsername());
 		getService().persist(empresa);
 
-		return redirectMainPage();
+		sucessMessage(model);
+		return redirectToPreviousPage(request);
 	}
 
 	/*
@@ -137,7 +137,6 @@ public class EmpresaController extends AbstractBeanController<Integer, Empresa, 
 	 */
 	@Override
 	public String show(@PathVariable Integer id, ModelMap model) {
-
 		Tipo tipo = getService().getEmpresaIipoById(id);
 
 		if (tipo != null)
@@ -165,10 +164,9 @@ public class EmpresaController extends AbstractBeanController<Integer, Empresa, 
 	 */
 	@Override
 	public String update(@Valid Empresa empresa, BindingResult result, ModelMap model, @PathVariable Integer id,
-			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
-
+			HttpServletRequest request) {
 		setCommonAttributes(model);
-		incrementLastLoadedPage(model, lastLoadedPage);
+		incrementPreviousPage(model, request);
 		setEditPage(model);
 
 		Usuario usuario = empresa.getUsuarioAcesso();
@@ -191,7 +189,8 @@ public class EmpresaController extends AbstractBeanController<Integer, Empresa, 
 
 		getService().update(empresa);
 
-		return redirectMainPage();
+		sucessMessage(model, empresa);
+		return redirectToPreviousPage(request);
 	}
 
 	@GetMapping(value = "/{empresaId}/entregadores")
@@ -201,7 +200,6 @@ public class EmpresaController extends AbstractBeanController<Integer, Empresa, 
 			@RequestParam(value = "f", required = true) String sortField,
 			@RequestParam(value = "s", required = true) String sortOrder,
 			@RequestParam(value = "q", required = true) String query) {
-
 		loadEntregadores(empresaId, model, offset, sortField, SortOrder.get(sortOrder));
 
 		return "entregador_list";
@@ -214,7 +212,6 @@ public class EmpresaController extends AbstractBeanController<Integer, Empresa, 
 			@RequestParam(value = "f", required = true) String sortField,
 			@RequestParam(value = "s", required = true) String sortOrder,
 			@RequestParam(value = "q", required = true) String query) {
-
 		loadPedidos(empresaId, model, offset, sortField, SortOrder.get(sortOrder));
 
 		return "pedido_list";
@@ -443,6 +440,17 @@ public class EmpresaController extends AbstractBeanController<Integer, Empresa, 
 		model.addAttribute("escondeCliente", true);
 
 		setPaginationAttribute(model, offset, sortField, sortOrder, null, count, MAX_RESULTS);
+	}
+
+	@Override
+	protected String getStoreSucessMessage() {
+		return "A empresa foi cadastrada com sucesso!";
+	}
+
+	@Override
+	protected String getUpdateSucessMessage(Empresa empresa) {
+		return String.format("Os dados da empresa (%s) foram atualizados com sucesso!",
+				empresa.getRazaoSocialWithCnpj());
 	}
 
 }
