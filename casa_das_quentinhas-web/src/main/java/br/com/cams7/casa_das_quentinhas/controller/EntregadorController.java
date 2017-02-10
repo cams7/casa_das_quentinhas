@@ -6,13 +6,10 @@ package br.com.cams7.casa_das_quentinhas.controller;
 import static br.com.cams7.casa_das_quentinhas.entity.Funcionario.Funcao.ENTREGADOR;
 import static org.springframework.http.HttpStatus.OK;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,16 +22,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
-import br.com.cams7.app.SearchParams;
-import br.com.cams7.app.SearchParams.SortOrder;
 import br.com.cams7.casa_das_quentinhas.entity.Empresa;
 import br.com.cams7.casa_das_quentinhas.entity.Empresa.Tipo;
 import br.com.cams7.casa_das_quentinhas.entity.Funcionario;
 import br.com.cams7.casa_das_quentinhas.entity.Funcionario.Funcao;
-import br.com.cams7.casa_das_quentinhas.entity.Pedido;
-import br.com.cams7.casa_das_quentinhas.service.PedidoService;
 
 /**
  * @author César Magalhães
@@ -46,9 +38,6 @@ public class EntregadorController extends AbstractFuncionarioController {
 
 	public static final String MODEL_NAME = "entregador";
 	public static final String LIST_NAME = "entregadores";
-
-	@Autowired
-	private PedidoService pedidoService;
 
 	/*
 	 * (non-Javadoc)
@@ -78,20 +67,6 @@ public class EntregadorController extends AbstractFuncionarioController {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see br.com.cams7.app.controller.AbstractBeanController#show(java.io.
-	 * Serializable, org.springframework.ui.ModelMap)
-	 */
-	@Override
-	public String show(@PathVariable Integer id, ModelMap model) {
-
-		loadPedidos(id, model, 0, "id", SortOrder.DESCENDING);
-
-		return super.show(id, model);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see
 	 * br.com.cams7.casa_das_quentinhas.controller.AbstractFuncionarioController
 	 * #update(br.com.cams7.casa_das_quentinhas.model.Funcionario,
@@ -103,19 +78,6 @@ public class EntregadorController extends AbstractFuncionarioController {
 			ModelMap model, @PathVariable Integer id,
 			@RequestParam(value = LAST_LOADED_PAGE, required = true) Integer lastLoadedPage) {
 		return updateFuncionario(entregador, result, model, id, lastLoadedPage);
-	}
-
-	@GetMapping(value = "/{entregadorId}/pedidos")
-	@ResponseStatus(OK)
-	public String pedidos(@PathVariable Integer entregadorId, ModelMap model,
-			@RequestParam(value = "offset", required = true) Integer offset,
-			@RequestParam(value = "f", required = true) String sortField,
-			@RequestParam(value = "s", required = true) String sortOrder,
-			@RequestParam(value = "q", required = true) String query) {
-
-		loadPedidos(entregadorId, model, offset, sortField, SortOrder.get(sortOrder));
-
-		return "pedido_list";
 	}
 
 	@GetMapping(value = "/empresas/{razaoSocialOrCnpj}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -167,23 +129,9 @@ public class EntregadorController extends AbstractFuncionarioController {
 		return "O entregador foi removido com sucesso.";
 	}
 
-	@SuppressWarnings("unchecked")
-	private void loadPedidos(Integer entregadorId, ModelMap model, Integer offset, String sortField,
-			SortOrder sortOrder) {
-		final short MAX_RESULTS = 5;
-
-		Map<String, Object> filters = new HashMap<>();
+	@Override
+	protected void setFilterPedidos(Map<String, Object> filters, Integer entregadorId) {
 		filters.put("entregador.id", entregadorId);
-
-		SearchParams params = new SearchParams(offset, MAX_RESULTS, sortField, sortOrder, filters);
-
-		pedidoService.setIgnoredJoins();
-		List<Pedido> pedidos = pedidoService.search(params);
-		long count = pedidoService.getTotalElements(filters);
-
-		model.addAttribute("pedidos", pedidos);
-
-		setPaginationAttribute(model, offset, sortField, sortOrder, null, count, MAX_RESULTS);
 	}
 
 }
