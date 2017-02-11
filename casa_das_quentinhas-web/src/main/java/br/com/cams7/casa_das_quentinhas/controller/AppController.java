@@ -37,6 +37,12 @@ public class AppController {
 	@Autowired
 	private EmpresaService empresaService;
 
+	/**
+	 * Página home
+	 * 
+	 * @param model
+	 * @return
+	 */
 	@GetMapping
 	@ResponseStatus(OK)
 	public String home(ModelMap model) {
@@ -46,6 +52,12 @@ public class AppController {
 		return "home";
 	}
 
+	/**
+	 * Página de informação sobre a empresa
+	 * 
+	 * @param model
+	 * @return
+	 */
 	@GetMapping(value = "info")
 	@ResponseStatus(OK)
 	public String info(ModelMap model) {
@@ -58,6 +70,8 @@ public class AppController {
 	/**
 	 * This method handles login GET requests. If users is already logged-in and
 	 * tries to goto login page again, will be redirected to list page.
+	 * 
+	 * @return
 	 */
 	@GetMapping(value = "login")
 	// @ResponseStatus(OK)
@@ -71,6 +85,10 @@ public class AppController {
 	/**
 	 * This method handles logout requests. Toggle the handlers if you are
 	 * RememberMe functionality is useless in your app.
+	 *
+	 * @param request
+	 * @param response
+	 * @return
 	 */
 	@GetMapping(value = "logout")
 	// @ResponseStatus(OK)
@@ -87,6 +105,9 @@ public class AppController {
 
 	/**
 	 * This method handles Access-Denied redirect.
+	 *
+	 * @param model
+	 * @return
 	 */
 	@GetMapping(value = "/unauthorized")
 	@ResponseStatus(UNAUTHORIZED)
@@ -97,6 +118,8 @@ public class AppController {
 	/**
 	 * This method returns true if users is already authenticated [logged-in],
 	 * else false.
+	 * 
+	 * @return
 	 */
 	private boolean isCurrentAuthenticationAnonymous() {
 		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

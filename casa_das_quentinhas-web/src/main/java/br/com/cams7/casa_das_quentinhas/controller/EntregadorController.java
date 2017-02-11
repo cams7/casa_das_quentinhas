@@ -43,10 +43,9 @@ public class EntregadorController extends AbstractFuncionarioController {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * br.com.cams7.casa_das_quentinhas.controller.AbstractFuncionarioController
-	 * #store(br.com.cams7.casa_das_quentinhas.model.Funcionario,
-	 * org.springframework.validation.BindingResult,
-	 * org.springframework.ui.ModelMap, java.lang.Integer)
+	 * br.com.cams7.app.controller.AbstractBeanController#store(br.com.cams7.app
+	 * .entity.AbstractEntity, org.springframework.validation.BindingResult,
+	 * org.springframework.ui.ModelMap, javax.servlet.http.HttpServletRequest)
 	 */
 	@Override
 	public String store(@Valid @ModelAttribute(MODEL_NAME) Funcionario entregador, BindingResult result, ModelMap model,
@@ -67,10 +66,10 @@ public class EntregadorController extends AbstractFuncionarioController {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * br.com.cams7.casa_das_quentinhas.controller.AbstractFuncionarioController
-	 * #update(br.com.cams7.casa_das_quentinhas.model.Funcionario,
-	 * org.springframework.validation.BindingResult,
-	 * org.springframework.ui.ModelMap, java.lang.Integer, java.lang.Integer)
+	 * br.com.cams7.app.controller.AbstractBeanController#update(br.com.cams7.
+	 * app.entity.AbstractEntity, org.springframework.validation.BindingResult,
+	 * org.springframework.ui.ModelMap, java.io.Serializable,
+	 * javax.servlet.http.HttpServletRequest)
 	 */
 	@Override
 	public String update(@Valid @ModelAttribute(MODEL_NAME) Funcionario entregador, BindingResult result,
@@ -78,6 +77,10 @@ public class EntregadorController extends AbstractFuncionarioController {
 		return updateFuncionario(entregador, result, model, id, request);
 	}
 
+	/**
+	 * @param razaoSocialOrCnpj
+	 * @return Na requisição AJAX, carrega as empresas de entrega
+	 */
 	@GetMapping(value = "/empresas/{razaoSocialOrCnpj}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<Map<Integer, String>> getEmpresas(@PathVariable String razaoSocialOrCnpj) {
@@ -87,21 +90,44 @@ public class EntregadorController extends AbstractFuncionarioController {
 		return new ResponseEntity<Map<Integer, String>>(empresas, OK);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.app.controller.AbstractBeanController#getModelName()
+	 */
 	@Override
 	protected String getModelName() {
 		return MODEL_NAME;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.app.controller.AbstractBeanController#getListName()
+	 */
 	@Override
 	protected String getListName() {
 		return LIST_NAME;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.controller.AbstractBeanController#getGlobalFilters()
+	 */
 	@Override
 	protected String[] getGlobalFilters() {
 		return new String[] { "nome", "cpf", "celular", "usuario.email", "empresa.razaoSocial", "empresa.cnpj" };
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.casa_das_quentinhas.controller.AbstractFuncionarioController
+	 * #getNewEntity()
+	 */
 	@Override
 	protected Funcionario getNewEntity() {
 		Funcionario entregador = super.getNewEntity();
@@ -122,25 +148,53 @@ public class EntregadorController extends AbstractFuncionarioController {
 		return new Funcao[] { ENTREGADOR };
 	}
 
-	@Override
-	protected String getDeleteMessage() {
-		return "O entregador foi removido com sucesso.";
-	}
-
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.casa_das_quentinhas.controller.AbstractFuncionarioController
+	 * #setFilterPedidos(java.util.Map, java.lang.Integer)
+	 */
 	@Override
 	protected void setFilterPedidos(Map<String, Object> filters, Integer entregadorId) {
 		filters.put("entregador.id", entregadorId);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.controller.AbstractBeanController#getDeleteSucessMessage
+	 * ()
+	 */
 	@Override
-	protected String getStoreSucessMessage() {
-		return "O(A) entregador(a) foi cadastrado(a) com sucesso!";
+	protected String getDeleteSucessMessage() {
+		return getMessageSource().getMessage("entregador.successfully.removed", null, LOCALE);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.controller.AbstractBeanController#getStoreSucessMessage(
+	 * )
+	 */
+	@Override
+	protected String getStoreSucessMessage() {
+		return getMessageSource().getMessage("entregador.successfully.registered", null, LOCALE);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.controller.AbstractBeanController#getUpdateSucessMessage
+	 * (br.com.cams7.app.entity.AbstractEntity)
+	 */
 	@Override
 	protected String getUpdateSucessMessage(Funcionario entregador) {
-		return String.format("Os dados do(a) entregador(a) (%s) foram atualizados com sucesso!",
-				entregador.getNomeWithCpf());
+		return getMessageSource().getMessage("entregador.successfully.updated",
+				new String[] { entregador.getNomeWithCpf() }, LOCALE);
 	}
 
 }

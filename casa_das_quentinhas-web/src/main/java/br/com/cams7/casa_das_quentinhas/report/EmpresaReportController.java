@@ -32,6 +32,11 @@ public class EmpresaReportController extends AbstractReportController<Integer, E
 
 	private final String PDF_VIEW = "empresaPdfView";
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.app.controller.AbstractReportController#getPdfView()
+	 */
 	@Override
 	protected String getPdfView() {
 		return PDF_VIEW;
@@ -48,6 +53,11 @@ public class EmpresaReportController extends AbstractReportController<Integer, E
 		return new Class<?>[] { Cidade.class };
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.app.controller.AbstractController#getFilters()
+	 */
 	@Override
 	protected Map<String, Object> getFilters() {
 		Map<String, Object> filters = new HashMap<>();
@@ -55,6 +65,13 @@ public class EmpresaReportController extends AbstractReportController<Integer, E
 		return filters;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.controller.AbstractReportController#getEntities(java.
+	 * util.List)
+	 */
 	@Override
 	protected List<Empresa> getEntities(List<Empresa> empresas) {
 		return empresas.stream().map(empresa -> {

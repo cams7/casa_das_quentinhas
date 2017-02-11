@@ -25,11 +25,23 @@ public class PedidoReportController extends AbstractReportController<Long, Pedid
 
 	private final String PDF_VIEW = "pedidoPdfView";
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.app.controller.AbstractReportController#getPdfView()
+	 */
 	@Override
 	protected String getPdfView() {
 		return PDF_VIEW;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.controller.AbstractReportController#getEntities(java.
+	 * util.List)
+	 */
 	@Override
 	protected List<Pedido> getEntities(List<Pedido> pedidos) {
 		return pedidos.stream().map(pedido -> {

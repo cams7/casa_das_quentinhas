@@ -216,8 +216,8 @@
 					<version>2.19.1</version>
 					<configuration>
 						<systemPropertyVariables>
-							<!--base.url>http://localhost:8080/casa-das-quentinhas</base.url-->
-							<base.url>http://localhost:8090</base.url>
+							<base.url>http://localhost:8080/casa-das-quentinhas</base.url>
+							<!--base.url>http://localhost:8090</base.url-->
 							<sleep.millisecounds>1000</sleep.millisecounds>
 						</systemPropertyVariables>
 					</configuration>

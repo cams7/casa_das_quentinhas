@@ -26,6 +26,11 @@ public class EntregadorReportController extends AbstractReportController<Integer
 
 	private final String PDF_VIEW = "entregadorPdfView";
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.app.controller.AbstractReportController#getPdfView()
+	 */
 	@Override
 	protected String getPdfView() {
 		return PDF_VIEW;

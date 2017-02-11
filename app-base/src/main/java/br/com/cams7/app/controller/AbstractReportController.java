@@ -27,11 +27,20 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 public abstract class AbstractReportController<PK extends Serializable, E extends AbstractEntity<PK>, S extends BaseService<PK, E>>
 		extends AbstractController<PK, E, S> implements BaseReportController {
 
+	/**
+	 * 
+	 */
 	public AbstractReportController() {
 		super();
 	}
 
-	private Map<String, Object> getReportParams(SearchParams params) {
+	/**
+	 * Carrega os parametros para gerar o relatório
+	 * 
+	 * @param params
+	 * @return
+	 */
+	private Map<String, Object> getReportParams(final SearchParams params) {
 		if (getFilters() != null)
 			params.getFilters().putAll(getFilters());
 
@@ -43,36 +52,37 @@ public abstract class AbstractReportController<PK extends Serializable, E extend
 		if (entities.isEmpty())
 			throw new AppNotFoundException("Não foi encontrada nenhuma entidade");
 
-		String reportPath = getClass().getClassLoader().getResource("/META-INF/report/").getPath();
+		final String REPORT_PATH = getClass().getClassLoader().getResource("/META-INF/report/").getPath();
 
-		Map<String, Object> reportParams = new HashMap<String, Object>();
-		reportParams.put(JRParameter.REPORT_LOCALE, LOCALE);
-		reportParams.put("SUBREPORT_DIR", reportPath);
-		reportParams.put("datasource", new JRBeanCollectionDataSource(entities));
+		final Map<String, Object> REPORT_PARAMS = new HashMap<String, Object>();
+		REPORT_PARAMS.put(JRParameter.REPORT_LOCALE, LOCALE);
+		REPORT_PARAMS.put("SUBREPORT_DIR", REPORT_PATH);
+		REPORT_PARAMS.put("datasource", new JRBeanCollectionDataSource(entities));
 
-		return reportParams;
-	}
-
-	private ModelAndView getModelAndView(Map<String, Object> reportParams, String reportName) {
-		return new ModelAndView(reportName, reportParams);
+		return REPORT_PARAMS;
 	}
 
 	/**
+	 * Gera o relatório
 	 * 
 	 * @param request
 	 * @return
 	 */
-	public ModelAndView generatePdfReport(HttpServletRequest request) {
-		SearchParams params = URIHelper.getParams(ENTITY_TYPE, request.getParameterMap());
+	public ModelAndView generatePdfReport(final HttpServletRequest request) {
+		final SearchParams PARAMS = URIHelper.getParams(ENTITY_TYPE, request.getParameterMap());
 
-		return getModelAndView(getReportParams(params), getPdfView());
+		return new ModelAndView(getPdfView(), getReportParams(PARAMS));
 	}
 
+	/**
+	 * @return Nome do arquivo
+	 */
 	protected abstract String getPdfView();
 
 	/**
 	 * @param entities
-	 * @return
+	 *            Entidades
+	 * @return Entidades
 	 */
 	protected List<E> getEntities(List<E> entities) {
 		return entities;

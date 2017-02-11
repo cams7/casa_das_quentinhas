@@ -50,9 +50,8 @@ public class ProdutoController extends AbstractBeanController<Integer, Produto, 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * br.com.cams7.app.controller.AbstractController#show(java.io.Serializable,
-	 * org.springframework.ui.ModelMap)
+	 * @see br.com.cams7.app.controller.AbstractBeanController#show(java.io.
+	 * Serializable, org.springframework.ui.ModelMap)
 	 */
 	@Override
 	public String show(@PathVariable Integer id, ModelMap model) {
@@ -62,6 +61,18 @@ public class ProdutoController extends AbstractBeanController<Integer, Produto, 
 		return super.show(id, model);
 	}
 
+	/**
+	 * Carregas os pedidos que contenha o produto
+	 * 
+	 * @param produtoId
+	 *            ID do produto
+	 * @param model
+	 * @param offset
+	 * @param sortField
+	 * @param sortOrder
+	 * @param query
+	 * @return
+	 */
 	@GetMapping(value = "/{produtoId}/pedidos")
 	@ResponseStatus(OK)
 	public String pedidos(@PathVariable Integer produtoId, ModelMap model,
@@ -75,43 +86,76 @@ public class ProdutoController extends AbstractBeanController<Integer, Produto, 
 	}
 
 	/**
-	 * Possiveis tamanhos de produtos
+	 * @return Possiveis tamanhos de produtos
 	 */
 	@ModelAttribute("produtoTamanhos")
 	public Tamanho[] initializeTamanhos() {
 		return Tamanho.values();
 	}
 
+	/**
+	 * Converte o custo formatado
+	 * 
+	 * @param binder
+	 */
 	@InitBinder
 	public void binder(WebDataBinder binder) {
 		binder.registerCustomEditor(Float.class, "custo", new MoneyEditor());
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.app.controller.AbstractBeanController#getModelName()
+	 */
 	@Override
 	protected String getModelName() {
 		return MODEL_NAME;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.app.controller.AbstractBeanController#getListName()
+	 */
 	@Override
 	protected String getListName() {
 		return LIST_NAME;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.controller.AbstractBeanController#getGlobalFilters()
+	 */
 	@Override
 	protected String[] getGlobalFilters() {
 		return new String[] { "nome", "custo" };
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.controller.AbstractBeanController#getEntity(java.io.
+	 * Serializable)
+	 */
 	@Override
 	protected Produto getEntity(Integer id) {
 		return getService().getProdutoById(id);
 	}
 
-	@Override
-	protected String getDeleteMessage() {
-		return "O produto foi removido com sucesso.";
-	}
-
+	/**
+	 * Carrega os pedidos que contenha o produto
+	 * 
+	 * @param produtoId
+	 *            ID do produto
+	 * @param model
+	 * @param offset
+	 * @param sortField
+	 * @param sortOrder
+	 */
 	@SuppressWarnings("unchecked")
 	private void loadPedidos(Integer produtoId, ModelMap model, Integer offset, String sortField, SortOrder sortOrder) {
 		final short MAX_RESULTS = 5;
@@ -130,14 +174,41 @@ public class ProdutoController extends AbstractBeanController<Integer, Produto, 
 		setPaginationAttribute(model, offset, sortField, sortOrder, null, count, MAX_RESULTS);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.controller.AbstractBeanController#getDeleteSucessMessage
+	 * ()
+	 */
 	@Override
-	protected String getStoreSucessMessage() {
-		return "O produto foi cadastrado com sucesso!";
+	protected String getDeleteSucessMessage() {
+		return getMessageSource().getMessage("produto.successfully.removed", null, LOCALE);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.controller.AbstractBeanController#getStoreSucessMessage(
+	 * )
+	 */
+	@Override
+	protected String getStoreSucessMessage() {
+		return getMessageSource().getMessage("produto.successfully.registered", null, LOCALE);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.controller.AbstractBeanController#getUpdateSucessMessage
+	 * (br.com.cams7.app.entity.AbstractEntity)
+	 */
 	@Override
 	protected String getUpdateSucessMessage(Produto produto) {
-		return String.format("Os dados do produto (%s) foram atualizados com sucesso!", produto.getNomeWithTamanho());
+		return getMessageSource().getMessage("produto.successfully.updated",
+				new String[] { produto.getNomeWithTamanho() }, LOCALE);
 	}
 
 }

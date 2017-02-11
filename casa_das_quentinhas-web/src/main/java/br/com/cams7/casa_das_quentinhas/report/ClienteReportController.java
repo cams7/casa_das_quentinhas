@@ -25,6 +25,11 @@ public class ClienteReportController extends AbstractReportController<Integer, C
 
 	private final String PDF_VIEW = "clientePdfView";
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.app.controller.AbstractReportController#getPdfView()
+	 */
 	@Override
 	protected String getPdfView() {
 		return PDF_VIEW;
@@ -41,6 +46,13 @@ public class ClienteReportController extends AbstractReportController<Integer, C
 		return new Class<?>[] { Cidade.class };
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.controller.AbstractReportController#getEntities(java.
+	 * util.List)
+	 */
 	@Override
 	protected List<Cliente> getEntities(List<Cliente> clientes) {
 		return clientes.stream().map(cliente -> {
