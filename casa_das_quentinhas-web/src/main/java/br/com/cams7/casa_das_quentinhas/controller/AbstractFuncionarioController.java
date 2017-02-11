@@ -59,6 +59,19 @@ public abstract class AbstractFuncionarioController
 		return super.show(id, model);
 	}
 
+	/**
+	 * Carrega os pedidos cadastrado pelo funcionário ou atribuidos ao
+	 * entregador
+	 * 
+	 * @param funcionarioId
+	 *            ID do funcionário
+	 * @param model
+	 * @param offset
+	 * @param sortField
+	 * @param sortOrder
+	 * @param query
+	 * @return
+	 */
 	@GetMapping(value = "/{funcionarioId}/pedidos")
 	@ResponseStatus(OK)
 	public String pedidos(@PathVariable Integer funcionarioId, ModelMap model,
@@ -72,6 +85,15 @@ public abstract class AbstractFuncionarioController
 		return "pedido_list";
 	}
 
+	/**
+	 * Armazena os dados do funcionário
+	 * 
+	 * @param funcionario
+	 * @param result
+	 * @param model
+	 * @param request
+	 * @return
+	 */
 	protected String storeFuncionario(Funcionario funcionario, BindingResult result, ModelMap model,
 			HttpServletRequest request) {
 		setCommonAttributes(model);
@@ -106,6 +128,16 @@ public abstract class AbstractFuncionarioController
 		return redirectToPreviousPage(request);
 	}
 
+	/**
+	 * Atualiza os dados do funcionário
+	 * 
+	 * @param funcionario
+	 * @param result
+	 * @param model
+	 * @param id
+	 * @param request
+	 * @return
+	 */
 	protected String updateFuncionario(Funcionario funcionario, BindingResult result, ModelMap model, Integer id,
 			HttpServletRequest request) {
 		setCommonAttributes(model);
@@ -138,7 +170,7 @@ public abstract class AbstractFuncionarioController
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see br.com.cams7.app.controller.AbstractController#destroy(java.io.
+	 * @see br.com.cams7.app.controller.AbstractBeanController#destroy(java.io.
 	 * Serializable)
 	 */
 	@Override
@@ -155,6 +187,11 @@ public abstract class AbstractFuncionarioController
 		return new ResponseEntity<Map<String, String>>(getOnlyMessage(response), response.getStatus());
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.app.controller.AbstractBeanController#getNewEntity()
+	 */
 	@Override
 	protected Funcionario getNewEntity() {
 		Funcionario funcionario = new Funcionario();
@@ -162,12 +199,24 @@ public abstract class AbstractFuncionarioController
 		return funcionario;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.controller.AbstractBeanController#getEntity(java.io.
+	 * Serializable)
+	 */
 	@Override
 	protected Funcionario getEntity(Integer id) {
 		Funcionario funcionario = getService().getFuncionarioByIdAndFuncoes(id, getPossiveisFuncoes());
 		return funcionario;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.app.controller.AbstractController#getFilters()
+	 */
 	@Override
 	protected Map<String, Object> getFilters() {
 		Map<String, Object> filters = new HashMap<>();
@@ -175,9 +224,19 @@ public abstract class AbstractFuncionarioController
 		return filters;
 	}
 
+	/**
+	 * @return Possíves funções do funcionário
+	 */
 	protected abstract Funcao[] getPossiveisFuncoes();
 
-	protected abstract void setFilterPedidos(Map<String, Object> filters, Integer entregadorId);
+	/**
+	 * Filtra os pedidos pelo ID do funcionário
+	 * 
+	 * @param filters
+	 * @param funcionarioId
+	 *            ID do funcionário
+	 */
+	protected abstract void setFilterPedidos(Map<String, Object> filters, Integer funcionarioId);
 
 	protected UsuarioService getUsuarioService() {
 		return usuarioService;
@@ -186,8 +245,6 @@ public abstract class AbstractFuncionarioController
 	protected EmpresaService getEmpresaService() {
 		return empresaService;
 	}
-
-	
 
 	/**
 	 * 1º validação
@@ -245,8 +302,8 @@ public abstract class AbstractFuncionarioController
 			return;
 
 		if (!usuarioService.isEmailUnique(usuario.getId(), usuario.getEmail())) {
-			FieldError emailError = new FieldError(getModelName(), FIELD_NAME,
-					getMessageSource().getMessage("NonUnique.usuario.email", new String[] { usuario.getEmail() }, LOCALE));
+			FieldError emailError = new FieldError(getModelName(), FIELD_NAME, getMessageSource()
+					.getMessage("NonUnique.usuario.email", new String[] { usuario.getEmail() }, LOCALE));
 			result.addError(emailError);
 		}
 	}
@@ -273,6 +330,17 @@ public abstract class AbstractFuncionarioController
 		}
 	}
 
+	/**
+	 * Carrega os pedidos cadastrado pelo funcionário ou atribuidos ao
+	 * entregador
+	 * 
+	 * @param funcionarioId
+	 *            ID do funcionário
+	 * @param model
+	 * @param offset
+	 * @param sortField
+	 * @param sortOrder
+	 */
 	@SuppressWarnings("unchecked")
 	private void loadPedidos(Integer funcionarioId, ModelMap model, Integer offset, String sortField,
 			SortOrder sortOrder) {

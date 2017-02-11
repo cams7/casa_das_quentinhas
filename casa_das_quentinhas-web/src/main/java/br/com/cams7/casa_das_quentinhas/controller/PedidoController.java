@@ -95,9 +95,8 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * br.com.cams7.app.controller.AbstractController#create(org.springframework
-	 * .ui.ModelMap)
+	 * @see br.com.cams7.app.controller.AbstractBeanController#create(org.
+	 * springframework.ui.ModelMap, javax.servlet.http.HttpServletRequest)
 	 */
 	@Override
 	public String create(ModelMap model, HttpServletRequest request) {
@@ -108,6 +107,14 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 		return super.create(model, request);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.controller.AbstractBeanController#store(br.com.cams7.app
+	 * .entity.AbstractEntity, org.springframework.validation.BindingResult,
+	 * org.springframework.ui.ModelMap, javax.servlet.http.HttpServletRequest)
+	 */
 	@Override
 	public String store(@Valid Pedido pedido, BindingResult result, ModelMap model, HttpServletRequest request) {
 		setSituacao(model);
@@ -135,9 +142,8 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * br.com.cams7.app.controller.AbstractController#show(java.io.Serializable,
-	 * org.springframework.ui.ModelMap)
+	 * @see br.com.cams7.app.controller.AbstractBeanController#show(java.io.
+	 * Serializable, org.springframework.ui.ModelMap)
 	 */
 	@Override
 	public String show(@PathVariable Long id, ModelMap model) {
@@ -148,6 +154,13 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 		return super.show(id, model);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.app.controller.AbstractBeanController#edit(java.io.
+	 * Serializable, org.springframework.ui.ModelMap,
+	 * javax.servlet.http.HttpServletRequest)
+	 */
 	@Override
 	public String edit(@PathVariable Long id, ModelMap model, HttpServletRequest request) {
 		itemFacade.initUpdate(id);
@@ -157,6 +170,15 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 		return super.edit(id, model, request);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.controller.AbstractBeanController#update(br.com.cams7.
+	 * app.entity.AbstractEntity, org.springframework.validation.BindingResult,
+	 * org.springframework.ui.ModelMap, java.io.Serializable,
+	 * javax.servlet.http.HttpServletRequest)
+	 */
 	@Override
 	public String update(@Valid Pedido pedido, BindingResult result, ModelMap model, @PathVariable Long id,
 			HttpServletRequest request) {
@@ -182,6 +204,18 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 		return redirectToPreviousPage(request);
 	}
 
+	/**
+	 * Carrega os itens de pedido
+	 * 
+	 * @param pedidoId
+	 *            ID do pedido
+	 * @param model
+	 * @param offset
+	 * @param sortField
+	 * @param sortOrder
+	 * @param query
+	 * @return
+	 */
 	@GetMapping(value = "/{pedidoId}/itens")
 	@ResponseStatus(OK)
 	public String itens(@PathVariable Long pedidoId, ModelMap model,
@@ -194,6 +228,13 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 		return "pedido_itens";
 	}
 
+	/**
+	 * @param pedidoId
+	 *            ID do pedido
+	 * @param produtoId
+	 *            ID do produto
+	 * @return Na requisição AJAX, carrega o item selecionado
+	 */
 	@GetMapping(value = "/{pedidoId}/item/{produtoId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<Map<String, ?>> showItem(@PathVariable Long pedidoId, @PathVariable Integer produtoId) {
@@ -209,6 +250,12 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 		return new ResponseEntity<Map<String, ?>>(response.getBody(), response.getStatus());
 	}
 
+	/**
+	 * @param model
+	 * @param produtoId
+	 * @param quantidade
+	 * @return Na requisição AJAX, carrega um novo item
+	 */
 	@PostMapping(value = "/item", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<Map<String, ?>> addItem(ModelMap model,
@@ -234,6 +281,10 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 		return new ResponseEntity<Map<String, ?>>(response.getBody(), response.getStatus());
 	}
 
+	/**
+	 * @param produtoId
+	 * @return Na requisição AJAX, carrega o pedido
+	 */
 	@PostMapping(value = "/item/{produtoId}/delete", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<Map<String, ?>> removeItem(@PathVariable Integer produtoId) {
@@ -249,6 +300,10 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 		return new ResponseEntity<Map<String, ?>>(response.getBody(), response.getStatus());
 	}
 
+	/**
+	 * @param nomeOrCpfOrTelefone
+	 * @return Na requisição AJAX, carrega os clientes
+	 */
 	@GetMapping(value = "/clientes/{nomeOrCpfOrTelefone}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<Map<Integer, String>> getClientes(@PathVariable String nomeOrCpfOrTelefone) {
@@ -257,6 +312,10 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 		return new ResponseEntity<Map<Integer, String>>(clientes, OK);
 	}
 
+	/**
+	 * @param nomeOrCnpj
+	 * @return Na requisição AJAX, carrega as empresas clientes
+	 */
 	@GetMapping(value = "/empresas/{nomeOrCnpj}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<Map<Integer, String>> getEmpresas(@PathVariable String nomeOrCnpj) {
@@ -265,6 +324,10 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 		return new ResponseEntity<Map<Integer, String>>(empresas, OK);
 	}
 
+	/**
+	 * @param nomeOrCpfOrCelular
+	 * @return Na requisição AJAX, carrega os entregadores
+	 */
 	@GetMapping(value = "/entregadores/{nomeOrCpfOrCelular}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<Map<Integer, String>> getEntregadores(@PathVariable String nomeOrCpfOrCelular) {
@@ -273,6 +336,10 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 		return new ResponseEntity<Map<Integer, String>>(funcionarios, OK);
 	}
 
+	/**
+	 * @param nomeOrCusto
+	 * @return Na requisição AJAX, carrega os produtos
+	 */
 	@GetMapping(value = "/produtos/{nomeOrCusto}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<Map<Integer, String>> getProdutos(@PathVariable String nomeOrCusto) {
@@ -282,7 +349,7 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 	}
 
 	/**
-	 * Possiveis tipos de cliente
+	 * @return Possiveis tipos de cliente
 	 */
 	@ModelAttribute("pedidoTiposCliente")
 	public TipoCliente[] initializeTiposCliente() {
@@ -290,7 +357,7 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 	}
 
 	/**
-	 * Possiveis formas de pagamento
+	 * @return Possiveis formas de pagamento
 	 */
 	@ModelAttribute("pedidoFormasPagamento")
 	public FormaPagamento[] initializeFormasPagamento() {
@@ -298,7 +365,7 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 	}
 
 	/**
-	 * Possiveis destinos de operação
+	 * @return Possiveis destinos de operação
 	 */
 	@ModelAttribute("pedidoDestinosOperacao")
 	public DestinoOperacao[] initializeDestinosOperacao() {
@@ -306,7 +373,7 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 	}
 
 	/**
-	 * Possiveis tipos de atendimento
+	 * @return Possiveis tipos de atendimento
 	 */
 	@ModelAttribute("pedidoTiposAtendimento")
 	public TipoAtendimento[] initializeTiposAtendimento() {
@@ -314,13 +381,18 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 	}
 
 	/**
-	 * Possiveis situações do pedido
+	 * @return Possiveis situações do pedido
 	 */
 	@ModelAttribute("pedidoSituacoes")
 	public Situacao[] initializeSituacoes() {
 		return Situacao.values();
 	}
 
+	/**
+	 * Converte os custos formatados
+	 * 
+	 * @param binder
+	 */
 	@InitBinder
 	public void binder(WebDataBinder binder) {
 		binder.registerCustomEditor(Float.class, "custo", new MoneyEditor());
@@ -328,27 +400,53 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 		binder.registerCustomEditor(Float.class, "custoSt", new MoneyEditor());
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.app.controller.AbstractBeanController#getModelName()
+	 */
 	@Override
 	protected String getModelName() {
 		return MODEL_NAME;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.app.controller.AbstractBeanController#getListName()
+	 */
 	@Override
 	protected String getListName() {
 		return LIST_NAME;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.app.controller.AbstractController#getIgnoredJoins()
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	protected Class<?>[] getIgnoredJoins() {
 		return new Class<?>[] { Cidade.class };
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.controller.AbstractBeanController#getGlobalFilters()
+	 */
 	@Override
 	protected String[] getGlobalFilters() {
 		return new String[] { "cliente.nome", "empresa.razaoSocial", "quantidade", "custo" };
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.app.controller.AbstractBeanController#getNewEntity()
+	 */
 	@Override
 	protected Pedido getNewEntity() {
 		Pedido pedido = new Pedido();
@@ -361,6 +459,13 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 		return pedido;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.controller.AbstractBeanController#getEntity(java.io.
+	 * Serializable)
+	 */
 	@Override
 	protected Pedido getEntity(Long id) {
 		Pedido pedido = getService().getPedidoById(id);
@@ -390,11 +495,6 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 		return pedido;
 	}
 
-	@Override
-	protected String getDeleteMessage() {
-		return "O pedido foi removido com sucesso.";
-	}
-
 	/**
 	 * Verifica se foi informado o id do cliente ou da empresa
 	 * 
@@ -412,6 +512,10 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 	}
 
 	/**
+	 * Carrega os itens de pedido
+	 * 
+	 * @param pedidoId
+	 *            ID do pedido
 	 * @param model
 	 */
 	private void loadItens(Long pedidoId, ModelMap model) {
@@ -419,6 +523,10 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 	}
 
 	/**
+	 * Carrega os itens de pedido
+	 * 
+	 * @param pedidoId
+	 *            ID do pedido
 	 * @param model
 	 * @param offset
 	 * @param sortField
@@ -446,11 +554,37 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 		model.addAttribute("pedidoSituacao", CADASTRO_SITUACAO.getDescricao());
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.controller.AbstractBeanController#getDeleteSucessMessage
+	 * ()
+	 */
+	@Override
+	protected String getDeleteSucessMessage() {
+		return getMessageSource().getMessage("pedido.successfully.removed", null, LOCALE);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.controller.AbstractBeanController#getStoreSucessMessage(
+	 * )
+	 */
 	@Override
 	protected String getStoreSucessMessage() {
 		return getMessageSource().getMessage("pedido.successfully.registered", null, LOCALE);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.controller.AbstractBeanController#getUpdateSucessMessage
+	 * (br.com.cams7.app.entity.AbstractEntity)
+	 */
 	@Override
 	protected String getUpdateSucessMessage(Pedido pedido) {
 		return getMessageSource().getMessage("pedido.successfully.updated", new String[] { pedido.getIdWithCadastro() },

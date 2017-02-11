@@ -24,11 +24,23 @@ public class ProdutoReportController extends AbstractReportController<Integer, P
 
 	private final String PDF_VIEW = "produtoPdfView";
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.app.controller.AbstractReportController#getPdfView()
+	 */
 	@Override
 	protected String getPdfView() {
 		return PDF_VIEW;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.controller.AbstractReportController#getEntities(java.
+	 * util.List)
+	 */
 	@Override
 	protected List<Produto> getEntities(List<Produto> produtos) {
 		return produtos.stream().map(produto -> {

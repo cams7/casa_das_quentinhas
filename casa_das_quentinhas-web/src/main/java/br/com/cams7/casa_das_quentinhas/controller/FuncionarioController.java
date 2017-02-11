@@ -39,10 +39,9 @@ public class FuncionarioController extends AbstractFuncionarioController {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * br.com.cams7.casa_das_quentinhas.controller.AbstractFuncionarioController
-	 * #store(br.com.cams7.casa_das_quentinhas.model.Funcionario,
-	 * org.springframework.validation.BindingResult,
-	 * org.springframework.ui.ModelMap, java.lang.Integer)
+	 * br.com.cams7.app.controller.AbstractBeanController#store(br.com.cams7.app
+	 * .entity.AbstractEntity, org.springframework.validation.BindingResult,
+	 * org.springframework.ui.ModelMap, javax.servlet.http.HttpServletRequest)
 	 */
 	@Override
 	public String store(@Valid Funcionario funcionario, BindingResult result, ModelMap model,
@@ -54,10 +53,10 @@ public class FuncionarioController extends AbstractFuncionarioController {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * br.com.cams7.casa_das_quentinhas.controller.AbstractFuncionarioController
-	 * #update(br.com.cams7.casa_das_quentinhas.model.Funcionario,
-	 * org.springframework.validation.BindingResult,
-	 * org.springframework.ui.ModelMap, java.lang.Integer, java.lang.Integer)
+	 * br.com.cams7.app.controller.AbstractBeanController#update(br.com.cams7.
+	 * app.entity.AbstractEntity, org.springframework.validation.BindingResult,
+	 * org.springframework.ui.ModelMap, java.io.Serializable,
+	 * javax.servlet.http.HttpServletRequest)
 	 */
 	@Override
 	public String update(@Valid Funcionario funcionario, BindingResult result, ModelMap model, @PathVariable Integer id,
@@ -66,34 +65,62 @@ public class FuncionarioController extends AbstractFuncionarioController {
 	}
 
 	/**
-	 * Possiveis funções do funcionário
+	 * @return Possiveis funções do funcionário
 	 */
 	@ModelAttribute("funcionarioFuncoes")
 	public Funcao[] initializeFuncoes() {
 		return getPossiveisFuncoes();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.app.controller.AbstractBeanController#getModelName()
+	 */
 	@Override
 	protected String getModelName() {
 		return MODEL_NAME;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.app.controller.AbstractBeanController#getListName()
+	 */
 	@Override
 	protected String getListName() {
 		return LIST_NAME;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.app.controller.AbstractController#getIgnoredJoins()
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	protected Class<?>[] getIgnoredJoins() {
 		return new Class<?>[] { Empresa.class };
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.controller.AbstractBeanController#getGlobalFilters()
+	 */
 	@Override
 	protected String[] getGlobalFilters() {
 		return new String[] { "nome", "cpf", "celular", "usuario.email" };
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.casa_das_quentinhas.controller.AbstractFuncionarioController
+	 * #getNewEntity()
+	 */
 	@Override
 	protected Funcionario getNewEntity() {
 		Funcionario funcionario = super.getNewEntity();
@@ -101,6 +128,13 @@ public class FuncionarioController extends AbstractFuncionarioController {
 		return funcionario;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.casa_das_quentinhas.controller.AbstractFuncionarioController
+	 * #getEntity(java.lang.Integer)
+	 */
 	@Override
 	protected Funcionario getEntity(Integer id) {
 		Funcionario funcionario = super.getEntity(id);
@@ -120,21 +154,49 @@ public class FuncionarioController extends AbstractFuncionarioController {
 		return new Funcao[] { GERENTE, ATENDENTE };
 	}
 
-	@Override
-	protected String getDeleteMessage() {
-		return "O funcionário foi removido com sucesso.";
-	}
-
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.casa_das_quentinhas.controller.AbstractFuncionarioController
+	 * #setFilterPedidos(java.util.Map, java.lang.Integer)
+	 */
 	@Override
 	protected void setFilterPedidos(Map<String, Object> filters, Integer funcionarioId) {
 		filters.put("usuarioCadastro.id", funcionarioId);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.controller.AbstractBeanController#getDeleteSucessMessage
+	 * ()
+	 */
+	@Override
+	protected String getDeleteSucessMessage() {
+		return getMessageSource().getMessage("funcionario.successfully.removed", null, LOCALE);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.controller.AbstractBeanController#getStoreSucessMessage(
+	 * )
+	 */
 	@Override
 	protected String getStoreSucessMessage() {
 		return getMessageSource().getMessage("funcionario.successfully.registered", null, LOCALE);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.controller.AbstractBeanController#getUpdateSucessMessage
+	 * (br.com.cams7.app.entity.AbstractEntity)
+	 */
 	@Override
 	protected String getUpdateSucessMessage(Funcionario funcionario) {
 		return getMessageSource().getMessage("funcionario.successfully.updated",

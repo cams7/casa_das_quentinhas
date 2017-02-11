@@ -69,9 +69,9 @@ public class ClienteController extends AbstractBeanController<Integer, Cliente, 
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * br.com.cams7.app.controller.AbstractController#store(br.com.cams7.app.
-	 * model.AbstractEntity, org.springframework.validation.BindingResult,
-	 * org.springframework.ui.ModelMap, java.lang.Integer)
+	 * br.com.cams7.app.controller.AbstractBeanController#store(br.com.cams7.app
+	 * .entity.AbstractEntity, org.springframework.validation.BindingResult,
+	 * org.springframework.ui.ModelMap, javax.servlet.http.HttpServletRequest)
 	 */
 	@Override
 	public String store(@Valid Cliente cliente, BindingResult result, ModelMap model, HttpServletRequest request) {
@@ -118,9 +118,8 @@ public class ClienteController extends AbstractBeanController<Integer, Cliente, 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * br.com.cams7.app.controller.AbstractController#show(java.io.Serializable,
-	 * org.springframework.ui.ModelMap)
+	 * @see br.com.cams7.app.controller.AbstractBeanController#show(java.io.
+	 * Serializable, org.springframework.ui.ModelMap)
 	 */
 	@Override
 	public String show(@PathVariable Integer id, ModelMap model) {
@@ -133,9 +132,10 @@ public class ClienteController extends AbstractBeanController<Integer, Cliente, 
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * br.com.cams7.app.controller.AbstractController#update(br.com.cams7.app.
-	 * model.AbstractEntity, org.springframework.validation.BindingResult,
-	 * org.springframework.ui.ModelMap, java.io.Serializable, java.lang.Integer)
+	 * br.com.cams7.app.controller.AbstractBeanController#update(br.com.cams7.
+	 * app.entity.AbstractEntity, org.springframework.validation.BindingResult,
+	 * org.springframework.ui.ModelMap, java.io.Serializable,
+	 * javax.servlet.http.HttpServletRequest)
 	 */
 	@Override
 	public String update(@Valid Cliente cliente, BindingResult result, ModelMap model, @PathVariable Integer id,
@@ -167,6 +167,18 @@ public class ClienteController extends AbstractBeanController<Integer, Cliente, 
 		return redirectToPreviousPage(request);
 	}
 
+	/**
+	 * Carrega os pedidos do cliente
+	 * 
+	 * @param clienteId
+	 *            ID do cliente
+	 * @param model
+	 * @param offset
+	 * @param sortField
+	 * @param sortOrder
+	 * @param query
+	 * @return
+	 */
 	@GetMapping(value = "/{clienteId}/pedidos")
 	@ResponseStatus(OK)
 	public String pedidos(@PathVariable Integer clienteId, ModelMap model,
@@ -180,6 +192,10 @@ public class ClienteController extends AbstractBeanController<Integer, Cliente, 
 		return "pedido_list";
 	}
 
+	/**
+	 * @param nomeOrIbge
+	 * @return Na requisição AJAX, carrega as cidades
+	 */
 	@GetMapping(value = "/cidades/{nomeOrIbge}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<Map<Integer, String>> getCidades(@PathVariable String nomeOrIbge) {
@@ -189,7 +205,7 @@ public class ClienteController extends AbstractBeanController<Integer, Cliente, 
 	}
 
 	/**
-	 * Possiveis tipos de contribuintes
+	 * @return Possiveis tipos de contribuintes
 	 */
 	@ModelAttribute("clienteTiposContribuintes")
 	public TipoContribuinte[] initializeTipos() {
@@ -197,26 +213,52 @@ public class ClienteController extends AbstractBeanController<Integer, Cliente, 
 		return tipos;
 	}
 
+	/**
+	 * Converte a data de nascimento formatada
+	 * 
+	 * @param binder
+	 */
 	@InitBinder
 	public void binder(WebDataBinder binder) {
 		binder.registerCustomEditor(Date.class, "nascimento", new DateEditor());
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.app.controller.AbstractBeanController#getModelName()
+	 */
 	@Override
 	protected String getModelName() {
 		return MODEL_NAME;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.app.controller.AbstractBeanController#getListName()
+	 */
 	@Override
 	protected String getListName() {
 		return LIST_NAME;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.controller.AbstractBeanController#getGlobalFilters()
+	 */
 	@Override
 	protected String[] getGlobalFilters() {
 		return new String[] { "nome", "cpf", "contato.email", "contato.telefone", "cidade.nome" };
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.cams7.app.controller.AbstractBeanController#getNewEntity()
+	 */
 	@Override
 	protected Cliente getNewEntity() {
 		Cliente cliente = new Cliente();
@@ -228,16 +270,18 @@ public class ClienteController extends AbstractBeanController<Integer, Cliente, 
 		return cliente;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.controller.AbstractBeanController#getEntity(java.io.
+	 * Serializable)
+	 */
 	@Override
 	protected Cliente getEntity(Integer id) {
 		Cliente cliente = getService().getClienteById(id);
 		cliente.setUsuarioAcesso(new Usuario());
 		return cliente;
-	}
-
-	@Override
-	protected String getDeleteMessage() {
-		return "O cliente foi removido com sucesso.";
 	}
 
 	/**
@@ -327,6 +371,16 @@ public class ClienteController extends AbstractBeanController<Integer, Cliente, 
 		}
 	}
 
+	/**
+	 * Carrega os pedidos do cliente
+	 * 
+	 * @param clienteId
+	 *            ID do cliente
+	 * @param model
+	 * @param offset
+	 * @param sortField
+	 * @param sortOrder
+	 */
 	@SuppressWarnings("unchecked")
 	private void loadPedidos(Integer clienteId, ModelMap model, Integer offset, String sortField, SortOrder sortOrder) {
 		final short MAX_RESULTS = 5;
@@ -346,11 +400,37 @@ public class ClienteController extends AbstractBeanController<Integer, Cliente, 
 		setPaginationAttribute(model, offset, sortField, sortOrder, null, count, MAX_RESULTS);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.controller.AbstractBeanController#getDeleteSucessMessage
+	 * ()
+	 */
+	@Override
+	protected String getDeleteSucessMessage() {
+		return getMessageSource().getMessage("cliente.successfully.removed", null, LOCALE);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.controller.AbstractBeanController#getStoreSucessMessage(
+	 * )
+	 */
 	@Override
 	protected String getStoreSucessMessage() {
 		return getMessageSource().getMessage("cliente.successfully.registered", null, LOCALE);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.com.cams7.app.controller.AbstractBeanController#getUpdateSucessMessage
+	 * (br.com.cams7.app.entity.AbstractEntity)
+	 */
 	@Override
 	protected String getUpdateSucessMessage(Cliente cliente) {
 		return getMessageSource().getMessage("cliente.successfully.updated", new String[] { cliente.getNomeWithCpf() },
