@@ -16,6 +16,8 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -44,6 +46,9 @@ import br.com.cams7.app.utils.AppHelper;
  */
 public abstract class AbstractBeanController<PK extends Serializable, E extends AbstractEntity<PK>, S extends BaseService<PK, E>>
 		extends AbstractController<PK, E, S> implements BaseBeanController<PK, E> {
+
+	@Autowired
+	private MessageSource messageSource;
 
 	protected final String PREVIOUS_PAGE = "previousPage";
 	private final short MAX_RESULTS = 10;
@@ -421,6 +426,10 @@ public abstract class AbstractBeanController<PK extends Serializable, E extends 
 	protected abstract String getStoreSucessMessage();
 
 	protected abstract String getUpdateSucessMessage(E entity);
+
+	protected final MessageSource getMessageSource() {
+		return messageSource;
+	}
 
 	protected final class Response {
 		private Map<String, Serializable> body;

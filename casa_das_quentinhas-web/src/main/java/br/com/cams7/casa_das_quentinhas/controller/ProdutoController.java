@@ -132,12 +132,13 @@ public class ProdutoController extends AbstractBeanController<Integer, Produto, 
 
 	@Override
 	protected String getStoreSucessMessage() {
-		return "O produto foi cadastrado com sucesso!";
+		return getMessageSource().getMessage("produto.successfully.registered", null, LOCALE);
 	}
 
 	@Override
 	protected String getUpdateSucessMessage(Produto produto) {
-		return String.format("Os dados do produto (%s) foram atualizados com sucesso!", produto.getNomeWithTamanho());
+		return getMessageSource().getMessage("produto.successfully.updated",
+				new String[] { produto.getNomeWithTamanho() }, LOCALE);
 	}
 
 }

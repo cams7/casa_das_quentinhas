@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -92,9 +91,6 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 
 	@Autowired
 	private PedidoItemFacade itemFacade;
-
-	@Autowired
-	private MessageSource messageSource;
 
 	/*
 	 * (non-Javadoc)
@@ -409,7 +405,7 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 		Cliente cliente = pedido.getCliente();
 		if (cliente.getId() == null) {
 			FieldError clienteError = new FieldError(getModelName(), "cliente.id",
-					messageSource.getMessage(PESSOA_JURIDICA.equals(pedido.getTipoCliente())
+					getMessageSource().getMessage(PESSOA_JURIDICA.equals(pedido.getTipoCliente())
 							? "NotNull.pedido.empresa.id" : "NotNull.pedido.cliente.id", null, LOCALE));
 			result.addError(clienteError);
 		}
@@ -452,12 +448,13 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 
 	@Override
 	protected String getStoreSucessMessage() {
-		return "O pedido foi cadastrado com sucesso!";
+		return getMessageSource().getMessage("pedido.successfully.registered", null, LOCALE);
 	}
 
 	@Override
 	protected String getUpdateSucessMessage(Pedido pedido) {
-		return String.format("Os dados do pedido (%s) foram atualizados com sucesso!", pedido.getIdWithCadastro());
+		return getMessageSource().getMessage("pedido.successfully.updated", new String[] { pedido.getIdWithCadastro() },
+				LOCALE);
 	}
 
 }

@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -40,13 +39,13 @@ import br.com.cams7.casa_das_quentinhas.entity.Cidade;
 import br.com.cams7.casa_das_quentinhas.entity.Cliente;
 import br.com.cams7.casa_das_quentinhas.entity.Contato;
 import br.com.cams7.casa_das_quentinhas.entity.Empresa;
-import br.com.cams7.casa_das_quentinhas.entity.Endereco;
-import br.com.cams7.casa_das_quentinhas.entity.Funcionario;
-import br.com.cams7.casa_das_quentinhas.entity.Pedido;
-import br.com.cams7.casa_das_quentinhas.entity.Usuario;
 import br.com.cams7.casa_das_quentinhas.entity.Empresa.RegimeTributario;
 import br.com.cams7.casa_das_quentinhas.entity.Empresa.Tipo;
+import br.com.cams7.casa_das_quentinhas.entity.Endereco;
+import br.com.cams7.casa_das_quentinhas.entity.Funcionario;
 import br.com.cams7.casa_das_quentinhas.entity.Funcionario.Funcao;
+import br.com.cams7.casa_das_quentinhas.entity.Pedido;
+import br.com.cams7.casa_das_quentinhas.entity.Usuario;
 import br.com.cams7.casa_das_quentinhas.service.CidadeService;
 import br.com.cams7.casa_das_quentinhas.service.EmpresaService;
 import br.com.cams7.casa_das_quentinhas.service.FuncionarioService;
@@ -73,9 +72,6 @@ public class EmpresaController extends AbstractBeanController<Integer, Empresa, 
 	@Autowired
 	private PedidoService pedidoService;
 
-	@Autowired
-	private MessageSource messageSource;
-
 	private final short MAX_RESULTS = 5;
 
 	/*
@@ -97,13 +93,13 @@ public class EmpresaController extends AbstractBeanController<Integer, Empresa, 
 		// 1º validação
 		if (cidade.getId() == null) {
 			FieldError cidadeError = new FieldError(getModelName(), "cidade.id",
-					messageSource.getMessage("NotNull.empresa.cidade.id", null, LOCALE));
+					getMessageSource().getMessage("NotNull.empresa.cidade.id", null, LOCALE));
 			result.addError(cidadeError);
 		}
 
 		if (usuario.getSenha().isEmpty()) {
 			FieldError senhaError = new FieldError(getModelName(), "usuarioAcesso.senha",
-					messageSource.getMessage("NotEmpty.empresa.usuarioAcesso.senha", null, LOCALE));
+					getMessageSource().getMessage("NotEmpty.empresa.usuarioAcesso.senha", null, LOCALE));
 			result.addError(senhaError);
 		}
 
@@ -301,7 +297,7 @@ public class EmpresaController extends AbstractBeanController<Integer, Empresa, 
 	private void setNotEmptyConfirmacaoError(Usuario usuario, BindingResult result, boolean senhaInformada) {
 		if (senhaInformada && usuario.getConfirmacaoSenha().isEmpty()) {
 			FieldError confirmacaoError = new FieldError(getModelName(), "usuarioAcesso.confirmacaoSenha",
-					messageSource.getMessage("NotEmpty.usuario.confirmacaoSenha", null, LOCALE));
+					getMessageSource().getMessage("NotEmpty.usuario.confirmacaoSenha", null, LOCALE));
 			result.addError(confirmacaoError);
 		}
 	}
@@ -323,7 +319,7 @@ public class EmpresaController extends AbstractBeanController<Integer, Empresa, 
 		if (!usuario.getSenha().isEmpty() && !usuario.getConfirmacaoSenha().isEmpty()
 				&& !usuario.getSenha().equals(usuario.getConfirmacaoSenha())) {
 			FieldError confirmacaoError = new FieldError(getModelName(), FIELD_NAME,
-					messageSource.getMessage("NotEquals.usuario.confirmacaoSenha", null, LOCALE));
+					getMessageSource().getMessage("NotEquals.usuario.confirmacaoSenha", null, LOCALE));
 			result.addError(confirmacaoError);
 		}
 	}
@@ -345,7 +341,7 @@ public class EmpresaController extends AbstractBeanController<Integer, Empresa, 
 		Contato contato = empresa.getContato();
 
 		if (!getService().isEmailUnique(empresa.getId(), usuario.getId(), contato.getEmail())) {
-			FieldError emailError = new FieldError(getModelName(), FIELD_NAME, messageSource
+			FieldError emailError = new FieldError(getModelName(), FIELD_NAME, getMessageSource()
 					.getMessage("NonUnique.empresa.contato.email", new String[] { contato.getEmail() }, LOCALE));
 			result.addError(emailError);
 		}
@@ -367,8 +363,8 @@ public class EmpresaController extends AbstractBeanController<Integer, Empresa, 
 		String cnpj = empresa.getUnformattedCnpj();
 
 		if (!getService().isCNPJUnique(empresa.getId(), cnpj)) {
-			FieldError cnpjError = new FieldError(getModelName(), FIELD_NAME,
-					messageSource.getMessage("NonUnique.empresa.cnpj", new String[] { empresa.getCnpj() }, LOCALE));
+			FieldError cnpjError = new FieldError(getModelName(), FIELD_NAME, getMessageSource()
+					.getMessage("NonUnique.empresa.cnpj", new String[] { empresa.getCnpj() }, LOCALE));
 			result.addError(cnpjError);
 		}
 	}
@@ -402,7 +398,7 @@ public class EmpresaController extends AbstractBeanController<Integer, Empresa, 
 
 	private void setTipoNotValidError(Tipo tipo, BindingResult result, String fieldName) {
 		FieldError tipoError = new FieldError(getModelName(), fieldName,
-				messageSource.getMessage("Invalid.empresa.tipo", new String[] { tipo.getDescricao() }, LOCALE));
+				getMessageSource().getMessage("Invalid.empresa.tipo", new String[] { tipo.getDescricao() }, LOCALE));
 		result.addError(tipoError);
 	}
 
@@ -444,13 +440,13 @@ public class EmpresaController extends AbstractBeanController<Integer, Empresa, 
 
 	@Override
 	protected String getStoreSucessMessage() {
-		return "A empresa foi cadastrada com sucesso!";
+		return getMessageSource().getMessage("empresa.successfully.registered", null, LOCALE);
 	}
 
 	@Override
 	protected String getUpdateSucessMessage(Empresa empresa) {
-		return String.format("Os dados da empresa (%s) foram atualizados com sucesso!",
-				empresa.getRazaoSocialWithCnpj());
+		return getMessageSource().getMessage("empresa.successfully.updated",
+				new String[] { empresa.getRazaoSocialWithCnpj() }, LOCALE);
 	}
 
 }

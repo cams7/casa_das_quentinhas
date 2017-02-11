@@ -134,13 +134,13 @@ public class EntregadorController extends AbstractFuncionarioController {
 
 	@Override
 	protected String getStoreSucessMessage() {
-		return "O(A) entregador(a) foi cadastrado(a) com sucesso!";
+		return getMessageSource().getMessage("entregador.successfully.registered", null, LOCALE);
 	}
 
 	@Override
 	protected String getUpdateSucessMessage(Funcionario entregador) {
-		return String.format("Os dados do(a) entregador(a) (%s) foram atualizados com sucesso!",
-				entregador.getNomeWithCpf());
+		return getMessageSource().getMessage("entregador.successfully.updated",
+				new String[] { entregador.getNomeWithCpf() }, LOCALE);
 	}
 
 }

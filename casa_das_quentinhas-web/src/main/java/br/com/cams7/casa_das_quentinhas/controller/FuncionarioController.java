@@ -132,12 +132,12 @@ public class FuncionarioController extends AbstractFuncionarioController {
 
 	@Override
 	protected String getStoreSucessMessage() {
-		return "O(A) funcionária(a) foi cadastrado(a) com sucesso!";
+		return getMessageSource().getMessage("funcionario.successfully.registered", null, LOCALE);
 	}
 
 	@Override
 	protected String getUpdateSucessMessage(Funcionario funcionario) {
-		return String.format("Os dados do(a) funcionária(a) (%s) foram atualizados com sucesso!",
-				funcionario.getNomeWithCpf());
+		return getMessageSource().getMessage("funcionario.successfully.updated",
+				new String[] { funcionario.getNomeWithCpf() }, LOCALE);
 	}
 }

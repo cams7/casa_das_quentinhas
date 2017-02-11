@@ -9,7 +9,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -47,9 +46,6 @@ public abstract class AbstractFuncionarioController
 	@Autowired
 	private PedidoService pedidoService;
 
-	@Autowired
-	private MessageSource messageSource;
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -86,7 +82,7 @@ public abstract class AbstractFuncionarioController
 		// 1º validação
 		if (usuario.getSenha().isEmpty()) {
 			FieldError senhaError = new FieldError(getModelName(), "usuario.senha",
-					messageSource.getMessage("NotEmpty.usuario.senha", null, LOCALE));
+					getMessageSource().getMessage("NotEmpty.usuario.senha", null, LOCALE));
 			result.addError(senhaError);
 		}
 
@@ -191,9 +187,7 @@ public abstract class AbstractFuncionarioController
 		return empresaService;
 	}
 
-	protected MessageSource getMessageSource() {
-		return messageSource;
-	}
+	
 
 	/**
 	 * 1º validação
@@ -210,7 +204,7 @@ public abstract class AbstractFuncionarioController
 	private void setNotEmptyConfirmacaoError(Usuario usuario, BindingResult result, boolean senhaInformada) {
 		if (senhaInformada && usuario.getConfirmacaoSenha().isEmpty()) {
 			FieldError confirmacaoError = new FieldError(getModelName(), "usuario.confirmacaoSenha",
-					messageSource.getMessage("NotEmpty.usuario.confirmacaoSenha", null, LOCALE));
+					getMessageSource().getMessage("NotEmpty.usuario.confirmacaoSenha", null, LOCALE));
 			result.addError(confirmacaoError);
 		}
 	}
@@ -232,7 +226,7 @@ public abstract class AbstractFuncionarioController
 		if (!usuario.getSenha().isEmpty() && !usuario.getConfirmacaoSenha().isEmpty()
 				&& !usuario.getSenha().equals(usuario.getConfirmacaoSenha())) {
 			FieldError confirmacaoError = new FieldError(getModelName(), FIELD_NAME,
-					messageSource.getMessage("NotEquals.usuario.confirmacaoSenha", null, LOCALE));
+					getMessageSource().getMessage("NotEquals.usuario.confirmacaoSenha", null, LOCALE));
 			result.addError(confirmacaoError);
 		}
 	}
@@ -252,7 +246,7 @@ public abstract class AbstractFuncionarioController
 
 		if (!usuarioService.isEmailUnique(usuario.getId(), usuario.getEmail())) {
 			FieldError emailError = new FieldError(getModelName(), FIELD_NAME,
-					messageSource.getMessage("NonUnique.usuario.email", new String[] { usuario.getEmail() }, LOCALE));
+					getMessageSource().getMessage("NonUnique.usuario.email", new String[] { usuario.getEmail() }, LOCALE));
 			result.addError(emailError);
 		}
 	}
@@ -273,7 +267,7 @@ public abstract class AbstractFuncionarioController
 		String cpf = funcionario.getUnformattedCpf();
 
 		if (!getService().isCPFUnique(funcionario.getId(), cpf)) {
-			FieldError cpfError = new FieldError(getModelName(), FIELD_NAME, messageSource
+			FieldError cpfError = new FieldError(getModelName(), FIELD_NAME, getMessageSource()
 					.getMessage("NonUnique." + getModelName() + ".cpf", new String[] { funcionario.getCpf() }, LOCALE));
 			result.addError(cpfError);
 		}

@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -66,9 +65,6 @@ public class ClienteController extends AbstractBeanController<Integer, Cliente, 
 	@Autowired
 	private PedidoService pedidoService;
 
-	@Autowired
-	private MessageSource messageSource;
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -88,13 +84,13 @@ public class ClienteController extends AbstractBeanController<Integer, Cliente, 
 		// 1º validação
 		if (cidade.getId() == null) {
 			FieldError cidadeError = new FieldError(getModelName(), "cidade.id",
-					messageSource.getMessage("NotNull.cliente.cidade.id", null, LOCALE));
+					getMessageSource().getMessage("NotNull.cliente.cidade.id", null, LOCALE));
 			result.addError(cidadeError);
 		}
 
 		if (usuario.getSenha().isEmpty()) {
 			FieldError senhaError = new FieldError(getModelName(), "usuarioAcesso.senha",
-					messageSource.getMessage("NotEmpty.cliente.usuarioAcesso.senha", null, LOCALE));
+					getMessageSource().getMessage("NotEmpty.cliente.usuarioAcesso.senha", null, LOCALE));
 			result.addError(senhaError);
 		}
 
@@ -259,7 +255,7 @@ public class ClienteController extends AbstractBeanController<Integer, Cliente, 
 	private void setNotEmptyConfirmacaoError(Usuario usuario, BindingResult result, boolean senhaInformada) {
 		if (senhaInformada && usuario.getConfirmacaoSenha().isEmpty()) {
 			FieldError confirmacaoError = new FieldError(getModelName(), "usuarioAcesso.confirmacaoSenha",
-					messageSource.getMessage("NotEmpty.usuario.confirmacaoSenha", null, LOCALE));
+					getMessageSource().getMessage("NotEmpty.usuario.confirmacaoSenha", null, LOCALE));
 			result.addError(confirmacaoError);
 		}
 	}
@@ -281,7 +277,7 @@ public class ClienteController extends AbstractBeanController<Integer, Cliente, 
 		if (!usuario.getSenha().isEmpty() && !usuario.getConfirmacaoSenha().isEmpty()
 				&& !usuario.getSenha().equals(usuario.getConfirmacaoSenha())) {
 			FieldError confirmacaoError = new FieldError(getModelName(), FIELD_NAME,
-					messageSource.getMessage("NotEquals.usuario.confirmacaoSenha", null, LOCALE));
+					getMessageSource().getMessage("NotEquals.usuario.confirmacaoSenha", null, LOCALE));
 			result.addError(confirmacaoError);
 		}
 	}
@@ -303,7 +299,7 @@ public class ClienteController extends AbstractBeanController<Integer, Cliente, 
 		Contato contato = cliente.getContato();
 
 		if (!getService().isEmailUnique(cliente.getId(), usuario.getId(), contato.getEmail())) {
-			FieldError emailError = new FieldError(getModelName(), FIELD_NAME, messageSource
+			FieldError emailError = new FieldError(getModelName(), FIELD_NAME, getMessageSource()
 					.getMessage("NonUnique.cliente.contato.email", new String[] { contato.getEmail() }, LOCALE));
 			result.addError(emailError);
 		}
@@ -326,7 +322,7 @@ public class ClienteController extends AbstractBeanController<Integer, Cliente, 
 
 		if (!getService().isCPFUnique(cliente.getId(), cpf)) {
 			FieldError cpfError = new FieldError(getModelName(), FIELD_NAME,
-					messageSource.getMessage("NonUnique.cliente.cpf", new String[] { cliente.getCpf() }, LOCALE));
+					getMessageSource().getMessage("NonUnique.cliente.cpf", new String[] { cliente.getCpf() }, LOCALE));
 			result.addError(cpfError);
 		}
 	}
@@ -352,12 +348,13 @@ public class ClienteController extends AbstractBeanController<Integer, Cliente, 
 
 	@Override
 	protected String getStoreSucessMessage() {
-		return "O(A) cliente foi cadastrado(a) com sucesso!";
+		return getMessageSource().getMessage("cliente.successfully.registered", null, LOCALE);
 	}
 
 	@Override
 	protected String getUpdateSucessMessage(Cliente cliente) {
-		return String.format("Os dados do(a) cliente (%s) foram atualizados com sucesso!", cliente.getNomeWithCpf());
+		return getMessageSource().getMessage("cliente.successfully.updated", new String[] { cliente.getNomeWithCpf() },
+				LOCALE);
 	}
 
 }
