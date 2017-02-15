@@ -12,29 +12,33 @@ Number.prototype.formatMoney = function(c, d, t) {
 function createSuccessMessage(message) {
 	$('div.alert strong').html('Sucesso!');
 	$('div.alert span').html(message);
-	$('div.alert').removeClass('alert-danger alert-warning').addClass('alert-success').show(); 
+	$('div.alert').removeClass('alert-danger alert-warning').addClass(
+			'alert-success').show();
 }
 
 function createErrorMessage(status, message) {
 	var title = 'Erro interno do servidor!';
-	
+
 	switch (status) {
-	case 400:		
+	case 400:
 		title = 'Requisição inválida!';
-		$('div.alert').removeClass('alert-success alert-danger').addClass('alert-warning');
+		$('div.alert').removeClass('alert-success alert-danger').addClass(
+				'alert-warning');
 		break;
-	case 404:	
+	case 404:
 		title = 'Não encontrado!';
-		$('div.alert').removeClass('alert-success alert-danger').addClass('alert-warning');
+		$('div.alert').removeClass('alert-success alert-danger').addClass(
+				'alert-warning');
 		break;
 	default:
-		$('div.alert').removeClass('alert-success alert-warning').addClass('alert-danger');
+		$('div.alert').removeClass('alert-success alert-warning').addClass(
+				'alert-danger');
 		break;
 	}
-	
+
 	$('div.alert strong').html(title);
 	$('div.alert span').html(message);
-    $('div.alert').show();
+	$('div.alert').show();
 }
 
 var loadingShow = function() {
@@ -48,7 +52,7 @@ var loadingHide = function() {
 };
 
 $(document).ready(function($) {
-//$(function() {
+	// $(function() {
 	$(document).on('ajaxSend', loadingShow).on('ajaxComplete', loadingHide);
 
 	var token = $('meta[name="_csrf"]').attr('content');
@@ -58,9 +62,14 @@ $(document).ready(function($) {
 		// console.log('ajaxSend(token: ' + token + ', header: ' + header +
 		// ')');
 	});
-	
-	$('button#cancelar').click(function( event ) {
+
+	$('button#cancelar').click(function(event) {
 		event.preventDefault();
-		window.history.go(-$('input#previousPage').val());
+		var previousPage = $('input#previousPage').val();
+		if (previousPage != '')
+			window.location.replace(previousPage);
+		else
+			window.location.replace($('input#mainPage').val());
+
 	});
 });

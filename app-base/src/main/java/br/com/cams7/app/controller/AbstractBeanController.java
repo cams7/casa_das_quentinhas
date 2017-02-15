@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -47,8 +48,13 @@ import br.com.cams7.app.utils.AppHelper;
 public abstract class AbstractBeanController<PK extends Serializable, E extends AbstractEntity<PK>, S extends BaseService<PK, E>>
 		extends AbstractController<PK, E, S> implements BaseBeanController<PK, E> {
 
-	protected final String PREVIOUS_PAGE = "previousPage";
+	// protected final String REGEX_URL =
+	// "^http://([-a-z0-9:.]*|localhost:8080/[-a-z]*)";
+
 	private final short MAX_RESULTS = 10;
+	private final String PREVIOUS_PAGE = "previousPage";
+	private final String REMOVE_PREVIOUS_PAGE = "removePreviousPage";
+	private final String SUCESS_MESSAGE = "sucessMessage";
 
 	@Autowired
 	private MessageSource messageSource;
@@ -62,10 +68,11 @@ public abstract class AbstractBeanController<PK extends Serializable, E extends 
 	 * 
 	 * @see
 	 * br.com.cams7.app.controller.BaseBeanController#index(org.springframework.
-	 * ui.ModelMap)
+	 * ui.ModelMap, javax.servlet.http.HttpServletRequest)
 	 */
 	@Override
-	public final String index(ModelMap model) {
+	public final String index(ModelMap model, HttpServletRequest request) {
+		cleanNavigationPreviousPages(request);
 		setCommonAttributes(model);
 
 		Integer offset = 0;
@@ -95,9 +102,8 @@ public abstract class AbstractBeanController<PK extends Serializable, E extends 
 	 */
 	@Override
 	public String create(ModelMap model, HttpServletRequest request) {
-		setPreviousPage(request);
+		setPreviousPage(model, request);
 		setCommonAttributes(model);
-		setPreviousPage(model, 1);
 
 		E entity = getNewEntity();
 
@@ -116,9 +122,8 @@ public abstract class AbstractBeanController<PK extends Serializable, E extends 
 	 */
 	@Override
 	public String store(@Valid E entity, BindingResult result, ModelMap model, HttpServletRequest request) {
+		setPreviousPageAtribute(model, request);
 		setCommonAttributes(model);
-
-		incrementPreviousPage(model, request);
 
 		if (result.hasErrors())
 			return getCreateTilesPage();
@@ -135,10 +140,11 @@ public abstract class AbstractBeanController<PK extends Serializable, E extends 
 	 * 
 	 * @see
 	 * br.com.cams7.app.controller.BaseBeanController#show(java.io.Serializable,
-	 * org.springframework.ui.ModelMap)
+	 * org.springframework.ui.ModelMap, javax.servlet.http.HttpServletRequest)
 	 */
 	@Override
-	public String show(@PathVariable PK id, ModelMap model) {
+	public String show(@PathVariable PK id, ModelMap model, HttpServletRequest request) {
+		setPreviousPage(model, request);
 		setCommonAttributes(model);
 
 		E entity = getEntity(id);
@@ -157,9 +163,8 @@ public abstract class AbstractBeanController<PK extends Serializable, E extends 
 	 */
 	@Override
 	public String edit(@PathVariable PK id, ModelMap model, HttpServletRequest request) {
-		setPreviousPage(request);
+		setPreviousPage(model, request);
 		setCommonAttributes(model);
-		setPreviousPage(model, 1);
 		setEditPage(model);
 
 		E entity = getEntity(id);
@@ -181,8 +186,8 @@ public abstract class AbstractBeanController<PK extends Serializable, E extends 
 	@Override
 	public String update(@Valid E entity, BindingResult result, ModelMap model, @PathVariable PK id,
 			HttpServletRequest request) {
+		setPreviousPageAtribute(model, request);
 		setCommonAttributes(model);
-		incrementPreviousPage(model, request);
 		setEditPage(model);
 
 		if (result.hasErrors())
@@ -198,15 +203,15 @@ public abstract class AbstractBeanController<PK extends Serializable, E extends 
 	 * (non-Javadoc)
 	 * 
 	 * @see br.com.cams7.app.controller.BaseBeanController#destroy(java.io.
-	 * Serializable)
+	 * Serializable, javax.servlet.http.HttpServletRequest)
 	 */
 	@Override
-	public ResponseEntity<Map<String, String>> destroy(@PathVariable PK id) {
+	public ResponseEntity<Map<String, String>> destroy(@PathVariable PK id, HttpServletRequest request) {
 		Response response;
 
 		try {
 			getService().delete(id);
-			response = getDeleteResponse();
+			response = getDeleteResponse(request);
 		} catch (Exception e) {
 			response = getErrorResponse(e);
 		}
@@ -268,6 +273,28 @@ public abstract class AbstractBeanController<PK extends Serializable, E extends 
 	 */
 	public static void setUsuarioLogado(ModelMap model) {
 		model.addAttribute("loggedinuser", getUsername());
+	}
+
+	/**
+	 * This method returns the principal[user-name] of logged-in user.
+	 */
+	protected static String getUsername() {
+		String username = null;
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		if (principal instanceof UserDetails)
+			username = ((UserDetails) principal).getUsername();
+		else
+			username = principal.toString();
+
+		return username;
+	}
+
+	/**
+	 * @return Mensagem
+	 */
+	protected final MessageSource getMessageSource() {
+		return messageSource;
 	}
 
 	/**
@@ -335,13 +362,6 @@ public abstract class AbstractBeanController<PK extends Serializable, E extends 
 	}
 
 	/**
-	 * @return Mensagem
-	 */
-	protected final MessageSource getMessageSource() {
-		return messageSource;
-	}
-
-	/**
 	 * Define os atributos da paginação
 	 * 
 	 * @param model
@@ -385,14 +405,15 @@ public abstract class AbstractBeanController<PK extends Serializable, E extends 
 	}
 
 	/**
-	 * Incrementa um atributo para que após o acionamento do botão cancelar, a
-	 * página volte a anterior
-	 * 
 	 * @param model
 	 * @param request
 	 */
-	protected final void incrementPreviousPage(ModelMap model, final HttpServletRequest request) {
-		setPreviousPage(model, Integer.valueOf(request.getParameter(PREVIOUS_PAGE)) + 1);
+	protected final void setPreviousPageAtribute(final ModelMap model, final HttpServletRequest request) {
+		final Stack<String> NAVIGATION = getNavigationPreviousPage(request);
+		if (NAVIGATION != null && !NAVIGATION.isEmpty())
+			model.addAttribute(PREVIOUS_PAGE, NAVIGATION.peek());
+		else
+			model.addAttribute(PREVIOUS_PAGE, "");
 	}
 
 	/**
@@ -402,7 +423,11 @@ public abstract class AbstractBeanController<PK extends Serializable, E extends 
 	 * @return
 	 */
 	protected final String redirectToPreviousPage(final HttpServletRequest request) {
-		return "redirect:" + (String) request.getSession().getAttribute(PREVIOUS_PAGE);
+		final Stack<String> NAVIGATION = getNavigationPreviousPage(request);
+		if (NAVIGATION == null || NAVIGATION.isEmpty())
+			return "redirect:/" + getMainPage();
+
+		return "redirect:" + NAVIGATION.peek();
 	}
 
 	/**
@@ -438,12 +463,23 @@ public abstract class AbstractBeanController<PK extends Serializable, E extends 
 	}
 
 	/**
-	 * Na requisição via AJAX, retorna a mensagem de exclusão dos dados
-	 * 
+	 * @param request
 	 * @return
 	 */
-	protected final Response getDeleteResponse() {
-		return getSucessResponse(null, getDeleteSucessMessage());
+	protected final Response getDeleteResponse(final HttpServletRequest request) {
+		Response response;
+
+		final boolean REMOVE_PREVIOUS_PAGE = removePreviousPage(request);
+		final Stack<String> NAVIGATION = getNavigationPreviousPage(request);
+
+		if (REMOVE_PREVIOUS_PAGE && NAVIGATION != null && !NAVIGATION.isEmpty()) {
+			String page = NAVIGATION.peek();
+			page += "&" + SUCESS_MESSAGE + "=" + getDeleteSucessMessage();
+			response = getDeleteResponse(page);
+		} else
+			response = getDeleteResponse();
+
+		return response;
 	}
 
 	/**
@@ -453,7 +489,7 @@ public abstract class AbstractBeanController<PK extends Serializable, E extends 
 	 * @return
 	 */
 	protected final Response getSucessResponse(AbstractEntity<?> entity) {
-		return getSucessResponse(entity, null);
+		return getSucessResponse(entity, null, null);
 	}
 
 	/**
@@ -465,7 +501,7 @@ public abstract class AbstractBeanController<PK extends Serializable, E extends 
 	protected final Response getErrorResponse(Exception e) {
 		LOGGER.error(e.getMessage());
 
-		Map<String, Serializable> response = getResponseBody(null, e.getMessage());
+		Map<String, Serializable> response = getResponseBody(null, ResponseContent.MESSAGE, e.getMessage());
 		HttpStatus status = INTERNAL_SERVER_ERROR;
 
 		if (e instanceof AppException)
@@ -507,21 +543,6 @@ public abstract class AbstractBeanController<PK extends Serializable, E extends 
 	protected abstract String getUpdateSucessMessage(E entity);
 
 	/**
-	 * This method returns the principal[user-name] of logged-in user.
-	 */
-	protected static String getUsername() {
-		String username = null;
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-		if (principal instanceof UserDetails)
-			username = ((UserDetails) principal).getUsername();
-		else
-			username = principal.toString();
-
-		return username;
-	}
-
-	/**
 	 * Define a página principal
 	 * 
 	 * @param model
@@ -531,25 +552,91 @@ public abstract class AbstractBeanController<PK extends Serializable, E extends 
 	}
 
 	/**
-	 * Define a página anterior através do indice do historico de navegação
-	 * 
-	 * @param model
-	 * @param previousPage
-	 */
-	private void setPreviousPage(ModelMap model, Integer previousPage) {
-		model.addAttribute(PREVIOUS_PAGE, previousPage);
-	}
-
-	/**
 	 * Define a página anterior
 	 * 
 	 * @param request
 	 */
-	private void setPreviousPage(final HttpServletRequest request) {
-		final String PAGE = request.getHeader("Referer");
-		final int INDEX = PAGE.indexOf("?");
-		request.getSession().setAttribute(PREVIOUS_PAGE, PAGE.substring(0, INDEX > 0 ? INDEX : PAGE.length()));
+	private void setPreviousPage(final ModelMap model, final HttpServletRequest request) {
+		final String PREVIOUS_PAGE = getPreviousPageWithoutParams(request);
+
+		if (PREVIOUS_PAGE != null) {
+			final Stack<String> NAVIGATION = createNavigationPreviousPages(request);
+
+			if (removePreviousPage(request))
+				NAVIGATION.pop();
+			else
+				NAVIGATION.push(PREVIOUS_PAGE + "?" + REMOVE_PREVIOUS_PAGE + "=true");
+
+			setPreviousPageAtribute(model, request);
+		} else
+			cleanNavigationPreviousPages(request);
+
 	}
+
+	/**
+	 * @param request
+	 * @return
+	 */
+	private boolean removePreviousPage(final HttpServletRequest request) {
+		final String PARAM = request.getParameter(REMOVE_PREVIOUS_PAGE);
+		return PARAM != null && Boolean.valueOf(PARAM);
+	}
+
+	/**
+	 * @param request
+	 * @return
+	 */
+	private String getPreviousPageWithoutParams(final HttpServletRequest request) {
+		final String PREVIOUS_PAGE = request.getHeader("Referer");
+
+		if (PREVIOUS_PAGE == null)
+			return null;
+
+		final int INDEX = PREVIOUS_PAGE.indexOf("?");
+		return PREVIOUS_PAGE.substring(0, INDEX > -1 ? INDEX : PREVIOUS_PAGE.length());
+	}
+
+	/**
+	 * @param request
+	 */
+	private void cleanNavigationPreviousPages(final HttpServletRequest request) {
+		request.getSession().setAttribute(PREVIOUS_PAGE, null);
+	}
+
+	/**
+	 * @param request
+	 */
+	private Stack<String> createNavigationPreviousPages(final HttpServletRequest request) {
+		if (getNavigationPreviousPage(request) == null)
+			request.getSession().setAttribute(PREVIOUS_PAGE, new Stack<String>());
+
+		return getNavigationPreviousPage(request);
+	}
+
+	/**
+	 * @param request
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	private Stack<String> getNavigationPreviousPage(final HttpServletRequest request) {
+		return (Stack<String>) request.getSession().getAttribute(PREVIOUS_PAGE);
+	}
+
+	// private String getRegexMainPage() {
+	// return REGEX_URL + "/[a-z]*$";
+	// }
+	//
+	// private String getRegexCreatePage() {
+	// return REGEX_URL + "/[a-z]*/create$";
+	// }
+	//
+	// private String getRegexViewPage() {
+	// return REGEX_URL + "/[a-z]*/[0-9]*$";
+	// }
+	//
+	// private String getRegexEditPage() {
+	// return REGEX_URL + "/[a-z]*/[0-9]*/edit$";
+	// }
 
 	/**
 	 * Define um atributo com a mensagem de sucesso
@@ -558,7 +645,24 @@ public abstract class AbstractBeanController<PK extends Serializable, E extends 
 	 * @param message
 	 */
 	private void sucessMessage(ModelMap model, String message) {
-		model.addAttribute("sucessMessage", message);
+		model.addAttribute(SUCESS_MESSAGE, message);
+	}
+
+	/**
+	 * Na requisição via AJAX, retorna a mensagem de exclusão dos dados
+	 * 
+	 * @return
+	 */
+	private Response getDeleteResponse() {
+		return getSucessResponse(null, ResponseContent.MESSAGE, getDeleteSucessMessage());
+	}
+
+	/**
+	 * @param previousPage
+	 * @return
+	 */
+	private Response getDeleteResponse(final String previousPage) {
+		return getSucessResponse(null, ResponseContent.PREVIOUS_PAGE, previousPage);
 	}
 
 	/**
@@ -568,8 +672,8 @@ public abstract class AbstractBeanController<PK extends Serializable, E extends 
 	 * @param message
 	 * @return
 	 */
-	private Response getSucessResponse(AbstractEntity<?> entity, String message) {
-		Map<String, Serializable> response = getResponseBody(entity, message);
+	private Response getSucessResponse(AbstractEntity<?> entity, ResponseContent content, String value) {
+		Map<String, Serializable> response = getResponseBody(entity, content, value);
 		return new Response(response, OK);
 	}
 
@@ -580,13 +684,13 @@ public abstract class AbstractBeanController<PK extends Serializable, E extends 
 	 * @param message
 	 * @return
 	 */
-	private Map<String, Serializable> getResponseBody(AbstractEntity<?> entity, String message) {
+	private Map<String, Serializable> getResponseBody(AbstractEntity<?> entity, ResponseContent content, String value) {
 		Map<String, Serializable> objectMessage = new HashMap<>();
 
 		if (entity != null)
 			objectMessage.put("entity", entity);
-		if (message != null)
-			objectMessage.put("message", message);
+		if (content != null && value != null)
+			objectMessage.put(content.key, value);
 
 		return objectMessage;
 	}
@@ -613,6 +717,17 @@ public abstract class AbstractBeanController<PK extends Serializable, E extends 
 		public final HttpStatus getStatus() {
 			return status;
 		}
+	}
+
+	private enum ResponseContent {
+		MESSAGE("message"), PREVIOUS_PAGE("previousPage");
+
+		private String key;
+
+		private ResponseContent(String key) {
+			this.key = key;
+		}
+
 	}
 
 }

@@ -113,9 +113,6 @@
 	</div>
 </div>
 
-<input type="hidden" id="previousPage" name="previousPage"
-	value="${not empty param.sucessMessage?'3':'1'}">
-
 <hr />
 <div id="actions" class="row">
 	<div class="col-md-12">

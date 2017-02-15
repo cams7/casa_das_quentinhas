@@ -115,9 +115,6 @@
 	</div>
 </div>
 
-<input type="hidden" id="previousPage" name="previousPage"
-	value="${previousPage}">
-
 <script src="<c:url value='/static/js/casa_das_quentinhas-form.js' />"></script>
 <script type="text/javascript">
 	var MAIN_PAGE = '<c:url value='/${mainPage}' />';

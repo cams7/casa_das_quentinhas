@@ -75,8 +75,9 @@ public class ClienteController extends AbstractBeanController<Integer, Cliente, 
 	 */
 	@Override
 	public String store(@Valid Cliente cliente, BindingResult result, ModelMap model, HttpServletRequest request) {
+		setPreviousPageAtribute(model, request);
 		setCommonAttributes(model);
-		incrementPreviousPage(model, request);
+		// incrementPreviousPage(model, request);
 
 		Usuario usuario = cliente.getUsuarioAcesso();
 		Cidade cidade = cliente.getCidade();
@@ -119,13 +120,14 @@ public class ClienteController extends AbstractBeanController<Integer, Cliente, 
 	 * (non-Javadoc)
 	 * 
 	 * @see br.com.cams7.app.controller.AbstractBeanController#show(java.io.
-	 * Serializable, org.springframework.ui.ModelMap)
+	 * Serializable, org.springframework.ui.ModelMap,
+	 * javax.servlet.http.HttpServletRequest)
 	 */
 	@Override
-	public String show(@PathVariable Integer id, ModelMap model) {
+	public String show(@PathVariable Integer id, ModelMap model, HttpServletRequest request) {
 		loadPedidos(id, model, 0, "id", SortOrder.DESCENDING);
 
-		return super.show(id, model);
+		return super.show(id, model, request);
 	}
 
 	/*
@@ -140,8 +142,9 @@ public class ClienteController extends AbstractBeanController<Integer, Cliente, 
 	@Override
 	public String update(@Valid Cliente cliente, BindingResult result, ModelMap model, @PathVariable Integer id,
 			HttpServletRequest request) {
+		setPreviousPageAtribute(model, request);
 		setCommonAttributes(model);
-		incrementPreviousPage(model, request);
+		// incrementPreviousPage(model, request);
 		setEditPage(model);
 
 		Usuario usuario = cliente.getUsuarioAcesso();

@@ -202,4 +202,5 @@ public class FuncionarioController extends AbstractFuncionarioController {
 		return getMessageSource().getMessage("funcionario.successfully.updated",
 				new String[] { funcionario.getNomeWithCpf() }, LOCALE);
 	}
+
 }

@@ -33,16 +33,18 @@ public interface BaseBeanController<PK extends Serializable, E extends AbstractE
 	 * Display a listing of the resource.
 	 *
 	 * @param model
+	 * @param request
 	 * @return
 	 */
 	@GetMapping
 	@ResponseStatus(OK)
-	String index(ModelMap model);
+	String index(ModelMap model, HttpServletRequest request);
 
 	/**
 	 * Show the form for creating a new resource.
 	 *
 	 * @param model
+	 * @param request
 	 * @return
 	 */
 	@GetMapping(value = "/create")
@@ -53,8 +55,10 @@ public interface BaseBeanController<PK extends Serializable, E extends AbstractE
 	 * Store a newly created resource in storage.
 	 *
 	 * @param entity
+	 *            Entidade
 	 * @param result
 	 * @param model
+	 * @param request
 	 * @return
 	 */
 	@PostMapping(value = "/create")
@@ -64,18 +68,22 @@ public interface BaseBeanController<PK extends Serializable, E extends AbstractE
 	 * Display the specified resource.
 	 *
 	 * @param id
+	 *            ID da entidade
 	 * @param model
+	 * @param request
 	 * @return
 	 */
 	@GetMapping(value = "/{id}")
 	@ResponseStatus(OK)
-	String show(PK id, ModelMap model);
+	String show(PK id, ModelMap model, HttpServletRequest request);
 
 	/**
 	 * Show the form for editing the specified resource.
 	 *
 	 * @param id
+	 *            ID da entidade
 	 * @param model
+	 * @param request
 	 * @return
 	 */
 	@GetMapping(value = "/{id}/edit")
@@ -86,9 +94,12 @@ public interface BaseBeanController<PK extends Serializable, E extends AbstractE
 	 * Update the specified resource in storage.
 	 *
 	 * @param entity
-	 * @param id
+	 *            Entidade
 	 * @param result
 	 * @param model
+	 * @param id
+	 *            ID da entidade
+	 * @param request
 	 * @return
 	 */
 	@PostMapping(value = "/{id}/edit")
@@ -98,11 +109,13 @@ public interface BaseBeanController<PK extends Serializable, E extends AbstractE
 	 * Remove the specified resource from storage.
 	 *
 	 * @param id
+	 *            ID da entidade
+	 * @param request
 	 * @return
 	 */
 	@PostMapping(value = "/{id}/delete")
 	@ResponseBody
-	ResponseEntity<Map<String, String>> destroy(PK id);
+	ResponseEntity<Map<String, String>> destroy(PK id, HttpServletRequest request);
 
 	/**
 	 * @param model

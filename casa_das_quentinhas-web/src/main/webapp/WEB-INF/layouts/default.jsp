@@ -39,6 +39,8 @@
 	<tiles:insertAttribute name="header" />
 
 	<div class="container-fluid" style="margin-top: 50px">
+		<input type="hidden" id="mainPage" value="<c:url value='/${mainPage}' />">
+		<input type="hidden" id="previousPage" value="${previousPage}">
 		<tiles:insertAttribute name="body" />
 	</div>
 

@@ -118,8 +118,9 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 	@Override
 	public String store(@Valid Pedido pedido, BindingResult result, ModelMap model, HttpServletRequest request) {
 		setSituacao(model);
+		setPreviousPageAtribute(model, request);
 		setCommonAttributes(model);
-		incrementPreviousPage(model, request);
+		// incrementPreviousPage(model, request);
 
 		// Carrega os intens do pedido
 		loadItens(0L, model);
@@ -143,15 +144,16 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 	 * (non-Javadoc)
 	 * 
 	 * @see br.com.cams7.app.controller.AbstractBeanController#show(java.io.
-	 * Serializable, org.springframework.ui.ModelMap)
+	 * Serializable, org.springframework.ui.ModelMap,
+	 * javax.servlet.http.HttpServletRequest)
 	 */
 	@Override
-	public String show(@PathVariable Long id, ModelMap model) {
+	public String show(@PathVariable Long id, ModelMap model, HttpServletRequest request) {
 		itemFacade.initShow();
 		// Carrega os intens do pedido
 		loadItens(id, model);
 
-		return super.show(id, model);
+		return super.show(id, model, request);
 	}
 
 	/*
@@ -182,8 +184,9 @@ public class PedidoController extends AbstractBeanController<Long, Pedido, Pedid
 	@Override
 	public String update(@Valid Pedido pedido, BindingResult result, ModelMap model, @PathVariable Long id,
 			HttpServletRequest request) {
+		setPreviousPageAtribute(model, request);
 		setCommonAttributes(model);
-		incrementPreviousPage(model, request);
+		// incrementPreviousPage(model, request);
 		setEditPage(model);
 
 		// Carrega os intens do pedido
