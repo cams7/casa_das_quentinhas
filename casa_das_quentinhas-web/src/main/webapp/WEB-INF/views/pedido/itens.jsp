@@ -45,8 +45,12 @@
 							<td><fmt:formatNumber value="${item.produto.custo}"
 									type="currency" /></td>
 							<td><fmt:formatNumber value="${item.custo}" type="currency" /></td>
-							<td><a
-								href="<c:url value='/produto/${item.id.produtoId}' />">${item.produto.nome}</a></td>
+							<td><c:choose>
+									<c:when test="${escondeAcoes}">
+										<a href="<c:url value='/produto/${item.id.produtoId}' />">${item.produto.nome}</a>
+									</c:when>
+									<c:otherwise>${item.produto.nome}</c:otherwise>
+								</c:choose></td>
 							<td>${item.produto.tamanho.descricao}</td>
 
 							<c:if test="${not escondeAcoes}">

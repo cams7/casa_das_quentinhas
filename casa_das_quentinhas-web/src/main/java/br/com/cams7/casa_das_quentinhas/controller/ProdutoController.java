@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -51,14 +53,15 @@ public class ProdutoController extends AbstractBeanController<Integer, Produto, 
 	 * (non-Javadoc)
 	 * 
 	 * @see br.com.cams7.app.controller.AbstractBeanController#show(java.io.
-	 * Serializable, org.springframework.ui.ModelMap)
+	 * Serializable, org.springframework.ui.ModelMap,
+	 * javax.servlet.http.HttpServletRequest)
 	 */
 	@Override
-	public String show(@PathVariable Integer id, ModelMap model) {
+	public String show(@PathVariable Integer id, ModelMap model, HttpServletRequest request) {
 		// Carrega os pedidos
 		loadPedidos(id, model, 0, "id.pedidoId", SortOrder.DESCENDING);
 
-		return super.show(id, model);
+		return super.show(id, model, request);
 	}
 
 	/**

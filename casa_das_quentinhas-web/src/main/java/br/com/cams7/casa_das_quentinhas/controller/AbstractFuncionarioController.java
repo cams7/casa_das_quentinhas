@@ -50,13 +50,14 @@ public abstract class AbstractFuncionarioController
 	 * (non-Javadoc)
 	 * 
 	 * @see br.com.cams7.app.controller.AbstractBeanController#show(java.io.
-	 * Serializable, org.springframework.ui.ModelMap)
+	 * Serializable, org.springframework.ui.ModelMap,
+	 * javax.servlet.http.HttpServletRequest)
 	 */
 	@Override
-	public String show(@PathVariable Integer id, ModelMap model) {
+	public String show(@PathVariable Integer id, ModelMap model, HttpServletRequest request) {
 		loadPedidos(id, model, 0, "id", SortOrder.DESCENDING);
 
-		return super.show(id, model);
+		return super.show(id, model, request);
 	}
 
 	/**
@@ -96,8 +97,9 @@ public abstract class AbstractFuncionarioController
 	 */
 	protected String storeFuncionario(Funcionario funcionario, BindingResult result, ModelMap model,
 			HttpServletRequest request) {
+		setPreviousPageAtribute(model, request);
 		setCommonAttributes(model);
-		incrementPreviousPage(model, request);
+		// incrementPreviousPage(model, request);
 
 		Usuario usuario = funcionario.getUsuario();
 
@@ -140,8 +142,9 @@ public abstract class AbstractFuncionarioController
 	 */
 	protected String updateFuncionario(Funcionario funcionario, BindingResult result, ModelMap model, Integer id,
 			HttpServletRequest request) {
+		setPreviousPageAtribute(model, request);
 		setCommonAttributes(model);
-		incrementPreviousPage(model, request);
+		// incrementPreviousPage(model, request);
 		setEditPage(model);
 
 		Usuario usuario = funcionario.getUsuario();
@@ -171,15 +174,15 @@ public abstract class AbstractFuncionarioController
 	 * (non-Javadoc)
 	 * 
 	 * @see br.com.cams7.app.controller.AbstractBeanController#destroy(java.io.
-	 * Serializable)
+	 * Serializable, javax.servlet.http.HttpServletRequest)
 	 */
 	@Override
-	public ResponseEntity<Map<String, String>> destroy(@PathVariable Integer id) {
+	public ResponseEntity<Map<String, String>> destroy(@PathVariable Integer id, HttpServletRequest request) {
 		Response response;
 
 		try {
 			getService().delete(id, getPossiveisFuncoes());
-			response = getDeleteResponse();
+			response = getDeleteResponse(request);
 		} catch (Exception e) {
 			response = getErrorResponse(e);
 		}
