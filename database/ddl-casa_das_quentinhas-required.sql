@@ -7,10 +7,10 @@
 DROP TABLE IF EXISTS public.cliente_pedido;
 DROP TABLE IF EXISTS public.cliente;
 DROP TABLE IF EXISTS public.empresa_pedido;
-DROP TABLE IF EXISTS public.funcionario;
-DROP TABLE IF EXISTS public.empresa;
 DROP TABLE IF EXISTS public.pedido_item;
 DROP TABLE IF EXISTS public.pedido;
+DROP TABLE IF EXISTS public.funcionario;
+DROP TABLE IF EXISTS public.empresa;
 DROP TABLE IF EXISTS public.produto;
 DROP TABLE IF EXISTS public.usuario;
 DROP TABLE IF EXISTS public.acesso;
@@ -147,7 +147,7 @@ CREATE TABLE public.pedido_item (
                 id_pedido BIGINT NOT NULL,
                 id_produto INTEGER NOT NULL,
                 quantidade SMALLINT NOT NULL,
-				custo REAL NOT NULL,
+		custo REAL,
                 codigo_cfop CHAR(5),
                 codigo_icms CHAR(6),
                 codigo_icms_origem CHAR(1),

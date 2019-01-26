@@ -635,7 +635,7 @@ public abstract class AbstractTest implements BaseTest {
 			LOGGER.info("{}: {}", WEBDRIVER_GECKO_DRIVER, System.getProperty(WEBDRIVER_GECKO_DRIVER));
 		} else {
 			if (System.getProperty(WEBDRIVER_CHROME_DRIVER) == null)
-				System.setProperty(WEBDRIVER_CHROME_DRIVER, "chromedriver.exe");
+				System.setProperty(WEBDRIVER_CHROME_DRIVER, "chromedriver");
 
 			driver = new ChromeDriver();
 			LOGGER.info("{}: {}", WEBDRIVER_CHROME_DRIVER, System.getProperty(WEBDRIVER_CHROME_DRIVER));

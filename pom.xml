@@ -310,7 +310,7 @@
 			<id>desenv-phantomjs</id>
 			<activation>
 				<os>
-					<family>Windows</family>
+					<family>Linux</family>
 				</os>
 				<property>
 					<name>phantomjs</name>
@@ -323,7 +323,7 @@
 						<artifactId>maven-surefire-plugin</artifactId>
 						<configuration>
 							<systemPropertyVariables>
-								<phantomjs.binary.path>phantomjs.exe</phantomjs.binary.path>
+								<phantomjs.binary.path>phantomjs</phantomjs.binary.path>
 							</systemPropertyVariables>
 						</configuration>
 					</plugin>
@@ -334,7 +334,7 @@
 			<id>desenv-chrome</id>
 			<activation>
 				<os>
-					<family>Windows</family>
+					<family>Linux</family>
 				</os>
 				<property>
 					<name>chrome</name>
@@ -347,7 +347,7 @@
 						<artifactId>maven-surefire-plugin</artifactId>
 						<configuration>
 							<systemPropertyVariables>
-								<webdriver.chrome.driver>chromedriver.exe</webdriver.chrome.driver>
+								<webdriver.chrome.driver>chromedriver</webdriver.chrome.driver>
 							</systemPropertyVariables>
 						</configuration>
 					</plugin>
@@ -358,7 +358,7 @@
 			<id>desenv-firefox</id>
 			<activation>
 				<os>
-					<family>Windows</family>
+					<family>Linux</family>
 				</os>
 				<property>
 					<name>gecko</name>
@@ -371,7 +371,7 @@
 						<artifactId>maven-surefire-plugin</artifactId>
 						<configuration>
 							<systemPropertyVariables>
-								<webdriver.gecko.driver>geckodriver.exe</webdriver.gecko.driver>
+								<webdriver.gecko.driver>geckodriver</webdriver.gecko.driver>
 							</systemPropertyVariables>
 						</configuration>
 					</plugin>

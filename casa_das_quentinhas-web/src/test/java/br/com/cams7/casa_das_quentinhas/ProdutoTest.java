@@ -3,7 +3,7 @@
  */
 package br.com.cams7.casa_das_quentinhas;
 
-import static org.junit.Assert.assertEquals;
+import static org.testng.AssertJUnit.assertEquals;
 
 import org.openqa.selenium.By;
 import org.testng.annotations.Test;
