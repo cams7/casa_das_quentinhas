@@ -365,7 +365,8 @@ public class PedidoTest extends AbstractTest {
 			}
 		}
 
-		if (countItens < 10 || !itemIncluido || getBaseProducer().trueOrFalse())
+		boolean mantemItem = countItens < 10 && (!itemIncluido || getBaseProducer().trueOrFalse());
+		if (mantemItem)
 			mantemItem(AUTOCOMPLETE, itemIncluido, countItens + 1);
 
 	}
