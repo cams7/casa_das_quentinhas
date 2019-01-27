@@ -18,7 +18,7 @@ pipeline {
         }
 	stage('Test') {
             steps {
-                sh 'mvn test -Phomologacao'
+                sh 'mvn test -Pdesenv-chrome'
             }
         }	
     }
