@@ -13,12 +13,13 @@ pipeline {
 	    post {
                 always {
                     sh 'nohup java -jar casa_das_quentinhas-web/target/dependency/jetty-runner.jar --host 0.0.0.0 --port 8080 casa_das_quentinhas-web/target/*.war &'
+		    sh 'sleep 1m'
                 }
             }
         }
 	stage('Test') {
             steps {
-                sh 'mvn test -Pdesenv-chrome'
+                sh 'mvn test -Phomologacao'
             }
         }	
     }

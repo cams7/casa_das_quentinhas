@@ -346,7 +346,6 @@
 						<artifactId>maven-surefire-plugin</artifactId>
 						<configuration>
 							<systemPropertyVariables>
-								<base.url>http://192.168.33.15:8080</base.url>
 								<webdriver.chrome.driver>/opt/webdrivers/chromedriver</webdriver.chrome.driver>
 							</systemPropertyVariables>
 						</configuration>
