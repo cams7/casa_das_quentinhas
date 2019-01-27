@@ -217,7 +217,6 @@
 					<configuration>
 						<systemPropertyVariables>
 							<base.url>http://localhost:8080/casa-das-quentinhas</base.url>
-							<!--base.url>http://localhost:8090</base.url-->
 							<sleep.millisecounds>1000</sleep.millisecounds>
 						</systemPropertyVariables>
 					</configuration>
@@ -273,8 +272,8 @@
 						<artifactId>maven-surefire-plugin</artifactId>
 						<configuration>
 							<systemPropertyVariables>
-								<base.url>http://localhost:8090</base.url>
-								<phantomjs.binary.path>phantomjs</phantomjs.binary.path>
+								<base.url>http://192.168.33.15:8080</base.url>
+								<phantomjs.binary.path>/opt/webdrivers/phantomjs</phantomjs.binary.path>
 							</systemPropertyVariables>
 						</configuration>
 					</plugin>
@@ -299,7 +298,7 @@
 						<configuration>
 							<systemPropertyVariables>
 								<base.url>http://casa-das-quentinhas.herokuapp.com</base.url>
-								<phantomjs.binary.path>phantomjs</phantomjs.binary.path>
+								<phantomjs.binary.path>/opt/webdrivers/phantomjs</phantomjs.binary.path>
 							</systemPropertyVariables>
 						</configuration>
 					</plugin>
@@ -323,7 +322,7 @@
 						<artifactId>maven-surefire-plugin</artifactId>
 						<configuration>
 							<systemPropertyVariables>
-								<phantomjs.binary.path>phantomjs</phantomjs.binary.path>
+								<phantomjs.binary.path>/opt/webdrivers/phantomjs</phantomjs.binary.path>
 							</systemPropertyVariables>
 						</configuration>
 					</plugin>
@@ -347,7 +346,7 @@
 						<artifactId>maven-surefire-plugin</artifactId>
 						<configuration>
 							<systemPropertyVariables>
-								<webdriver.chrome.driver>chromedriver</webdriver.chrome.driver>
+								<webdriver.chrome.driver>/opt/webdrivers/chromedriver</webdriver.chrome.driver>
 							</systemPropertyVariables>
 						</configuration>
 					</plugin>
@@ -371,7 +370,7 @@
 						<artifactId>maven-surefire-plugin</artifactId>
 						<configuration>
 							<systemPropertyVariables>
-								<webdriver.gecko.driver>geckodriver</webdriver.gecko.driver>
+								<webdriver.gecko.driver>/opt/webdrivers/geckodriver</webdriver.gecko.driver>
 							</systemPropertyVariables>
 						</configuration>
 					</plugin>
