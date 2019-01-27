@@ -12,7 +12,7 @@ pipeline {
             }
 	    post {
                 always {
-                    sh 'java -jar casa_das_quentinhas-web/target/dependency/jetty-runner.jar --host 0.0.0.0 --port 8080 casa_das_quentinhas-web/target/*.war'
+                    sh 'nohup java -jar casa_das_quentinhas-web/target/dependency/jetty-runner.jar --host 0.0.0.0 --port 8080 casa_das_quentinhas-web/target/*.war &'
                 }
             }
         }
