@@ -56,13 +56,13 @@ pipeline {
 				}
             }
         }
-		stage('Quality Gate Status Check') {			
+		/*stage('Quality Gate Status Check') {			
             steps {			
 				timeout(time: 1, unit: 'HOURS') {
 					waitForQualityGate abortPipeline: true
 				}
             }
-        }
+        }*/
 		stage('Deploy to Tomcat'){ 
 			steps {	
 				sshagent(['tomcat-ssh']) {
