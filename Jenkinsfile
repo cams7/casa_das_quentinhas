@@ -52,7 +52,7 @@ pipeline {
 		stage('Build and SonarQube Analysis') {			
             steps {			
 				withSonarQubeEnv('sonarqube-service') {
-					sh "mvn -s ${MAVEN_SETTINGS_PATH} -P${params.MAVEN_PROFILE} -DskipTests package sonar:sonar"
+					sh "mvn -s ${MAVEN_SETTINGS_PATH} -P${params.MAVEN_PROFILE} -DskipTests install sonar:sonar"
 				}
             }
         }
