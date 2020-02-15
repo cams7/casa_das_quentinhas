@@ -1,27 +1,61 @@
 pipeline {
-    agent {
-        docker {
-            image 'maven:3-alpine' 
-            args ' --net=shared_nw190126 --ip=192.168.33.15 -e "DATABASE_URL=postgres://postgres:postgres@192.168.33.11:5432/casa_das_quentinhas" -v /opt/java/m2:/root/.m2 -v /opt/webdrivers:/opt/webdrivers' 
-        }
+    agent any
+	
+	environment {
+        GIT_CREDENTIALS_ID = 'github-credentials'
+		GIT_URL = 'https://github.com/cams7/casa_das_quentinhas.git'
+		GIT_USER_EMAIL = 'ceanma@gmail.com'
+		GIT_USER_NAME = 'César A. Magalhães'
+		
+		ROOT_PATH               = "${pwd()}"
+		APP_BASE_PATH           = "${ROOT_PATH}/app-base
+		APP_ENTITY_PATH         = "${ROOT_PATH}/casa_das_quentinhas-entity
+		APP_PATH                = "${ROOT_PATH}/casa_das_quentinhas-web
+        MAVEN_TARGET_PATH       = "${APP_PATH}/target"
+		MAVEN_SETTINGS_PATH     = "${ROOT_PATH}/settings.xml"
+
+        def pom                 = readMavenPom(file: "${ROOT_PATH}/pom.xml")
+        ARTIFACT_ID             = pom.getArtifactId()
+        RELEASE_VERSION         = pom.getVersion().replace("-SNAPSHOT", "")
+				
+		NEXUS_CREDENTIALS_ID = 'nexus-credentials'
+		GITHUB_PACKAGES_CREDENTIALS_ID = 'github-packages-credentials'
     }
-    stages {
-        stage('Build') { 
-            steps {
-                sh 'mvn -B -DskipTests clean package' 
-            }
-	    post {
-                always {
-                    sh 'nohup java -jar casa_das_quentinhas-web/target/dependency/jetty-runner.jar --host 0.0.0.0 --port 8080 casa_das_quentinhas-web/target/*.war &'
-		    sh 'sleep 10m'
-                }
+	
+    tools {
+        maven 'apache-maven'
+    }
+	
+    triggers {
+        pollSCM "H/30 * * * *"
+    }
+    
+    options {
+        timestamps()
+    }
+
+    parameters {
+		choice (
+			choices: ['test', 'prod'],
+            name: 'MAVEN_PROFILE', 
+			description: 'Maven profile'
+		)
+		
+        booleanParam (
+			name: "RELEASE", 
+			description: "Build a release from current commit.", 
+			defaultValue: false
+		)
+    }
+	
+	stages {	
+		stage('Build and SonarQube analysis') {			
+            steps {			
+				withSonarQubeEnv('sonarqube-service') {
+					sh "mvn -s ${MAVEN_SETTINGS_PATH} -P${params.MAVEN_PROFILE} -DskipTests package sonar:sonar"
+				}
             }
         }
-	/*stage('Test') {
-            steps {
-                sh 'mvn test -Phomologacao'
-            }
-        }*/	
-    }
+	}
     
 }
