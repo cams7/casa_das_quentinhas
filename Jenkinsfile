@@ -56,9 +56,9 @@ pipeline {
 				}
             }
         }		
-		stage('Quality Gate Status Check'){
-			steps {
-				timeout(time: 1, unit: 'HOURS') {
+		stage('Quality Gate Status Check'){			
+			timeout(time: 1, unit: 'HOURS') {
+				steps {
 					def qg = waitForQualityGate()
 					if (qg.status != 'OK') {
 						slackSend baseUrl: 'https://hooks.slack.com/services/', 
