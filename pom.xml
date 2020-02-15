@@ -1,10 +1,11 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>br.com.cams7</groupId>
 	<artifactId>casa_das_quentinhas</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>Casa das Quentinhas</name>
@@ -26,6 +27,10 @@
 		<springsecurity.version>4.2.0.RELEASE</springsecurity.version>
 
 		<jackson.version>2.7.4</jackson.version>
+		
+		<hibernate.show_sql>false</hibernate.show_sql>
+		<hibernate.format_sql>false</hibernate.format_sql>
+		<hibernate.hbm2ddl.auto>none</hibernate.hbm2ddl.auto>
 	</properties>
 
 	<modules>
@@ -36,6 +41,23 @@
 
 	<repositories>
 	</repositories>
+
+	<dependencies>	
+		<!-- PostgreSQL -->
+		<dependency>
+			<groupId>postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>9.1-901-1.jdbc4</version>
+			<!--scope>runtime</scope-->
+		</dependency>
+
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>1.4.200</version>
+			<!--scope>runtime</scope-->
+		</dependency>	
+	</dependencies>
 
 	<dependencyManagement>
 		<dependencies>
@@ -137,14 +159,16 @@
 					</exclusion>
 				</exclusions>
 			</dependency>
-
-			<!-- Teste -->
-			<!--dependency> <groupId>junit</groupId> <artifactId>junit</artifactId> 
-				<version>4.12</version> <scope>test</scope> </dependency -->
 		</dependencies>
 	</dependencyManagement>
 
 	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -216,7 +240,9 @@
 					<version>2.19.1</version>
 					<configuration>
 						<systemPropertyVariables>
-							<base.url>http://localhost:8080/casa-das-quentinhas</base.url>
+							<base.url>http://192.168.100.8:8090</base.url>
+							<!--base.url>http://casa-das-quentinhas.herokuapp.com</base.url-->
+							<webdriver.url>http://192.168.100.13:4444/wd/hub</webdriver.url>
 							<sleep.millisecounds>1000</sleep.millisecounds>
 						</systemPropertyVariables>
 					</configuration>
@@ -226,19 +252,9 @@
 
 		<plugins>
 			<!--Gera informações do controle de versão -->
-			<!--plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>buildnumber-maven-plugin</artifactId>
-				<version>1.4</version>
-				<executions>
-					<execution>
-						<phase>validate</phase>
-						<goals>
-							<goal>create</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin-->
+			<!--plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>buildnumber-maven-plugin</artifactId> 
+				<version>1.4</version> <executions> <execution> <phase>validate</phase> <goals> 
+				<goal>create</goal> </goals> </execution> </executions> </plugin -->
 
 			<!--Cria os arquivos de configuração do Eclipse -->
 			<plugin>
@@ -249,22 +265,51 @@
 					<downloadSources>true</downloadSources>
 					<downloadJavadocs>true</downloadJavadocs>
 				</configuration>
-			</plugin>
+			</plugin>						
 		</plugins>
 	</build>
 
 	<profiles>
 		<profile>
-			<id>homologacao</id>
+			<id>dev</id>
+			<activation>
+				<os>
+					<family>Windows</family>
+				</os>
+				<property>
+					<name>dev</name>
+				</property>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<jdbc.driverClassName>org.h2.Driver</jdbc.driverClassName>
+				<jdbc.url>jdbc:h2:file:c:/My/Desenv/My/CasaDasQuentinhas/database/h2/casa_das_quentinhas</jdbc.url>
+				<jdbc.username>sa</jdbc.username>
+				<jdbc.password></jdbc.password>
+				<hibernate.dialect>org.hibernate.dialect.H2Dialect</hibernate.dialect>
+				<hibernate.show_sql>true</hibernate.show_sql>
+				<hibernate.format_sql>true</hibernate.format_sql>
+			</properties>
+		</profile>
+		<profile>
+			<id>test</id>
 			<activation>
 				<os>
 					<family>Linux</family>
 				</os>
 				<property>
-					<name>phantomjs</name>
+					<name>test</name>
 				</property>
-				<!--activeByDefault>true</activeByDefault -->
 			</activation>
+			<properties>
+				<jdbc.driverClassName>org.postgresql.Driver</jdbc.driverClassName>
+				<jdbc.url>jdbc:postgresql://172.42.42.200:15432/casa_das_quentinhas</jdbc.url>
+				<jdbc.username>dono_da_cozinha</jdbc.username>
+				<jdbc.password>abc12345</jdbc.password>
+				<hibernate.dialect>org.hibernate.dialect.PostgreSQLDialect</hibernate.dialect>
+				<hibernate.show_sql>true</hibernate.show_sql>
+				<hibernate.format_sql>true</hibernate.format_sql>
+			</properties>
 			<build>
 				<plugins>
 					<plugin>
@@ -272,8 +317,7 @@
 						<artifactId>maven-surefire-plugin</artifactId>
 						<configuration>
 							<systemPropertyVariables>
-								<base.url>http://192.168.33.15:8080</base.url>
-								<phantomjs.binary.path>/opt/webdrivers/phantomjs</phantomjs.binary.path>
+								<base.url>http://192.168.100.8:28080</base.url>
 							</systemPropertyVariables>
 						</configuration>
 					</plugin>
@@ -281,15 +325,22 @@
 			</build>
 		</profile>
 		<profile>
-			<id>producao</id>
+			<id>prod</id>
 			<activation>
 				<os>
 					<family>Linux</family>
 				</os>
 				<property>
-					<name>heroku</name>
+					<name>prod</name>
 				</property>
 			</activation>
+			<properties>
+				<jdbc.driverClassName>org.postgresql.Driver</jdbc.driverClassName>
+				<jdbc.url>${JDBC_DATABASE_URL}</jdbc.url>
+				<jdbc.username>${JDBC_DATABASE_USERNAME}</jdbc.username>
+				<jdbc.password>${JDBC_DATABASE_PASSWORD}</jdbc.password>
+				<hibernate.dialect>org.hibernate.dialect.PostgreSQLDialect</hibernate.dialect>
+			</properties>
 			<build>
 				<plugins>
 					<plugin>
@@ -298,103 +349,6 @@
 						<configuration>
 							<systemPropertyVariables>
 								<base.url>http://casa-das-quentinhas.herokuapp.com</base.url>
-								<phantomjs.binary.path>/opt/webdrivers/phantomjs</phantomjs.binary.path>
-							</systemPropertyVariables>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>desenv-phantomjs</id>
-			<activation>
-				<os>
-					<family>Linux</family>
-				</os>
-				<property>
-					<name>phantomjs</name>
-				</property>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-surefire-plugin</artifactId>
-						<configuration>
-							<systemPropertyVariables>
-								<phantomjs.binary.path>/opt/webdrivers/phantomjs</phantomjs.binary.path>
-							</systemPropertyVariables>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>desenv-chrome</id>
-			<activation>
-				<os>
-					<family>Linux</family>
-				</os>
-				<property>
-					<name>chrome</name>
-				</property>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-surefire-plugin</artifactId>
-						<configuration>
-							<systemPropertyVariables>
-								<webdriver.chrome.driver>/opt/webdrivers/chromedriver</webdriver.chrome.driver>
-							</systemPropertyVariables>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>desenv-firefox</id>
-			<activation>
-				<os>
-					<family>Linux</family>
-				</os>
-				<property>
-					<name>gecko</name>
-				</property>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-surefire-plugin</artifactId>
-						<configuration>
-							<systemPropertyVariables>
-								<webdriver.gecko.driver>/opt/webdrivers/geckodriver</webdriver.gecko.driver>
-							</systemPropertyVariables>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>desenv-ie</id>
-			<activation>
-				<os>
-					<family>Windows</family>
-				</os>
-				<property>
-					<name>ie</name>
-				</property>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-surefire-plugin</artifactId>
-						<configuration>
-							<systemPropertyVariables>
-								<webdriver.ie.driver>MicrosoftWebDriver.exe</webdriver.ie.driver>
 							</systemPropertyVariables>
 						</configuration>
 					</plugin>

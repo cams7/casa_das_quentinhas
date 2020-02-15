@@ -1,6 +1,5 @@
 package br.com.cams7.casa_das_quentinhas.configuration;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Properties;
 
@@ -33,17 +32,9 @@ public class JpaConfiguration {
 	public DataSource dataSource() throws URISyntaxException {
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 		dataSource.setDriverClassName(environment.getRequiredProperty("jdbc.driverClassName"));
-
-		URI dbUrl = new URI(System.getenv().get("DATABASE_URL"));
-		String[] info = dbUrl.getUserInfo().split(":");
-
-		dataSource.setUrl("jdbc:postgresql://" + dbUrl.getHost() + ":" + dbUrl.getPort() + dbUrl.getPath());
-		dataSource.setUsername(info[0]);
-		dataSource.setPassword(info[1]);
-
-		// dataSource.setUrl(environment.getRequiredProperty("jdbc.url"));
-		// dataSource.setUsername(environment.getRequiredProperty("jdbc.username"));
-		// dataSource.setPassword(environment.getRequiredProperty("jdbc.password"));
+		dataSource.setUrl(environment.getRequiredProperty("jdbc.url"));
+		dataSource.setUsername(environment.getRequiredProperty("jdbc.username"));
+		dataSource.setPassword(environment.getRequiredProperty("jdbc.password"));
 		return dataSource;
 	}
 
@@ -72,8 +63,7 @@ public class JpaConfiguration {
 	private Properties jpaProperties() {
 		Properties properties = new Properties();
 		properties.put("hibernate.dialect", environment.getRequiredProperty("hibernate.dialect"));
-		// properties.put("hibernate.hbm2ddl.auto",
-		// environment.getRequiredProperty("hibernate.hbm2ddl.auto"));
+		properties.put("hibernate.hbm2ddl.auto", environment.getRequiredProperty("hibernate.hbm2ddl.auto"));
 		properties.put("hibernate.show_sql", environment.getRequiredProperty("hibernate.show_sql"));
 		properties.put("hibernate.format_sql", environment.getRequiredProperty("hibernate.format_sql"));
 		return properties;

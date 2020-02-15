@@ -1,13 +1,14 @@
 <project
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
 		<groupId>br.com.cams7</groupId>
 		<artifactId>casa_das_quentinhas</artifactId>
-		<version>1.0-SNAPSHOT</version>
+		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>casa_das_quentinhas-web</artifactId>
@@ -124,14 +125,7 @@
 			<groupId>com.fasterxml.jackson.datatype</groupId>
 			<artifactId>jackson-datatype-hibernate5</artifactId>
 		</dependency>
-
-		<!-- PostgreSQL -->
-		<dependency>
-			<groupId>postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<version>9.1-901-1.jdbc4</version>
-		</dependency>
-
+		
 		<!-- Relatório -->
 		<dependency>
 			<groupId>net.sf.jasperreports</groupId>
@@ -162,25 +156,26 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-		    <groupId>com.codeborne</groupId>
-		    <artifactId>phantomjsdriver</artifactId>
-		    <version>1.4.1</version>
-		    <scope>test</scope>
-		</dependency>
-		<!--dependency> <groupId>org.seleniumhq.selenium</groupId> <artifactId>selenium-chrome-driver</artifactId> 
-			<version>3.0.1</version> <scope>test</scope> </dependency -->
-		<!--dependency> <groupId>org.seleniumhq.selenium</groupId> <artifactId>selenium-firefox-driver</artifactId> 
-			<version>3.0.1</version> <scope>test</scope> </dependency -->
-		<!--dependency> <groupId>org.seleniumhq.selenium</groupId> <artifactId>selenium-htmlunit-driver</artifactId> 
-			<version>2.52.0</version> <scope>test</scope> </dependency -->
-		<dependency>
 			<groupId>io.codearte.jfairy</groupId>
 			<artifactId>jfairy</artifactId>
 			<version>0.5.5</version>
 			<scope>test</scope>
 		</dependency>
 		<!--dependency> <groupId>org.fluttercode.datafactory</groupId> <artifactId>datafactory</artifactId> 
-			<version>0.8</version> <scope>test</scope> </dependency -->
+			<version>0.8</version> <scope>test</scope> </dependency -->	
+			
+		<!-- PostgreSQL -->
+		<dependency>
+			<groupId>postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>9.1-901-1.jdbc4</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>1.4.200</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -194,7 +189,6 @@
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 				</configuration>
 			</plugin>
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
@@ -204,7 +198,12 @@
 						<suiteXmlFile>testng.xml</suiteXmlFile>
 					</suiteXmlFiles>
 				</configuration>
-			</plugin>
+			</plugin>	
+			<plugin>
+				<groupId>org.flywaydb</groupId>
+				<artifactId>flyway-maven-plugin</artifactId>
+				<version>6.1.3</version>
+			</plugin>					
 		</plugins>
 	</build>
 
@@ -224,7 +223,6 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-dependency-plugin</artifactId>
-						<version>2.3</version>
 						<executions>
 							<execution>
 								<phase>package</phase>
@@ -236,7 +234,7 @@
 										<artifactItem>
 											<groupId>org.eclipse.jetty</groupId>
 											<artifactId>jetty-runner</artifactId>
-											<version>9.4.0.v20161208</version>
+											<version>9.4.26.v20200117</version>
 											<destFileName>jetty-runner.jar</destFileName>
 										</artifactItem>
 									</artifactItems>

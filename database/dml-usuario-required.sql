@@ -1,2 +1,0 @@
---password: 12345
-INSERT INTO usuario(id_usuario, email, senha, tipo_usuario) VALUES (nextval('usuario_id_seq'),'gerente@casa-das-quentinhas.com','$2a$10$9y4f/xNXOV4B9m8wBuXpZuG5cBvPIzbuwS.htxWs.PudI0XIeMAuC', 0);

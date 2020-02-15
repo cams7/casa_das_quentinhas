@@ -12,6 +12,8 @@ import static org.testng.AssertJUnit.assertNotSame;
 import static org.testng.AssertJUnit.assertTrue;
 import static org.testng.AssertJUnit.fail;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -19,13 +21,13 @@ import java.util.regex.Pattern;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Platform;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.phantomjs.PhantomJSDriver;
+import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Wait;
@@ -34,9 +36,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.SkipException;
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.AfterSuite;
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
 
 import io.codearte.jfairy.Fairy;
 import io.codearte.jfairy.producer.BaseProducer;
@@ -76,9 +79,10 @@ public abstract class AbstractTest implements BaseTest {
 		LOGGER = LoggerFactory.getLogger(this.getClass());
 	}
 
-	@BeforeSuite(alwaysRun = true)
-	public void setUp() {
-		setDriverAndUrl();
+	@BeforeTest
+	@Parameters({ "browser" })
+	public void setUp(String browser) throws MalformedURLException {
+		setDriverAndUrl(browser);
 
 		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 
@@ -86,7 +90,7 @@ public abstract class AbstractTest implements BaseTest {
 		wait = new WebDriverWait(driver, 5).ignoring(StaleElementReferenceException.class);
 	}
 
-	@AfterSuite(alwaysRun = true)
+	@AfterTest
 	public void tearDown() {
 		driver.quit();
 	}
@@ -616,35 +620,19 @@ public abstract class AbstractTest implements BaseTest {
 
 	protected abstract String[] getFields();
 
-	private void setDriverAndUrl() {
-		final String PHANTOMJS_BINARY_PATH = "phantomjs.binary.path";
-		final String WEBDRIVER_CHROME_DRIVER = "webdriver.chrome.driver";
-		final String WEBDRIVER_GECKO_DRIVER = "webdriver.gecko.driver";
-		final String WEBDRIVER_IE_DRIVER = "webdriver.ie.driver";
+	private void setDriverAndUrl(String browser) throws MalformedURLException {		
+		DesiredCapabilities dc = new DesiredCapabilities();
+		dc.setCapability(CapabilityType.BROWSER_NAME, browser);
+		dc.setCapability(CapabilityType.PLATFORM_NAME, Platform.LINUX);
 
-		if (System.getProperty(PHANTOMJS_BINARY_PATH) != null) {
-			driver = new PhantomJSDriver();
-			LOGGER.info("{}: {}", PHANTOMJS_BINARY_PATH, System.getProperty(PHANTOMJS_BINARY_PATH));
-
-			sleep = false;
-		} else if (System.getProperty(WEBDRIVER_IE_DRIVER) != null) {
-			driver = new InternetExplorerDriver();
-			LOGGER.info("{}: {}", WEBDRIVER_IE_DRIVER, System.getProperty(WEBDRIVER_IE_DRIVER));
-		} else if (System.getProperty(WEBDRIVER_GECKO_DRIVER) != null) {
-			driver = new FirefoxDriver();
-			LOGGER.info("{}: {}", WEBDRIVER_GECKO_DRIVER, System.getProperty(WEBDRIVER_GECKO_DRIVER));
-		} else {
-			if (System.getProperty(WEBDRIVER_CHROME_DRIVER) == null)
-				System.setProperty(WEBDRIVER_CHROME_DRIVER, "chromedriver");
-
-			driver = new ChromeDriver();
-			LOGGER.info("{}: {}", WEBDRIVER_CHROME_DRIVER, System.getProperty(WEBDRIVER_CHROME_DRIVER));
-		}
+		final String WEBDRIVER_URL = System.getProperty("webdriver.url");
+		URL url = new URL(WEBDRIVER_URL);
+		driver = new RemoteWebDriver(url, dc);
 
 		driver.manage().window().maximize();
 
 		baseUrl = System.getProperty("base.url");
-		LOGGER.info("url: {}", baseUrl);
+		LOGGER.info("webdriver: {}, url: {}", WEBDRIVER_URL, baseUrl);		
 	}
 
 	private void login(String username, String password) {
