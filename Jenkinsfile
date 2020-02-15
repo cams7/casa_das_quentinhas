@@ -8,9 +8,9 @@ pipeline {
 		GIT_USER_NAME = 'César A. Magalhães'
 		
 		ROOT_PATH               = "${pwd()}"
-		APP_BASE_PATH           = "${ROOT_PATH}/app-base
-		APP_ENTITY_PATH         = "${ROOT_PATH}/casa_das_quentinhas-entity
-		APP_PATH                = "${ROOT_PATH}/casa_das_quentinhas-web
+		APP_BASE_PATH           = "${ROOT_PATH}/app-base"
+		APP_ENTITY_PATH         = "${ROOT_PATH}/casa_das_quentinhas-entity"
+		APP_PATH                = "${ROOT_PATH}/casa_das_quentinhas-web"
         MAVEN_TARGET_PATH       = "${APP_PATH}/target"
 		MAVEN_SETTINGS_PATH     = "${ROOT_PATH}/settings.xml"
 
@@ -49,13 +49,22 @@ pipeline {
     }
 	
 	stages {	
-		stage('Build and SonarQube analysis') {			
+		stage('Build and SonarQube Analysis') {			
             steps {			
 				withSonarQubeEnv('sonarqube-service') {
 					sh "mvn -s ${MAVEN_SETTINGS_PATH} -P${params.MAVEN_PROFILE} -DskipTests package sonar:sonar"
 				}
             }
         }
+		
+		stage('Quality Gate Status Check'){
+			timeout(time: 1, unit: 'HOURS') {
+				def qg = waitForQualityGate()
+				if (qg.status != 'OK') {             
+					error "Pipeline aborted due to quality gate failure: ${qg.status}"
+				}
+			}
+		}  
 	}
     
 }
