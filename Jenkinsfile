@@ -1,5 +1,7 @@
 pipeline {
-    agent any
+    agent {
+        docker { image '172.42.42.200:18082/node:lts-alpine3.9' }
+    }
 	
 	environment {
         GIT_CREDENTIALS_ID = 'github-credentials'
