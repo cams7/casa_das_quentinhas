@@ -55,10 +55,17 @@ pipeline {
 					sh "mvn -U -s ${MAVEN_SETTINGS_PATH} -P${params.MAVEN_PROFILE} -DskipTests clean install sonar:sonar"
 				}
             }
-        }		
-		stage('Quality Gate Status Check'){			
-			timeout(time: 1, unit: 'HOURS') {
-				steps {
+        }	
+		stage('Quality Gate Status Check') {
+            steps {
+                timeout(time: 1, unit: 'HOURS') {
+                    sh 'echo teste'
+                }
+            }
+        }
+		/*stage('Quality Gate Status Check'){
+			steps {
+				timeout(time: 1, unit: 'HOURS') {
 					def qg = waitForQualityGate()
 					if (qg.status != 'OK') {
 						slackSend baseUrl: 'https://hooks.slack.com/services/', 
@@ -72,7 +79,7 @@ pipeline {
 					}
 				}
 			}
-		}
+		}*/
 	}
     
 }
