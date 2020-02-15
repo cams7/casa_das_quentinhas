@@ -56,17 +56,18 @@ pipeline {
 				}
             }
         }
-		/*stage('Quality Gate Status Check') {			
+		stage('Quality Gate Status Check') {			
             steps {			
 				timeout(time: 1, unit: 'HOURS') {
 					waitForQualityGate abortPipeline: true
 				}
             }
-        }*/
+        }
 		stage('Deploy to Tomcat'){ 
 			steps {	
 				sshagent(['tomcat-ssh']) {
 					sh 'scp -o StrictHostKeyChecking=no ${MAVEN_TARGET_PATH}/*.war vagrant@172.42.42.200:/opt/apache-tomcat/webapps/'
+					sh 'sleep 30'
 				}
 			}
 		}
