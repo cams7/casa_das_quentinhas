@@ -1,7 +1,5 @@
 pipeline {
-    agent {
-        docker { image '172.42.42.200:18082/node:lts-alpine3.9' }
-    }
+    agent any
 	
 	environment {
         GIT_CREDENTIALS_ID = 'github-credentials'
@@ -24,9 +22,9 @@ pipeline {
 		GITHUB_PACKAGES_CREDENTIALS_ID = 'github-packages-credentials'
     }
 	
-    tools {
+    /*tools {
         maven 'apache-maven'
-    }
+    }*/
 	
     triggers {
         pollSCM "H/30 * * * *"
@@ -51,10 +49,15 @@ pipeline {
     }
 	
 	stages {	
-		stage('Build and SonarQube Analysis') {			
+		stage('Build and SonarQube Analysis') {	
+			agent {
+				docker { image '172.42.42.200:18082/node:lts-alpine3.9' }
+			}
             steps {			
 				withSonarQubeEnv('sonarqube-service') {
-					sh "mvn -U -s ${MAVEN_SETTINGS_PATH} -P${params.MAVEN_PROFILE} -DskipTests clean install sonar:sonar"
+					withMaven(maven: 'apache-maven') {
+						sh "mvn -U -s ${MAVEN_SETTINGS_PATH} -P${params.MAVEN_PROFILE} -DskipTests clean install sonar:sonar"
+					}
 				}
             }
         }
