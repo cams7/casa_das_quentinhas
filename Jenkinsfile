@@ -71,7 +71,16 @@ pipeline {
 				}
 			}
 		}
-		
+		stage('Test') {
+            steps {
+                sh "mvn -s ${MAVEN_SETTINGS_PATH} -P${params.MAVEN_PROFILE} test"
+            }			
+            post {
+                always {
+                    junit "target/surefire-reports/*.xml"
+                }
+            }
+        }		
 	}
     
 }

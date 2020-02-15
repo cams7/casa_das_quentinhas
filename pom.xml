@@ -317,7 +317,7 @@
 						<artifactId>maven-surefire-plugin</artifactId>
 						<configuration>
 							<systemPropertyVariables>
-								<base.url>http://192.168.100.8:28080</base.url>
+								<base.url>http://192.168.100.8:28080/casa-das-quentinhas</base.url>
 							</systemPropertyVariables>
 						</configuration>
 					</plugin>
