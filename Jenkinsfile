@@ -55,31 +55,18 @@ pipeline {
 					sh "mvn -U -s ${MAVEN_SETTINGS_PATH} -P${params.MAVEN_PROFILE} -DskipTests clean install sonar:sonar"
 				}
             }
-        }	
-		stage('Quality Gate Status Check') {
-            steps {
+			steps {
 				timeout(time: 1, unit: 'HOURS') {
 					waitForQualityGate abortPipeline: true
 				}
             }
+			post {
+                always {
+                    sh "nohup java -jar ${MAVEN_TARGET_PATH}/dependency/jetty-runner.jar --host 0.0.0.0 --port 28080 ${MAVEN_TARGET_PATH}/*.war 2>/dev/null &"
+                }
+            }
         }
-		/*stage('Quality Gate Status Check'){
-			steps {
-				timeout(time: 1, unit: 'HOURS') {
-					def qg = waitForQualityGate()
-					if (qg.status != 'OK') {
-						slackSend baseUrl: 'https://hooks.slack.com/services/', 
-						channel: '#teste200111', 
-						color: 'danger', 
-						message: 'SonarQube Analysis Failed', 
-						teamDomain: 'DevOps', 
-						tokenCredentialId: 'slack-teste200111', 
-						username: 'jenkins'               
-						error "Pipeline aborted due to quality gate failure: ${qg.status}"
-					}
-				}
-			}
-		}*/
+		
 	}
     
 }
