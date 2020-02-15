@@ -54,14 +54,20 @@ pipeline {
 				withSonarQubeEnv('sonarqube-service') {
 					sh "mvn -U -s ${MAVEN_SETTINGS_PATH} -P${params.MAVEN_PROFILE} -DskipTests clean install sonar:sonar"
 				}
+            }
+        }
+		stage('Quality Gate Status Check') {			
+            steps {			
 				timeout(time: 1, unit: 'HOURS') {
 					waitForQualityGate abortPipeline: true
 				}
             }
         }
-		stage('Deploy to Tomcat'){      
-			sshagent(['tomcat-ssh']) {
-				sh 'scp -o StrictHostKeyChecking=no ${MAVEN_TARGET_PATH}/*.war vagrant@172.42.42.200:/opt/apache-tomcat/webapps/'
+		stage('Deploy to Tomcat'){ 
+			steps {	
+				sshagent(['tomcat-ssh']) {
+					sh 'scp -o StrictHostKeyChecking=no ${MAVEN_TARGET_PATH}/*.war vagrant@172.42.42.200:/opt/apache-tomcat/webapps/'
+				}
 			}
 		}
 		
