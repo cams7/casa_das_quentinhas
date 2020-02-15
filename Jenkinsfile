@@ -54,8 +54,6 @@ pipeline {
 				withSonarQubeEnv('sonarqube-service') {
 					sh "mvn -U -s ${MAVEN_SETTINGS_PATH} -P${params.MAVEN_PROFILE} -DskipTests clean install sonar:sonar"
 				}
-            }
-			steps {
 				timeout(time: 1, unit: 'HOURS') {
 					waitForQualityGate abortPipeline: true
 				}
