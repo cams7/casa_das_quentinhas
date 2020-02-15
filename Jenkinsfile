@@ -61,6 +61,7 @@ pipeline {
 			post {
                 always {
                     sh "nohup java -jar ${MAVEN_TARGET_PATH}/dependency/jetty-runner.jar --host 0.0.0.0 --port 28080 ${MAVEN_TARGET_PATH}/*.war 2>/dev/null &"
+					sh 'sleep 2m'
                 }
             }
         }
