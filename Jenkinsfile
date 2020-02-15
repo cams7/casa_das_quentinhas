@@ -58,13 +58,12 @@ pipeline {
 					waitForQualityGate abortPipeline: true
 				}
             }
-			post {
-                always {
-                    sh "nohup java -jar ${MAVEN_TARGET_PATH}/dependency/jetty-runner.jar --host 0.0.0.0 --port 28080 ${MAVEN_TARGET_PATH}/*.war 2>/dev/null &"
-					sh 'sleep 2m'
-                }
-            }
         }
+		stage('Deploy to Tomcat'){      
+			sshagent(['tomcat-ssh']) {
+				sh 'scp -o StrictHostKeyChecking=no ${MAVEN_TARGET_PATH}/*.war vagrant@172.42.42.200:/opt/apache-tomcat/webapps/'
+			}
+		}
 		
 	}
     
