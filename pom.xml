@@ -3,7 +3,7 @@
 
 	<groupId>br.com.cams7</groupId>
 	<artifactId>casa_das_quentinhas</artifactId>
-	<version>0.0.3-SNAPSHOT</version>
+	<version>0.0.3</version>
 	<packaging>pom</packaging>
 
 	<name>Casa das Quentinhas</name>
@@ -12,7 +12,8 @@
 	<url>${REPOSITORY_URL}/tree/master</url>
 	<scm>
 		<connection>scm:git:${GIT_URL}</connection>
-	</scm>
+	  <tag>v0.0.3</tag>
+  </scm>
 
 	<properties>
 		<user.name>${GIT_USER_NAME}</user.name>
