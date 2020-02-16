@@ -38,3 +38,7 @@ phantomjs*
 chromedriver*
 geckodriver*
 MicrosoftWebDriver*
+
+#Maven files
+pom.xml.releaseBackup
+release.properties
