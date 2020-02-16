@@ -88,11 +88,11 @@ pipeline {
             steps {
                 sh "mvn -s ${MAVEN_SETTINGS_PATH} -P${params.MAVEN_PROFILE} test"
             }			
-            post {
+            /*post {
                 always {
                     junit "${MAVEN_TARGET_PATH}/surefire-reports/*.xml"
                 }
-            }
+            }*/
         }		
 	}
     
