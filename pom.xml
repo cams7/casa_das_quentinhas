@@ -11,13 +11,13 @@
 	<name>Casa das Quentinhas</name>
 	<description>Casa das Quentinhas</description>
 
-	<url>https://github.com/cams7/casa_das_quentinhas/tree/master</url>
+	<url>${REPOSITORY_URL}/tree/master</url>
 	<scm>
-		<connection>scm:git:https://github.com/cams7/casa_das_quentinhas.git</connection>
+		<connection>scm:git:${GIT_URL}</connection>
 	</scm>
 
 	<properties>
-		<user.name>César A. Magalhães</user.name>
+		<user.name>${GIT_USER_NAME}</user.name>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.build.timestamp.format>yyyyMMdd'T'HHmmss</maven.build.timestamp.format>
 
@@ -241,7 +241,6 @@
 					<configuration>
 						<systemPropertyVariables>
 							<base.url>http://192.168.100.8:8090</base.url>
-							<!--base.url>http://casa-das-quentinhas.herokuapp.com</base.url-->
 							<webdriver.url>http://192.168.100.13:4444/wd/hub</webdriver.url>
 							<sleep.millisecounds>1000</sleep.millisecounds>
 						</systemPropertyVariables>
@@ -303,9 +302,9 @@
 			</activation>
 			<properties>
 				<jdbc.driverClassName>org.postgresql.Driver</jdbc.driverClassName>
-				<jdbc.url>jdbc:postgresql://172.42.42.200:15432/casa_das_quentinhas</jdbc.url>
-				<jdbc.username>dono_da_cozinha</jdbc.username>
-				<jdbc.password>abc12345</jdbc.password>
+				<jdbc.url>${JDBC_DATABASE_URL}</jdbc.url>
+				<jdbc.username>${JDBC_DATABASE_USERNAME}</jdbc.username>
+				<jdbc.password>${JDBC_DATABASE_PASSWORD}</jdbc.password>
 				<hibernate.dialect>org.hibernate.dialect.PostgreSQLDialect</hibernate.dialect>
 				<hibernate.show_sql>true</hibernate.show_sql>
 				<hibernate.format_sql>true</hibernate.format_sql>
@@ -317,7 +316,8 @@
 						<artifactId>maven-surefire-plugin</artifactId>
 						<configuration>
 							<systemPropertyVariables>
-								<base.url>http://192.168.100.8:28080/casa-das-quentinhas</base.url>
+								<base.url>${APP_URL}</base.url>
+								<webdriver.url>${WEBDRIVER_URL}</webdriver.url>
 							</systemPropertyVariables>
 						</configuration>
 					</plugin>
@@ -349,6 +349,7 @@
 						<configuration>
 							<systemPropertyVariables>
 								<base.url>http://casa-das-quentinhas.herokuapp.com</base.url>
+								<webdriver.url>${WEBDRIVER_URL}</webdriver.url>
 							</systemPropertyVariables>
 						</configuration>
 					</plugin>

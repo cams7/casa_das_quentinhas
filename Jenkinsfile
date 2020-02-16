@@ -3,7 +3,8 @@ pipeline {
 	
 	environment {
         GIT_CREDENTIALS_ID = 'github-credentials'
-		GIT_URL = 'https://github.com/cams7/casa_das_quentinhas.git'
+		REPOSITORY_URL = 'https://github.com/cams7/casa_das_quentinhas'
+		GIT_URL = "${REPOSITORY_URL}.git"
 		GIT_USER_EMAIL = 'ceanma@gmail.com'
 		GIT_USER_NAME = 'César A. Magalhães'
 		
@@ -16,12 +17,17 @@ pipeline {
 
         def pom                 = readMavenPom(file: "${ROOT_PATH}/pom.xml")
         ARTIFACT_ID             = pom.getArtifactId()
-        RELEASE_VERSION         = pom.getVersion().replace("-SNAPSHOT", "")
+        RELEASE_VERSION         = pom.getVersion().replace('-SNAPSHOT', '')
 				
 		NEXUS_CREDENTIALS_ID = 'nexus-credentials'
 		GITHUB_PACKAGES_CREDENTIALS_ID = 'github-packages-credentials'
 		
-		APP_URL                 = "http://192.168.100.8:28080/casa-das-quentinhas"
+		APP_URL                 = 'http://192.168.100.8:28080/casa-das-quentinhas'
+		WEBDRIVER_URL           = 'http://192.168.100.13:4444/wd/hub'
+		
+		JDBC_DATABASE_URL       = 'jdbc:postgresql://172.42.42.200:15432/casa_das_quentinhas'
+		JDBC_DATABASE_USERNAME  = 'dono_da_cozinha'
+		JDBC_DATABASE_PASSWORD  = 'abc12345'
     }
 	
     tools {
@@ -68,15 +74,15 @@ pipeline {
 		stage('Deploy to Tomcat'){ 
 			steps {	
 				sshagent(['tomcat-ssh']) {
-					sh 'scp -o StrictHostKeyChecking=no ${MAVEN_TARGET_PATH}/*.war vagrant@172.42.42.200:/opt/apache-tomcat/webapps/'
-					sh 'sleep 3'
+					sh "scp -o StrictHostKeyChecking=no ${MAVEN_TARGET_PATH}/*.war vagrant@172.42.42.200:/opt/apache-tomcat/webapps/"
+					sh 'sleep 5'
 					sh "bash ${ROOT_PATH}/wait-for-url.sh ${APP_URL}"
 				}
 			}
 		}
 		stage('Test') {
             steps {
-                sh "mvn -s ${MAVEN_SETTINGS_PATH} -P${params.MAVEN_PROFILE} test"
+                sh "mvn -U -s ${MAVEN_SETTINGS_PATH} -P${params.MAVEN_PROFILE} test"
             }			
             /*post {
                 always {
