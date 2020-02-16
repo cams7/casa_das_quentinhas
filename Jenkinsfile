@@ -105,7 +105,7 @@ pipeline {
 				
 			    withCredentials([usernamePassword(credentialsId: "${GIT_CREDENTIALS_ID}", usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
 					withCredentials([usernamePassword(credentialsId: "${'prod'.equals(params.MAVEN_PROFILE) ? GITHUB_PACKAGES_CREDENTIALS_ID : NEXUS_CREDENTIALS_ID}", usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
-						sh "mvn --batch-mode -s ${MAVEN_SETTINGS_PATH} -P${params.MAVEN_PROFILE} -DskipTests release:clean release:prepare release:perform -DreleaseVersion=${RELEASE_VERSION} -Dtag=v${RELEASE_VERSION} -DdevelopmentVersion=${getSnapshotVersion()} -Dusername=${GIT_USERNAME} -Dpassword=${GIT_PASSWORD}"
+						sh "mvn --batch-mode -s ${MAVEN_SETTINGS_PATH} -P${params.MAVEN_PROFILE} -DskipTests -Darguments=-DskipTests release:clean release:prepare release:perform -DreleaseVersion=${RELEASE_VERSION} -Dtag=v${RELEASE_VERSION} -DdevelopmentVersion=${getSnapshotVersion()} -Dusername=${GIT_USERNAME} -Dpassword=${GIT_PASSWORD}"
 					}
                 }                
             }

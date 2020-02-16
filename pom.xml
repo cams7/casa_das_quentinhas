@@ -373,11 +373,13 @@
 				<os>
 					<family>Linux</family>
 				</os>
+				<jdk>[1.8,)</jdk>
 				<property>
 					<name>prod</name>
 				</property>
 			</activation>
 			<properties>
+				<javadoc.opts>-Xdoclint:none</javadoc.opts>
 				<jdbc.driverClassName>org.postgresql.Driver</jdbc.driverClassName>
 				<jdbc.url>${JDBC_DATABASE_URL}</jdbc.url>
 				<jdbc.username>${JDBC_DATABASE_USERNAME}</jdbc.username>
@@ -394,6 +396,38 @@
 								<base.url>http://casa-das-quentinhas.herokuapp.com</base.url>
 								<webdriver.url>${WEBDRIVER_URL}</webdriver.url>
 							</systemPropertyVariables>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>2.9</version>
+						<executions>
+							<execution>
+								<id>attach-javadocs</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+								<configuration>
+									<additionalparam>${javadoc.opts}</additionalparam>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-site-plugin</artifactId>
+						<version>3.3</version>
+						<configuration>
+						  <reportPlugins>
+							<plugin>
+							  <groupId>org.apache.maven.plugins</groupId>
+							  <artifactId>maven-javadoc-plugin</artifactId>
+							  <configuration>
+								<additionalparam>${javadoc.opts}</additionalparam>
+							  </configuration>
+							</plugin>
+						  </reportPlugins>
 						</configuration>
 					</plugin>
 				</plugins>
