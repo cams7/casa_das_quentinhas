@@ -35,7 +35,7 @@ pipeline {
     }
 	
     triggers {
-        pollSCM "H/30 * * * *"
+        pollSCM 'H/30 * * * *'
     }
     
     options {
@@ -50,8 +50,8 @@ pipeline {
 		)
 		
         booleanParam (
-			name: "RELEASE", 
-			description: "Build a release from current commit.", 
+			name: 'RELEASE', 
+			description: 'Build a release from current commit.', 
 			defaultValue: false
 		)
     }
@@ -89,12 +89,35 @@ pipeline {
                     junit "${MAVEN_TARGET_PATH}/surefire-reports/*.xml"
                 }
             }*/
-        }		
+        }
+		stage('Release') {
+            when {
+                expression { params.RELEASE }
+            }
+            steps {
+			    checkout([$class: 'GitSCM', 
+				  branches: [[name: '*/master']], 
+				  extensions: [
+					  [$class: 'UserIdentity', email: "${GIT_USER_EMAIL}", name: "${GIT_USER_NAME}"],
+					  [$class: 'WipeWorkspace'], 
+					  [$class: 'LocalBranch', localBranch: 'master']], 
+				  userRemoteConfigs: [[credentialsId: "${GIT_CREDENTIALS_ID}", url: "${GIT_URL}"]]])
+				
+			    withCredentials([usernamePassword(credentialsId: "${GIT_CREDENTIALS_ID}", usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+					withCredentials([usernamePassword(credentialsId: "${'prod'.equals(params.MAVEN_PROFILE) ? GITHUB_PACKAGES_CREDENTIALS_ID : NEXUS_CREDENTIALS_ID}", usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
+						sh "mvn --batch-mode -s ${MAVEN_SETTINGS_PATH} -P${params.MAVEN_PROFILE} -DskipTests release:clean release:prepare release:perform -DreleaseVersion=${RELEASE_VERSION} -Dtag=v${RELEASE_VERSION} -DdevelopmentVersion=${getSnapshotVersion()} -Dusername=${GIT_USERNAME} -Dpassword=${GIT_PASSWORD}"
+					}
+                }                
+            }
+        }
 	}
 	post {
         always {
             deleteDir()
         }
-    }
-    
+    }    
+}
+def getSnapshotVersion() {
+	def array = "${RELEASE_VERSION}".split("\\.")
+	return "${array[0]}.${array[1]}.${(array[2] as Integer) + 1}-SNAPSHOT"
 }
