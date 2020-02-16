@@ -3,7 +3,7 @@
 
 	<groupId>br.com.cams7</groupId>
 	<artifactId>casa_das_quentinhas</artifactId>
-	<version>0.0.14-SNAPSHOT</version>
+	<version>0.0.16-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>Casa das Quentinhas</name>
