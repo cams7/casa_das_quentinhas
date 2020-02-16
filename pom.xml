@@ -393,7 +393,8 @@
 						<artifactId>maven-surefire-plugin</artifactId>
 						<configuration>
 							<systemPropertyVariables>
-								<base.url>http://casa-das-quentinhas.herokuapp.com</base.url>
+								<!--base.url>http://casa-das-quentinhas.herokuapp.com</base.url-->
+								<base.url>${APP_URL}</base.url>
 								<webdriver.url>${WEBDRIVER_URL}</webdriver.url>
 							</systemPropertyVariables>
 						</configuration>
