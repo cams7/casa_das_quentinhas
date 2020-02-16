@@ -1,11 +1,9 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>br.com.cams7</groupId>
 	<artifactId>casa_das_quentinhas</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<packaging>pom</packaging>
 
 	<name>Casa das Quentinhas</name>
@@ -14,7 +12,8 @@
 	<url>${REPOSITORY_URL}/tree/master</url>
 	<scm>
 		<connection>scm:git:${GIT_URL}</connection>
-	</scm>
+	  <tag>v0.0.1</tag>
+  </scm>
 
 	<properties>
 		<user.name>${GIT_USER_NAME}</user.name>
@@ -284,7 +283,7 @@
 				<jdbc.driverClassName>org.h2.Driver</jdbc.driverClassName>
 				<jdbc.url>jdbc:h2:file:c:/My/Desenv/My/CasaDasQuentinhas/database/h2/casa_das_quentinhas</jdbc.url>
 				<jdbc.username>sa</jdbc.username>
-				<jdbc.password></jdbc.password>
+				<jdbc.password />
 				<hibernate.dialect>org.hibernate.dialect.H2Dialect</hibernate.dialect>
 				<hibernate.show_sql>true</hibernate.show_sql>
 				<hibernate.format_sql>true</hibernate.format_sql>
