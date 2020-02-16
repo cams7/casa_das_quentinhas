@@ -57,20 +57,20 @@ pipeline {
     }
 	
 	stages {	
-		stage('Build and SonarQube Analysis') {			
+		stage('Build and SonarQube Analysis and Quality Gate Status Check') {			
             steps {			
 				withSonarQubeEnv('sonarqube-service') {
 					sh "mvn -U -s ${MAVEN_SETTINGS_PATH} -P${params.MAVEN_PROFILE} -DskipTests clean install sonar:sonar"
 				}
-            }
-        }
-		stage('Quality Gate Status Check') {			
-            steps {			
-				timeout(time: 1, unit: 'HOURS') {
-					waitForQualityGate abortPipeline: true
+				post {
+					always {
+						timeout(time: 1, unit: 'HOURS') {
+							waitForQualityGate abortPipeline: true
+						}
+					}
 				}
             }
-        }
+        }		
 		stage('Deploy to Tomcat'){ 
 			steps {	
 				sshagent(['tomcat-ssh']) {
