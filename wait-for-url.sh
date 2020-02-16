@@ -9,3 +9,4 @@ wait-for-url() {
 	echo "OK!"
 	curl -I $1
 }
+wait-for-url $1
