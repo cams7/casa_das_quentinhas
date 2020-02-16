@@ -69,6 +69,7 @@ pipeline {
 			steps {	
 				sshagent(['tomcat-ssh']) {
 					sh 'scp -o StrictHostKeyChecking=no ${MAVEN_TARGET_PATH}/*.war vagrant@172.42.42.200:/opt/apache-tomcat/webapps/'
+					sh 'sleep 3'
 					sh '''#!/bin/bash
 					set -eux
 					wait-for-url() {
