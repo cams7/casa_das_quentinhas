@@ -20,6 +20,8 @@ pipeline {
 				
 		NEXUS_CREDENTIALS_ID = 'nexus-credentials'
 		GITHUB_PACKAGES_CREDENTIALS_ID = 'github-packages-credentials'
+		
+		APP_URL                 = "http://192.168.100.8:28080/casa-das-quentinhas"
     }
 	
     tools {
@@ -67,7 +69,18 @@ pipeline {
 			steps {	
 				sshagent(['tomcat-ssh']) {
 					sh 'scp -o StrictHostKeyChecking=no ${MAVEN_TARGET_PATH}/*.war vagrant@172.42.42.200:/opt/apache-tomcat/webapps/'
-					sh 'sleep 30'
+					sh '''#!/bin/bash
+					set -eux
+					wait-for-url() {
+						echo "Testing $1"
+						timeout -s TERM 45 bash -c \
+						'while [[ "$(curl -s -o /dev/null -L -w ''%{http_code}'' ${0})" != "200" ]];\
+						do echo "Waiting for ${0}" && sleep 2;\
+						done' ${1}
+						echo "OK!"
+						curl -I $1
+					}
+					wait-for-url ${APP_URL}'''
 				}
 			}
 		}
@@ -77,7 +90,7 @@ pipeline {
             }			
             post {
                 always {
-                    junit "target/surefire-reports/*.xml"
+                    junit "${MAVEN_TARGET_PATH}/surefire-reports/*.xml"
                 }
             }
         }		
