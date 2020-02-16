@@ -32,7 +32,7 @@ pipeline {
 		MAVEN_CENTRAL           = 'http://172.42.42.200:18081/repository/maven-group/'
 		NEXUS_SNAPSHOTS         = 'http://172.42.42.200:18081/repository/maven-snapshots/'
 		NEXUS_RELEASES          = 'http://172.42.42.200:18081/repository/maven-releases/'
-		GITHUB_PKG              = 'https://maven.pkg.github.com/cams7/simple-java-maven-app'
+		GITHUB_PKG              = 'https://maven.pkg.github.com/cams7/casa_das_quentinhas'
     }
 	
     tools {
