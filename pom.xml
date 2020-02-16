@@ -359,11 +359,11 @@
 			<distributionManagement>
 				<snapshotRepository>
 				  <id>nexus-snapshots</id>
-				  <url>http://172.42.42.200:18081/repository/maven-snapshots/</url>
+				  <url>${NEXUS_SNAPSHOTS}</url>
 				</snapshotRepository>
 				<repository>
 				  <id>nexus-releases</id>
-				  <url>http://172.42.42.200:18081/repository/maven-releases/</url>
+				  <url>${NEXUS_RELEASES}</url>
 				</repository>
 			</distributionManagement>
 		</profile>
@@ -436,7 +436,7 @@
 			   <repository>
 				 <id>github</id>
 				 <name>GitHub OWNER Apache Maven Packages</name>
-				 <url>https://maven.pkg.github.com/cams7/simple-java-maven-app</url>
+				 <url>${GITHUB_PKG}</url>
 			   </repository>
 			</distributionManagement>
 		</profile>
