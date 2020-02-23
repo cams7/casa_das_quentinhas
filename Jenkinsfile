@@ -82,7 +82,7 @@ pipeline {
 		stage('Deploy to Tomcat'){ 
 			steps {	
 				sshagent(['tomcat9-ssh']) {
-					sh "scp -o StrictHostKeyChecking=no ${MAVEN_TARGET_PATH}/*.war ${TOMCAT_USER}@`docker ps | grep 'cams7/tomcat' | awk '{ print $1 }'`:${TOMCAT_WEBAPPS}"
+					sh "scp -o StrictHostKeyChecking=no ${MAVEN_TARGET_PATH}/*.war ${TOMCAT_USER}@$(docker ps | grep 'cams7/tomcat' | awk '{ print $1 }'):${TOMCAT_WEBAPPS}"
 					sh 'sleep 5'
 					sh "bash ${ROOT_PATH}/wait-for-url.sh ${APP_URL}"
 				}
