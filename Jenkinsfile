@@ -35,7 +35,7 @@ pipeline {
 		GITHUB_PKG              = 'https://maven.pkg.github.com/cams7/casa_das_quentinhas'
 		
 		TOMCAT_USER             = 'root'
-		TOMCAT_CONTAINERID      = "docker ps | grep 'cams7/tomcat' | awk '{ print $1 }'"
+		TOMCAT_REPOSITORY       = 'cams7/tomcat'
 		TOMCAT_WEBAPPS          = '/usr/local/tomcat/webapps/'
     }
 	
@@ -83,7 +83,7 @@ pipeline {
 		stage('Deploy to Tomcat'){ 
 			steps {	
 				sshagent(['tomcat9-ssh']) {
-					sh "scp -o StrictHostKeyChecking=no ${MAVEN_TARGET_PATH}/*.war ${TOMCAT_USER}@${TOMCAT_CONTAINERID}:${TOMCAT_WEBAPPS}"
+					sh "scp -o StrictHostKeyChecking=no ${MAVEN_TARGET_PATH}/*.war ${TOMCAT_USER}@`docker ps | grep ${TOMCAT_REPOSITORY} | awk '{ print $1 }'`:${TOMCAT_WEBAPPS}"
 					sh 'sleep 5'
 					sh "bash ${ROOT_PATH}/wait-for-url.sh ${APP_URL}"
 				}
