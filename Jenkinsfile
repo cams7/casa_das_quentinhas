@@ -33,6 +33,10 @@ pipeline {
 		NEXUS_SNAPSHOTS         = 'http://172.42.42.200:18081/repository/maven-snapshots/'
 		NEXUS_RELEASES          = 'http://172.42.42.200:18081/repository/maven-releases/'
 		GITHUB_PKG              = 'https://maven.pkg.github.com/cams7/casa_das_quentinhas'
+		
+		TOMCAT_USER             = 'root'
+		TOMCAT_CONTAINERID      = "docker ps | grep 'cams7/tomcat' | awk '{ print $1 }'"
+		TOMCAT_WEBAPPS          = '/usr/local/tomcat/webapps/'
     }
 	
     tools {
@@ -79,7 +83,7 @@ pipeline {
 		stage('Deploy to Tomcat'){ 
 			steps {	
 				sshagent(['tomcat9-ssh']) {
-					sh "scp -o StrictHostKeyChecking=no ${MAVEN_TARGET_PATH}/*.war root@devops_tomcat_1:/usr/local/tomcat/webapps/"
+					sh "scp -o StrictHostKeyChecking=no ${MAVEN_TARGET_PATH}/*.war ${TOMCAT_USER}@${TOMCAT_CONTAINERID}:${TOMCAT_WEBAPPS}"
 					sh 'sleep 5'
 					sh "bash ${ROOT_PATH}/wait-for-url.sh ${APP_URL}"
 				}
