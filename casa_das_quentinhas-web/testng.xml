@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
 <suite name="suite">
-	<!--test name="chrome-test">
+	<test name="chrome-test">
 		<parameter name="browser" value="chrome"/>
 		<classes>
 			<class name="br.com.cams7.casa_das_quentinhas.ClienteTest" />
@@ -11,16 +11,16 @@
 			<class name="br.com.cams7.casa_das_quentinhas.EntregadorTest" />
 			<class name="br.com.cams7.casa_das_quentinhas.FuncionarioTest" />
 		</classes>
-	</test-->
-	<test name="firefox-test">
+	</test>
+	<!--test name="firefox-test">
 		<parameter name="browser" value="firefox"/>
 		<classes>
 			<class name="br.com.cams7.casa_das_quentinhas.ClienteTest" />
-			<!--class name="br.com.cams7.casa_das_quentinhas.PedidoTest" />
+			<class name="br.com.cams7.casa_das_quentinhas.PedidoTest" />
 			<class name="br.com.cams7.casa_das_quentinhas.ProdutoTest" />
 			<class name="br.com.cams7.casa_das_quentinhas.EmpresaTest" />
 			<class name="br.com.cams7.casa_das_quentinhas.EntregadorTest" />
-			<class name="br.com.cams7.casa_das_quentinhas.FuncionarioTest" /-->
+			<class name="br.com.cams7.casa_das_quentinhas.FuncionarioTest" />
 		</classes>
-	</test>
+	</test-->
 </suite>
