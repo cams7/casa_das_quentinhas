@@ -90,7 +90,7 @@ pipeline {
 			}
 		}
 		
-		timeout(time: 3, unit: 'MINUTES') {
+		timeout(time: 120, unit: 'SECONDS') {
 			stage('Check Availability') {
 			  steps {             
 				  waitUntil {
