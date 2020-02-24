@@ -37,6 +37,8 @@ pipeline {
 		TOMCAT_USER             = 'root'
 		TOMCAT_IMAGE            = 'cams7/tomcat'
 		TOMCAT_WEBAPPS          = '/usr/local/tomcat/webapps/'
+		
+		HEALTHCHECK_TIMEOUT     = 120
     }
 	
     tools {
@@ -90,9 +92,7 @@ pipeline {
 		}		
 		stage('Check Availability') {
 		    steps {
-				timeout(time: 2, unit: 'MINUTES') {
-					sh "bash ${ROOT_PATH}/healthcheck.sh ${APP_URL}"
-				}
+				sh "bash ${ROOT_PATH}/healthcheck.sh ${APP_URL} ${HEALTHCHECK_TIMEOUT}"
 		    }
 	    }		
 		stage('Test') {
