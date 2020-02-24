@@ -88,11 +88,10 @@ pipeline {
 					//sh "bash ${ROOT_PATH}/healthcheck.sh ${APP_URL}"
 				}
 			}
-		}
-		
-		timeout(time: 120, unit: 'SECONDS') {
-			stage('Check Availability') {
-			  steps {             
+		}		
+		stage('Check Availability') {
+			steps {  
+				timeout(time: 3, unit: 'MINUTES') {
 				  waitUntil {
 					  try {         
 						sh "curl -s --head --request GET ${APP_URL} | grep '200'"
@@ -103,8 +102,7 @@ pipeline {
 				  }
 			   }
 		   }
-		}
-		
+		}		
 		stage('Test') {
             steps {
                 sh "mvn -U -s ${MAVEN_SETTINGS_PATH} -P${params.MAVEN_PROFILE} test"
