@@ -90,18 +90,20 @@ pipeline {
 		}		
 		stage('Check Availability') {
 		    steps {
-				sh "bash ${ROOT_PATH}/healthcheck.sh ${APP_URL}"
+				timeout(time: 2, unit: 'MINUTES') {
+					sh "bash ${ROOT_PATH}/healthcheck.sh ${APP_URL}"
+				}
 		    }
 	    }		
 		stage('Test') {
-            steps {
-                sh "mvn -U -s ${MAVEN_SETTINGS_PATH} -P${params.MAVEN_PROFILE} test"
+            steps {				
+				sh "mvn -U -s ${MAVEN_SETTINGS_PATH} -P${params.MAVEN_PROFILE} test"				
             }			
-            post {
+            /*post {
                 always {
                     junit "${MAVEN_TARGET_PATH}/surefire-reports/*.xml"
                 }
-            }
+            }*/
         }
 		stage('Release') {
             when {
