@@ -88,21 +88,16 @@ pipeline {
 					//sh "bash ${ROOT_PATH}/healthcheck.sh ${APP_URL}"
 				}
 			}
-		}		
+		}
+		
 		stage('Check Availability') {
-			steps {  
-				timeout(time: 3, unit: 'MINUTES') {
-				  waitUntil {
-					  try {         
-						sh "curl -s --head --request GET ${APP_URL} | grep '200'"
-						return true
-					  } catch (Exception e) {
-						return false
-					  }
-				  }
-			   }
+		  steps {
+			  waitUntil {
+				sh "timeout 120 wget --retry-connrefused --tries=120 --waitretry=1 -q ${APP_URL} -O /dev/null"
+			  }
 		   }
-		}		
+	   }
+		
 		stage('Test') {
             steps {
                 sh "mvn -U -s ${MAVEN_SETTINGS_PATH} -P${params.MAVEN_PROFILE} test"
