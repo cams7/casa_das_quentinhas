@@ -35,7 +35,7 @@ pipeline {
 		GITHUB_PKG              = 'https://maven.pkg.github.com/cams7/casa_das_quentinhas'
 		
 		TOMCAT_USER             = 'root'
-		TOMCAT_CONTAINER_NAME   = 'devops_tomcat_1'
+		TOMCAT_IMAGE            = 'cams7/tomcat'
 		TOMCAT_WEBAPPS          = '/usr/local/tomcat/webapps/'
     }
 	
@@ -83,7 +83,7 @@ pipeline {
 		stage('Deploy to Tomcat'){ 
 			steps {	
 				sshagent(['tomcat9-ssh']) {
-					sh "scp -o StrictHostKeyChecking=no ${MAVEN_TARGET_PATH}/*.war ${TOMCAT_USER}@${TOMCAT_CONTAINER_NAME}:${TOMCAT_WEBAPPS}"
+					sh "scp -o StrictHostKeyChecking=no ${MAVEN_TARGET_PATH}/*.war ${TOMCAT_USER}@${getTomcatContainerName()}:${TOMCAT_WEBAPPS}"
 					sh 'sleep 5'
 					sh "bash ${ROOT_PATH}/wait-for-url.sh ${APP_URL}"
 				}
@@ -129,4 +129,8 @@ pipeline {
 def getSnapshotVersion() {
 	def array = "${RELEASE_VERSION}".split("\\.")
 	return "${array[0]}.${array[1]}.${(array[2] as Integer) + 1}-SNAPSHOT"
+}
+def getTomcatContainerName() {
+	def containerName = 'devops_tomcat_1'
+	return containerName
 }
