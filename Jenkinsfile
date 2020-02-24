@@ -137,7 +137,7 @@ def getSnapshotVersion() {
 	return "${array[0]}.${array[1]}.${(array[2] as Integer) + 1}-SNAPSHOT"
 }
 def getTomcatContainerName() {
-	def output = sh returnStdout: true, script: "docker ps -a --format 'table {{.Image}} {{.Names}}' | grep 'cams7/tomcat'"
+	def output = sh(returnStdout: true, script: "docker ps -a --format 'table {{.Image}},{{.Names}}' | grep ${TOMCAT_IMAGE}").split(',')[1]
 	sh "echo ${output}"
 	def containerName = 'devops_tomcat_1'
 	return containerName
