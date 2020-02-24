@@ -40,7 +40,6 @@ pipeline {
 	
     tools {
         maven 'apache-maven'
-		docker 'docker'
     }
 	
     triggers {
@@ -131,6 +130,6 @@ def getSnapshotVersion() {
 	return "${array[0]}.${array[1]}.${(array[2] as Integer) + 1}-SNAPSHOT"
 }
 def getTomcatContainerName() {
-	def containerName = $(docker ps -a --format 'table {{.Image}} {{.Names}}' | grep 'cams7/tomcat' | awk '{ print $2 }').trim()
+	def containerName = $(sudo /usr/bin/docker ps -a --format 'table {{.Image}} {{.Names}}' | grep 'cams7/tomcat' | awk '{ print $2 }').trim()
 	return containerName
 }
