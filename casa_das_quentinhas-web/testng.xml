@@ -12,7 +12,7 @@
 			<class name="br.com.cams7.casa_das_quentinhas.FuncionarioTest" /-->
 		</classes>
 	</test>
-	<test name="firefox-test">
+	<!--test name="firefox-test">
 		<parameter name="browser" value="firefox"/>
 		<classes>
 			<class name="br.com.cams7.casa_das_quentinhas.ClienteTest" />
@@ -22,5 +22,5 @@
 			<class name="br.com.cams7.casa_das_quentinhas.EntregadorTest" />
 			<class name="br.com.cams7.casa_das_quentinhas.FuncionarioTest" />
 		</classes>
-	</test>
+	</test-->
 </suite>
