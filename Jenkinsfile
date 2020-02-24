@@ -81,8 +81,9 @@ pipeline {
         }
 		stage('Deploy to Tomcat'){ 
 			steps {	
+				env.TOMCAT_CONTAINERID = sh((sudo docker ps -a --format 'table {{.Image}} {{.Names}}' | grep 'cams7/tomcat' | awk '{ print $2 }')).trim()
 				sshagent(['tomcat9-ssh']) {
-					sh "scp -o StrictHostKeyChecking=no ${MAVEN_TARGET_PATH}/*.war ${TOMCAT_USER}@0de6523dc32f:${TOMCAT_WEBAPPS}"
+					sh "scp -o StrictHostKeyChecking=no ${MAVEN_TARGET_PATH}/*.war ${TOMCAT_USER}@${TOMCAT_CONTAINERID}:${TOMCAT_WEBAPPS}"
 					sh 'sleep 5'
 					sh "bash ${ROOT_PATH}/wait-for-url.sh ${APP_URL}"
 				}
