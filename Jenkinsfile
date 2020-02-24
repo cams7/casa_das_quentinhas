@@ -84,17 +84,14 @@ pipeline {
 			steps {	
 				sshagent(['tomcat9-ssh']) {
 					sh "scp -o StrictHostKeyChecking=no ${MAVEN_TARGET_PATH}/*.war ${TOMCAT_USER}@${getTomcatContainerName()}:${TOMCAT_WEBAPPS}"
-					//sh 'sleep 10'
-					//sh "bash ${ROOT_PATH}/healthcheck.sh ${APP_URL}"
+					sh 'sleep 10'
 				}
 			}
 		}
 		
 		stage('Check Availability') {
 		  steps {
-			  waitUntil {
-				sh "timeout 120 wget --retry-connrefused --tries=120 --waitretry=1 -q ${APP_URL} -O /dev/null"
-			  }
+			  sh "bash ${ROOT_PATH}/healthcheck.sh ${APP_URL}"
 		   }
 	   }
 		
