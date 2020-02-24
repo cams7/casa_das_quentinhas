@@ -38,7 +38,7 @@ pipeline {
 		TOMCAT_IMAGE            = 'cams7/tomcat'
 		TOMCAT_WEBAPPS          = '/usr/local/tomcat/webapps/'
 		
-		HEALTHCHECK_TIMEOUT     = 120
+		HEALTHCHECK_TIMEOUT     = 45
     }
 	
     tools {
