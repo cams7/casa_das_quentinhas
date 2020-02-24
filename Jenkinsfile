@@ -84,11 +84,27 @@ pipeline {
 			steps {	
 				sshagent(['tomcat9-ssh']) {
 					sh "scp -o StrictHostKeyChecking=no ${MAVEN_TARGET_PATH}/*.war ${TOMCAT_USER}@${getTomcatContainerName()}:${TOMCAT_WEBAPPS}"
-					sh 'sleep 5'
-					sh "bash ${ROOT_PATH}/wait-for-url.sh ${APP_URL}"
+					//sh 'sleep 10'
+					//sh "bash ${ROOT_PATH}/healthcheck.sh ${APP_URL}"
 				}
 			}
 		}
+		
+		timeout(time: 3, unit: 'MINUTES') {
+			stage('Check Availability') {
+			  steps {             
+				  waitUntil {
+					  try {         
+						sh "curl -s --head --request GET ${APP_URL} | grep '200'"
+						return true
+					  } catch (Exception e) {
+						return false
+					  }
+				  }
+			   }
+		   }
+		}
+		
 		stage('Test') {
             steps {
                 sh "mvn -U -s ${MAVEN_SETTINGS_PATH} -P${params.MAVEN_PROFILE} test"
