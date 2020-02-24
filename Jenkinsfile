@@ -43,9 +43,9 @@ pipeline {
         maven 'apache-maven'
     }
 	
-    triggers {
+    /*triggers {
         pollSCM 'H/30 * * * *'
-    }
+    }*/
     
     options {
         timestamps()
