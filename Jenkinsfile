@@ -82,7 +82,7 @@ pipeline {
 		stage('Deploy to Tomcat'){ 
 			steps {	
 				sshagent(['tomcat9-ssh']) {
-					sh "scp -o StrictHostKeyChecking=no ${MAVEN_TARGET_PATH}/*.war ${TOMCAT_USER}@${sh((sudo docker ps -a --format 'table {{.Image}} {{.Names}}' | grep 'cams7/tomcat' | awk '{ print $2 }')).trim()}:${TOMCAT_WEBAPPS}"
+					sh "scp -o StrictHostKeyChecking=no ${MAVEN_TARGET_PATH}/*.war ${TOMCAT_USER}@${getTomcatContainerName()}:${TOMCAT_WEBAPPS}"
 					sh 'sleep 5'
 					sh "bash ${ROOT_PATH}/wait-for-url.sh ${APP_URL}"
 				}
@@ -128,4 +128,8 @@ pipeline {
 def getSnapshotVersion() {
 	def array = "${RELEASE_VERSION}".split("\\.")
 	return "${array[0]}.${array[1]}.${(array[2] as Integer) + 1}-SNAPSHOT"
+}
+def getTomcatContainerName() {
+	def containerName = $(sudo docker ps -a --format 'table {{.Image}} {{.Names}}' | grep 'cams7/tomcat' | awk '{ print $2 }').trim()
+	return containerName
 }
