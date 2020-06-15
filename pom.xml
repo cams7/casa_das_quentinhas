@@ -23,7 +23,7 @@
 		<java.version>1.8</java.version>
 
 		<springframework.version>4.3.4.RELEASE</springframework.version>
-		<springsecurity.version>4.2.0.RELEASE</springsecurity.version>
+		<springsecurity.version>5.3.3.RELEASE</springsecurity.version>
 
 		<jackson.version>2.7.4</jackson.version>
 		
