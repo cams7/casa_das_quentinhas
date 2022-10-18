@@ -25,7 +25,7 @@
 		<springframework.version>4.3.4.RELEASE</springframework.version>
 		<springsecurity.version>4.2.0.RELEASE</springsecurity.version>
 
-		<jackson.version>2.7.4</jackson.version>
+		<jackson.version>2.13.4.1</jackson.version>
 		
 		<hibernate.show_sql>false</hibernate.show_sql>
 		<hibernate.format_sql>false</hibernate.format_sql>
